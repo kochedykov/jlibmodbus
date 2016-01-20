@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+ Copyright (c) 2014-2015 JSC "Zavod "Invertor"
+ [http://www.sbp-invertor.ru]
+ <p/>
+ This file is part of JModbus.
+ <p/>
+ JModbus is free software: you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+ <p/>
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ <p/>
+ You should have received a copy of the GNU General Public License
+ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ <p/>
+ Authors: Vladislav Y. Kochedykov, software engineer.
+ email: vladislav.kochedykov@gmail.com
+-->
+<project name="JLibModbus" basedir="." default="jar">
+    <property name="source.dir" value="src"/>
+    <property name="lib.dir" value="lib"/>
+    <property name="class.dir" value="bin"/>
+    <property name="jar.dir" value="dist"/>
+    <property name="jar.file" value="${jar.dir}/${ant.project.name}.jar"/>
+	
+	<property name="ant.build.javac.source" value="1.7"/>
+	<property name="ant.build.javac.target" value="1.7"/>
+    
+	<path id="libraries.path">
+        <fileset dir="${lib.dir}">
+            <include name="*.jar"/>
+        </fileset>
+    </path>
+    <target name="clean" description="delete old files">
+        <delete dir="${class.dir}"/>
+        <delete dir="${jar.dir}"/>
+    </target>
+
+    <target name="compile" description="build class files" depends="clean">
+        <mkdir dir="${class.dir}"/>
+        <javac encoding="UTF-8" srcdir="${source.dir}" destdir="${class.dir}">
+            <classpath refid="libraries.path"/>
+        </javac>
+    </target>
+
+    <target name="jar" depends="compile">
+        <mkdir dir="${jar.dir}"/>
+        <jar destfile="${jar.file}" basedir="${class.dir}"/>
+    </target>
+
+    <target name="run" depends="jar">
+        <java jar="${jar.dir}/${ant.project.name}.jar" fork="true"/>
+    </target>
+
+</project>
