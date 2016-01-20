@@ -28,8 +28,8 @@
     <property name="jar.dir" value="dist"/>
     <property name="jar.file" value="${jar.dir}/${ant.project.name}.jar"/>
 	
-	<property name="ant.build.javac.source" value="1.7"/>
-	<property name="ant.build.javac.target" value="1.7"/>
+	<property name="ant.build.javac.source" value="1.6"/>
+	<property name="ant.build.javac.target" value="1.6"/>
     
 	<path id="libraries.path">
         <fileset dir="${lib.dir}">
@@ -43,7 +43,7 @@
 
     <target name="compile" description="build class files" depends="clean">
         <mkdir dir="${class.dir}"/>
-        <javac encoding="UTF-8" srcdir="${source.dir}" destdir="${class.dir}">
+        <javac includeantruntime="false" encoding="UTF-8" srcdir="${source.dir}" destdir="${class.dir}">
             <classpath refid="libraries.path"/>
         </javac>
     </target>
