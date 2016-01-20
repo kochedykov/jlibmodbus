@@ -4,7 +4,7 @@ import com.sbpinvertor.modbus.exception.ModbusTransportException;
 import com.sbpinvertor.modbus.net.ModbusTransportTCP;
 
 /**
- * Copyright (c) 2015 JSC "Zavod "Invertor"
+ * Copyright (c) 2015-2016 JSC "Zavod "Invertor"
  * [http://www.sbp-invertor.ru]
  * <p/>
  * This file is part of JLibModbus.

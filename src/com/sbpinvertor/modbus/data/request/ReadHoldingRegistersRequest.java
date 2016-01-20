@@ -6,7 +6,7 @@ import com.sbpinvertor.modbus.data.base.AbstractMultipleRequest;
 import com.sbpinvertor.modbus.exception.ModbusNumberException;
 
 /**
- * Copyright (c) 2015 JSC "Zavod "Invertor"
+ * Copyright (c) 2015-2016 JSC "Zavod "Invertor"
  * [http://www.sbp-invertor.ru]
  * <p/>
  * This file is part of JLibModbus.

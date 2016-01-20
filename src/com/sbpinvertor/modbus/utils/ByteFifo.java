@@ -7,7 +7,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
 /**
- * Copyright (c) 2015 JSC "Zavod "Invertor"
+ * Copyright (c) 2015-2016 JSC "Zavod "Invertor"
  * [http://www.sbp-invertor.ru]
  * <p/>
  * This file is part of JLibModbus.
@@ -64,7 +64,7 @@ final public class ByteFifo {
     }
 
     public int read(byte[] b) throws ModbusDataException {
-        int c = 0;
+        int c;
         try {
             c = bais.read(b);
         } catch (IOException e) {

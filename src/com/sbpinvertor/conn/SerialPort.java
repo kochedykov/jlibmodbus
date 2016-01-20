@@ -5,7 +5,7 @@ import jssc.SerialPortList;
 import java.util.Arrays;
 
 /**
- * Copyright (c) 2015 JSC "Zavod "Invertor"
+ * Copyright (c) 2015-2016 JSC "Zavod "Invertor"
  * [http://www.sbp-invertor.ru]
  * <p/>
  * This file is part of JUniMonitor.
