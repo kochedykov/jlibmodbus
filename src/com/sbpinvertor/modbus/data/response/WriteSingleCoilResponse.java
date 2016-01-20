@@ -29,6 +29,10 @@ import com.sbpinvertor.modbus.exception.ModbusNumberException;
  */
 public class WriteSingleCoilResponse extends AbstractWriteResponse {
 
+    public WriteSingleCoilResponse(int serverAddress) throws ModbusNumberException {
+        super(serverAddress);
+    }
+
     public WriteSingleCoilResponse(int serverAddress, int startAddress, boolean value) throws ModbusNumberException {
         super(serverAddress, startAddress, value ? 0xff00 : 0x0000);
     }

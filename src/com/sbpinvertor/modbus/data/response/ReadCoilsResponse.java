@@ -1,10 +1,12 @@
 package com.sbpinvertor.modbus.data.response;
 
-import com.sbpinvertor.modbus.Modbus;
 import com.sbpinvertor.modbus.ModbusFunction;
-import com.sbpinvertor.modbus.data.base.AbstractWriteResponse;
-import com.sbpinvertor.modbus.data.base.ModbusMessage;
+import com.sbpinvertor.modbus.data.base.AbstractReadResponse;
 import com.sbpinvertor.modbus.exception.ModbusNumberException;
+import com.sbpinvertor.modbus.utils.ByteFifo;
+import com.sbpinvertor.modbus.utils.DataUtils;
+
+import java.io.IOException;
 
 /**
  * Copyright (c) 2015-2016 JSC "Zavod "Invertor"
@@ -28,27 +30,38 @@ import com.sbpinvertor.modbus.exception.ModbusNumberException;
  * Authors: Vladislav Y. Kochedykov, software engineer.
  * email: vladislav.kochedykov@gmail.com
  */
-public class WriteMultipleCoilsResponse extends AbstractWriteResponse {
+public class ReadCoilsResponse extends AbstractReadResponse {
 
-    public WriteMultipleCoilsResponse(int serverAddress) throws ModbusNumberException {
+    private boolean[] coils;
+
+    public ReadCoilsResponse(int serverAddress) throws ModbusNumberException {
         super(serverAddress);
     }
 
-    public WriteMultipleCoilsResponse(int serverAddress, int startAddress, int register) throws ModbusNumberException {
-        super(serverAddress, startAddress, register);
+    ReadCoilsResponse(int serverAddress, boolean[] coils) throws ModbusNumberException {
+        super(serverAddress, (int) Math.ceil(coils.length / 8));
+
+        this.coils = coils;
     }
 
-    public WriteMultipleCoilsResponse(ModbusMessage msg) {
-        super(msg);
+    final public boolean[] getCoils() {
+        return coils;
     }
 
     @Override
-    protected boolean checkValue() {
-        return Modbus.checkWriteCoilCount(getValue());
+    final protected void readData(ByteFifo fifo) throws IOException {
+        byte[] coils = new byte[getByteCount()];
+        fifo.read(coils);
+        this.coils = DataUtils.toBitsArray(coils, getByteCount() * 8);
+    }
+
+    @Override
+    final protected void writeData(ByteFifo fifo) throws IOException {
+        fifo.write(DataUtils.toByteArray(coils));
     }
 
     @Override
     public ModbusFunction getFunction() {
-        return ModbusFunction.WRITE_MULTIPLE_REGISTERS;
+        return ModbusFunction.READ_COILS;
     }
 }

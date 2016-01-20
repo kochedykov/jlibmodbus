@@ -3,10 +3,11 @@ package com.sbpinvertor.modbus.data.request;
 import com.sbpinvertor.modbus.Modbus;
 import com.sbpinvertor.modbus.ModbusFunction;
 import com.sbpinvertor.modbus.data.base.AbstractWriteMultipleRequest;
-import com.sbpinvertor.modbus.exception.ModbusDataException;
 import com.sbpinvertor.modbus.exception.ModbusNumberException;
 import com.sbpinvertor.modbus.utils.ByteFifo;
 import com.sbpinvertor.modbus.utils.DataUtils;
+
+import java.io.IOException;
 
 /**
  * Copyright (c) 2015-2016 JSC "Zavod "Invertor"
@@ -45,11 +46,11 @@ final public class WriteMultipleCoilsRequest extends AbstractWriteMultipleReques
     }
 
     @Override
-    public void readPDU(ByteFifo fifo) throws ModbusDataException {
+    public void readPDU(ByteFifo fifo) throws ModbusNumberException, IOException {
         super.readPDU(fifo);
 
         if (Math.ceil(getQuantity() / 8) != getByteCount()) {
-            throw new ModbusDataException("Byte count not matches quantity/8");
+            throw new ModbusNumberException("Byte count not matches quantity/8", getByteCount());
         }
     }
 

@@ -3,7 +3,6 @@ package com.sbpinvertor.modbus.net;
 import com.sbpinvertor.conn.SerialPort;
 import com.sbpinvertor.conn.SerialPortException;
 import com.sbpinvertor.modbus.Modbus;
-import com.sbpinvertor.modbus.exception.ModbusDataException;
 import com.sbpinvertor.modbus.exception.ModbusTransportException;
 import com.sbpinvertor.modbus.utils.ByteFifo;
 
@@ -30,7 +29,7 @@ import com.sbpinvertor.modbus.utils.ByteFifo;
  * email: vladislav.kochedykov@gmail.com
  */
 public class ModbusTransportRTU extends ModbusTransport {
-    private final SerialPort port;
+    final private SerialPort port;
 
     public ModbusTransportRTU(SerialPort port) throws SerialPortException {
         this.port = port;
@@ -38,22 +37,30 @@ public class ModbusTransportRTU extends ModbusTransport {
     }
 
     @Override
-    synchronized public void send(ByteFifo pdu) throws ModbusTransportException, ModbusDataException, SerialPortException {
-        port.purgeRx();
-        pdu.writeCRC();
-        port.write(pdu.toByteArray());
+    synchronized public void send(ByteFifo pdu) throws ModbusTransportException {
+        try {
+            port.purgeRx();
+            pdu.writeCRC();
+            port.write(pdu.toByteArray());
+        } catch (Exception e) {
+            throw new ModbusTransportException(e);
+        }
     }
 
     @Override
-    synchronized public void recv(ByteFifo pdu) throws ModbusTransportException, ModbusDataException, SerialPortException {
-        //read server addr
-        pdu.write(port.readBytes(1, Modbus.MAX_RESPONSE_TIMEOUT));
-        if (port.hasBytes() < Modbus.MIN_MESSAGE_LENGTH) {
-            throw new ModbusTransportException("Incomplete response");
-        } else
-            pdu.write(port.readBytes());
-        if (pdu.getCrc() != 0) {
-            throw new ModbusTransportException("CRC check failed");
+    synchronized public void recv(ByteFifo pdu) throws ModbusTransportException {
+        try {
+            //read server address
+            pdu.write(port.readBytes(1, Modbus.MAX_RESPONSE_TIMEOUT));
+            if (port.hasBytes() < Modbus.MIN_MESSAGE_LENGTH) {
+                throw new ModbusTransportException("Incomplete response");
+            } else
+                pdu.write(port.readBytes());
+            if (pdu.getCrc() != 0) {
+                throw new ModbusTransportException("CRC check failed");
+            }
+        } catch (Exception e) {
+            throw new ModbusTransportException(e);
         }
     }
 }

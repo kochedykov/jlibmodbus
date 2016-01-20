@@ -1,7 +1,6 @@
 package com.sbpinvertor.modbus.net;
 
 import com.sbpinvertor.modbus.Modbus;
-import com.sbpinvertor.modbus.exception.ModbusDataException;
 import com.sbpinvertor.modbus.exception.ModbusTransportException;
 import com.sbpinvertor.modbus.utils.ByteFifo;
 import com.sbpinvertor.modbus.utils.DataUtils;
@@ -36,12 +35,12 @@ import java.net.Socket;
  */
 final public class ModbusTransportTCP extends ModbusTransport {
 
-    private final String host;
-    private final int port;
+    final private String host;
+    final private int port;
     final private boolean keepAlive;
-    private final AduHeader headerIn = new AduHeader();
-    private final AduHeader headerOut = new AduHeader();
-    byte[] pdu = new byte[Modbus.MAX_PDU_LENGTH];
+    final private AduHeader headerIn = new AduHeader();
+    final private AduHeader headerOut = new AduHeader();
+    private final byte[] pdu = new byte[Modbus.MAX_PDU_LENGTH];
     private Socket socket;
     private BufferedInputStream is;
     private BufferedOutputStream os;
@@ -68,7 +67,7 @@ final public class ModbusTransportTCP extends ModbusTransport {
     }
 
     @Override
-    synchronized public void send(ByteFifo pdu) throws ModbusTransportException, ModbusDataException {
+    synchronized public void send(ByteFifo pdu) throws ModbusTransportException {
         if (!keepAlive)
             openConnection();
         try {
@@ -87,12 +86,16 @@ final public class ModbusTransportTCP extends ModbusTransport {
         }
     }
 
-    private void sendAdu(ByteFifo pdu) throws ModbusDataException, IOException {
-        // modbus tcp adu header
-        write(headerOut.update(pdu.size()));
-        // modbus pdu
-        write(pdu.toByteArray());
-        send();
+    private void sendAdu(ByteFifo pdu) throws ModbusTransportException {
+        try {
+            // modbus tcp adu header
+            write(headerOut.update(pdu.size()));
+            // modbus pdu
+            write(pdu.toByteArray());
+            send();
+        } catch (Exception e) {
+            throw new ModbusTransportException(e);
+        }
     }
 
     private void send() throws IOException {
@@ -104,7 +107,7 @@ final public class ModbusTransportTCP extends ModbusTransport {
     }
 
     @Override
-    synchronized public void recv(ByteFifo pdu) throws ModbusTransportException, ModbusDataException {
+    synchronized public void recv(ByteFifo pdu) throws ModbusTransportException {
         try {
             //read modbus tcp adu header
             read(headerIn.byteArray(), AduHeader.SIZE);
@@ -157,7 +160,7 @@ final public class ModbusTransportTCP extends ModbusTransport {
     }
 
     final static private class AduHeader {
-        static public int SIZE = 6;
+        final static public int SIZE = 6;
         final private byte[] buffer;
 
         public AduHeader() {

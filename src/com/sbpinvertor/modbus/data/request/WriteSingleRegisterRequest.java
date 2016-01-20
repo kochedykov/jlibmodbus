@@ -3,7 +3,6 @@ package com.sbpinvertor.modbus.data.request;
 import com.sbpinvertor.modbus.Modbus;
 import com.sbpinvertor.modbus.ModbusFunction;
 import com.sbpinvertor.modbus.data.base.AbstractDataRequest;
-import com.sbpinvertor.modbus.exception.ModbusDataException;
 import com.sbpinvertor.modbus.exception.ModbusNumberException;
 import com.sbpinvertor.modbus.utils.ByteFifo;
 
@@ -44,7 +43,7 @@ public class WriteSingleRegisterRequest extends AbstractDataRequest {
     }
 
     @Override
-    protected void readPDU(ByteFifo fifo) throws ModbusDataException {
+    protected void readPDU(ByteFifo fifo) {
         value = fifo.readShortBE();
     }
 

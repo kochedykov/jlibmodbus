@@ -1,6 +1,5 @@
 package com.sbpinvertor.modbus.utils;
 
-import com.sbpinvertor.modbus.exception.ModbusDataException;
 import com.sbpinvertor.utils.CRC16;
 
 import java.io.ByteArrayInputStream;
@@ -32,7 +31,7 @@ final public class ByteFifo {
 
     final private ByteArrayOutputStream baos;
     final private ByteArrayInputStream bais;
-    private volatile int crc;
+    private int crc;
 
     public ByteFifo(int size) {
         baos = new ByteArrayOutputStream(size);
@@ -48,7 +47,7 @@ final public class ByteFifo {
     public void clear() {
         baos.reset();
         bais.reset();
-        crc = CRC16.init();
+        crc = CRC16.INITIAL_VALUE;
     }
 
     public byte[] toByteArray() {
@@ -63,14 +62,8 @@ final public class ByteFifo {
         return bais.read();
     }
 
-    public int read(byte[] b) throws ModbusDataException {
-        int c;
-        try {
-            c = bais.read(b);
-        } catch (IOException e) {
-            throw new ModbusDataException(e);
-        }
-        return c;
+    public int read(byte[] b) throws IOException {
+        return bais.read(b);
     }
 
     public int readShortBE() {
@@ -100,13 +93,9 @@ final public class ByteFifo {
         crc = CRC16.calc(crc, (byte) (b & 0xFF));
     }
 
-    public void write(byte[] b) throws ModbusDataException {
-        try {
-            baos.write(b);
-            crc = CRC16.calc(crc, b);
-        } catch (IOException e) {
-            throw new ModbusDataException(e);
-        }
+    public void write(byte[] b) throws IOException {
+        baos.write(b);
+        crc = CRC16.calc(crc, b);
     }
 
     public void writeCRC() {

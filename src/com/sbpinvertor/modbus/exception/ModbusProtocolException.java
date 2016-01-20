@@ -1,9 +1,6 @@
-package com.sbpinvertor.modbus.data.base;
+package com.sbpinvertor.modbus.exception;
 
-import com.sbpinvertor.modbus.exception.ModbusNumberException;
-import com.sbpinvertor.modbus.utils.ByteFifo;
-
-import java.io.IOException;
+import com.sbpinvertor.modbus.data.base.ModbusException;
 
 /**
  * Copyright (c) 2015-2016 JSC "Zavod "Invertor"
@@ -27,21 +24,36 @@ import java.io.IOException;
  * Authors: Vladislav Y. Kochedykov, software engineer.
  * email: vladislav.kochedykov@gmail.com
  */
-abstract public class ModbusRequest extends ModbusMessage {
 
-    public ModbusRequest(int serverAddress) throws ModbusNumberException {
-        super(serverAddress);
+public class ModbusProtocolException extends Exception {
+
+    private final ModbusException code;
+
+    public ModbusProtocolException(ModbusException code) {
+        super();
+
+        this.code = code;
     }
 
-    public ModbusRequest(ModbusMessage msg) {
-        super(msg);
+    public ModbusProtocolException(String message, ModbusException code) {
+        super(message);
+
+        this.code = code;
     }
 
-    abstract protected void writeRequest(ByteFifo fifo) throws IOException;
+    public ModbusProtocolException(Throwable cause, ModbusException code) {
+        super(cause);
+
+        this.code = code;
+    }
+
+    public ModbusException getCode() {
+        return code;
+    }
 
     @Override
-    final public void writePDU(ByteFifo fifo) throws IOException {
-        fifo.write(getFunction().getCode());
-        writeRequest(fifo);
+    public String getMessage() {
+        String message = super.getMessage();
+        return getCode().toString() + ": " + message;
     }
 }

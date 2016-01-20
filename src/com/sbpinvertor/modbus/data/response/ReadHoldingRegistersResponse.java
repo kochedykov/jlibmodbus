@@ -2,10 +2,11 @@ package com.sbpinvertor.modbus.data.response;
 
 import com.sbpinvertor.modbus.ModbusFunction;
 import com.sbpinvertor.modbus.data.base.AbstractReadResponse;
-import com.sbpinvertor.modbus.exception.ModbusDataException;
 import com.sbpinvertor.modbus.exception.ModbusNumberException;
 import com.sbpinvertor.modbus.utils.ByteFifo;
 import com.sbpinvertor.modbus.utils.DataUtils;
+
+import java.io.IOException;
 
 /**
  * Copyright (c) 2015-2016 JSC "Zavod "Invertor"
@@ -31,31 +32,30 @@ import com.sbpinvertor.modbus.utils.DataUtils;
  */
 public class ReadHoldingRegistersResponse extends AbstractReadResponse {
 
-    private byte[] registers;
+    private int[] registers;
 
     public ReadHoldingRegistersResponse(int serverAddress) throws ModbusNumberException {
         super(serverAddress);
     }
 
-    public ReadHoldingRegistersResponse(int serverAddress, int[] registers) throws ModbusNumberException {
+    ReadHoldingRegistersResponse(int serverAddress, int[] registers) throws ModbusNumberException {
         super(serverAddress, registers.length * 2);
-
-        this.registers = DataUtils.toByteArray(registers);
     }
 
-    public byte[] getValues() {
+    public int[] getRegisters() {
         return registers;
     }
 
     @Override
-    protected void readData(ByteFifo fifo) throws ModbusDataException {
-        registers = new byte[getByteCount()];
-        fifo.read(registers);
+    protected void readData(ByteFifo fifo) throws IOException {
+        byte[] buffer = new byte[getByteCount()];
+        fifo.read(buffer);
+        registers = DataUtils.toRegistersArray(buffer);
     }
 
     @Override
-    protected void writeData(ByteFifo fifo) throws ModbusDataException {
-        fifo.write(registers);
+    protected void writeData(ByteFifo fifo) throws IOException {
+        fifo.write(DataUtils.toByteArray(registers));
     }
 
     @Override

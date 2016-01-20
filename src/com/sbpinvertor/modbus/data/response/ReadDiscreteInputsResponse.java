@@ -1,9 +1,6 @@
 package com.sbpinvertor.modbus.data.response;
 
-import com.sbpinvertor.modbus.Modbus;
 import com.sbpinvertor.modbus.ModbusFunction;
-import com.sbpinvertor.modbus.data.base.AbstractWriteResponse;
-import com.sbpinvertor.modbus.data.base.ModbusMessage;
 import com.sbpinvertor.modbus.exception.ModbusNumberException;
 
 /**
@@ -28,27 +25,22 @@ import com.sbpinvertor.modbus.exception.ModbusNumberException;
  * Authors: Vladislav Y. Kochedykov, software engineer.
  * email: vladislav.kochedykov@gmail.com
  */
-public class WriteMultipleCoilsResponse extends AbstractWriteResponse {
+public class ReadDiscreteInputsResponse extends ReadCoilsResponse {
 
-    public WriteMultipleCoilsResponse(int serverAddress) throws ModbusNumberException {
+    public ReadDiscreteInputsResponse(int serverAddress) throws ModbusNumberException {
         super(serverAddress);
     }
 
-    public WriteMultipleCoilsResponse(int serverAddress, int startAddress, int register) throws ModbusNumberException {
-        super(serverAddress, startAddress, register);
+    public ReadDiscreteInputsResponse(int serverAddress, boolean[] coils) throws ModbusNumberException {
+        super(serverAddress, coils);
     }
 
-    public WriteMultipleCoilsResponse(ModbusMessage msg) {
-        super(msg);
-    }
-
-    @Override
-    protected boolean checkValue() {
-        return Modbus.checkWriteCoilCount(getValue());
+    public boolean[] getDiscreteInputs() {
+        return getCoils();
     }
 
     @Override
     public ModbusFunction getFunction() {
-        return ModbusFunction.WRITE_MULTIPLE_REGISTERS;
+        return ModbusFunction.READ_DISCRETE_INPUTS;
     }
 }

@@ -1,4 +1,7 @@
-package com.sbpinvertor.modbus.exception;
+package com.sbpinvertor.modbus.data.request;
+
+import com.sbpinvertor.modbus.ModbusFunction;
+import com.sbpinvertor.modbus.exception.ModbusNumberException;
 
 /**
  * Copyright (c) 2015-2016 JSC "Zavod "Invertor"
@@ -22,16 +25,15 @@ package com.sbpinvertor.modbus.exception;
  * Authors: Vladislav Y. Kochedykov, software engineer.
  * email: vladislav.kochedykov@gmail.com
  */
-public class ModbusDataException extends Exception {
-    public ModbusDataException(String message) {
-        super(message);
+
+public class ReadDiscreteInputsRequest extends ReadCoilsRequest {
+
+    public ReadDiscreteInputsRequest(int serverAddress, int startAddress, int quantity) throws ModbusNumberException {
+        super(serverAddress, startAddress, quantity);
     }
 
-    public ModbusDataException(String message, Throwable cause) {
-        super(message, cause);
-    }
-
-    public ModbusDataException(Throwable cause) {
-        super(cause);
+    @Override
+    public ModbusFunction getFunction() {
+        return ModbusFunction.READ_DISCRETE_INPUTS;
     }
 }

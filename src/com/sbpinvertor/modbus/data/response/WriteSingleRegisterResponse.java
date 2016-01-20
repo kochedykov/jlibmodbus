@@ -30,6 +30,10 @@ import com.sbpinvertor.modbus.exception.ModbusNumberException;
  */
 public class WriteSingleRegisterResponse extends AbstractWriteResponse {
 
+    public WriteSingleRegisterResponse(int serverAddress) throws ModbusNumberException {
+        super(serverAddress);
+    }
+
     public WriteSingleRegisterResponse(int serverAddress, int startAddress, int register) throws ModbusNumberException {
         super(serverAddress, startAddress, register);
     }

@@ -25,7 +25,8 @@ package com.sbpinvertor.utils;
 
 public class CRC16 {
 
-    private static int[] table = {
+    final static public int INITIAL_VALUE = 0xFFFF;
+    final static private int[] table = {
             0x0000, 0xC0C1, 0xC181, 0x0140, 0xC301, 0x03C0, 0x0280, 0xC241,
             0xC601, 0x06C0, 0x0780, 0xC741, 0x0500, 0xC5C1, 0xC481, 0x0440,
             0xCC01, 0x0CC0, 0x0D80, 0xCD41, 0x0F00, 0xCFC1, 0xCE81, 0x0E40,
@@ -60,29 +61,25 @@ public class CRC16 {
             0x8201, 0x42C0, 0x4380, 0x8341, 0x4100, 0x81C1, 0x8081, 0x4040,
     };
 
-    public static int init() {
-        return 0xFFFF;
-    }
-
-    public static int calc(byte[] bytes) {
+    static public int calc(byte[] bytes) {
         return calc(bytes, bytes.length);
     }
 
-    public static int calc(int crc, byte[] bytes) {
+    static public int calc(int crc, byte[] bytes) {
         return calc(crc, bytes, bytes.length);
     }
 
-    public static int calc(byte[] bytes, int length) {
+    static public int calc(byte[] bytes, int length) {
 
-        int crc = 0xFFFF;
+        int crc = INITIAL_VALUE;
         return calc(crc, bytes, length);
     }
 
-    public static int calc(int crc, byte[] bytes, int length) {
+    static public int calc(int crc, byte[] bytes, int length) {
         return calc(crc, bytes, 0, length);
     }
 
-    public static int calc(int crc, byte[] bytes, int offset, int length) {
+    static public int calc(int crc, byte[] bytes, int offset, int length) {
         for (int i = offset; i < offset + length; i++) {
             crc = calc(crc, bytes[i]);
         }
@@ -90,11 +87,11 @@ public class CRC16 {
         return crc;
     }
 
-    public static int calc(int crc, short[] words, int length) {
+    static public int calc(int crc, short[] words, int length) {
         return calc(crc, words, 0, length);
     }
 
-    public static int calc(int crc, short[] words, int offset, int length) {
+    static public int calc(int crc, short[] words, int offset, int length) {
         for (int i = offset; i < offset + length; i++) {
             crc = calc(crc, (byte) (words[i] & 0xff));
             crc = calc(crc, (byte) ((words[i] >> 8) & 0xff));
@@ -103,12 +100,12 @@ public class CRC16 {
         return crc;
     }
 
-    public static int calc16(int crc, int b) {
+    static public int calc16(int crc, int b) {
         crc = calc(crc, (byte) (b & 0xff));
         return calc(crc, (byte) ((b >> 8) & 0xff));
     }
 
-    public static int calc(int crc, byte b) {
+    static public int calc(int crc, byte b) {
         crc = (short) crc & 0xffff;
         return (crc >>> 8) ^ table[(crc ^ b) & 0xff];
     }

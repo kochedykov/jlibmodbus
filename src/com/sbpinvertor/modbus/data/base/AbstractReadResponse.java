@@ -1,8 +1,9 @@
 package com.sbpinvertor.modbus.data.base;
 
-import com.sbpinvertor.modbus.exception.ModbusDataException;
 import com.sbpinvertor.modbus.exception.ModbusNumberException;
 import com.sbpinvertor.modbus.utils.ByteFifo;
+
+import java.io.IOException;
 
 /**
  * Copyright (c) 2015-2016 JSC "Zavod "Invertor"
@@ -30,17 +31,17 @@ abstract public class AbstractReadResponse extends ModbusResponse {
 
     private int byteCount = 0;
 
-    public AbstractReadResponse(int serverAddress) throws ModbusNumberException {
+    protected AbstractReadResponse(int serverAddress) throws ModbusNumberException {
         super(serverAddress);
     }
 
-    public AbstractReadResponse(int serverAddress, int byteCount) throws ModbusNumberException {
+    protected AbstractReadResponse(int serverAddress, int byteCount) throws ModbusNumberException {
         super(serverAddress);
 
         this.byteCount = byteCount;
     }
 
-    public int getByteCount() {
+    protected int getByteCount() {
         return byteCount;
     }
 
@@ -49,18 +50,18 @@ abstract public class AbstractReadResponse extends ModbusResponse {
     }
 
     @Override
-    final public void readResponse(ByteFifo fifo) throws ModbusDataException {
+    final public void readResponse(ByteFifo fifo) throws IOException {
         setByteCount(fifo.read());
         readData(fifo);
     }
 
     @Override
-    final public void writeResponse(ByteFifo fifo) throws ModbusDataException {
+    final public void writeResponse(ByteFifo fifo) throws IOException {
         fifo.write(getByteCount());
         writeData(fifo);
     }
 
-    abstract protected void readData(ByteFifo fifo) throws ModbusDataException;
+    abstract protected void readData(ByteFifo fifo) throws IOException;
 
-    abstract protected void writeData(ByteFifo fifo) throws ModbusDataException;
+    abstract protected void writeData(ByteFifo fifo) throws IOException;
 }

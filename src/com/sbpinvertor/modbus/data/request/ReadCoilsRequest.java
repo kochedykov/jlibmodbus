@@ -1,11 +1,9 @@
-package com.sbpinvertor.modbus.data.base;
+package com.sbpinvertor.modbus.data.request;
 
 import com.sbpinvertor.modbus.Modbus;
 import com.sbpinvertor.modbus.ModbusFunction;
+import com.sbpinvertor.modbus.data.base.AbstractMultipleRequest;
 import com.sbpinvertor.modbus.exception.ModbusNumberException;
-import com.sbpinvertor.modbus.utils.ByteFifo;
-
-import java.io.IOException;
 
 /**
  * Copyright (c) 2015-2016 JSC "Zavod "Invertor"
@@ -30,36 +28,21 @@ import java.io.IOException;
  * email: vladislav.kochedykov@gmail.com
  */
 
-abstract public class ModbusMessage {
+public class ReadCoilsRequest extends AbstractMultipleRequest {
 
-    private final int serverAddress;
-
-    public ModbusMessage(int serverAddress) throws ModbusNumberException {
-        if (!Modbus.checkServerAddress(serverAddress))
-            throw new ModbusNumberException("Error in slave id", serverAddress);
-        this.serverAddress = serverAddress;
+    public ReadCoilsRequest(int serverAddress, int startAddress, int quantity) throws ModbusNumberException {
+        super(serverAddress, startAddress, quantity);
     }
 
-    public ModbusMessage(ModbusMessage msg) {
-        this.serverAddress = msg.serverAddress;
+    @Override
+    public boolean checkAddressRange(int startAddress, int quantity) {
+        return Modbus.checkReadCoilCount(quantity) &&
+                Modbus.checkStartAddress(startAddress) &&
+                Modbus.checkEndAddress(startAddress + quantity);
     }
 
-    final public void write(ByteFifo fifo) throws IOException {
-        fifo.write(getServerAddress());
-        writePDU(fifo);
-    }
-
-    final public void read(ByteFifo fifo) throws ModbusNumberException, IOException {
-        readPDU(fifo);
-    }
-
-    abstract protected void readPDU(ByteFifo fifo) throws ModbusNumberException, IOException;
-
-    abstract protected void writePDU(ByteFifo fifo) throws IOException;
-
-    abstract public ModbusFunction getFunction();
-
-    public int getServerAddress() {
-        return serverAddress;
+    @Override
+    public ModbusFunction getFunction() {
+        return ModbusFunction.READ_COILS;
     }
 }

@@ -32,35 +32,35 @@ public class ModbusRequestFactory {
 
     }
 
-    public static ModbusRequest createReadCoils(int serverAddress, int startAddress, int quantity) throws ModbusNumberException {
-        return null;
+    static public ModbusRequest createReadCoils(int serverAddress, int startAddress, int quantity) throws ModbusNumberException {
+        return new ReadCoilsRequest(serverAddress, startAddress, quantity);
     }
 
-    public static ModbusRequest createReadDiscreteInputs(int serverAddress, int startAddress, int quantity) throws ModbusNumberException {
-        return null;
+    static public ModbusRequest createReadDiscreteInputs(int serverAddress, int startAddress, int quantity) throws ModbusNumberException {
+        return new ReadDiscreteInputsRequest(serverAddress, startAddress, quantity);
     }
 
-    public static ModbusRequest createReadInputRegisters(int serverAddress, int startAddress, int quantity) throws ModbusNumberException {
+    static public ModbusRequest createReadInputRegisters(int serverAddress, int startAddress, int quantity) throws ModbusNumberException {
         return new ReadInputRegistersRequest(serverAddress, startAddress, quantity);
     }
 
-    public static ModbusRequest createReadHoldingRegisters(int serverAddress, int startAddress, int quantity) throws ModbusNumberException {
+    static public ModbusRequest createReadHoldingRegisters(int serverAddress, int startAddress, int quantity) throws ModbusNumberException {
         return new ReadHoldingRegistersRequest(serverAddress, startAddress, quantity);
     }
 
-    public static ModbusRequest createWriteSingleCoil(int serverAddress, int startAddress, boolean coil) throws ModbusNumberException {
+    static public ModbusRequest createWriteSingleCoil(int serverAddress, int startAddress, boolean coil) throws ModbusNumberException {
         return new WriteSingleCoilRequest(serverAddress, startAddress, coil);
     }
 
-    public static ModbusRequest createWriteMultipleCoils(int serverAddress, int startAddress, boolean[] coils) throws ModbusNumberException {
+    static public ModbusRequest createWriteMultipleCoils(int serverAddress, int startAddress, boolean[] coils) throws ModbusNumberException {
         return new WriteMultipleCoilsRequest(serverAddress, startAddress, coils);
     }
 
-    public static ModbusRequest createWriteMultipleRegisters(int serverAddress, int startAddress, int[] registers) throws ModbusNumberException {
+    static public ModbusRequest createWriteMultipleRegisters(int serverAddress, int startAddress, int[] registers) throws ModbusNumberException {
         return new WriteMultipleRegistersRequest(serverAddress, startAddress, registers);
     }
 
-    public static ModbusRequest createWriteSingleRegister(int serverAddress, int startAddress, int register) throws ModbusNumberException {
+    static public ModbusRequest createWriteSingleRegister(int serverAddress, int startAddress, int register) throws ModbusNumberException {
         return new WriteSingleRegisterRequest(serverAddress, startAddress, register);
     }
 }

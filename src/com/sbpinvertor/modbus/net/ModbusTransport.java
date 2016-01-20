@@ -1,7 +1,5 @@
 package com.sbpinvertor.modbus.net;
 
-import com.sbpinvertor.conn.SerialPortException;
-import com.sbpinvertor.modbus.exception.ModbusDataException;
 import com.sbpinvertor.modbus.exception.ModbusTransportException;
 import com.sbpinvertor.modbus.utils.ByteFifo;
 
@@ -28,6 +26,7 @@ import com.sbpinvertor.modbus.utils.ByteFifo;
  * email: vladislav.kochedykov@gmail.com
  */
 abstract public class ModbusTransport {
-    abstract public void send(ByteFifo pdu) throws ModbusTransportException, ModbusDataException, SerialPortException;
-    abstract public void recv(ByteFifo pdu) throws ModbusTransportException, ModbusDataException, SerialPortException;
+    abstract public void send(ByteFifo pdu) throws ModbusTransportException;
+
+    abstract public void recv(ByteFifo pdu) throws ModbusTransportException;
 }

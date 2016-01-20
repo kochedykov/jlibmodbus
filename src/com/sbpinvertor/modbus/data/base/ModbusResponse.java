@@ -1,8 +1,9 @@
 package com.sbpinvertor.modbus.data.base;
 
-import com.sbpinvertor.modbus.exception.ModbusDataException;
 import com.sbpinvertor.modbus.exception.ModbusNumberException;
 import com.sbpinvertor.modbus.utils.ByteFifo;
+
+import java.io.IOException;
 
 /**
  * Copyright (c) 2015-2016 JSC "Zavod "Invertor"
@@ -48,7 +49,7 @@ public abstract class ModbusResponse extends ModbusMessage {
     }
 
     @Override
-    final protected void writePDU(ByteFifo fifo) throws ModbusDataException {
+    final protected void writePDU(ByteFifo fifo) throws IOException {
         if (isException()) {
             fifo.write(getFunction().getExceptionCode());
             fifo.write(getModbusException());
@@ -59,7 +60,7 @@ public abstract class ModbusResponse extends ModbusMessage {
     }
 
     @Override
-    final protected void readPDU(ByteFifo fifo) throws ModbusDataException {
+    final protected void readPDU(ByteFifo fifo) throws IOException {
         if (isException()) {
             setModbusException(fifo.read());
         } else {
@@ -67,9 +68,9 @@ public abstract class ModbusResponse extends ModbusMessage {
         }
     }
 
-    abstract protected void readResponse(ByteFifo fifo) throws ModbusDataException;
+    abstract protected void readResponse(ByteFifo fifo) throws IOException;
 
-    abstract public void writeResponse(ByteFifo fifo) throws ModbusDataException;
+    abstract public void writeResponse(ByteFifo fifo) throws IOException;
 
     final public ModbusException getException() {
         return modbusException;

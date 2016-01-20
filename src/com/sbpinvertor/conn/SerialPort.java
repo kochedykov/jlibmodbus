@@ -116,7 +116,7 @@ public class SerialPort {
         return write(bytes, bytes.length);
     }
 
-    public int write(byte[] bytes, int length) throws SerialPortException {
+    private int write(byte[] bytes, int length) throws SerialPortException {
         try {
             if (port.writeBytes(Arrays.copyOf(bytes, length))) {
                 return bytes.length;

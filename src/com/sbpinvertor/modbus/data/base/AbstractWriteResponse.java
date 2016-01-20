@@ -1,7 +1,6 @@
 package com.sbpinvertor.modbus.data.base;
 
 import com.sbpinvertor.modbus.Modbus;
-import com.sbpinvertor.modbus.exception.ModbusDataException;
 import com.sbpinvertor.modbus.exception.ModbusNumberException;
 import com.sbpinvertor.modbus.utils.ByteFifo;
 
@@ -32,7 +31,11 @@ public abstract class AbstractWriteResponse extends ModbusResponse {
     private int startAddress = 0;
     private int value = 0;
 
-    public AbstractWriteResponse(int serverAddress, int startAddress, int value) throws ModbusNumberException {
+    protected AbstractWriteResponse(int serverAddress) throws ModbusNumberException {
+        super(serverAddress);
+    }
+
+    protected AbstractWriteResponse(int serverAddress, int startAddress, int value) throws ModbusNumberException {
         super(serverAddress);
 
         if (!(Modbus.checkStartAddress(startAddress) && checkValue()))
@@ -42,37 +45,37 @@ public abstract class AbstractWriteResponse extends ModbusResponse {
         setValue(value);
     }
 
-    public AbstractWriteResponse(ModbusMessage msg) {
+    protected AbstractWriteResponse(ModbusMessage msg) {
         super(msg);
     }
 
     @Override
-    protected void readResponse(ByteFifo fifo) throws ModbusDataException {
-        startAddress = fifo.readShortBE();
-        value = fifo.readShortBE();
+    final protected void readResponse(ByteFifo fifo) {
+        setStartAddress(fifo.readShortBE());
+        setValue(fifo.readShortBE());
     }
 
     @Override
-    public void writeResponse(ByteFifo fifo) throws ModbusDataException {
-        fifo.writeShortBE(startAddress);
-        fifo.writeShortBE(value);
+    final public void writeResponse(ByteFifo fifo) {
+        fifo.writeShortBE(getStartAddress());
+        fifo.writeShortBE(getValue());
     }
 
     abstract protected boolean checkValue();
 
-    public int getStartAddress() {
+    final public int getStartAddress() {
         return startAddress;
     }
 
-    public void setStartAddress(int startAddress) {
+    private void setStartAddress(int startAddress) {
         this.startAddress = startAddress;
     }
 
-    public int getValue() {
+    final protected int getValue() {
         return value;
     }
 
-    public void setValue(int value) {
+    final public void setValue(int value) {
         this.value = value;
     }
 }

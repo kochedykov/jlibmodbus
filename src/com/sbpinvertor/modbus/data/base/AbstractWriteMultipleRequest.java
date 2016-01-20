@@ -1,8 +1,9 @@
 package com.sbpinvertor.modbus.data.base;
 
-import com.sbpinvertor.modbus.exception.ModbusDataException;
 import com.sbpinvertor.modbus.exception.ModbusNumberException;
 import com.sbpinvertor.modbus.utils.ByteFifo;
+
+import java.io.IOException;
 
 /**
  * Copyright (c) 2015-2016 JSC "Zavod "Invertor"
@@ -31,7 +32,7 @@ abstract public class AbstractWriteMultipleRequest extends AbstractMultipleReque
     private byte[] values;
     private int byteCount;
 
-    public AbstractWriteMultipleRequest(int serverAddress, int startAddress, byte[] values, int quantity) throws ModbusNumberException {
+    protected AbstractWriteMultipleRequest(int serverAddress, int startAddress, byte[] values, int quantity) throws ModbusNumberException {
         super(serverAddress, startAddress, quantity);
 
         setByteCount(values.length);
@@ -43,25 +44,25 @@ abstract public class AbstractWriteMultipleRequest extends AbstractMultipleReque
     }
 
     @Override
-    public void writeData(ByteFifo fifo) throws ModbusDataException {
+    public void writeData(ByteFifo fifo) throws IOException {
         super.writeData(fifo);
         fifo.write(getByteCount());
         fifo.write(getValues());
     }
 
     @Override
-    public void readPDU(ByteFifo fifo) throws ModbusDataException {
+    protected void readPDU(ByteFifo fifo) throws ModbusNumberException, IOException {
         super.readPDU(fifo);
         setByteCount(fifo.read());
         setValues(new byte[byteCount]);
         fifo.read(getValues());
     }
 
-    public int getByteCount() {
+    protected int getByteCount() {
         return byteCount;
     }
 
-    public void setByteCount(int byteCount) {
+    private void setByteCount(int byteCount) {
         this.byteCount = byteCount;
     }
 

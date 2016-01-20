@@ -1,8 +1,9 @@
 package com.sbpinvertor.modbus.data.base;
 
-import com.sbpinvertor.modbus.exception.ModbusDataException;
 import com.sbpinvertor.modbus.exception.ModbusNumberException;
 import com.sbpinvertor.modbus.utils.ByteFifo;
+
+import java.io.IOException;
 
 /**
  * Copyright (c) 2015-2016 JSC "Zavod "Invertor"
@@ -29,7 +30,7 @@ import com.sbpinvertor.modbus.utils.ByteFifo;
 abstract public class AbstractMultipleRequest extends AbstractDataRequest {
     private int quantity;
 
-    public AbstractMultipleRequest(int serverAddress, int startAddress, int quantity) throws ModbusNumberException {
+    protected AbstractMultipleRequest(int serverAddress, int startAddress, int quantity) throws ModbusNumberException {
         super(serverAddress, startAddress);
         if (!checkAddressRange(startAddress, quantity))
             throw new ModbusNumberException("Error in start address", startAddress);
@@ -43,19 +44,19 @@ abstract public class AbstractMultipleRequest extends AbstractDataRequest {
         this.quantity = msg.quantity;
     }
 
-    public int getQuantity() {
+    protected int getQuantity() {
         return quantity;
     }
 
     @Override
-    protected void readPDU(ByteFifo fifo) throws ModbusDataException {
+    protected void readPDU(ByteFifo fifo) throws ModbusNumberException, IOException {
         quantity = fifo.readShortBE();
     }
 
     @Override
-    protected void writeData(ByteFifo fifo) throws ModbusDataException {
+    protected void writeData(ByteFifo fifo) throws IOException {
         fifo.writeShortBE(quantity);
     }
 
-    abstract public boolean checkAddressRange(int startAddress, int quantity);
+    protected abstract boolean checkAddressRange(int startAddress, int quantity);
 }
