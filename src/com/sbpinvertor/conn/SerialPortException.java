@@ -23,11 +23,6 @@ package com.sbpinvertor.conn;
  * email: vladislav.kochedykov@gmail.com
  */
 public class SerialPortException extends Exception {
-
-    public SerialPortException(String message) {
-        super(message);
-    }
-
     public SerialPortException(Exception cause) {
         super(cause);
     }

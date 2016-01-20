@@ -1,10 +1,7 @@
 package com.sbpinvertor.conn;
 
-import jssc.SerialPortEvent;
-import jssc.SerialPortEventListener;
 import jssc.SerialPortList;
 
-import java.awt.event.ActionListener;
 import java.util.Arrays;
 
 /**
@@ -32,13 +29,13 @@ import java.util.Arrays;
 
 public class SerialPort {
 
-    private final jssc.SerialPort port;
+    final private jssc.SerialPort port;
 
-    private final String device;
-    private final int baudRate;
-    private final int dataBits;
-    private final int stopBits;
-    private final int parity;
+    final private String device;
+    final private int baudRate;
+    final private int dataBits;
+    final private int stopBits;
+    final private int parity;
 
     public SerialPort(String device, BaudRate baudRate, int dataBits, int stopBits, Parity parity) {
         this.device = device;
@@ -105,10 +102,6 @@ public class SerialPort {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    public void addListener(ActionListener l) {
-
     }
 
     public void purgeTx() {
@@ -268,21 +261,5 @@ public class SerialPort {
         public String toString() {
             return String.valueOf(value);
         }
-    }
-
-    public static abstract class SerialPortRxListener implements SerialPortEventListener {
-
-        public SerialPortRxListener() {
-
-        }
-
-        @Override
-        public void serialEvent(SerialPortEvent serialPortEvent) {
-            if (serialPortEvent.isRXFLAG()) {
-                action();
-            }
-        }
-
-        public abstract void action();
     }
 }
