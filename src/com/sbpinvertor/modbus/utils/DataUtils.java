@@ -42,8 +42,8 @@ public class DataUtils {
 
     static public int[] toRegistersArray(byte[] src) {
         int[] dst = new int[src.length / 2];
-        for (int i = 0; i < dst.length; i++)
-            dst[i] = ((src[i] & 0xff) << 8) | (src[i + 1] & 0xff);
+        for (int i = 0, j = 0; i < dst.length; i++, j += 2)
+            dst[i] = ((src[j] & 0xff) << 8) | (src[j + 1] & 0xff);
         return dst;
     }
 
