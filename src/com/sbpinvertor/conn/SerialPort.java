@@ -244,7 +244,7 @@ public class SerialPort {
             this.value = value;
         }
 
-        static public BaudRate getParity(Integer value) {
+        static public BaudRate getBaudrate(Integer value) {
             for (BaudRate br : BaudRate.values()) {
                 if (br.value == value) {
                     return br;
