@@ -50,17 +50,14 @@ public class ModbusTransportRTU extends ModbusTransport {
     @Override
     synchronized public void recv(ByteFifo pdu) throws ModbusTransportException {
         try {
-            //read server address
-            pdu.write(port.readBytes(1, Modbus.MAX_RESPONSE_TIMEOUT));
-            if (port.hasBytes() < Modbus.MIN_MESSAGE_LENGTH) {
-                throw new ModbusTransportException("Incomplete response");
-            } else
-                pdu.write(port.readBytes());
-            if (pdu.getCrc() != 0) {
-                throw new ModbusTransportException("CRC check failed");
-            }
+            byte[] buffer = port.readBytes(Modbus.MAX_RESPONSE_TIMEOUT);
+            if (buffer != null)
+                pdu.write(buffer);
         } catch (Exception e) {
             throw new ModbusTransportException(e);
+        }
+        if (pdu.getCrc() != 0) {
+            throw new ModbusTransportException("CRC check failed");
         }
     }
 }

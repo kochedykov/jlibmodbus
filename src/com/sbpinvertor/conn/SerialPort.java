@@ -1,5 +1,7 @@
 package com.sbpinvertor.conn;
 
+import com.sbpinvertor.modbus.Modbus;
+import com.sbpinvertor.modbus.utils.ByteFifo;
 import jssc.SerialPortList;
 
 import java.util.Arrays;
@@ -30,12 +32,15 @@ import java.util.Arrays;
 public class SerialPort {
 
     final private jssc.SerialPort port;
-
     final private String device;
     final private int baudRate;
     final private int dataBits;
     final private int stopBits;
     final private int parity;
+
+    final private ByteFifo fifo = new ByteFifo(Modbus.MAX_RTU_ADU_LENGTH);
+    final private long frameBreakTime;
+    private volatile long rxLastTime;
 
     public SerialPort(String device, BaudRate baudRate, int dataBits, int stopBits, Parity parity) {
         this.device = device;
@@ -43,7 +48,9 @@ public class SerialPort {
         this.dataBits = dataBits;
         this.stopBits = stopBits;
         this.parity = parity.getValue();
-        port = new jssc.SerialPort(device);
+        this.port = new jssc.SerialPort(device);
+        int bits = 1 + dataBits + stopBits + (parity != Parity.NONE ? 1 : 0);
+        frameBreakTime = (int) Math.ceil((3.5 * 1000 * bits) / BaudRate.BAUD_RATE_1440.getValue());
     }
 
     public static String[] getPortList() {
@@ -112,7 +119,7 @@ public class SerialPort {
         }
     }
 
-    public int write(byte [] bytes) throws SerialPortException {
+    public int write(byte[] bytes) throws SerialPortException {
         return write(bytes, bytes.length);
     }
 
@@ -137,40 +144,24 @@ public class SerialPort {
         return c;
     }
 
-    public byte readByte() throws SerialPortException {
-        byte b;
+    public byte[] readBytes(int timeout) throws SerialPortException {
+        byte[] bytes = null;
         try {
-            b = port.readBytes(1)[0];
-        } catch (Exception e) {
-            throw new SerialPortException(e);
-        }
-        return b;
-    }
-
-    public byte readByte(int timeout) throws SerialPortException {
-        byte b;
-        try {
-            b = port.readBytes(1, timeout)[0];
-        } catch (Exception e) {
-            throw new SerialPortException(e);
-        }
-        return b;
-    }
-
-    public byte[] readBytes() throws SerialPortException {
-        byte[] bytes;
-        try {
-            bytes = port.readBytes();
-        } catch (Exception e) {
-            throw new SerialPortException(e);
-        }
-        return bytes;
-    }
-
-    public byte[] readBytes(int count, int timeout) throws SerialPortException {
-        byte[] bytes;
-        try {
-            bytes = port.readBytes(count, timeout);
+            long time = System.currentTimeMillis();
+            rxLastTime = time;
+            long timer = time;
+            while ((timer - rxLastTime) < frameBreakTime &&
+                    (timer - time) < timeout) {
+                if (hasBytes() > 0) {
+                    fifo.write(port.readBytes(hasBytes()));
+                    rxLastTime = System.currentTimeMillis();
+                }
+                timer = System.currentTimeMillis();
+            }
+            if (fifo.available() > 0) {
+                bytes = fifo.toByteArray();
+                fifo.clear();
+            }
         } catch (Exception e) {
             throw new SerialPortException(e);
         }
