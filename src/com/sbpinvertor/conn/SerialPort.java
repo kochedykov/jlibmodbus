@@ -4,6 +4,7 @@ import com.sbpinvertor.modbus.Modbus;
 import com.sbpinvertor.modbus.utils.ByteFifo;
 import jssc.SerialPortList;
 
+import java.io.IOException;
 import java.util.Arrays;
 
 /**
@@ -39,8 +40,6 @@ public class SerialPort {
     final private int parity;
 
     final private ByteFifo fifo = new ByteFifo(Modbus.MAX_RTU_ADU_LENGTH);
-    final private long frameBreakTime;
-    private volatile long rxLastTime;
 
     public SerialPort(String device, BaudRate baudRate, int dataBits, int stopBits, Parity parity) {
         this.device = device;
@@ -49,8 +48,6 @@ public class SerialPort {
         this.stopBits = stopBits;
         this.parity = parity.getValue();
         this.port = new jssc.SerialPort(device);
-        int bits = 1 + dataBits + stopBits + (parity != Parity.NONE ? 1 : 0);
-        frameBreakTime = (int) Math.ceil((3.5 * 1000 * bits) / BaudRate.BAUD_RATE_1440.getValue());
     }
 
     public static String[] getPortList() {
@@ -103,6 +100,11 @@ public class SerialPort {
         }
     }
 
+    public void clear() {
+        purgeRx();
+        purgeTx();
+    }
+
     public void purgeRx() {
         try {
             port.purgePort(jssc.SerialPort.PURGE_RXCLEAR);
@@ -119,8 +121,20 @@ public class SerialPort {
         }
     }
 
-    public int write(byte[] bytes) throws SerialPortException {
-        return write(bytes, bytes.length);
+    public void write(int b) throws IOException {
+        try {
+            port.writeByte((byte) b);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void write(byte[] bytes) {
+        try {
+            port.writeBytes(bytes);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private int write(byte[] bytes, int length) throws SerialPortException {
@@ -144,30 +158,6 @@ public class SerialPort {
         return c;
     }
 
-    public byte[] readBytes(int timeout) throws SerialPortException {
-        byte[] bytes = null;
-        try {
-            long time = System.currentTimeMillis();
-            rxLastTime = time;
-            long timer = time;
-            while ((timer - rxLastTime) < frameBreakTime &&
-                    (timer - time) < timeout) {
-                if (hasBytes() > 0) {
-                    fifo.write(port.readBytes(hasBytes()));
-                    rxLastTime = System.currentTimeMillis();
-                }
-                timer = System.currentTimeMillis();
-            }
-            if (fifo.available() > 0) {
-                bytes = fifo.toByteArray();
-                fifo.clear();
-            }
-        } catch (Exception e) {
-            throw new SerialPortException(e);
-        }
-        return bytes;
-    }
-
     public void open() throws SerialPortException {
         try {
             port.openPort();
@@ -178,12 +168,32 @@ public class SerialPort {
         }
     }
 
-    public void close() throws SerialPortException {
+    public int read() throws IOException {
+        try {
+            return port.readBytes(1, Modbus.MAX_RESPONSE_TIMEOUT)[0];
+        } catch (Exception e) {
+            throw new IOException(e);
+        }
+    }
+
+    public int read(byte[] b, int off, int len) throws IOException {
+        int c = -1;
+        try {
+            byte[] rb = port.readBytes(b.length);
+            System.arraycopy(rb, 0, b, 0, b.length);
+            c = rb.length;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return c;
+    }
+
+    public void close() {
         if (port.isOpened()) {
             try {
                 port.closePort();
             } catch (Exception e) {
-                throw new SerialPortException(e);
+                e.printStackTrace();
             }
         }
     }
@@ -235,7 +245,7 @@ public class SerialPort {
             this.value = value;
         }
 
-        static public BaudRate getBaudrate(Integer value) {
+        static public BaudRate getBaudRate(Integer value) {
             for (BaudRate br : BaudRate.values()) {
                 if (br.value == value) {
                     return br;
