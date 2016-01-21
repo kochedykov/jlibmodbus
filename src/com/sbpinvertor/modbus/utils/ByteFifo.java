@@ -31,12 +31,14 @@ final public class ByteFifo {
 
     final private ByteArrayOutputStream baos;
     final private ByteArrayInputStream bais;
+    final private int capacity;
     private int crc;
+
 
     public ByteFifo(int size) {
         baos = new ByteArrayOutputStream(size);
         bais = new ByteArrayInputStream(baos.getByteBuffer());
-
+        capacity = size;
         clear();
     }
 
@@ -50,6 +52,10 @@ final public class ByteFifo {
         crc = CRC16.INITIAL_VALUE;
     }
 
+    public byte[] getByteBuffer() {
+        return baos.getByteBuffer();
+    }
+
     public byte[] toByteArray() {
         return baos.toByteArray();
     }
@@ -59,22 +65,30 @@ final public class ByteFifo {
     }
 
     public int read() {
-        return bais.read();
+        return available() > 0 ? bais.read() : -1;
     }
 
     public int read(byte[] b) throws IOException {
-        return bais.read(b);
+        return (available() < b.length) ? 0 : bais.read(b);
+    }
+
+    public int read(byte[] b, int offset, int length) throws IOException {
+        return (available() < b.length) ? 0 : bais.read(b, offset, length);
     }
 
     public int readShortBE() {
         int h = read();
         int l = read();
+        if (-1 == h || -1 == l)
+            return -1;
         return DataUtils.toShort(h, l);
     }
 
     public int readShortLE() {
         int l = read();
         int h = read();
+        if (-1 == h || -1 == l)
+            return -1;
         return DataUtils.toShort(h, l);
     }
 
@@ -89,13 +103,23 @@ final public class ByteFifo {
     }
 
     public void write(int b) {
-        baos.write(b);
-        crc = CRC16.calc(crc, (byte) (b & 0xFF));
+        if (size() < capacity) {
+            baos.write(b);
+            crc = CRC16.calc(crc, (byte) (b & 0xFF));
+        }
     }
 
     public void write(byte[] b) throws IOException {
-        baos.write(b);
-        crc = CRC16.calc(crc, b);
+        int available = (capacity - size());
+        if (available > 0) {
+            int count = b.length < available ? b.length : available;
+            baos.write(b, 0, count);
+            crc = CRC16.calc(crc, b, 0, count);
+        }
+    }
+
+    public int available() {
+        return size() - (capacity - bais.available());
     }
 
     public void writeCRC() {
