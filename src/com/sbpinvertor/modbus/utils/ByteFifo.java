@@ -1,7 +1,5 @@
 package com.sbpinvertor.modbus.utils;
 
-import com.sbpinvertor.utils.CRC16;
-
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
@@ -32,8 +30,6 @@ final public class ByteFifo {
     final private ByteArrayOutputStream baos;
     final private ByteArrayInputStream bais;
     final private int capacity;
-    private int crc;
-
 
     public ByteFifo(int size) {
         baos = new ByteArrayOutputStream(size);
@@ -42,14 +38,9 @@ final public class ByteFifo {
         clear();
     }
 
-    public int getCrc() {
-        return crc;
-    }
-
     public void clear() {
         baos.reset();
         bais.reset();
-        crc = CRC16.INITIAL_VALUE;
     }
 
     public byte[] getByteBuffer() {
@@ -105,7 +96,6 @@ final public class ByteFifo {
     public void write(int b) {
         if (size() < capacity) {
             baos.write(b);
-            crc = CRC16.calc(crc, (byte) (b & 0xFF));
         }
     }
 
@@ -114,16 +104,11 @@ final public class ByteFifo {
         if (available > 0) {
             int count = b.length < available ? b.length : available;
             baos.write(b, 0, count);
-            crc = CRC16.calc(crc, b, 0, count);
         }
     }
 
     public int available() {
         return size() - (capacity - bais.available());
-    }
-
-    public void writeCRC() {
-        writeShortLE(getCrc());
     }
 
     private class ByteArrayOutputStream extends java.io.ByteArrayOutputStream {
