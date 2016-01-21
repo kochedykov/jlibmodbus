@@ -2,8 +2,9 @@ package com.sbpinvertor.modbus.data.base;
 
 import com.sbpinvertor.modbus.Modbus;
 import com.sbpinvertor.modbus.ModbusFunction;
+import com.sbpinvertor.modbus.data.ModbusInputStream;
+import com.sbpinvertor.modbus.data.ModbusOutputStream;
 import com.sbpinvertor.modbus.exception.ModbusNumberException;
-import com.sbpinvertor.modbus.utils.ByteFifo;
 
 import java.io.IOException;
 
@@ -44,20 +45,26 @@ abstract public class ModbusMessage {
         this.serverAddress = msg.serverAddress;
     }
 
-    final public void write(ByteFifo fifo) throws IOException {
+    final public void write(ModbusOutputStream fifo) throws IOException {
         fifo.write(getServerAddress());
         writePDU(fifo);
     }
 
-    final public void read(ByteFifo fifo) throws ModbusNumberException, IOException {
+    final public void read(ModbusInputStream fifo) throws ModbusNumberException, IOException {
         readPDU(fifo);
     }
 
-    abstract protected void readPDU(ByteFifo fifo) throws ModbusNumberException, IOException;
+    abstract protected void readPDU(ModbusInputStream fifo) throws ModbusNumberException, IOException;
 
-    abstract protected void writePDU(ByteFifo fifo) throws IOException;
+    abstract protected void writePDU(ModbusOutputStream fifo) throws IOException;
 
     abstract public ModbusFunction getFunction();
+
+    public int size() {
+        return 1 + pduSize();
+    }
+
+    abstract protected int pduSize();
 
     public int getServerAddress() {
         return serverAddress;

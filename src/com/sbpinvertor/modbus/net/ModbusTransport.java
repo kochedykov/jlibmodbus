@@ -1,7 +1,12 @@
 package com.sbpinvertor.modbus.net;
 
+import com.sbpinvertor.modbus.data.ModbusInputStream;
+import com.sbpinvertor.modbus.data.ModbusOutputStream;
+import com.sbpinvertor.modbus.data.ModbusResponseFactory;
+import com.sbpinvertor.modbus.data.base.ModbusMessage;
+import com.sbpinvertor.modbus.data.base.ModbusRequest;
+import com.sbpinvertor.modbus.data.base.ModbusResponse;
 import com.sbpinvertor.modbus.exception.ModbusTransportException;
-import com.sbpinvertor.modbus.utils.ByteFifo;
 
 /**
  * Copyright (c) 2015-2016 JSC "Zavod "Invertor"
@@ -26,7 +31,31 @@ import com.sbpinvertor.modbus.utils.ByteFifo;
  * email: vladislav.kochedykov@gmail.com
  */
 abstract public class ModbusTransport {
-    abstract public void send(ByteFifo pdu) throws ModbusTransportException;
 
-    abstract public void recv(ByteFifo pdu) throws ModbusTransportException;
+    abstract public ModbusOutputStream getOutputStream();
+
+    abstract public ModbusInputStream getInputStream();
+
+    public ModbusResponse sendRequest(ModbusMessage msg) throws ModbusTransportException {
+        try {
+            send(msg);
+            return ModbusResponseFactory.getResponse(getInputStream());
+        } catch (Exception e) {
+            throw new ModbusTransportException(e);
+        }
+    }
+
+    public ModbusRequest recvRequest() throws ModbusTransportException {
+        return null;
+    }
+
+    public void send(ModbusMessage msg) throws ModbusTransportException {
+        try {
+            ModbusOutputStream os = getOutputStream();
+            msg.write(os);
+            os.flush();
+        } catch (Exception e) {
+            throw new ModbusTransportException(e);
+        }
+    }
 }

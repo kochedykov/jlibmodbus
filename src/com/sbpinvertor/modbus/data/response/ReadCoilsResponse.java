@@ -1,9 +1,10 @@
 package com.sbpinvertor.modbus.data.response;
 
 import com.sbpinvertor.modbus.ModbusFunction;
+import com.sbpinvertor.modbus.data.ModbusInputStream;
+import com.sbpinvertor.modbus.data.ModbusOutputStream;
 import com.sbpinvertor.modbus.data.base.AbstractReadResponse;
 import com.sbpinvertor.modbus.exception.ModbusNumberException;
-import com.sbpinvertor.modbus.utils.ByteFifo;
 import com.sbpinvertor.modbus.utils.DataUtils;
 
 import java.io.IOException;
@@ -49,14 +50,14 @@ public class ReadCoilsResponse extends AbstractReadResponse {
     }
 
     @Override
-    final protected void readData(ByteFifo fifo) throws IOException {
+    final protected void readData(ModbusInputStream fifo) throws IOException {
         byte[] coils = new byte[getByteCount()];
-        fifo.read(coils);
+        fifo.read(coils, 0, getByteCount());
         this.coils = DataUtils.toBitsArray(coils, getByteCount() * 8);
     }
 
     @Override
-    final protected void writeData(ByteFifo fifo) throws IOException {
+    final protected void writeData(ModbusOutputStream fifo) throws IOException {
         fifo.write(DataUtils.toByteArray(coils));
     }
 

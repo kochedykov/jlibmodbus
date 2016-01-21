@@ -5,7 +5,6 @@ import com.sbpinvertor.modbus.data.base.ModbusResponse;
 import com.sbpinvertor.modbus.data.response.*;
 import com.sbpinvertor.modbus.exception.ModbusNumberException;
 import com.sbpinvertor.modbus.exception.ModbusProtocolException;
-import com.sbpinvertor.modbus.utils.ByteFifo;
 
 import java.io.IOException;
 
@@ -37,7 +36,7 @@ public class ModbusResponseFactory {
 
     }
 
-    static public ModbusResponse getResponse(ByteFifo fifo) throws ModbusNumberException, ModbusProtocolException, IOException {
+    static public ModbusResponse getResponse(ModbusInputStream fifo) throws ModbusNumberException, ModbusProtocolException, IOException {
         ModbusResponse response = null;
         int serverAddress = fifo.read();
         int functionCode = fifo.read();

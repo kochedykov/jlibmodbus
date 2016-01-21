@@ -1,13 +1,14 @@
 package com.sbpinvertor.modbus.net;
 
 import com.sbpinvertor.modbus.Modbus;
+import com.sbpinvertor.modbus.data.ModbusInputStream;
+import com.sbpinvertor.modbus.data.ModbusOutputStream;
+import com.sbpinvertor.modbus.data.base.ModbusMessage;
+import com.sbpinvertor.modbus.data.base.ModbusResponse;
 import com.sbpinvertor.modbus.exception.ModbusTransportException;
-import com.sbpinvertor.modbus.utils.ByteFifo;
 import com.sbpinvertor.modbus.utils.DataUtils;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 
@@ -42,8 +43,8 @@ final public class ModbusTransportTCP extends ModbusTransport {
     final private AduHeader headerOut = new AduHeader();
     private final byte[] pdu = new byte[Modbus.MAX_PDU_LENGTH];
     private Socket socket;
-    private BufferedInputStream is;
-    private BufferedOutputStream os;
+    private TcpSocketInputStream is;
+    private TcpSocketOutputStream os;
 
     public ModbusTransportTCP(String host, int port, boolean keepAlive) {
         this.host = host;
@@ -66,17 +67,27 @@ final public class ModbusTransportTCP extends ModbusTransport {
         this(host, Modbus.TCP_PORT, false);
     }
 
+    private void sendAdu(ModbusMessage msg) throws ModbusTransportException, IOException {
+        // modbus tcp adu header
+        os.write(headerOut.update(msg.size()));
+        super.send(msg);
+        is.read(headerIn.byteArray(), 0, AduHeader.SIZE);
+        if (headerIn.getPduSize() > Modbus.MAX_TCP_ADU_LENGTH) {
+            throw new ModbusTransportException("Maximum ADU size is reached");
+        }
+    }
+
     @Override
-    synchronized public void send(ByteFifo pdu) throws ModbusTransportException {
+    public void send(ModbusMessage msg) throws ModbusTransportException {
         if (!keepAlive)
             openConnection();
         try {
             try {
-                sendAdu(pdu);
+                sendAdu(msg);
             } catch (Exception e) {
                 if (keepAlive) {
                     openConnection();
-                    sendAdu(pdu);
+                    sendAdu(msg);
                 } else {
                     throw e;
                 }
@@ -86,49 +97,14 @@ final public class ModbusTransportTCP extends ModbusTransport {
         }
     }
 
-    private void sendAdu(ByteFifo pdu) throws ModbusTransportException {
-        try {
-            // modbus tcp adu header
-            write(headerOut.update(pdu.size()));
-            // modbus pdu
-            write(pdu.toByteArray());
-            send();
-        } catch (Exception e) {
-            throw new ModbusTransportException(e);
-        }
-    }
-
-    private void send() throws IOException {
-        os.flush();
-    }
-
-    private void write(byte[] update) throws IOException {
-        os.write(update);
-    }
-
     @Override
-    synchronized public void recv(ByteFifo pdu) throws ModbusTransportException {
+    public ModbusResponse sendRequest(ModbusMessage msg) throws ModbusTransportException {
         try {
-            //read modbus tcp adu header
-            read(headerIn.byteArray(), AduHeader.SIZE);
-            if (headerIn.getPduSize() > Modbus.MAX_TCP_ADU_LENGTH) {
-                throw new ModbusTransportException("Maximum ADU size is reached");
-            }
-            pdu.write(read(this.pdu, headerIn.getPduSize()));
-        } catch (Exception e) {
-            throw new ModbusTransportException(e);
+            return super.sendRequest(msg);
         } finally {
             if (!keepAlive)
                 closeConnection();
         }
-    }
-
-    private byte[] read(byte[] buffer, int size) throws IOException {
-        int count = 0;
-        while (count < size) {
-            count += is.read(buffer, count, size - count);
-        }
-        return buffer;
     }
 
     synchronized private void openConnection() throws ModbusTransportException {
@@ -138,8 +114,8 @@ final public class ModbusTransportTCP extends ModbusTransport {
             socket.setKeepAlive(keepAlive);
             socket.setSoTimeout(Modbus.MAX_RESPONSE_TIMEOUT);
             socket.connect(new InetSocketAddress(host, port), Modbus.MAX_CONNECTION_TIMEOUT);
-            is = new BufferedInputStream(socket.getInputStream());
-            os = new BufferedOutputStream(socket.getOutputStream());
+            is = new TcpSocketInputStream(socket.getInputStream());
+            os = new TcpSocketOutputStream(socket.getOutputStream());
         } catch (Exception e) {
             closeConnection();
             throw new ModbusTransportException(e);
@@ -157,6 +133,16 @@ final public class ModbusTransportTCP extends ModbusTransport {
             os = null;
             socket = null;
         }
+    }
+
+    @Override
+    public ModbusOutputStream getOutputStream() {
+        return os;
+    }
+
+    @Override
+    public ModbusInputStream getInputStream() {
+        return is;
     }
 
     final static private class AduHeader {
@@ -211,6 +197,57 @@ final public class ModbusTransportTCP extends ModbusTransport {
             //size of PDU (2 bytes, BE)
             setPduSize(pduSize);
             return buffer;
+        }
+    }
+
+    private class TcpSocketInputStream extends ModbusInputStream {
+
+        volatile private BufferedInputStream is;
+
+        protected TcpSocketInputStream(InputStream is) {
+            this.is = new BufferedInputStream(is);
+        }
+
+        @Override
+        public int read() throws IOException {
+            int c = is.read();
+            if (c == -1) {
+                c = is.read();
+            }
+            return c;
+        }
+
+        @Override
+        public int read(byte[] b, int off, int len) throws IOException {
+            int count = 0;
+            while (count < len) {
+                count += is.read(b, off + count, len - count);
+            }
+            return count;
+        }
+    }
+
+    private class TcpSocketOutputStream extends ModbusOutputStream {
+
+        volatile private BufferedOutputStream os;
+
+        protected TcpSocketOutputStream(OutputStream os) {
+            this.os = new BufferedOutputStream(os);
+        }
+
+        @Override
+        public void write(byte[] b) throws IOException {
+            os.write(b);
+        }
+
+        @Override
+        public void write(int b) throws IOException {
+            os.write(b);
+        }
+
+        @Override
+        public void flush() throws IOException {
+            os.flush();
         }
     }
 }

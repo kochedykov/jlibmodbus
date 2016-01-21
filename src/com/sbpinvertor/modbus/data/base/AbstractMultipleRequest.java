@@ -1,7 +1,8 @@
 package com.sbpinvertor.modbus.data.base;
 
+import com.sbpinvertor.modbus.data.ModbusInputStream;
+import com.sbpinvertor.modbus.data.ModbusOutputStream;
 import com.sbpinvertor.modbus.exception.ModbusNumberException;
-import com.sbpinvertor.modbus.utils.ByteFifo;
 
 import java.io.IOException;
 
@@ -49,13 +50,18 @@ abstract public class AbstractMultipleRequest extends AbstractDataRequest {
     }
 
     @Override
-    protected void readPDU(ByteFifo fifo) throws ModbusNumberException, IOException {
+    protected void readPDU(ModbusInputStream fifo) throws ModbusNumberException, IOException {
         quantity = fifo.readShortBE();
     }
 
     @Override
-    protected void writeData(ByteFifo fifo) throws IOException {
+    protected void writeData(ModbusOutputStream fifo) throws IOException {
         fifo.writeShortBE(quantity);
+    }
+
+    @Override
+    protected int dataSize() {
+        return 2;
     }
 
     protected abstract boolean checkAddressRange(int startAddress, int quantity);

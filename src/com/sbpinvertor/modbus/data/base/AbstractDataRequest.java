@@ -1,8 +1,8 @@
 package com.sbpinvertor.modbus.data.base;
 
 import com.sbpinvertor.modbus.Modbus;
+import com.sbpinvertor.modbus.data.ModbusOutputStream;
 import com.sbpinvertor.modbus.exception.ModbusNumberException;
-import com.sbpinvertor.modbus.utils.ByteFifo;
 
 import java.io.IOException;
 
@@ -47,10 +47,10 @@ abstract public class AbstractDataRequest extends ModbusRequest {
         setStartAddress(msg.startAddress);
     }
 
-    abstract protected void writeData(ByteFifo fifo) throws IOException;
+    abstract protected void writeData(ModbusOutputStream fifo) throws IOException;
 
     @Override
-    protected void writeRequest(ByteFifo fifo) throws IOException {
+    protected void writeRequest(ModbusOutputStream fifo) throws IOException {
         fifo.writeShortBE(getStartAddress());
         writeData(fifo);
     }
@@ -62,4 +62,11 @@ abstract public class AbstractDataRequest extends ModbusRequest {
     private void setStartAddress(int startAddress) {
         this.startAddress = startAddress;
     }
+
+    @Override
+    final protected int requestSize() {
+        return 2 + dataSize();
+    }
+
+    abstract protected int dataSize();
 }

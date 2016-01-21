@@ -1,7 +1,8 @@
 package com.sbpinvertor.modbus.data.base;
 
+import com.sbpinvertor.modbus.data.ModbusInputStream;
+import com.sbpinvertor.modbus.data.ModbusOutputStream;
 import com.sbpinvertor.modbus.exception.ModbusNumberException;
-import com.sbpinvertor.modbus.utils.ByteFifo;
 
 import java.io.IOException;
 
@@ -50,18 +51,23 @@ abstract public class AbstractReadResponse extends ModbusResponse {
     }
 
     @Override
-    final public void readResponse(ByteFifo fifo) throws IOException {
+    final public void readResponse(ModbusInputStream fifo) throws IOException {
         setByteCount(fifo.read());
         readData(fifo);
     }
 
     @Override
-    final public void writeResponse(ByteFifo fifo) throws IOException {
+    final public void writeResponse(ModbusOutputStream fifo) throws IOException {
         fifo.write(getByteCount());
         writeData(fifo);
     }
 
-    abstract protected void readData(ByteFifo fifo) throws IOException;
+    abstract protected void readData(ModbusInputStream fifo) throws IOException;
 
-    abstract protected void writeData(ByteFifo fifo) throws IOException;
+    abstract protected void writeData(ModbusOutputStream fifo) throws IOException;
+
+    @Override
+    final protected int responseSize() {
+        return 1 + getByteCount();
+    }
 }

@@ -2,9 +2,12 @@ package com.sbpinvertor.modbus.data.request;
 
 import com.sbpinvertor.modbus.Modbus;
 import com.sbpinvertor.modbus.ModbusFunction;
+import com.sbpinvertor.modbus.data.ModbusInputStream;
+import com.sbpinvertor.modbus.data.ModbusOutputStream;
 import com.sbpinvertor.modbus.data.base.AbstractDataRequest;
 import com.sbpinvertor.modbus.exception.ModbusNumberException;
-import com.sbpinvertor.modbus.utils.ByteFifo;
+
+import java.io.IOException;
 
 /**
  * Copyright (c) 2015-2016 JSC "Zavod "Invertor"
@@ -43,7 +46,7 @@ public class WriteSingleRegisterRequest extends AbstractDataRequest {
     }
 
     @Override
-    protected void readPDU(ByteFifo fifo) {
+    protected void readPDU(ModbusInputStream fifo) throws IOException {
         value = fifo.readShortBE();
     }
 
@@ -53,7 +56,12 @@ public class WriteSingleRegisterRequest extends AbstractDataRequest {
     }
 
     @Override
-    public void writeData(ByteFifo fifo) {
+    public void writeData(ModbusOutputStream fifo) throws IOException {
         fifo.writeShortBE(value);
+    }
+
+    @Override
+    protected int dataSize() {
+        return 2;
     }
 }

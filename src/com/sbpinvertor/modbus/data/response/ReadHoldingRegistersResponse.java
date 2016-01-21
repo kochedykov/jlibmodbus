@@ -1,9 +1,10 @@
 package com.sbpinvertor.modbus.data.response;
 
 import com.sbpinvertor.modbus.ModbusFunction;
+import com.sbpinvertor.modbus.data.ModbusInputStream;
+import com.sbpinvertor.modbus.data.ModbusOutputStream;
 import com.sbpinvertor.modbus.data.base.AbstractReadResponse;
 import com.sbpinvertor.modbus.exception.ModbusNumberException;
-import com.sbpinvertor.modbus.utils.ByteFifo;
 import com.sbpinvertor.modbus.utils.DataUtils;
 
 import java.io.IOException;
@@ -47,14 +48,14 @@ public class ReadHoldingRegistersResponse extends AbstractReadResponse {
     }
 
     @Override
-    protected void readData(ByteFifo fifo) throws IOException {
+    protected void readData(ModbusInputStream fifo) throws IOException {
         byte[] buffer = new byte[getByteCount()];
-        fifo.read(buffer);
+        fifo.read(buffer, 0, getByteCount());
         registers = DataUtils.toRegistersArray(buffer);
     }
 
     @Override
-    protected void writeData(ByteFifo fifo) throws IOException {
+    protected void writeData(ModbusOutputStream fifo) throws IOException {
         fifo.write(DataUtils.toByteArray(registers));
     }
 
