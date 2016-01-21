@@ -27,33 +27,22 @@ import com.sbpinvertor.modbus.data.base.ModbusException;
 
 public class ModbusProtocolException extends Exception {
 
-    private final ModbusException code;
+    private final ModbusException exception;
+    private final int serverAddress;
 
-    public ModbusProtocolException(ModbusException code) {
+    public ModbusProtocolException(ModbusException exception, int serverAddress) {
         super();
 
-        this.code = code;
+        this.exception = exception;
+        this.serverAddress = serverAddress;
     }
 
-    public ModbusProtocolException(String message, ModbusException code) {
-        super(message);
-
-        this.code = code;
-    }
-
-    public ModbusProtocolException(Throwable cause, ModbusException code) {
-        super(cause);
-
-        this.code = code;
-    }
-
-    public ModbusException getCode() {
-        return code;
+    public ModbusException getException() {
+        return exception;
     }
 
     @Override
     public String getMessage() {
-        String message = super.getMessage();
-        return getCode().toString() + ": " + message;
+        return getException().toString() + "; server: " + serverAddress;
     }
 }

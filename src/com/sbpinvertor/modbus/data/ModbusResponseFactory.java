@@ -77,7 +77,7 @@ public class ModbusResponseFactory {
             }
             response.read(fifo);
             if (response.isException()) {
-                throw new ModbusProtocolException(response.getException());
+                throw new ModbusProtocolException(response.getException(), response.getServerAddress());
             }
         }
         return response;
