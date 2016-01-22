@@ -71,14 +71,16 @@ final public class ModbusTransportTCP extends ModbusTransport {
         // modbus tcp adu header
         os.write(headerOut.update(msg.size()));
         super.send(msg);
-        is.read(headerIn.byteArray(), 0, AduHeader.SIZE);
+        if (is.read(headerIn.byteArray(), 0, AduHeader.SIZE) < AduHeader.SIZE) {
+            throw new ModbusTransportException("Error: no response.");
+        }
         if (headerIn.getPduSize() > Modbus.MAX_TCP_ADU_LENGTH) {
-            throw new ModbusTransportException("Maximum ADU size is reached");
+            throw new ModbusTransportException("Maximum ADU size is reached.");
         }
     }
 
     @Override
-    public void send(ModbusMessage msg) throws ModbusTransportException {
+    protected void send(ModbusMessage msg) throws ModbusTransportException {
         if (!keepAlive)
             openConnection();
         try {
@@ -220,8 +222,11 @@ final public class ModbusTransportTCP extends ModbusTransport {
         @Override
         public int read(byte[] b, int off, int len) throws IOException {
             int count = 0;
-            while (count < len) {
-                count += is.read(b, off + count, len - count);
+            int k = 0;
+            while (count < len && k != -1) {
+                k = is.read(b, off + count, len - count);
+                if (-1 != k)
+                    count += k;
             }
             return count;
         }

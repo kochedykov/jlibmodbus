@@ -49,7 +49,7 @@ abstract public class ModbusTransport {
         return null;
     }
 
-    public void send(ModbusMessage msg) throws ModbusTransportException {
+    protected void send(ModbusMessage msg) throws ModbusTransportException {
         try {
             ModbusOutputStream os = getOutputStream();
             msg.write(os);
