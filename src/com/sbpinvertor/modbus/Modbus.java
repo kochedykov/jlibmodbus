@@ -2,6 +2,7 @@ package com.sbpinvertor.modbus;
 
 import com.sbpinvertor.conn.SerialPort;
 
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -28,26 +29,40 @@ import java.util.logging.Logger;
  */
 
 public class Modbus {
-    public static final int MAX_CONNECTION_TIMEOUT = 3000;
-    public static final int MAX_RESPONSE_TIMEOUT = 1000;
-    public static final int MIN_MESSAGE_LENGTH = 3;// Modbus exception = serverAddress + functionCode + ExceptionCode
-    public static final int MAX_PDU_LENGTH = 254;
-    public static final int MAX_TCP_ADU_LENGTH = 260;
-    public static final int MAX_RTU_ADU_LENGTH = 256;
-    public static final int MAX_REGISTER_VALUE = 0xFFFF;
-    public static final int MIN_START_ADDRESS = 0x0000;
-    public static final int MAX_START_ADDRESS = 0xFFFF;
-    public static final int MAX_READ_COIL_COUNT = 0x7D0;
-    public static final int MAX_WRITE_COIL_COUNT = 0x7B0;
-    public static final int MAX_READ_REGISTER_COUNT = 0x7D;
-    public static final int MAX_WRITE_REGISTER_COUNT = 0x7B;
-    public static final int MIN_SERVER_ADDRESS = 1;
-    public static final int MAX_SERVER_ADDRESS = 247;
-    public static final int TCP_PORT = 502;
-    public static final int PROTOCOL_ID = 0;
+    final static public int MAX_CONNECTION_TIMEOUT = 3000;
+    final static public int MAX_RESPONSE_TIMEOUT = 1000;
+    final static public int MAX_PDU_LENGTH = 254;
+    final static public int MAX_TCP_ADU_LENGTH = 260;
+    final static public int MAX_RTU_ADU_LENGTH = 256;
+    final static public int MAX_REGISTER_VALUE = 0xFFFF;
+    final static public int MIN_START_ADDRESS = 0x0000;
+    final static public int MAX_START_ADDRESS = 0xFFFF;
+    final static public int MAX_READ_COIL_COUNT = 0x7D0;
+    final static public int MAX_WRITE_COIL_COUNT = 0x7B0;
+    final static public int MAX_READ_REGISTER_COUNT = 0x7D;
+    final static public int MAX_WRITE_REGISTER_COUNT = 0x7B;
+    final static public int MIN_SERVER_ADDRESS = 1;
+    final static public int MAX_SERVER_ADDRESS = 247;
+    final static public int TCP_PORT = 502;
+    final static public int PROTOCOL_ID = 0;
+    final static private String TAG = "JLibModbus";
+    final static private Logger log;
+
+    static {
+        log = Logger.getLogger(TAG);
+        setLogLevel(LogLevel.LEVEL_RELEASE);
+    }
 
     private Modbus() {
 
+    }
+
+    public static Logger log() {
+        return log;
+    }
+
+    static public void setLogLevel(LogLevel level) {
+        log().setLevel(level.value());
     }
 
     /**
@@ -61,7 +76,7 @@ public class Modbus {
         * some of modbus tcp slaves sets the UnitId value to zero, not ignoring value in this field.
         */
         if (0 == serverAddress) {
-            Logger.getAnonymousLogger().warning("Server address must be in range from " + MIN_SERVER_ADDRESS + " to " + MAX_SERVER_ADDRESS);
+            Modbus.log().warning("Server address must be in range from " + MIN_SERVER_ADDRESS + " to " + MAX_SERVER_ADDRESS);
             return true;
         }
         return !(serverAddress < MIN_SERVER_ADDRESS || serverAddress > MAX_SERVER_ADDRESS);
@@ -176,5 +191,22 @@ public class Modbus {
             e.printStackTrace();
         }
         return m;
+    }
+
+    public enum LogLevel {
+        LEVEL_RELEASE(Level.SEVERE),
+        LEVEL_WARNINGS(Level.WARNING),
+        LEVEL_VERBOSE(Level.INFO),
+        LEVEL_DEBUG(Level.ALL);
+
+        final private Level value;
+
+        LogLevel(Level value) {
+            this.value = value;
+        }
+
+        public Level value() {
+            return value;
+        }
     }
 }
