@@ -57,10 +57,20 @@ public class Modbus {
 
     }
 
+    /**
+     * getter for default logger
+     *
+     * @return default logger
+     */
     public static Logger log() {
         return log;
     }
 
+    /**
+     * changes the log level of default Logger
+     * @param level - LogLevel instance
+     * @see LogLevel
+     */
     static public void setLogLevel(LogLevel level) {
         log().setLevel(level.value());
     }
@@ -82,14 +92,36 @@ public class Modbus {
         return !(serverAddress < MIN_SERVER_ADDRESS || serverAddress > MAX_SERVER_ADDRESS);
     }
 
+    /**
+     * validates is the value in the range from min to max.
+     *
+     * @param value - the value for check
+     * @param min - minimum
+     * @param max - maximum
+     * @return "true" if value in the range from min to max, else "false".
+     */
     static private boolean checkRange(int value, int min, int max) {
         return !(value < min || value > max);
     }
 
+    /**
+     * validates the value in the range from 1 to max.
+     *
+     * @param value - the value for check
+     * @param max - maximum
+     * @return "true" if value in the range from 1 to max, else "false".
+     */
     static private boolean checkQuantity(int value, int max) {
         return checkRange(value, 1, max);
     }
 
+    /**
+     * validates data offset in the range from Modbus.MIN_START_ADDRESS to max.
+     *
+     * @param value - the offset for check
+     * @param max - maximum
+     * @return "true" if offset in the range from Modbus.MIN_START_ADDRESS to max, else "false".
+     */
     static private boolean checkStartAddress(int value, int max) {
         return checkRange(value, MIN_START_ADDRESS, max);
     }
@@ -165,6 +197,19 @@ public class Modbus {
         return checkRange(value, 0, Modbus.MAX_REGISTER_VALUE);
     }
 
+    /**
+     *  Creates ModbusMasterRTU instance.
+     * @param device - serial port device name
+     * @param baudRate - baud rate
+     * @param dataBits - data bit count
+     * @param stopBits - stop bit count(1,2)
+     * @param parity - parity bit(NONE, EVEN, ODD, MARK, SPACE)
+     * @return ModbusMaster instance if there is no errors, else null
+     *
+     * @see com.sbpinvertor.conn.SerialPort.Parity
+     * @see com.sbpinvertor.conn.SerialPort.BaudRate
+     * @see ModbusMaster
+     */
     static public ModbusMaster createModbusMasterRTU(String device, SerialPort.BaudRate baudRate, int dataBits, int stopBits, SerialPort.Parity parity) {
         ModbusMaster m = null;
         try {
@@ -175,14 +220,38 @@ public class Modbus {
         return m;
     }
 
+    /**
+     * Creates ModbusMasterTCP instance.
+     * @param host - ip address of remote slave
+     * @param keepAlive - whether or not to have socket keep alive turned on.
+     * @return ModbusMaster instance if there is no errors, else null
+     *
+     * @see ModbusMaster
+     */
     static public ModbusMaster createModbusMasterTCP(String host, boolean keepAlive) {
         return createModbusMasterTCP(host, Modbus.TCP_PORT, keepAlive);
     }
 
+    /**
+     * Creates ModbusMasterTCP instance.
+     * @param host - ip address of remote slave
+     * @return ModbusMaster instance if there is no errors, else null
+     *
+     * @see ModbusMaster
+     */
     static public ModbusMaster createModbusMasterTCP(String host) {
         return createModbusMasterTCP(host, false);
     }
 
+    /**
+     * Creates ModbusMasterTCP instance.
+     * @param host - ip address of remote slave
+     * @param port - tcp port
+     * @param keepAlive - whether or not to have socket keep alive turned on.
+     * @return ModbusMaster instance if there is no errors, else null
+     *
+     * @see ModbusMaster
+     */
     static public ModbusMaster createModbusMasterTCP(String host, int port, boolean keepAlive) {
         ModbusMaster m = null;
         try {
@@ -193,6 +262,9 @@ public class Modbus {
         return m;
     }
 
+    /**
+     * logging.Level wrapper.
+     */
     public enum LogLevel {
         LEVEL_RELEASE(Level.SEVERE),
         LEVEL_WARNINGS(Level.WARNING),
@@ -205,7 +277,12 @@ public class Modbus {
             this.value = value;
         }
 
-        public Level value() {
+        /**
+         * getter
+         *
+         * @return logging.Level instance
+         */
+        private Level value() {
             return value;
         }
     }
