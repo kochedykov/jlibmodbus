@@ -56,6 +56,6 @@ final public class WriteMultipleCoilsRequest extends AbstractWriteMultipleReques
 
     @Override
     public ModbusFunction getFunction() {
-        return ModbusFunction.WRITE_MULTIPLE_REGISTERS;
+        return ModbusFunction.WRITE_MULTIPLE_COILS;
     }
 }

@@ -49,6 +49,6 @@ public class WriteMultipleCoilsResponse extends AbstractWriteResponse {
 
     @Override
     public ModbusFunction getFunction() {
-        return ModbusFunction.WRITE_MULTIPLE_REGISTERS;
+        return ModbusFunction.WRITE_MULTIPLE_COILS;
     }
 }
