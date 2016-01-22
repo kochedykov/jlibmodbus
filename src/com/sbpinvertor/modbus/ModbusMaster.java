@@ -2,7 +2,6 @@ package com.sbpinvertor.modbus;
 
 import com.sbpinvertor.conn.SerialPortException;
 import com.sbpinvertor.modbus.data.ModbusRequestFactory;
-import com.sbpinvertor.modbus.data.ModbusResponseFactory;
 import com.sbpinvertor.modbus.data.base.ModbusRequest;
 import com.sbpinvertor.modbus.data.base.ModbusResponse;
 import com.sbpinvertor.modbus.data.response.ReadCoilsResponse;
@@ -52,10 +51,7 @@ public class ModbusMaster {
     private ModbusResponse processRequest(ModbusRequest request) throws SerialPortException,
             ModbusTransportException, ModbusNumberException, ModbusProtocolException, IOException {
         resetBuffers();
-        request.write(tx);
-        transport.send(tx);
-        transport.recv(rx);
-        ModbusResponse response = ModbusResponseFactory.getResponse(rx);
+        ModbusResponse response = transport.sendRequest(request);
         if (request.getServerAddress() != response.getServerAddress())
             throw new ModbusTransportException("Collision: does not matches the slave address");
         if (request.getFunction() != response.getFunction())
