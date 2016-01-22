@@ -2,6 +2,8 @@ package com.sbpinvertor.modbus;
 
 import com.sbpinvertor.conn.SerialPort;
 
+import java.util.logging.Logger;
+
 /**
  * Copyright (c) 2015-2016 JSC "Zavod "Invertor"
  * [http://www.sbp-invertor.ru]
@@ -54,6 +56,14 @@ public class Modbus {
      * @return "true" if serverAddress is correct, else "false".
      */
     static public boolean checkServerAddress(int serverAddress) {
+        /*
+        * hook for server address is equals zero:
+        * some of modbus tcp slaves sets the UnitId value to zero, not ignoring value in this field.
+        */
+        if (0 == serverAddress) {
+            Logger.getAnonymousLogger().warning("Server address must be in range from " + MIN_SERVER_ADDRESS + " to " + MAX_SERVER_ADDRESS);
+            return true;
+        }
         return !(serverAddress < MIN_SERVER_ADDRESS || serverAddress > MAX_SERVER_ADDRESS);
     }
 
