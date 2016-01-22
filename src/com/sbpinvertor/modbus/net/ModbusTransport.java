@@ -1,5 +1,6 @@
 package com.sbpinvertor.modbus.net;
 
+import com.sbpinvertor.modbus.Modbus;
 import com.sbpinvertor.modbus.data.ModbusInputStream;
 import com.sbpinvertor.modbus.data.ModbusOutputStream;
 import com.sbpinvertor.modbus.data.ModbusResponseFactory;
@@ -32,8 +33,17 @@ import com.sbpinvertor.modbus.exception.ModbusTransportException;
  */
 abstract public class ModbusTransport {
 
-    abstract public ModbusOutputStream getOutputStream();
+    private volatile int responseTimeout = Modbus.MAX_RESPONSE_TIMEOUT;
 
+    public int getResponseTimeout() {
+        return responseTimeout;
+    }
+
+    public void setResponseTimeout(int responseTimeout) {
+        this.responseTimeout = responseTimeout;
+    }
+
+    abstract public ModbusOutputStream getOutputStream();
     abstract public ModbusInputStream getInputStream();
 
     public ModbusResponse sendRequest(ModbusMessage msg) throws ModbusTransportException {

@@ -114,7 +114,7 @@ final public class ModbusTransportTCP extends ModbusTransport {
         try {
             socket = new Socket();
             socket.setKeepAlive(keepAlive);
-            socket.setSoTimeout(Modbus.MAX_RESPONSE_TIMEOUT);
+            socket.setSoTimeout(getResponseTimeout());
             socket.connect(new InetSocketAddress(host, port), Modbus.MAX_CONNECTION_TIMEOUT);
             is = new TcpSocketInputStream(socket.getInputStream());
             os = new TcpSocketOutputStream(socket.getOutputStream());

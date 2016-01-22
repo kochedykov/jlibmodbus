@@ -168,9 +168,9 @@ public class SerialPort {
         }
     }
 
-    public int read() throws IOException {
+    public int readByte(int timeout) throws IOException {
         try {
-            return port.readBytes(1, Modbus.MAX_RESPONSE_TIMEOUT)[0];
+            return port.readBytes(1, timeout)[0];
         } catch (Exception e) {
             throw new IOException(e);
         }

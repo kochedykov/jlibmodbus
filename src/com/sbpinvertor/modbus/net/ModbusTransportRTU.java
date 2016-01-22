@@ -60,11 +60,13 @@ public class ModbusTransportRTU extends ModbusTransport {
             os.clear();
             is.clear();
             response = super.sendRequest(msg);
+            //read crc part
             is.read();
             is.read();
         } catch (Exception e) {
             throw new ModbusTransportException(e);
         }
+        //crc hook
         if (is.getCrc() != 0)
             throw new ModbusTransportException("CRC check failed");
         return response;
@@ -88,7 +90,7 @@ public class ModbusTransportRTU extends ModbusTransport {
 
         @Override
         public int read() throws IOException {
-            int b = 0xFF & serial.read();
+            int b = 0xFF & serial.readByte(getResponseTimeout());
             crc = CRC16.calc(crc, (byte) (b & 0xFF));
             return b;
         }

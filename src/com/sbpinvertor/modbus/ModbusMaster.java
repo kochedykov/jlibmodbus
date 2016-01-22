@@ -12,7 +12,6 @@ import com.sbpinvertor.modbus.exception.ModbusNumberException;
 import com.sbpinvertor.modbus.exception.ModbusProtocolException;
 import com.sbpinvertor.modbus.exception.ModbusTransportException;
 import com.sbpinvertor.modbus.net.ModbusTransport;
-import com.sbpinvertor.modbus.utils.ByteFifo;
 
 import java.io.IOException;
 
@@ -41,8 +40,6 @@ import java.io.IOException;
 public class ModbusMaster {
 
     final private ModbusTransport transport;
-    final private ByteFifo rx = new ByteFifo(Modbus.MAX_RTU_ADU_LENGTH);
-    final private ByteFifo tx = new ByteFifo(Modbus.MAX_RTU_ADU_LENGTH);
 
     ModbusMaster(ModbusTransport transport) {
         this.transport = transport;
@@ -50,7 +47,6 @@ public class ModbusMaster {
 
     private ModbusResponse processRequest(ModbusRequest request) throws SerialPortException,
             ModbusTransportException, ModbusNumberException, ModbusProtocolException, IOException {
-        resetBuffers();
         ModbusResponse response = transport.sendRequest(request);
         if (request.getServerAddress() != response.getServerAddress())
             throw new ModbusTransportException("Collision: does not matches the slave address");
@@ -59,9 +55,8 @@ public class ModbusMaster {
         return response;
     }
 
-    private void resetBuffers() {
-        tx.clear();
-        rx.clear();
+    public void setResponseTimeout(int timeout) {
+        transport.setResponseTimeout(timeout);
     }
 
     final public int[] readHoldingRegisters(int serverAddress, int startAddress, int quantity) throws SerialPortException,
