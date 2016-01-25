@@ -6,9 +6,11 @@ import com.sbpinvertor.modbus.data.ModbusOutputStream;
 import com.sbpinvertor.modbus.data.base.ModbusMessage;
 import com.sbpinvertor.modbus.data.base.ModbusResponse;
 import com.sbpinvertor.modbus.exception.ModbusTransportException;
+import com.sbpinvertor.modbus.net.streaming.InputStreamTCP;
+import com.sbpinvertor.modbus.net.streaming.OutputStreamTCP;
 import com.sbpinvertor.modbus.utils.DataUtils;
 
-import java.io.*;
+import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 
@@ -43,8 +45,8 @@ final public class ModbusTransportTCP extends ModbusTransport {
     final private AduHeader headerOut = new AduHeader();
     private final byte[] pdu = new byte[Modbus.MAX_PDU_LENGTH];
     private Socket socket;
-    private TcpSocketInputStream is;
-    private TcpSocketOutputStream os;
+    private InputStreamTCP is;
+    private OutputStreamTCP os;
 
     public ModbusTransportTCP(String host, int port, boolean keepAlive) {
         this.host = host;
@@ -116,8 +118,8 @@ final public class ModbusTransportTCP extends ModbusTransport {
             socket.setKeepAlive(keepAlive);
             socket.setSoTimeout(getResponseTimeout());
             socket.connect(new InetSocketAddress(host, port), Modbus.MAX_CONNECTION_TIMEOUT);
-            is = new TcpSocketInputStream(socket.getInputStream());
-            os = new TcpSocketOutputStream(socket.getOutputStream());
+            is = new InputStreamTCP(socket.getInputStream());
+            os = new OutputStreamTCP(socket.getOutputStream());
         } catch (Exception e) {
             closeConnection();
             throw new ModbusTransportException(e);
@@ -199,60 +201,6 @@ final public class ModbusTransportTCP extends ModbusTransport {
             //size of PDU (2 bytes, BE)
             setPduSize(pduSize);
             return buffer;
-        }
-    }
-
-    private class TcpSocketInputStream extends ModbusInputStream {
-
-        volatile private BufferedInputStream is;
-
-        protected TcpSocketInputStream(InputStream is) {
-            this.is = new BufferedInputStream(is);
-        }
-
-        @Override
-        public int read() throws IOException {
-            int c = is.read();
-            if (c == -1) {
-                c = is.read();
-            }
-            return c;
-        }
-
-        @Override
-        public int read(byte[] b, int off, int len) throws IOException {
-            int count = 0;
-            int k = 0;
-            while (count < len && k != -1) {
-                k = is.read(b, off + count, len - count);
-                if (-1 != k)
-                    count += k;
-            }
-            return count;
-        }
-    }
-
-    private class TcpSocketOutputStream extends ModbusOutputStream {
-
-        volatile private BufferedOutputStream os;
-
-        protected TcpSocketOutputStream(OutputStream os) {
-            this.os = new BufferedOutputStream(os);
-        }
-
-        @Override
-        public void write(byte[] b) throws IOException {
-            os.write(b);
-        }
-
-        @Override
-        public void write(int b) throws IOException {
-            os.write(b);
-        }
-
-        @Override
-        public void flush() throws IOException {
-            os.flush();
         }
     }
 }
