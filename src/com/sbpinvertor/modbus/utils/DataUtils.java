@@ -24,8 +24,12 @@ package com.sbpinvertor.modbus.utils;
  */
 public class DataUtils {
 
-    static public byte fromAscii(char h, char l) {
-        return (byte) (Character.getNumericValue(h) & 0xf << 4 | Character.getNumericValue(l) & 0xf);
+    static public int fromAscii(char h, char l) {
+        return Integer.parseInt("" + h + l, 16);
+    }
+
+    static public byte fromAscii(char c) {
+        return (byte) Character.getNumericValue(c);
     }
 
     static public byte[] toAscii(byte b) {

@@ -59,7 +59,7 @@ public class ModbusTransportASCII extends ModbusTransport {
             response = super.sendRequest(msg);
             if (is.getLrc() != is.read())
                 throw new ModbusTransportException("LRC check failed.");
-            if (is.read() != ASCII_CODE_CR || is.read() != ASCII_CODE_LF)
+            if (is.readByte() != ASCII_CODE_CR || is.readByte() != ASCII_CODE_LF)
                 throw new ModbusTransportException("\\r\\n not received.");
         } catch (Exception e) {
             throw new ModbusTransportException(e);
