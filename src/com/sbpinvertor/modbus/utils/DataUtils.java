@@ -24,6 +24,26 @@ package com.sbpinvertor.modbus.utils;
  */
 public class DataUtils {
 
+    static public byte fromAscii(char h, char l) {
+        return (byte) (Character.getNumericValue(h) & 0xf << 4 | Character.getNumericValue(l) & 0xf);
+    }
+
+    static public byte[] toAscii(byte b) {
+        return toHexString(b).getBytes();
+    }
+
+    static public byte[] toAscii(byte[] bytes) {
+        StringBuilder sb = new StringBuilder();
+        for (byte b : bytes) {
+            sb.append(toHexString(b));
+        }
+        return sb.toString().getBytes();
+    }
+
+    static public String toHexString(byte b) {
+        return (((b & 0xff) < 0x10) ? "0" : "") + Integer.toString(b & 0xff, 16).toUpperCase();
+    }
+
     static public byte[] toByteArray(boolean[] bits) {
         byte[] dst = new byte[(int) Math.ceil((double) bits.length / 8)];
         for (int i = 0; i < bits.length; i++) {

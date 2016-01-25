@@ -221,6 +221,29 @@ public class Modbus {
     }
 
     /**
+     *  Creates ModbusMasterASCII instance.
+     * @param device - serial port device name
+     * @param baudRate - baud rate
+     * @param dataBits - data bit count
+     * @param stopBits - stop bit count(1,2)
+     * @param parity - parity bit(NONE, EVEN, ODD, MARK, SPACE)
+     * @return ModbusMaster instance if there is no errors, else null
+     *
+     * @see com.sbpinvertor.conn.SerialPort.Parity
+     * @see com.sbpinvertor.conn.SerialPort.BaudRate
+     * @see ModbusMaster
+     */
+    static public ModbusMaster createModbusMasterASCII(String device, SerialPort.BaudRate baudRate, int dataBits, int stopBits, SerialPort.Parity parity) {
+        ModbusMaster m = null;
+        try {
+            m = new ModbusMasterASCII(device, baudRate, dataBits, stopBits, parity);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return m;
+    }
+
+    /**
      * Creates ModbusMasterTCP instance.
      * @param host - ip address of remote slave
      * @param keepAlive - whether or not to have socket keep alive turned on.
