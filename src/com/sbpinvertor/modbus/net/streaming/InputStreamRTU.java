@@ -1,11 +1,9 @@
-package com.sbpinvertor.modbus.net;
+package com.sbpinvertor.modbus.net.streaming;
 
 import com.sbpinvertor.conn.SerialPort;
-import com.sbpinvertor.conn.SerialPortException;
 import com.sbpinvertor.modbus.data.ModbusInputStream;
-import com.sbpinvertor.modbus.data.ModbusOutputStream;
-import com.sbpinvertor.modbus.net.streaming.InputStreamRTU;
-import com.sbpinvertor.modbus.net.streaming.OutputStreamRTU;
+import com.sbpinvertor.modbus.net.ModbusTransport;
+import com.sbpinvertor.utils.CRC16;
 
 import java.io.IOException;
 
@@ -23,7 +21,7 @@ import java.io.IOException;
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * GNU General Public License for more details.
  * <p/>
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
@@ -31,36 +29,38 @@ import java.io.IOException;
  * Authors: Vladislav Y. Kochedykov, software engineer.
  * email: vladislav.kochedykov@gmail.com
  */
-public class ModbusTransportRTU extends ModbusTransportSerial {
-    final private OutputStreamRTU os;
-    final private InputStreamRTU is;
+public class InputStreamRTU extends ModbusInputStream {
 
-    public ModbusTransportRTU(SerialPort serial) throws SerialPortException {
-        super(serial);
-        os = new OutputStreamRTU(serial);
-        is = new InputStreamRTU(serial, this);
+    final private SerialPort serial;
+    final private ModbusTransport transport;
+
+    private int crc;
+
+    public InputStreamRTU(SerialPort serial, ModbusTransport transport) {
+        this.serial = serial;
+        this.transport = transport;
+        crc = CRC16.INITIAL_VALUE;
+    }
+
+    public void clear() {
+        crc = CRC16.INITIAL_VALUE;
     }
 
     @Override
-    void checksumInit() {
-        os.clear();
-        is.clear();
+    public int read() throws IOException {
+        int b = serial.readByte(transport.getResponseTimeout()) & 0xff;
+        crc = CRC16.calc(crc, (byte) (b & 0xff));
+        return b;
     }
 
     @Override
-    boolean checksumValid() throws IOException {
-        //read the crc part
-        is.read();
-        is.read();
-        // hook with crc
-        return is.getCrc() == 0;
+    public int read(byte[] b, int off, int len) throws IOException {
+        int c = serial.read(b, off, len);
+        crc = CRC16.calc(crc, b, off, len);
+        return c;
     }
 
-    public ModbusOutputStream getOutputStream() {
-        return os;
-    }
-
-    public ModbusInputStream getInputStream() {
-        return is;
+    public int getCrc() {
+        return crc;
     }
 }

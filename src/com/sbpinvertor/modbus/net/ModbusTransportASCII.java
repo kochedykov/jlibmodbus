@@ -5,11 +5,8 @@ import com.sbpinvertor.conn.SerialPortException;
 import com.sbpinvertor.modbus.Modbus;
 import com.sbpinvertor.modbus.data.ModbusInputStream;
 import com.sbpinvertor.modbus.data.ModbusOutputStream;
-import com.sbpinvertor.modbus.data.base.ModbusMessage;
-import com.sbpinvertor.modbus.data.base.ModbusResponse;
-import com.sbpinvertor.modbus.exception.ModbusTransportException;
-import com.sbpinvertor.modbus.utils.ByteFifo;
-import com.sbpinvertor.modbus.utils.DataUtils;
+import com.sbpinvertor.modbus.net.streaming.InputStreamASCII;
+import com.sbpinvertor.modbus.net.streaming.OutputStreamASCII;
 
 import java.io.IOException;
 
@@ -35,37 +32,29 @@ import java.io.IOException;
  * Authors: Vladislav Y. Kochedykov, software engineer.
  * email: vladislav.kochedykov@gmail.com
  */
-public class ModbusTransportASCII extends ModbusTransport {
+public class ModbusTransportASCII extends ModbusTransportSerial {
+    final private OutputStreamASCII os;
+    final private InputStreamASCII is;
 
-    final static public int ASCII_CODE_CR = 0xd;
-    final static public int ASCII_CODE_LF = 0xa;
-    final static public int ASCII_CODE_COLON = 0x3a;
-
-    final private AsciiOutputStream os;
-    final private AsciiInputStream is;
-
-    public ModbusTransportASCII(SerialPort port) throws SerialPortException {
-        os = new AsciiOutputStream(port);
-        is = new AsciiInputStream(port);
-        port.open();
+    public ModbusTransportASCII(SerialPort serial) throws SerialPortException {
+        super(serial);
+        os = new OutputStreamASCII(serial);
+        is = new InputStreamASCII(serial, this);
     }
 
     @Override
-    public ModbusResponse sendRequest(ModbusMessage msg) throws ModbusTransportException {
-        ModbusResponse response;
-        try {
-            os.clear();
-            is.clear();
-            response = super.sendRequest(msg);
-            if (is.getLrc() != is.read())
-                throw new ModbusTransportException("LRC check failed.");
-            if (is.readByte() != ASCII_CODE_CR || is.readByte() != ASCII_CODE_LF)
-                throw new ModbusTransportException("\\r\\n not received.");
-        } catch (Exception e) {
-            throw new ModbusTransportException(e);
-        }
-        return response;
+    void checksumInit() {
+        //dummy
     }
+
+    @Override
+    boolean checksumValid() throws IOException {
+        boolean ret = is.getLrc() != is.read();
+        if (is.readByte() != Modbus.ASCII_CODE_CR || is.readByte() != Modbus.ASCII_CODE_LF)
+            Modbus.log().warning("\\r\\n not received.");
+        return ret;
+    }
+
 
     @Override
     public ModbusOutputStream getOutputStream() {
@@ -75,101 +64,5 @@ public class ModbusTransportASCII extends ModbusTransport {
     @Override
     public ModbusInputStream getInputStream() {
         return is;
-    }
-
-    private class AsciiInputStream extends ModbusInputStream {
-        final private SerialPort serial;
-        final private ByteFifo fifo = new ByteFifo(Modbus.MAX_RTU_ADU_LENGTH);
-
-        protected AsciiInputStream(SerialPort serial) {
-            this.serial = serial;
-        }
-
-        public void clear() throws IOException {
-            serial.clear();
-        }
-
-        @Override
-        public int read() throws IOException {
-            int b;
-            char c = (char) readByte();
-            if (c == ASCII_CODE_COLON) {
-                fifo.clear();
-                c = (char) readByte();
-            }
-            b = DataUtils.fromAscii(c, (char) readByte());
-            fifo.write(b);
-            return b;
-        }
-
-        @Override
-        public int read(byte[] b, int off, int len) throws IOException {
-            for (int i = off; i < len; i++) {
-                b[i] = (byte) read();
-            }
-            return len;
-        }
-
-        public int getLrc() {
-            int lrc = 0;
-            byte[] buffer = fifo.getByteBuffer();
-            for (int i = 0; i < fifo.size(); i++) {
-                lrc += buffer[i];
-            }
-            return (byte) (-lrc) & 0xff;
-        }
-
-        private int readByte() throws IOException {
-            return serial.readByte(getResponseTimeout());
-        }
-    }
-
-    private class AsciiOutputStream extends ModbusOutputStream {
-
-        final private SerialPort serial;
-        final private ByteFifo fifo = new ByteFifo(Modbus.MAX_RTU_ADU_LENGTH);
-        private int lrc = 0;
-
-        protected AsciiOutputStream(SerialPort serial) {
-            this.serial = serial;
-        }
-
-        @Override
-        public void write(byte[] bytes) throws IOException {
-            fifoInit();
-            for (byte b : bytes) {
-                lrc += b;
-            }
-            byte[] ascii = DataUtils.toAscii(bytes);
-            fifo.write(ascii);
-        }
-
-        @Override
-        public void write(int b) throws IOException {
-            fifoInit();
-            lrc += (byte) b;
-            byte[] bytes = DataUtils.toAscii((byte) b);
-            fifo.write(bytes);
-        }
-
-        @Override
-        public void flush() throws IOException {
-            fifo.write(DataUtils.toAscii((byte) (lrc = -lrc)));
-            fifo.write(ASCII_CODE_CR);
-            fifo.write(ASCII_CODE_LF);
-            serial.write(fifo.toByteArray());
-            clear();
-        }
-
-        public void clear() throws IOException {
-            fifo.clear();
-        }
-
-        private void fifoInit() throws IOException {
-            if (fifo.size() == 0) {
-                fifo.write(ASCII_CODE_COLON);
-                lrc = 0;
-            }
-        }
     }
 }

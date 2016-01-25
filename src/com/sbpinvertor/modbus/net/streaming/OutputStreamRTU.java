@@ -1,11 +1,10 @@
-package com.sbpinvertor.modbus.net;
+package com.sbpinvertor.modbus.net.streaming;
 
 import com.sbpinvertor.conn.SerialPort;
-import com.sbpinvertor.conn.SerialPortException;
-import com.sbpinvertor.modbus.data.ModbusInputStream;
+import com.sbpinvertor.modbus.Modbus;
 import com.sbpinvertor.modbus.data.ModbusOutputStream;
-import com.sbpinvertor.modbus.net.streaming.InputStreamRTU;
-import com.sbpinvertor.modbus.net.streaming.OutputStreamRTU;
+import com.sbpinvertor.modbus.utils.ByteFifo;
+import com.sbpinvertor.utils.CRC16;
 
 import java.io.IOException;
 
@@ -23,7 +22,7 @@ import java.io.IOException;
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * GNU General Public License for more details.
  * <p/>
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
@@ -31,36 +30,38 @@ import java.io.IOException;
  * Authors: Vladislav Y. Kochedykov, software engineer.
  * email: vladislav.kochedykov@gmail.com
  */
-public class ModbusTransportRTU extends ModbusTransportSerial {
-    final private OutputStreamRTU os;
-    final private InputStreamRTU is;
+public class OutputStreamRTU extends ModbusOutputStream {
 
-    public ModbusTransportRTU(SerialPort serial) throws SerialPortException {
-        super(serial);
-        os = new OutputStreamRTU(serial);
-        is = new InputStreamRTU(serial, this);
+    final private SerialPort serial;
+    private final ByteFifo fifo = new ByteFifo(Modbus.MAX_RTU_ADU_LENGTH);
+    private int crc;
+
+    public OutputStreamRTU(SerialPort serial) {
+        this.serial = serial;
+        crc = CRC16.INITIAL_VALUE;
     }
 
     @Override
-    void checksumInit() {
-        os.clear();
-        is.clear();
+    public void write(byte[] b) throws IOException {
+        fifo.write(b);
+        crc = CRC16.calc(crc, b, 0, b.length);
     }
 
     @Override
-    boolean checksumValid() throws IOException {
-        //read the crc part
-        is.read();
-        is.read();
-        // hook with crc
-        return is.getCrc() == 0;
+    public void write(int b) throws IOException {
+        fifo.write(b);
+        crc = CRC16.calc(crc, (byte) (b & 0xff));
     }
 
-    public ModbusOutputStream getOutputStream() {
-        return os;
+    @Override
+    public void flush() throws IOException {
+        fifo.writeShortLE(crc);
+        serial.write(fifo.toByteArray());
+        clear();
     }
 
-    public ModbusInputStream getInputStream() {
-        return is;
+    public void clear() {
+        fifo.clear();
+        crc = CRC16.INITIAL_VALUE;
     }
 }

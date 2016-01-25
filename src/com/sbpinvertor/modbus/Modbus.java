@@ -45,6 +45,9 @@ public class Modbus {
     final static public int MAX_SERVER_ADDRESS = 247;
     final static public int TCP_PORT = 502;
     final static public int PROTOCOL_ID = 0;
+    final static public int ASCII_CODE_CR = 0xd;
+    final static public int ASCII_CODE_LF = 0xa;
+    final static public int ASCII_CODE_COLON = 0x3a;
     final static private String TAG = "JLibModbus";
     final static private Logger log;
 

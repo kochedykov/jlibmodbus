@@ -35,12 +35,14 @@ public class ModbusMasterTest {
         for (int r = 0; r < 5; r++) {
             try {
                 Thread.sleep(1000);
-                printRegisters(m.readHoldingRegisters(0, 0, 2));
-                printRegisters(m.readInputRegisters(0, 0, 10));
-                m.writeSingleRegister(0, 0, 69);
-                m.writeSingleCoil(0, 5, true);
-                m.writeMultipleRegisters(0, 0, new int[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10});
-                m.writeMultipleCoils(0, 0, new boolean[]{true, false, true});
+                printRegisters(m.readHoldingRegisters(1, 0, 10));
+                printRegisters(m.readInputRegisters(1, 0, 10));
+                printBits(m.readCoils(1, 0, 8));
+                printBits(m.readDiscreteInputs(1, 0, 8));
+                m.writeSingleRegister(1, 0, 69);
+                m.writeSingleCoil(1, 5, true);
+                m.writeMultipleRegisters(1, 0, new int[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10});
+                m.writeMultipleCoils(1, 0, new boolean[]{true, false, true});
                 System.out.println();
             } catch (Exception e) {
                 e.printStackTrace();
@@ -51,6 +53,12 @@ public class ModbusMasterTest {
     private static void printRegisters(int[] ir) {
         for (int i : ir)
             System.out.print(i);
+        System.out.println();
+    }
+
+    private static void printBits(boolean[] ir) {
+        for (boolean i : ir)
+            System.out.print(i + " ");
         System.out.println();
     }
 }
