@@ -31,6 +31,10 @@ import java.io.IOException;
 abstract public class AbstractMultipleRequest extends AbstractDataRequest {
     private int quantity;
 
+    protected AbstractMultipleRequest(int serverAddress) throws ModbusNumberException {
+        super(serverAddress);
+    }
+
     protected AbstractMultipleRequest(int serverAddress, int startAddress, int quantity) throws ModbusNumberException {
         super(serverAddress, startAddress);
         if (!checkAddressRange(startAddress, quantity))

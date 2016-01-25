@@ -34,8 +34,8 @@ public class WriteMultipleCoilsResponse extends AbstractWriteResponse {
         super(serverAddress);
     }
 
-    public WriteMultipleCoilsResponse(int serverAddress, int startAddress, int register) throws ModbusNumberException {
-        super(serverAddress, startAddress, register);
+    public WriteMultipleCoilsResponse(int serverAddress, int startAddress, int quantity) throws ModbusNumberException {
+        super(serverAddress, startAddress, quantity);
     }
 
     public WriteMultipleCoilsResponse(ModbusMessage msg) {

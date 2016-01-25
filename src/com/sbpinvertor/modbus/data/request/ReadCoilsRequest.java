@@ -30,6 +30,10 @@ import com.sbpinvertor.modbus.exception.ModbusNumberException;
 
 public class ReadCoilsRequest extends AbstractMultipleRequest {
 
+    public ReadCoilsRequest(int serverAddress) throws ModbusNumberException {
+        super(serverAddress);
+    }
+
     public ReadCoilsRequest(int serverAddress, int startAddress, int quantity) throws ModbusNumberException {
         super(serverAddress, startAddress, quantity);
     }

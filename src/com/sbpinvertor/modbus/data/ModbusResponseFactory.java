@@ -1,12 +1,8 @@
 package com.sbpinvertor.modbus.data;
 
-import com.sbpinvertor.modbus.ModbusFunction;
 import com.sbpinvertor.modbus.data.base.ModbusResponse;
 import com.sbpinvertor.modbus.data.response.*;
 import com.sbpinvertor.modbus.exception.ModbusNumberException;
-import com.sbpinvertor.modbus.exception.ModbusProtocolException;
-
-import java.io.IOException;
 
 /**
  * Copyright (c) 2015-2016 JSC "Zavod "Invertor"
@@ -30,55 +26,41 @@ import java.io.IOException;
  * Authors: Vladislav Y. Kochedykov, software engineer.
  * email: vladislav.kochedykov@gmail.com
  */
-public class ModbusResponseFactory {
+final public class ModbusResponseFactory {
 
     private ModbusResponseFactory() {
 
     }
 
-    static public ModbusResponse getResponse(ModbusInputStream fifo) throws ModbusNumberException, ModbusProtocolException, IOException {
-        ModbusResponse response = null;
-        int serverAddress = fifo.read();
-        int functionCode = fifo.read();
-        switch (ModbusFunction.getFunction(functionCode)) {
-            case READ_COILS:
-                response = new ReadCoilsResponse(serverAddress);
-                break;
-            case READ_DISCRETE_INPUTS:
-                response = new ReadDiscreteInputsResponse(serverAddress);
-                break;
-            case READ_HOLDING_REGISTERS:
-                response = new ReadHoldingRegistersResponse(serverAddress);
-                break;
-            case READ_INPUT_REGISTERS:
-                response = new ReadInputRegistersResponse(serverAddress);
-                break;
-            case WRITE_SINGLE_COIL:
-                response = new WriteSingleCoilResponse(serverAddress);
-                break;
-            case WRITE_SINGLE_REGISTER:
-                response = new WriteSingleRegisterResponse(serverAddress);
-                break;
-            case WRITE_MULTIPLE_COILS:
-                response = new WriteMultipleCoilsResponse(serverAddress);
-                break;
-            case WRITE_MULTIPLE_REGISTERS:
-                response = new WriteMultipleRegistersResponse(serverAddress);
-                break;
-            case REPORT_SLAVE_ID:
-            case READ_FILE_RECORD:
-            case WRITE_FILE_RECORD:
-                break;
-        }
-        if (response != null) {
-            if (ModbusFunction.isException(functionCode)) {
-                response.setException();
-            }
-            response.read(fifo);
-            if (response.isException()) {
-                throw new ModbusProtocolException(response.getException(), response.getServerAddress());
-            }
-        }
-        return response;
+    static public ModbusResponse createReadCoils(int serverAddress, boolean[] coils) throws ModbusNumberException {
+        return new ReadCoilsResponse(serverAddress, coils);
+    }
+
+    static public ModbusResponse createReadDiscreteInputs(int serverAddress, boolean[] discreteInputs) throws ModbusNumberException {
+        return new ReadDiscreteInputsResponse(serverAddress, discreteInputs);
+    }
+
+    static public ModbusResponse createReadInputRegisters(int serverAddress, int[] inputRegisters) throws ModbusNumberException {
+        return new ReadInputRegistersResponse(serverAddress, inputRegisters);
+    }
+
+    static public ModbusResponse createReadHoldingRegisters(int serverAddress, int[] holdingRegisters) throws ModbusNumberException {
+        return new ReadHoldingRegistersResponse(serverAddress, holdingRegisters);
+    }
+
+    static public ModbusResponse createWriteSingleCoil(int serverAddress, int startAddress, boolean coil) throws ModbusNumberException {
+        return new WriteSingleCoilResponse(serverAddress, startAddress, coil);
+    }
+
+    static public ModbusResponse createWriteMultipleCoils(int serverAddress, int startAddress, int quantity) throws ModbusNumberException {
+        return new WriteMultipleCoilsResponse(serverAddress, startAddress, quantity);
+    }
+
+    static public ModbusResponse createWriteMultipleRegisters(int serverAddress, int startAddress, int quantity) throws ModbusNumberException {
+        return new WriteMultipleRegistersResponse(serverAddress, startAddress, quantity);
+    }
+
+    static public ModbusResponse createWriteSingleRegister(int serverAddress, int startAddress, int register) throws ModbusNumberException {
+        return new WriteSingleRegisterResponse(serverAddress, startAddress, register);
     }
 }

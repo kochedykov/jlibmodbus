@@ -3,7 +3,6 @@ package com.sbpinvertor.modbus.net;
 import com.sbpinvertor.modbus.Modbus;
 import com.sbpinvertor.modbus.data.ModbusInputStream;
 import com.sbpinvertor.modbus.data.ModbusOutputStream;
-import com.sbpinvertor.modbus.data.ModbusResponseFactory;
 import com.sbpinvertor.modbus.data.base.ModbusMessage;
 import com.sbpinvertor.modbus.data.base.ModbusRequest;
 import com.sbpinvertor.modbus.data.base.ModbusResponse;
@@ -49,17 +48,29 @@ abstract public class ModbusTransport {
     public ModbusResponse sendRequest(ModbusMessage msg) throws ModbusTransportException {
         try {
             send(msg);
-            return ModbusResponseFactory.getResponse(getInputStream());
+            return receiveResponse();
         } catch (Exception e) {
             throw new ModbusTransportException(e);
         }
     }
 
-    public ModbusRequest recvRequest() throws ModbusTransportException {
-        return null;
+    public ModbusResponse receiveResponse() throws ModbusTransportException {
+        try {
+            return ModbusResponse.createResponse(getInputStream());
+        } catch (Exception e) {
+            throw new ModbusTransportException(e);
+        }
     }
 
-    protected void send(ModbusMessage msg) throws ModbusTransportException {
+    public ModbusRequest receiveRequest() throws ModbusTransportException {
+        try {
+            return ModbusRequest.createRequest(getInputStream());
+        } catch (Exception e) {
+            throw new ModbusTransportException(e);
+        }
+    }
+
+    public void send(ModbusMessage msg) throws ModbusTransportException {
         try {
             ModbusOutputStream os = getOutputStream();
             msg.write(os);

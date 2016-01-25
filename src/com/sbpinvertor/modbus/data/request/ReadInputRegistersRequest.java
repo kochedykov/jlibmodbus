@@ -28,6 +28,10 @@ import com.sbpinvertor.modbus.exception.ModbusNumberException;
 
 final public class ReadInputRegistersRequest extends ReadHoldingRegistersRequest {
 
+    public ReadInputRegistersRequest(int serverAddress) throws ModbusNumberException {
+        super(serverAddress);
+    }
+
     public ReadInputRegistersRequest(int serverAddress, int startAddress, int quantity) throws ModbusNumberException {
         super(serverAddress, startAddress, quantity);
     }

@@ -26,7 +26,7 @@ import com.sbpinvertor.modbus.exception.ModbusNumberException;
  * Authors: Vladislav Y. Kochedykov, software engineer.
  * email: vladislav.kochedykov@gmail.com
  */
-public class ModbusRequestFactory {
+final public class ModbusRequestFactory {
 
     private ModbusRequestFactory() {
 

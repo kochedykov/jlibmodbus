@@ -34,6 +34,10 @@ import java.io.IOException;
 
 final public class WriteMultipleRegistersRequest extends AbstractWriteMultipleRequest {
 
+    public WriteMultipleRegistersRequest(int serverAddress) throws ModbusNumberException {
+        super(serverAddress);
+    }
+
     public WriteMultipleRegistersRequest(int serverAddress, int startAddress, int[] registers) throws ModbusNumberException {
         super(serverAddress, startAddress, DataUtils.toByteArray(registers), registers.length);
     }

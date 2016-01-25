@@ -32,6 +32,10 @@ abstract public class AbstractDataRequest extends ModbusRequest {
 
     private int startAddress;
 
+    protected AbstractDataRequest(int serverAddress) throws ModbusNumberException {
+        super(serverAddress);
+    }
+
     protected AbstractDataRequest(int serverAddress, int startAddress) throws ModbusNumberException {
         super(serverAddress);
 

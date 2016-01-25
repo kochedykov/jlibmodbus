@@ -30,6 +30,10 @@ import com.sbpinvertor.modbus.exception.ModbusNumberException;
 
 public class ReadHoldingRegistersRequest extends AbstractMultipleRequest {
 
+    public ReadHoldingRegistersRequest(int serverAddress) throws ModbusNumberException {
+        super(serverAddress);
+    }
+
     public ReadHoldingRegistersRequest(int serverAddress, int startAddress, int quantity) throws ModbusNumberException {
         super(serverAddress, startAddress, quantity);
     }

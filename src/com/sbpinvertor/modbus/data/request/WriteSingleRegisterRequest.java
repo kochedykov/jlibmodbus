@@ -35,6 +35,10 @@ public class WriteSingleRegisterRequest extends AbstractDataRequest {
 
     private int value;
 
+    public WriteSingleRegisterRequest(int serverAddress) throws ModbusNumberException {
+        super(serverAddress);
+    }
+
     public WriteSingleRegisterRequest(int serverAddress, int startAddress, int value) throws ModbusNumberException {
         super(serverAddress, startAddress);
 

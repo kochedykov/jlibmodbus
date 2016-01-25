@@ -33,6 +33,10 @@ abstract public class AbstractWriteMultipleRequest extends AbstractMultipleReque
     private byte[] values;
     private int byteCount;
 
+    protected AbstractWriteMultipleRequest(int serverAddress) throws ModbusNumberException {
+        super(serverAddress);
+    }
+
     protected AbstractWriteMultipleRequest(int serverAddress, int startAddress, byte[] values, int quantity) throws ModbusNumberException {
         super(serverAddress, startAddress, quantity);
 

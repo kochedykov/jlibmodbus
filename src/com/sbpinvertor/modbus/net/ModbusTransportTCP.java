@@ -82,7 +82,7 @@ final public class ModbusTransportTCP extends ModbusTransport {
     }
 
     @Override
-    protected void send(ModbusMessage msg) throws ModbusTransportException {
+    public void send(ModbusMessage msg) throws ModbusTransportException {
         if (!keepAlive)
             openConnection();
         try {

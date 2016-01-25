@@ -39,7 +39,7 @@ public class ReadHoldingRegistersResponse extends AbstractReadResponse {
         super(serverAddress);
     }
 
-    ReadHoldingRegistersResponse(int serverAddress, int[] registers) throws ModbusNumberException {
+    public ReadHoldingRegistersResponse(int serverAddress, int[] registers) throws ModbusNumberException {
         super(serverAddress, registers.length * 2);
     }
 

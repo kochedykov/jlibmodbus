@@ -34,6 +34,10 @@ import java.io.IOException;
 
 final public class WriteMultipleCoilsRequest extends AbstractWriteMultipleRequest {
 
+    public WriteMultipleCoilsRequest(int serverAddress) throws ModbusNumberException {
+        super(serverAddress);
+    }
+
     public WriteMultipleCoilsRequest(int serverAddress, int startAddress, boolean[] coils) throws ModbusNumberException {
         super(serverAddress, startAddress, DataUtils.toByteArray(coils), coils.length);
     }

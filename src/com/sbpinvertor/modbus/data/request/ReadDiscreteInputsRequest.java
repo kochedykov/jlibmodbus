@@ -28,6 +28,10 @@ import com.sbpinvertor.modbus.exception.ModbusNumberException;
 
 public class ReadDiscreteInputsRequest extends ReadCoilsRequest {
 
+    public ReadDiscreteInputsRequest(int serverAddress) throws ModbusNumberException {
+        super(serverAddress);
+    }
+
     public ReadDiscreteInputsRequest(int serverAddress, int startAddress, int quantity) throws ModbusNumberException {
         super(serverAddress, startAddress, quantity);
     }
