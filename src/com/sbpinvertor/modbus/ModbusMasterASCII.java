@@ -29,7 +29,11 @@ import com.sbpinvertor.modbus.net.ModbusTransportASCII;
 
 class ModbusMasterASCII extends ModbusMaster {
 
-    public ModbusMasterASCII(String device, SerialPort.BaudRate baudRate, int dataBits, int stopBits, SerialPort.Parity parity) throws SerialPortException {
-        super(new ModbusTransportASCII(new SerialPort(device, baudRate, dataBits, stopBits, parity)));
+    public ModbusMasterASCII(String device, SerialPort.BaudRate baudRate, SerialPort.Parity parity) throws SerialPortException {
+        super(new ModbusTransportASCII(new SerialPort(device, baudRate, 7, parity == SerialPort.Parity.NONE ? 2 : 1, parity)));
+    }
+
+    public ModbusMasterASCII(String device, SerialPort.BaudRate baudRate) throws SerialPortException {
+        this(device, baudRate, SerialPort.Parity.EVEN);
     }
 }
