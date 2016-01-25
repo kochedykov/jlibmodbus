@@ -51,7 +51,7 @@ public class ReadHoldingRegistersResponse extends AbstractReadResponse {
     protected void readData(ModbusInputStream fifo) throws IOException {
         byte[] buffer = new byte[getByteCount()];
         fifo.read(buffer, 0, getByteCount());
-        registers = DataUtils.toRegistersArray(buffer);
+        registers = DataUtils.toIntArray(buffer);
     }
 
     @Override

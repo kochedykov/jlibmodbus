@@ -24,34 +24,34 @@ package com.sbpinvertor.modbus.utils;
  */
 public class DataUtils {
 
-    static public byte[] toByteArray(boolean[] src) {
-        byte[] dst = new byte[(int) Math.ceil((double) src.length / 8)];
-        for (int i = 0; i < src.length; i++) {
-            dst[i / 8] |= (byte) ((src[i] ? 1 : 0) << (i % 8));
+    static public byte[] toByteArray(boolean[] bits) {
+        byte[] dst = new byte[(int) Math.ceil((double) bits.length / 8)];
+        for (int i = 0; i < bits.length; i++) {
+            dst[i / 8] |= (byte) ((bits[i] ? 1 : 0) << (i % 8));
         }
         return dst;
     }
 
-    static public boolean[] toBitsArray(byte[] src, int bitCount) {
+    static public boolean[] toBitsArray(byte[] bytes, int bitCount) {
         boolean[] dst = new boolean[bitCount];
         for (int i = 0; i < dst.length; i++) {
-            dst[i] = (src[i / 8] & (1 << (i % 8))) != 0;
+            dst[i] = (bytes[i / 8] & (1 << (i % 8))) != 0;
         }
         return dst;
     }
 
-    static public int[] toRegistersArray(byte[] src) {
-        int[] dst = new int[src.length / 2];
+    static public int[] toIntArray(byte[] bytes) {
+        int[] dst = new int[bytes.length / 2];
         for (int i = 0, j = 0; i < dst.length; i++, j += 2)
-            dst[i] = ((src[j] & 0xff) << 8) | (src[j + 1] & 0xff);
+            dst[i] = ((bytes[j] & 0xff) << 8) | (bytes[j + 1] & 0xff);
         return dst;
     }
 
-    static public byte[] toByteArray(int[] src) {
-        byte[] dst = new byte[src.length * 2];
-        for (int i = 0, j = 0; i < src.length; i++, j += 2) {
-            dst[j] = (byte) ((src[i] >> 8) & 0xff);
-            dst[j + 1] = (byte) (src[i] & 0xff);
+    static public byte[] toByteArray(int[] i16) {
+        byte[] dst = new byte[i16.length * 2];
+        for (int i = 0, j = 0; i < i16.length; i++, j += 2) {
+            dst[j] = (byte) ((i16[i] >> 8) & 0xff);
+            dst[j + 1] = (byte) (i16[i] & 0xff);
         }
         return dst;
     }
@@ -67,34 +67,24 @@ public class DataUtils {
         return toShort(bytes[0], bytes[1]);
     }
 
+    public static byte[] toByteArray(short i16) {
+        return new byte[]{byteHigh(i16), byteLow(i16)};
+    }
+
     public static short toShort(int h, int l) {
         return (short) (((byte) h & 0xff) << 8 | ((byte) l & 0xff));
     }
 
-    public static byte[] shortToReg(int s) {
-        byte[] regs = new byte[2];
-        regs[0] = (byte) ((s >> 8) & 0xff);
-        regs[1] = (byte) (s & 0xff);
-        return regs;
-    }
-
-    public static int regsToInt(byte[] bytes) {
-        return ((bytes[0] & 0xff) << 8) |
-                (bytes[1] & 0xff) |
-                ((bytes[2] & 0xff) << 24) |
-                ((bytes[3] & 0xff) << 16);
-    }
-
-    public static byte[] intToRegs(int i) {
+    public static byte[] toByteArray(int i32) {
         byte[] regs = new byte[4];
-        regs[0] = (byte) (0xff & (i >> 8));
-        regs[1] = (byte) (0xff & i);
-        regs[2] = (byte) (0xff & (i >> 24));
-        regs[3] = (byte) (0xff & (i >> 16));
+        regs[0] = (byte) (0xff & (i32 >> 8));
+        regs[1] = (byte) (0xff & i32);
+        regs[2] = (byte) (0xff & (i32 >> 24));
+        regs[3] = (byte) (0xff & (i32 >> 16));
         return regs;
     }
 
-    public static float regsToFloat(byte[] bytes) {
+    public static float toFloat(byte[] bytes) {
         return Float.intBitsToFloat(
                 ((bytes[0] & 0xff) << 8) |
                         (bytes[1] & 0xff) |
@@ -102,8 +92,8 @@ public class DataUtils {
                         ((bytes[3] & 0xff) << 16));
     }
 
-    public static byte[] floatToRegs(float f) {
-        return intToRegs(Float.floatToIntBits(f));
+    public static byte[] toByteArray(float f32) {
+        return toByteArray(Float.floatToIntBits(f32));
     }
 
     public static byte byteLow(int b) {
@@ -112,9 +102,5 @@ public class DataUtils {
 
     public static byte byteHigh(int b) {
         return (byte) (((short)b >> 8) & 0xff);
-    }
-
-    public static int getShort(int l, int h) {
-        return (l & 0xff) | ((h & 0xff) << 8);
     }
 }
