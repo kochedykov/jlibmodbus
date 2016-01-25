@@ -28,10 +28,6 @@ public class DataUtils {
         return Integer.parseInt("" + h + l, 16);
     }
 
-    static public byte fromAscii(char c) {
-        return (byte) Character.getNumericValue(c);
-    }
-
     static public byte[] toAscii(byte b) {
         return toHexString(b).getBytes();
     }
