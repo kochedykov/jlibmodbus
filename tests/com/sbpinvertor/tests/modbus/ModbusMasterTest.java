@@ -29,12 +29,13 @@ public class ModbusMasterTest {
 
     public static void main(String[] argv) {
         //ModbusMaster m = Modbus.createModbusMasterRTU("COM1", SerialPort.BaudRate.BAUD_RATE_115200, 8, 1, SerialPort.Parity.NONE);
+        //ModbusMaster m = Modbus.createModbusMasterASCII("COM1", SerialPort.BaudRate.BAUD_RATE_115200);
         ModbusMaster m = Modbus.createModbusMasterTCP("127.0.0.1", true);
 
         for (int r = 0; r < 5; r++) {
             try {
                 Thread.sleep(1000);
-                printRegisters(m.readHoldingRegisters(0, 0, 10));
+                printRegisters(m.readHoldingRegisters(0, 0, 2));
                 printRegisters(m.readInputRegisters(0, 0, 10));
                 m.writeSingleRegister(0, 0, 69);
                 m.writeSingleCoil(0, 5, true);
