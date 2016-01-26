@@ -67,32 +67,6 @@ final public class ByteFifo {
         return (available() < b.length) ? 0 : bais.read(b, offset, length);
     }
 
-    public int readShortBE() {
-        int h = read();
-        int l = read();
-        if (-1 == h || -1 == l)
-            return -1;
-        return DataUtils.toShort(h, l);
-    }
-
-    public int readShortLE() {
-        int l = read();
-        int h = read();
-        if (-1 == h || -1 == l)
-            return -1;
-        return DataUtils.toShort(h, l);
-    }
-
-    public void writeShortBE(int s) {
-        write(DataUtils.byteHigh(s));
-        write(DataUtils.byteLow(s));
-    }
-
-    public void writeShortLE(int s) {
-        write(DataUtils.byteLow(s));
-        write(DataUtils.byteHigh(s));
-    }
-
     public void write(int b) {
         if (size() < capacity) {
             baos.write(b);

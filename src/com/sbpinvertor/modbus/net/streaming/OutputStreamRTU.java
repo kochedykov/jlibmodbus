@@ -55,7 +55,7 @@ public class OutputStreamRTU extends ModbusOutputStream {
 
     @Override
     public void flush() throws IOException {
-        fifo.writeShortLE(crc);
+        writeShortLE(crc);
         serial.write(fifo.toByteArray());
         reset();
     }
