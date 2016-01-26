@@ -42,42 +42,42 @@ final public class ModbusResponseFactory implements ModbusMessageFactory {
         return SingletonHolder.instance;
     }
 
-    static public ModbusResponse createReadCoils(int serverAddress, boolean[] coils) throws ModbusNumberException {
+    public ModbusResponse createReadCoils(int serverAddress, boolean[] coils) throws ModbusNumberException {
         return new ReadCoilsResponse(serverAddress, coils);
     }
 
-    static public ModbusResponse createReadDiscreteInputs(int serverAddress, boolean[] discreteInputs) throws ModbusNumberException {
+    public ModbusResponse createReadDiscreteInputs(int serverAddress, boolean[] discreteInputs) throws ModbusNumberException {
         return new ReadDiscreteInputsResponse(serverAddress, discreteInputs);
     }
 
-    static public ModbusResponse createReadInputRegisters(int serverAddress, int[] inputRegisters) throws ModbusNumberException {
+    public ModbusResponse createReadInputRegisters(int serverAddress, int[] inputRegisters) throws ModbusNumberException {
         return new ReadInputRegistersResponse(serverAddress, inputRegisters);
     }
 
-    static public ModbusResponse createReadHoldingRegisters(int serverAddress, int[] holdingRegisters) throws ModbusNumberException {
+    public ModbusResponse createReadHoldingRegisters(int serverAddress, int[] holdingRegisters) throws ModbusNumberException {
         return new ReadHoldingRegistersResponse(serverAddress, holdingRegisters);
     }
 
-    static public ModbusResponse createWriteSingleCoil(int serverAddress, int startAddress, boolean coil) throws ModbusNumberException {
+    public ModbusResponse createWriteSingleCoil(int serverAddress, int startAddress, boolean coil) throws ModbusNumberException {
         return new WriteSingleCoilResponse(serverAddress, startAddress, coil);
     }
 
-    static public ModbusResponse createWriteMultipleCoils(int serverAddress, int startAddress, int quantity) throws ModbusNumberException {
+    public ModbusResponse createWriteMultipleCoils(int serverAddress, int startAddress, int quantity) throws ModbusNumberException {
         return new WriteMultipleCoilsResponse(serverAddress, startAddress, quantity);
     }
 
-    static public ModbusResponse createWriteMultipleRegisters(int serverAddress, int startAddress, int quantity) throws ModbusNumberException {
+    public ModbusResponse createWriteMultipleRegisters(int serverAddress, int startAddress, int quantity) throws ModbusNumberException {
         return new WriteMultipleRegistersResponse(serverAddress, startAddress, quantity);
     }
 
-    static public ModbusResponse createWriteSingleRegister(int serverAddress, int startAddress, int register) throws ModbusNumberException {
+    public ModbusResponse createWriteSingleRegister(int serverAddress, int startAddress, int register) throws ModbusNumberException {
         return new WriteSingleRegisterResponse(serverAddress, startAddress, register);
     }
 
     @Override
     public ModbusMessage createMessage(ModbusInputStream fifo) throws ModbusTransportException, ModbusNumberException {
         try {
-            ModbusResponse msg = null;
+            ModbusResponse msg;
             int serverAddress = fifo.read();
             int functionCode = fifo.read();
             switch (ModbusFunction.getFunction(functionCode)) {
@@ -108,16 +108,16 @@ final public class ModbusResponseFactory implements ModbusMessageFactory {
                 case REPORT_SLAVE_ID:
                 case READ_FILE_RECORD:
                 case WRITE_FILE_RECORD:
-                    break;
+                default:
+                    throw new ModbusTransportException("function " + functionCode + " not supported.");
             }
-            if (msg != null) {
-                if (ModbusFunction.isException(functionCode)) {
-                    msg.setException();
-                }
-                msg.read(fifo);
-                if (msg.isException()) {
-                    throw new ModbusProtocolException(msg.getException(), msg.getServerAddress());
-                }
+
+            if (ModbusFunction.isException(functionCode)) {
+                msg.setException();
+            }
+            msg.read(fifo);
+            if (msg.isException()) {
+                throw new ModbusProtocolException(msg.getException(), msg.getServerAddress());
             }
             return msg;
         } catch (IOException e) {
