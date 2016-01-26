@@ -2,9 +2,9 @@ package com.sbpinvertor.modbus.net;
 
 import com.sbpinvertor.modbus.Modbus;
 import com.sbpinvertor.modbus.data.ModbusInputStream;
+import com.sbpinvertor.modbus.data.ModbusMessageFactory;
 import com.sbpinvertor.modbus.data.ModbusOutputStream;
 import com.sbpinvertor.modbus.data.base.ModbusMessage;
-import com.sbpinvertor.modbus.data.base.ModbusResponse;
 import com.sbpinvertor.modbus.exception.ModbusTransportException;
 import com.sbpinvertor.modbus.net.streaming.InputStreamTCP;
 import com.sbpinvertor.modbus.net.streaming.OutputStreamTCP;
@@ -69,12 +69,30 @@ final public class ModbusTransportTCP extends ModbusTransport {
         this(host, Modbus.TCP_PORT, false);
     }
 
-    private void sendAdu(ModbusMessage msg) throws ModbusTransportException, IOException {
+    private void sendADU(ModbusMessage msg) throws ModbusTransportException {
         // modbus tcp adu header
-        os.write(headerOut.update(msg.size()));
+        try {
+            os.write(headerOut.update(msg.size()));
+        } catch (IOException e) {
+            throw new ModbusTransportException(e);
+        }
         super.send(msg);
-        if (is.read(headerIn.byteArray(), 0, AduHeader.SIZE) < AduHeader.SIZE) {
-            throw new ModbusTransportException("Error: no response.");
+    }
+
+    private void recvADU() throws ModbusTransportException {
+        try {
+            if (is.read(headerIn.byteArray(), 0, AduHeader.SIZE) < AduHeader.SIZE) {
+                throw new ModbusTransportException("Error: no response.");
+            }
+        } catch (IOException e) {
+            throw new ModbusTransportException(e);
+        }
+
+        if (headerIn.getTransactionId() != headerOut.getTransactionId()) {
+            throw new ModbusTransportException("Transaction ID check failed.");
+        }
+        if (headerIn.getProtocolId() != headerOut.getProtocolId()) {
+            throw new ModbusTransportException("Protocol ID check failed.");
         }
         if (headerIn.getPduSize() > Modbus.MAX_TCP_ADU_LENGTH) {
             throw new ModbusTransportException("Maximum ADU size is reached.");
@@ -86,25 +104,23 @@ final public class ModbusTransportTCP extends ModbusTransport {
         if (!keepAlive)
             openConnection();
         try {
-            try {
-                sendAdu(msg);
-            } catch (Exception e) {
-                if (keepAlive) {
-                    openConnection();
-                    sendAdu(msg);
-                } else {
-                    throw e;
-                }
+            sendADU(msg);
+            recvADU();
+        } catch (ModbusTransportException e) {
+            if (keepAlive) {
+                openConnection();
+                sendADU(msg);
+                recvADU();
+            } else {
+                throw e;
             }
-        } catch (Exception e) {
-            throw new ModbusTransportException(e);
         }
     }
 
     @Override
-    public ModbusResponse sendRequest(ModbusMessage msg) throws ModbusTransportException {
+    public ModbusMessage recv(ModbusMessageFactory factory) throws ModbusTransportException {
         try {
-            return super.sendRequest(msg);
+            return super.recv(factory);
         } finally {
             if (!keepAlive)
                 closeConnection();
@@ -149,12 +165,19 @@ final public class ModbusTransportTCP extends ModbusTransport {
         return is;
     }
 
+    @Override
+    protected void finalize()
+            throws Throwable {
+        super.finalize();
+        closeConnection();
+    }
+
     final static private class AduHeader {
         final static public int SIZE = 6;
         final private byte[] buffer;
 
         public AduHeader() {
-            buffer = new byte[6];
+            buffer = new byte[SIZE];
             setProtocolId(Modbus.PROTOCOL_ID);
         }
 

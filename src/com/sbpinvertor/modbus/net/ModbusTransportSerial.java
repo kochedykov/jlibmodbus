@@ -2,13 +2,9 @@ package com.sbpinvertor.modbus.net;
 
 import com.sbpinvertor.conn.SerialPort;
 import com.sbpinvertor.conn.SerialPortException;
-import com.sbpinvertor.modbus.data.ModbusInputStream;
-import com.sbpinvertor.modbus.data.ModbusOutputStream;
+import com.sbpinvertor.modbus.data.ModbusMessageFactory;
 import com.sbpinvertor.modbus.data.base.ModbusMessage;
-import com.sbpinvertor.modbus.data.base.ModbusResponse;
 import com.sbpinvertor.modbus.exception.ModbusTransportException;
-
-import java.io.IOException;
 
 /**
  * Copyright (c) 2015-2016 JSC "Zavod "Invertor"
@@ -42,26 +38,28 @@ abstract public class ModbusTransportSerial extends ModbusTransport {
     }
 
     @Override
-    public ModbusResponse sendRequest(ModbusMessage msg) throws ModbusTransportException {
-        ModbusResponse response;
-        try {
-            serial.clear();
-            checksumInit();
-            response = super.sendRequest(msg);
-            if (!checksumValid())
-                throw new ModbusTransportException("control sum check failed.");
-        } catch (IOException e) {
-            throw new ModbusTransportException(e);
-        }
-        return response;
+    public void send(ModbusMessage msg) throws ModbusTransportException {
+        serial.clear();
+        checksumInit();
+        super.send(msg);
+    }
+
+    @Override
+    public ModbusMessage recv(ModbusMessageFactory factory) throws ModbusTransportException {
+        ModbusMessage msg = super.recv(factory);
+        if (!checksumValid())
+            throw new ModbusTransportException("control sum check failed.");
+        return msg;
     }
 
     @Override
     protected void finalize()
             throws Throwable {
+        super.finalize();
         serial.close();
     }
 
     abstract void checksumInit();
-    abstract boolean checksumValid() throws IOException;
+
+    abstract boolean checksumValid();
 }

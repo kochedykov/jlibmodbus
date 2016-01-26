@@ -1,9 +1,6 @@
 package com.sbpinvertor.modbus.data.base;
 
-import com.sbpinvertor.modbus.ModbusFunction;
-import com.sbpinvertor.modbus.data.ModbusInputStream;
 import com.sbpinvertor.modbus.data.ModbusOutputStream;
-import com.sbpinvertor.modbus.data.request.*;
 import com.sbpinvertor.modbus.exception.ModbusNumberException;
 
 import java.io.IOException;
@@ -38,44 +35,6 @@ abstract public class ModbusRequest extends ModbusMessage {
 
     public ModbusRequest(ModbusMessage msg) {
         super(msg);
-    }
-
-    static public ModbusRequest createRequest(ModbusInputStream fifo) throws IOException, ModbusNumberException {
-        ModbusRequest request = null;
-        int serverAddress = fifo.read();
-        int functionCode = fifo.read();
-        switch (ModbusFunction.getFunction(functionCode)) {
-            case READ_COILS:
-                request = new ReadCoilsRequest(serverAddress);
-                break;
-            case READ_DISCRETE_INPUTS:
-                request = new ReadDiscreteInputsRequest(serverAddress);
-                break;
-            case READ_HOLDING_REGISTERS:
-                request = new ReadHoldingRegistersRequest(serverAddress);
-                break;
-            case READ_INPUT_REGISTERS:
-                request = new ReadInputRegistersRequest(serverAddress);
-                break;
-            case WRITE_SINGLE_COIL:
-                request = new WriteSingleCoilRequest(serverAddress);
-                break;
-            case WRITE_SINGLE_REGISTER:
-                request = new WriteSingleRegisterRequest(serverAddress);
-                break;
-            case WRITE_MULTIPLE_COILS:
-                request = new WriteMultipleCoilsRequest(serverAddress);
-                break;
-            case WRITE_MULTIPLE_REGISTERS:
-                request = new WriteMultipleRegistersRequest(serverAddress);
-                break;
-            case REPORT_SLAVE_ID:
-            case READ_FILE_RECORD:
-            case WRITE_FILE_RECORD:
-                break;
-        }
-        request.read(fifo);
-        return request;
     }
 
     abstract protected void writeRequest(ModbusOutputStream fifo) throws IOException;

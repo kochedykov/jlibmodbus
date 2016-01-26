@@ -31,6 +31,7 @@ public class ModbusMasterTest {
         //ModbusMaster m = Modbus.createModbusMasterRTU("COM1", SerialPort.BaudRate.BAUD_RATE_115200, 8, 1, SerialPort.Parity.NONE);
         //ModbusMaster m = Modbus.createModbusMasterASCII("COM1", SerialPort.BaudRate.BAUD_RATE_115200);
         ModbusMaster m = Modbus.createModbusMasterTCP("127.0.0.1", true);
+        m.setResponseTimeout(1000);
 
         for (int r = 0; r < 5; r++) {
             try {
@@ -41,7 +42,7 @@ public class ModbusMasterTest {
                 printBits(m.readDiscreteInputs(1, 0, 8));
                 m.writeSingleRegister(1, 0, 69);
                 m.writeSingleCoil(1, 5, true);
-                m.writeMultipleRegisters(1, 0, new int[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10});
+                m.writeMultipleRegisters(1, 1, new int[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10});
                 m.writeMultipleCoils(1, 0, new boolean[]{true, false, true});
                 System.out.println();
             } catch (Exception e) {

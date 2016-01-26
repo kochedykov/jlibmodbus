@@ -48,11 +48,15 @@ public class ModbusTransportRTU extends ModbusTransportSerial {
     }
 
     @Override
-    boolean checksumValid() throws IOException {
-        //read the crc part
-        int crc = is.readShortLE();
-        // hook with crc
-        return crc != 0 && is.getCrc() == 0;
+    boolean checksumValid() {
+        try {
+            //read the crc part
+            int crc = is.readShortLE();
+            // hook with crc
+            return crc != 0 && is.getCrc() == 0;
+        } catch (IOException e) {
+            return false;
+        }
     }
 
     public ModbusOutputStream getOutputStream() {

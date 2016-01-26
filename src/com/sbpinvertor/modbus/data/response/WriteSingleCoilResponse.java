@@ -1,5 +1,6 @@
 package com.sbpinvertor.modbus.data.response;
 
+import com.sbpinvertor.modbus.Modbus;
 import com.sbpinvertor.modbus.ModbusFunction;
 import com.sbpinvertor.modbus.data.base.AbstractWriteResponse;
 import com.sbpinvertor.modbus.data.base.ModbusMessage;
@@ -34,7 +35,7 @@ public class WriteSingleCoilResponse extends AbstractWriteResponse {
     }
 
     public WriteSingleCoilResponse(int serverAddress, int startAddress, boolean value) throws ModbusNumberException {
-        super(serverAddress, startAddress, value ? 0xff00 : 0x0000);
+        super(serverAddress, startAddress, value ? Modbus.COIL_VALUE_ON : Modbus.COIL_VALUE_OFF);
     }
 
     public WriteSingleCoilResponse(ModbusMessage msg) {
@@ -43,7 +44,7 @@ public class WriteSingleCoilResponse extends AbstractWriteResponse {
 
     @Override
     protected boolean checkValue() {
-        return getValue() == 0xff00 || getValue() == 0x0000;
+        return getValue() == Modbus.COIL_VALUE_ON || getValue() == Modbus.COIL_VALUE_OFF;
     }
 
     @Override

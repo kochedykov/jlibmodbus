@@ -1,15 +1,15 @@
 package com.sbpinvertor.modbus;
 
 import com.sbpinvertor.conn.SerialPortException;
+import com.sbpinvertor.modbus.data.ModbusMessageFactory;
 import com.sbpinvertor.modbus.data.ModbusRequestFactory;
-import com.sbpinvertor.modbus.data.base.ModbusRequest;
-import com.sbpinvertor.modbus.data.base.ModbusResponse;
+import com.sbpinvertor.modbus.data.ModbusResponseFactory;
+import com.sbpinvertor.modbus.data.base.ModbusMessage;
 import com.sbpinvertor.modbus.data.response.ReadCoilsResponse;
 import com.sbpinvertor.modbus.data.response.ReadDiscreteInputsResponse;
 import com.sbpinvertor.modbus.data.response.ReadHoldingRegistersResponse;
 import com.sbpinvertor.modbus.data.response.ReadInputRegistersResponse;
 import com.sbpinvertor.modbus.exception.ModbusNumberException;
-import com.sbpinvertor.modbus.exception.ModbusProtocolException;
 import com.sbpinvertor.modbus.exception.ModbusTransportException;
 import com.sbpinvertor.modbus.net.ModbusTransport;
 
@@ -40,14 +40,17 @@ import java.io.IOException;
 public class ModbusMaster {
 
     final private ModbusTransport transport;
+    final private ModbusRequestFactory requestFactory = ModbusRequestFactory.getInstance();
+    final private ModbusMessageFactory responseFactory = ModbusResponseFactory.getInstance();
 
     ModbusMaster(ModbusTransport transport) {
         this.transport = transport;
     }
 
-    private ModbusResponse processRequest(ModbusRequest request) throws SerialPortException,
-            ModbusTransportException, ModbusNumberException, ModbusProtocolException, IOException {
-        ModbusResponse response = transport.sendRequest(request);
+    private ModbusMessage processRequest(ModbusMessage request) throws SerialPortException,
+            ModbusTransportException, ModbusNumberException, IOException {
+        transport.send(request);
+        ModbusMessage response = transport.recv(responseFactory);
         if (request.getServerAddress() != response.getServerAddress())
             throw new ModbusTransportException("Collision: does not matches the slave address");
         if (request.getFunction() != response.getFunction())
@@ -55,52 +58,62 @@ public class ModbusMaster {
         return response;
     }
 
+    /**
+     * ModbusMaster will block for only this amount of time.
+     * If the timeout expires, a ModbusTransportException is raised, though the ModbusMaster is still valid.
+     *
+     * @param timeout the specified timeout, in milliseconds.
+     */
     public void setResponseTimeout(int timeout) {
         transport.setResponseTimeout(timeout);
     }
 
     final public int[] readHoldingRegisters(int serverAddress, int startAddress, int quantity) throws SerialPortException,
-            ModbusTransportException, ModbusNumberException, ModbusProtocolException, IOException {
-        ModbusResponse response = processRequest(ModbusRequestFactory.createReadHoldingRegisters(serverAddress, startAddress, quantity));
-        return ((ReadHoldingRegistersResponse) response).getRegisters();
+            ModbusTransportException, ModbusNumberException, IOException {
+        ModbusMessage request = requestFactory.createReadHoldingRegisters(serverAddress, startAddress, quantity);
+        ReadHoldingRegistersResponse response = (ReadHoldingRegistersResponse) processRequest(request);
+        return response.getRegisters();
     }
 
 
     final public int[] readInputRegisters(int serverAddress, int startAddress, int quantity) throws SerialPortException,
-            ModbusTransportException, ModbusNumberException, IOException, ModbusProtocolException {
-        ModbusResponse response = processRequest(ModbusRequestFactory.createReadInputRegisters(serverAddress, startAddress, quantity));
-        return ((ReadInputRegistersResponse) response).getRegisters();
-    }
-
-    final public void writeSingleCoil(int serverAddress, int startAddress, boolean flag) throws SerialPortException,
-            ModbusTransportException, ModbusNumberException, IOException, ModbusProtocolException {
-        processRequest(ModbusRequestFactory.createWriteSingleCoil(serverAddress, startAddress, flag));
-    }
-
-    final public void writeSingleRegister(int serverAddress, int startAddress, int register) throws SerialPortException,
-            ModbusTransportException, ModbusNumberException, IOException, ModbusProtocolException {
-        processRequest(ModbusRequestFactory.createWriteSingleRegister(serverAddress, startAddress, register));
-    }
-
-    final public void writeMultipleCoils(int serverAddress, int startAddress, boolean[] coils) throws SerialPortException,
-            ModbusTransportException, ModbusNumberException, IOException, ModbusProtocolException {
-        processRequest(ModbusRequestFactory.createWriteMultipleCoils(serverAddress, startAddress, coils));
-    }
-
-    final public void writeMultipleRegisters(int serverAddress, int startAddress, int[] registers) throws SerialPortException,
-            ModbusTransportException, ModbusNumberException, IOException, ModbusProtocolException {
-        processRequest(ModbusRequestFactory.createWriteMultipleRegisters(serverAddress, startAddress, registers));
+            ModbusTransportException, ModbusNumberException, IOException {
+        ModbusMessage request = requestFactory.createReadInputRegisters(serverAddress, startAddress, quantity);
+        ReadHoldingRegistersResponse response = (ReadInputRegistersResponse) processRequest(request);
+        return response.getRegisters();
     }
 
     final public boolean[] readCoils(int serverAddress, int startAddress, int quantity) throws SerialPortException,
-            ModbusTransportException, ModbusNumberException, IOException, ModbusProtocolException {
-        ModbusResponse response = processRequest(ModbusRequestFactory.createReadCoils(serverAddress, startAddress, quantity));
-        return ((ReadCoilsResponse) response).getCoils();
+            ModbusTransportException, ModbusNumberException, IOException {
+        ModbusMessage request = requestFactory.createReadCoils(serverAddress, startAddress, quantity);
+        ReadCoilsResponse response = (ReadCoilsResponse) processRequest(request);
+        return response.getCoils();
     }
 
     final public boolean[] readDiscreteInputs(int serverAddress, int startAddress, int quantity) throws SerialPortException,
-            ModbusTransportException, ModbusNumberException, IOException, ModbusProtocolException {
-        ModbusResponse response = processRequest(ModbusRequestFactory.createReadDiscreteInputs(serverAddress, startAddress, quantity));
-        return ((ReadDiscreteInputsResponse) response).getCoils();
+            ModbusTransportException, ModbusNumberException, IOException {
+        ModbusMessage request = requestFactory.createReadDiscreteInputs(serverAddress, startAddress, quantity);
+        ReadDiscreteInputsResponse response = (ReadDiscreteInputsResponse) processRequest(request);
+        return response.getCoils();
+    }
+
+    final public void writeSingleCoil(int serverAddress, int startAddress, boolean flag) throws SerialPortException,
+            ModbusTransportException, ModbusNumberException, IOException {
+        processRequest(requestFactory.createWriteSingleCoil(serverAddress, startAddress, flag));
+    }
+
+    final public void writeSingleRegister(int serverAddress, int startAddress, int register) throws SerialPortException,
+            ModbusTransportException, ModbusNumberException, IOException {
+        processRequest(requestFactory.createWriteSingleRegister(serverAddress, startAddress, register));
+    }
+
+    final public void writeMultipleCoils(int serverAddress, int startAddress, boolean[] coils) throws SerialPortException,
+            ModbusTransportException, ModbusNumberException, IOException {
+        processRequest(requestFactory.createWriteMultipleCoils(serverAddress, startAddress, coils));
+    }
+
+    final public void writeMultipleRegisters(int serverAddress, int startAddress, int[] registers) throws SerialPortException,
+            ModbusTransportException, ModbusNumberException, IOException {
+        processRequest(requestFactory.createWriteMultipleRegisters(serverAddress, startAddress, registers));
     }
 }

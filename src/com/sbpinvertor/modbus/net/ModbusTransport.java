@@ -2,11 +2,12 @@ package com.sbpinvertor.modbus.net;
 
 import com.sbpinvertor.modbus.Modbus;
 import com.sbpinvertor.modbus.data.ModbusInputStream;
+import com.sbpinvertor.modbus.data.ModbusMessageFactory;
 import com.sbpinvertor.modbus.data.ModbusOutputStream;
 import com.sbpinvertor.modbus.data.base.ModbusMessage;
-import com.sbpinvertor.modbus.data.base.ModbusRequest;
-import com.sbpinvertor.modbus.data.base.ModbusResponse;
 import com.sbpinvertor.modbus.exception.ModbusTransportException;
+
+import java.io.IOException;
 
 /**
  * Copyright (c) 2015-2016 JSC "Zavod "Invertor"
@@ -45,26 +46,9 @@ abstract public class ModbusTransport {
     abstract public ModbusOutputStream getOutputStream();
     abstract public ModbusInputStream getInputStream();
 
-    public ModbusResponse sendRequest(ModbusMessage msg) throws ModbusTransportException {
+    public ModbusMessage recv(ModbusMessageFactory factory) throws ModbusTransportException {
         try {
-            send(msg);
-            return receiveResponse();
-        } catch (Exception e) {
-            throw new ModbusTransportException(e);
-        }
-    }
-
-    public ModbusResponse receiveResponse() throws ModbusTransportException {
-        try {
-            return ModbusResponse.createResponse(getInputStream());
-        } catch (Exception e) {
-            throw new ModbusTransportException(e);
-        }
-    }
-
-    public ModbusRequest receiveRequest() throws ModbusTransportException {
-        try {
-            return ModbusRequest.createRequest(getInputStream());
+            return factory.createMessage(getInputStream());
         } catch (Exception e) {
             throw new ModbusTransportException(e);
         }
@@ -75,7 +59,7 @@ abstract public class ModbusTransport {
             ModbusOutputStream os = getOutputStream();
             msg.write(os);
             os.flush();
-        } catch (Exception e) {
+        } catch (IOException e) {
             throw new ModbusTransportException(e);
         }
     }

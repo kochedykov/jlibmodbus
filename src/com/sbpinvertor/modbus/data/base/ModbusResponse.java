@@ -1,11 +1,8 @@
 package com.sbpinvertor.modbus.data.base;
 
-import com.sbpinvertor.modbus.ModbusFunction;
 import com.sbpinvertor.modbus.data.ModbusInputStream;
 import com.sbpinvertor.modbus.data.ModbusOutputStream;
-import com.sbpinvertor.modbus.data.response.*;
 import com.sbpinvertor.modbus.exception.ModbusNumberException;
-import com.sbpinvertor.modbus.exception.ModbusProtocolException;
 
 import java.io.IOException;
 
@@ -42,52 +39,6 @@ public abstract class ModbusResponse extends ModbusMessage {
 
     public ModbusResponse(ModbusMessage msg) {
         super(msg);
-    }
-
-    static public ModbusResponse createResponse(ModbusInputStream fifo) throws ModbusNumberException, ModbusProtocolException, IOException {
-        ModbusResponse response = null;
-        int serverAddress = fifo.read();
-        int functionCode = fifo.read();
-        switch (ModbusFunction.getFunction(functionCode)) {
-            case READ_COILS:
-                response = new ReadCoilsResponse(serverAddress);
-                break;
-            case READ_DISCRETE_INPUTS:
-                response = new ReadDiscreteInputsResponse(serverAddress);
-                break;
-            case READ_HOLDING_REGISTERS:
-                response = new ReadHoldingRegistersResponse(serverAddress);
-                break;
-            case READ_INPUT_REGISTERS:
-                response = new ReadInputRegistersResponse(serverAddress);
-                break;
-            case WRITE_SINGLE_COIL:
-                response = new WriteSingleCoilResponse(serverAddress);
-                break;
-            case WRITE_SINGLE_REGISTER:
-                response = new WriteSingleRegisterResponse(serverAddress);
-                break;
-            case WRITE_MULTIPLE_COILS:
-                response = new WriteMultipleCoilsResponse(serverAddress);
-                break;
-            case WRITE_MULTIPLE_REGISTERS:
-                response = new WriteMultipleRegistersResponse(serverAddress);
-                break;
-            case REPORT_SLAVE_ID:
-            case READ_FILE_RECORD:
-            case WRITE_FILE_RECORD:
-                break;
-        }
-        if (response != null) {
-            if (ModbusFunction.isException(functionCode)) {
-                response.setException();
-            }
-            response.read(fifo);
-            if (response.isException()) {
-                throw new ModbusProtocolException(response.getException(), response.getServerAddress());
-            }
-        }
-        return response;
     }
 
     final public boolean isException() {

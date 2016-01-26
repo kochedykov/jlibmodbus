@@ -25,14 +25,13 @@ import com.sbpinvertor.modbus.data.base.ModbusException;
  * email: vladislav.kochedykov@gmail.com
  */
 
-public class ModbusProtocolException extends Exception {
+public class ModbusProtocolException extends ModbusTransportException {
 
     private final ModbusException exception;
     private final int serverAddress;
 
     public ModbusProtocolException(ModbusException exception, int serverAddress) {
-        super();
-
+        super(exception.toString() + "; server: " + serverAddress);
         this.exception = exception;
         this.serverAddress = serverAddress;
     }
@@ -41,8 +40,7 @@ public class ModbusProtocolException extends Exception {
         return exception;
     }
 
-    @Override
-    public String getMessage() {
-        return getException().toString() + "; server: " + serverAddress;
+    public int getServerAddress() {
+        return serverAddress;
     }
 }

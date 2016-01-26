@@ -1,8 +1,14 @@
 package com.sbpinvertor.modbus.data;
 
+import com.sbpinvertor.modbus.ModbusFunction;
+import com.sbpinvertor.modbus.data.base.ModbusMessage;
 import com.sbpinvertor.modbus.data.base.ModbusResponse;
 import com.sbpinvertor.modbus.data.response.*;
 import com.sbpinvertor.modbus.exception.ModbusNumberException;
+import com.sbpinvertor.modbus.exception.ModbusProtocolException;
+import com.sbpinvertor.modbus.exception.ModbusTransportException;
+
+import java.io.IOException;
 
 /**
  * Copyright (c) 2015-2016 JSC "Zavod "Invertor"
@@ -26,10 +32,14 @@ import com.sbpinvertor.modbus.exception.ModbusNumberException;
  * Authors: Vladislav Y. Kochedykov, software engineer.
  * email: vladislav.kochedykov@gmail.com
  */
-final public class ModbusResponseFactory {
+final public class ModbusResponseFactory implements ModbusMessageFactory {
 
     private ModbusResponseFactory() {
 
+    }
+
+    static public ModbusResponseFactory getInstance() {
+        return SingletonHolder.instance;
     }
 
     static public ModbusResponse createReadCoils(int serverAddress, boolean[] coils) throws ModbusNumberException {
@@ -62,5 +72,60 @@ final public class ModbusResponseFactory {
 
     static public ModbusResponse createWriteSingleRegister(int serverAddress, int startAddress, int register) throws ModbusNumberException {
         return new WriteSingleRegisterResponse(serverAddress, startAddress, register);
+    }
+
+    @Override
+    public ModbusMessage createMessage(ModbusInputStream fifo) throws ModbusTransportException, ModbusNumberException {
+        try {
+            ModbusResponse msg = null;
+            int serverAddress = fifo.read();
+            int functionCode = fifo.read();
+            switch (ModbusFunction.getFunction(functionCode)) {
+                case READ_COILS:
+                    msg = new ReadCoilsResponse(serverAddress);
+                    break;
+                case READ_DISCRETE_INPUTS:
+                    msg = new ReadDiscreteInputsResponse(serverAddress);
+                    break;
+                case READ_HOLDING_REGISTERS:
+                    msg = new ReadHoldingRegistersResponse(serverAddress);
+                    break;
+                case READ_INPUT_REGISTERS:
+                    msg = new ReadInputRegistersResponse(serverAddress);
+                    break;
+                case WRITE_SINGLE_COIL:
+                    msg = new WriteSingleCoilResponse(serverAddress);
+                    break;
+                case WRITE_SINGLE_REGISTER:
+                    msg = new WriteSingleRegisterResponse(serverAddress);
+                    break;
+                case WRITE_MULTIPLE_COILS:
+                    msg = new WriteMultipleCoilsResponse(serverAddress);
+                    break;
+                case WRITE_MULTIPLE_REGISTERS:
+                    msg = new WriteMultipleRegistersResponse(serverAddress);
+                    break;
+                case REPORT_SLAVE_ID:
+                case READ_FILE_RECORD:
+                case WRITE_FILE_RECORD:
+                    break;
+            }
+            if (msg != null) {
+                if (ModbusFunction.isException(functionCode)) {
+                    msg.setException();
+                }
+                msg.read(fifo);
+                if (msg.isException()) {
+                    throw new ModbusProtocolException(msg.getException(), msg.getServerAddress());
+                }
+            }
+            return msg;
+        } catch (IOException e) {
+            throw new ModbusTransportException(e);
+        }
+    }
+
+    static private class SingletonHolder {
+        final static private ModbusResponseFactory instance = new ModbusResponseFactory();
     }
 }

@@ -49,7 +49,6 @@ public enum ModbusFunction {
         }
         for (ModbusFunction func : ModbusFunction.values()) {
             if (func.value == value) {
-
                 return func;
             }
         }

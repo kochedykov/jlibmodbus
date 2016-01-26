@@ -48,6 +48,8 @@ public class Modbus {
     final static public int ASCII_CODE_CR = 0xd;
     final static public int ASCII_CODE_LF = 0xa;
     final static public int ASCII_CODE_COLON = 0x3a;
+    final static public int COIL_VALUE_ON = 0xff00;
+    final static public int COIL_VALUE_OFF = 0x0000;
     final static private String TAG = "JLibModbus";
     final static private Logger log;
 

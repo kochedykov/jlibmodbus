@@ -25,7 +25,6 @@ package com.sbpinvertor.modbus.exception;
 
 public class ModbusTransportException extends Exception {
 
-
     public ModbusTransportException(String message) {
         super(message);
     }

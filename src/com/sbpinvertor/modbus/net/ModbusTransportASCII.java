@@ -49,13 +49,16 @@ public class ModbusTransportASCII extends ModbusTransportSerial {
     }
 
     @Override
-    boolean checksumValid() throws IOException {
-        boolean ret = is.getLrc() != is.read();
-        if (is.readByte() != Modbus.ASCII_CODE_CR || is.readByte() != Modbus.ASCII_CODE_LF)
-            Modbus.log().warning("\\r\\n not received.");
-        return ret;
+    boolean checksumValid() {
+        try {
+            boolean ret = is.getLrc() != is.read();
+            if (is.readByte() != Modbus.ASCII_CODE_CR || is.readByte() != Modbus.ASCII_CODE_LF)
+                Modbus.log().warning("\\r\\n not received.");
+            return ret;
+        } catch (IOException e) {
+            return false;
+        }
     }
-
 
     @Override
     public ModbusOutputStream getOutputStream() {

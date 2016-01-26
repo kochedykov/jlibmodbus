@@ -1,8 +1,8 @@
-package com.sbpinvertor.modbus.data.request;
+package com.sbpinvertor.modbus.data;
 
-import com.sbpinvertor.modbus.Modbus;
-import com.sbpinvertor.modbus.ModbusFunction;
+import com.sbpinvertor.modbus.data.base.ModbusMessage;
 import com.sbpinvertor.modbus.exception.ModbusNumberException;
+import com.sbpinvertor.modbus.exception.ModbusTransportException;
 
 /**
  * Copyright (c) 2015-2016 JSC "Zavod "Invertor"
@@ -26,18 +26,6 @@ import com.sbpinvertor.modbus.exception.ModbusNumberException;
  * Authors: Vladislav Y. Kochedykov, software engineer.
  * email: vladislav.kochedykov@gmail.com
  */
-public final class WriteSingleCoilRequest extends WriteSingleRegisterRequest {
-
-    public WriteSingleCoilRequest(int serverAddress) throws ModbusNumberException {
-        super(serverAddress);
-    }
-
-    public WriteSingleCoilRequest(int serverAddress, int startAddress, boolean value) throws ModbusNumberException {
-        super(serverAddress, startAddress, value ? Modbus.COIL_VALUE_ON : Modbus.COIL_VALUE_OFF);
-    }
-
-    @Override
-    public ModbusFunction getFunction() {
-        return ModbusFunction.WRITE_SINGLE_COIL;
-    }
+public interface ModbusMessageFactory {
+    ModbusMessage createMessage(ModbusInputStream fifo) throws ModbusTransportException, ModbusNumberException;
 }
