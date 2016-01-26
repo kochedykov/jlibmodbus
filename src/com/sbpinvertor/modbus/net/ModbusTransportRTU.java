@@ -2,10 +2,10 @@ package com.sbpinvertor.modbus.net;
 
 import com.sbpinvertor.conn.SerialPort;
 import com.sbpinvertor.conn.SerialPortException;
-import com.sbpinvertor.modbus.data.ModbusInputStream;
-import com.sbpinvertor.modbus.data.ModbusOutputStream;
 import com.sbpinvertor.modbus.net.streaming.InputStreamRTU;
 import com.sbpinvertor.modbus.net.streaming.OutputStreamRTU;
+import com.sbpinvertor.modbus.net.streaming.base.ModbusInputStream;
+import com.sbpinvertor.modbus.net.streaming.base.ModbusOutputStream;
 
 import java.io.IOException;
 

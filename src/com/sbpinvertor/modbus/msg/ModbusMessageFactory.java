@@ -1,6 +1,9 @@
-package com.sbpinvertor.modbus.exception;
+package com.sbpinvertor.modbus.msg;
 
-import com.sbpinvertor.modbus.ModbusException;
+import com.sbpinvertor.modbus.exception.ModbusNumberException;
+import com.sbpinvertor.modbus.exception.ModbusTransportException;
+import com.sbpinvertor.modbus.msg.base.ModbusMessage;
+import com.sbpinvertor.modbus.net.streaming.base.ModbusInputStream;
 
 /**
  * Copyright (c) 2015-2016 JSC "Zavod "Invertor"
@@ -24,23 +27,6 @@ import com.sbpinvertor.modbus.ModbusException;
  * Authors: Vladislav Y. Kochedykov, software engineer.
  * email: vladislav.kochedykov@gmail.com
  */
-
-public class ModbusProtocolException extends ModbusTransportException {
-
-    private final ModbusException exception;
-    private final int serverAddress;
-
-    public ModbusProtocolException(ModbusException exception, int serverAddress) {
-        super(exception.toString() + "; server: " + serverAddress);
-        this.exception = exception;
-        this.serverAddress = serverAddress;
-    }
-
-    public ModbusException getException() {
-        return exception;
-    }
-
-    public int getServerAddress() {
-        return serverAddress;
-    }
+public interface ModbusMessageFactory {
+    ModbusMessage createMessage(ModbusInputStream fifo) throws ModbusTransportException, ModbusNumberException;
 }

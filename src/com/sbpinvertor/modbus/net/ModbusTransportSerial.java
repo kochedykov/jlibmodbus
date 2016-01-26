@@ -2,9 +2,9 @@ package com.sbpinvertor.modbus.net;
 
 import com.sbpinvertor.conn.SerialPort;
 import com.sbpinvertor.conn.SerialPortException;
-import com.sbpinvertor.modbus.data.ModbusMessageFactory;
-import com.sbpinvertor.modbus.data.base.ModbusMessage;
 import com.sbpinvertor.modbus.exception.ModbusTransportException;
+import com.sbpinvertor.modbus.msg.ModbusMessageFactory;
+import com.sbpinvertor.modbus.msg.base.ModbusMessage;
 
 /**
  * Copyright (c) 2015-2016 JSC "Zavod "Invertor"

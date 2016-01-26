@@ -1,6 +1,6 @@
 package com.sbpinvertor.modbus.net.streaming;
 
-import com.sbpinvertor.modbus.data.ModbusOutputStream;
+import com.sbpinvertor.modbus.net.streaming.base.ModbusOutputStream;
 
 import java.io.BufferedOutputStream;
 import java.io.IOException;

@@ -1,6 +1,8 @@
-package com.sbpinvertor.modbus.exception;
+package com.sbpinvertor.modbus.msg.request;
 
-import com.sbpinvertor.modbus.ModbusException;
+import com.sbpinvertor.modbus.Modbus;
+import com.sbpinvertor.modbus.ModbusFunction;
+import com.sbpinvertor.modbus.exception.ModbusNumberException;
 
 /**
  * Copyright (c) 2015-2016 JSC "Zavod "Invertor"
@@ -24,23 +26,18 @@ import com.sbpinvertor.modbus.ModbusException;
  * Authors: Vladislav Y. Kochedykov, software engineer.
  * email: vladislav.kochedykov@gmail.com
  */
+public final class WriteSingleCoilRequest extends WriteSingleRegisterRequest {
 
-public class ModbusProtocolException extends ModbusTransportException {
-
-    private final ModbusException exception;
-    private final int serverAddress;
-
-    public ModbusProtocolException(ModbusException exception, int serverAddress) {
-        super(exception.toString() + "; server: " + serverAddress);
-        this.exception = exception;
-        this.serverAddress = serverAddress;
+    public WriteSingleCoilRequest(int serverAddress) throws ModbusNumberException {
+        super(serverAddress);
     }
 
-    public ModbusException getException() {
-        return exception;
+    public WriteSingleCoilRequest(int serverAddress, int startAddress, boolean value) throws ModbusNumberException {
+        super(serverAddress, startAddress, value ? Modbus.COIL_VALUE_ON : Modbus.COIL_VALUE_OFF);
     }
 
-    public int getServerAddress() {
-        return serverAddress;
+    @Override
+    public ModbusFunction getFunction() {
+        return ModbusFunction.WRITE_SINGLE_COIL;
     }
 }

@@ -1,10 +1,4 @@
-package com.sbpinvertor.modbus.net.streaming;
-
-import com.sbpinvertor.modbus.net.streaming.base.ModbusInputStream;
-
-import java.io.BufferedInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+package com.sbpinvertor.modbus;
 
 /**
  * Copyright (c) 2015-2016 JSC "Zavod "Invertor"
@@ -28,37 +22,46 @@ import java.io.InputStream;
  * Authors: Vladislav Y. Kochedykov, software engineer.
  * email: vladislav.kochedykov@gmail.com
  */
-public class InputStreamTCP extends ModbusInputStream {
+public enum ModbusException {
 
-    volatile private BufferedInputStream is;
+    ILLEGAL_FUNCTION(0x01),
+    ILLEGAL_DATA_ADDRESS(0x02),
+    ILLEGAL_DATA_VALUE(0x03),
+    SLAVE_DEVICE_FAILURE(0x04),
+    ACKNOWLEDGE(0x05),
+    SLAVE_DEVICE_BUSY(0x06),
+    MEMORY_PARITY_ERROR(0x08),
+    GATEWAY_PATH_UNAVAILABLE(0x0A),
+    GATEWAY_TARGET_DEVICE_FAILED_TO_RESPOND(0x0B),
 
-    public InputStreamTCP(InputStream is) {
-        this.is = new BufferedInputStream(is);
+    UNKNOWN_EXCEPTION(0x100),
+    NO_EXCEPTION(0x101);
+
+    private final int code;
+
+    ModbusException(int code) {
+        this.code = code;
     }
 
-    @Override
-    public int read() throws IOException {
-        int c = is.read();
-        if (c == -1) {
-            c = is.read();
+    static private ModbusException get(int code) {
+        for (ModbusException type : ModbusException.values()) {
+            if (type.code == code) {
+                return type;
+            }
         }
-        return c;
+        return UNKNOWN_EXCEPTION;
+    }
+
+    static public ModbusException getExceptionCode(int code) {
+        return get(code);
+    }
+
+    public int getCode() {
+        return code;
     }
 
     @Override
-    public int read(byte[] b, int off, int len) throws IOException {
-        int count = 0;
-        int k = 0;
-        while (count < len && k != -1) {
-            k = is.read(b, off + count, len - count);
-            if (-1 != k)
-                count += k;
-        }
-        return count;
-    }
-
-    @Override
-    public void reset() {
-        //dummy
+    public String toString() {
+        return name() + "; code: " + code;
     }
 }

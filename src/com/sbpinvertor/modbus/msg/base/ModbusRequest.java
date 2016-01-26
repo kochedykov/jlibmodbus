@@ -1,6 +1,9 @@
-package com.sbpinvertor.modbus.exception;
+package com.sbpinvertor.modbus.msg.base;
 
-import com.sbpinvertor.modbus.ModbusException;
+import com.sbpinvertor.modbus.exception.ModbusNumberException;
+import com.sbpinvertor.modbus.net.streaming.base.ModbusOutputStream;
+
+import java.io.IOException;
 
 /**
  * Copyright (c) 2015-2016 JSC "Zavod "Invertor"
@@ -24,23 +27,28 @@ import com.sbpinvertor.modbus.ModbusException;
  * Authors: Vladislav Y. Kochedykov, software engineer.
  * email: vladislav.kochedykov@gmail.com
  */
+abstract public class ModbusRequest extends ModbusMessage {
 
-public class ModbusProtocolException extends ModbusTransportException {
-
-    private final ModbusException exception;
-    private final int serverAddress;
-
-    public ModbusProtocolException(ModbusException exception, int serverAddress) {
-        super(exception.toString() + "; server: " + serverAddress);
-        this.exception = exception;
-        this.serverAddress = serverAddress;
+    public ModbusRequest(int serverAddress) throws ModbusNumberException {
+        super(serverAddress);
     }
 
-    public ModbusException getException() {
-        return exception;
+    public ModbusRequest(ModbusMessage msg) {
+        super(msg);
     }
 
-    public int getServerAddress() {
-        return serverAddress;
+    abstract protected void writeRequest(ModbusOutputStream fifo) throws IOException;
+
+    @Override
+    final public void writePDU(ModbusOutputStream fifo) throws IOException {
+        fifo.write(getFunction().getCode());
+        writeRequest(fifo);
     }
+
+    @Override
+    final protected int pduSize() {
+        return 1 + requestSize();
+    }
+
+    abstract protected int requestSize();
 }

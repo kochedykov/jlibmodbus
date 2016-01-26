@@ -1,6 +1,9 @@
-package com.sbpinvertor.modbus.exception;
+package com.sbpinvertor.modbus.net.streaming.base;
 
-import com.sbpinvertor.modbus.ModbusException;
+import com.sbpinvertor.modbus.utils.DataUtils;
+
+import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * Copyright (c) 2015-2016 JSC "Zavod "Invertor"
@@ -16,7 +19,7 @@ import com.sbpinvertor.modbus.ModbusException;
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * GNU General Public License for more details.
  * <p/>
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
@@ -24,23 +27,26 @@ import com.sbpinvertor.modbus.ModbusException;
  * Authors: Vladislav Y. Kochedykov, software engineer.
  * email: vladislav.kochedykov@gmail.com
  */
+abstract public class ModbusInputStream extends InputStream {
+    abstract public int read() throws IOException;
 
-public class ModbusProtocolException extends ModbusTransportException {
+    abstract public int read(byte[] b, int off, int len) throws IOException;
 
-    private final ModbusException exception;
-    private final int serverAddress;
+    abstract public void reset();
 
-    public ModbusProtocolException(ModbusException exception, int serverAddress) {
-        super(exception.toString() + "; server: " + serverAddress);
-        this.exception = exception;
-        this.serverAddress = serverAddress;
+    public int readShortBE() throws IOException {
+        int h = read();
+        int l = read();
+        if (-1 == h || -1 == l)
+            return -1;
+        return DataUtils.toShort(h, l);
     }
 
-    public ModbusException getException() {
-        return exception;
-    }
-
-    public int getServerAddress() {
-        return serverAddress;
+    public int readShortLE() throws IOException {
+        int l = read();
+        int h = read();
+        if (-1 == h || -1 == l)
+            return -1;
+        return DataUtils.toShort(h, l);
     }
 }

@@ -1,16 +1,16 @@
 package com.sbpinvertor.modbus;
 
 import com.sbpinvertor.conn.SerialPortException;
-import com.sbpinvertor.modbus.data.ModbusMessageFactory;
-import com.sbpinvertor.modbus.data.ModbusRequestFactory;
-import com.sbpinvertor.modbus.data.ModbusResponseFactory;
-import com.sbpinvertor.modbus.data.base.ModbusMessage;
-import com.sbpinvertor.modbus.data.response.ReadCoilsResponse;
-import com.sbpinvertor.modbus.data.response.ReadDiscreteInputsResponse;
-import com.sbpinvertor.modbus.data.response.ReadHoldingRegistersResponse;
-import com.sbpinvertor.modbus.data.response.ReadInputRegistersResponse;
 import com.sbpinvertor.modbus.exception.ModbusNumberException;
 import com.sbpinvertor.modbus.exception.ModbusTransportException;
+import com.sbpinvertor.modbus.msg.ModbusMessageFactory;
+import com.sbpinvertor.modbus.msg.ModbusRequestFactory;
+import com.sbpinvertor.modbus.msg.ModbusResponseFactory;
+import com.sbpinvertor.modbus.msg.base.ModbusMessage;
+import com.sbpinvertor.modbus.msg.response.ReadCoilsResponse;
+import com.sbpinvertor.modbus.msg.response.ReadDiscreteInputsResponse;
+import com.sbpinvertor.modbus.msg.response.ReadHoldingRegistersResponse;
+import com.sbpinvertor.modbus.msg.response.ReadInputRegistersResponse;
 import com.sbpinvertor.modbus.net.ModbusTransport;
 
 import java.io.IOException;

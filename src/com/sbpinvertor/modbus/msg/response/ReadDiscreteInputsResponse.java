@@ -1,6 +1,7 @@
-package com.sbpinvertor.modbus.exception;
+package com.sbpinvertor.modbus.msg.response;
 
-import com.sbpinvertor.modbus.ModbusException;
+import com.sbpinvertor.modbus.ModbusFunction;
+import com.sbpinvertor.modbus.exception.ModbusNumberException;
 
 /**
  * Copyright (c) 2015-2016 JSC "Zavod "Invertor"
@@ -16,7 +17,7 @@ import com.sbpinvertor.modbus.ModbusException;
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * GNU General Public License for more details.
  * <p/>
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
@@ -24,23 +25,22 @@ import com.sbpinvertor.modbus.ModbusException;
  * Authors: Vladislav Y. Kochedykov, software engineer.
  * email: vladislav.kochedykov@gmail.com
  */
+public class ReadDiscreteInputsResponse extends ReadCoilsResponse {
 
-public class ModbusProtocolException extends ModbusTransportException {
-
-    private final ModbusException exception;
-    private final int serverAddress;
-
-    public ModbusProtocolException(ModbusException exception, int serverAddress) {
-        super(exception.toString() + "; server: " + serverAddress);
-        this.exception = exception;
-        this.serverAddress = serverAddress;
+    public ReadDiscreteInputsResponse(int serverAddress) throws ModbusNumberException {
+        super(serverAddress);
     }
 
-    public ModbusException getException() {
-        return exception;
+    public ReadDiscreteInputsResponse(int serverAddress, boolean[] coils) throws ModbusNumberException {
+        super(serverAddress, coils);
     }
 
-    public int getServerAddress() {
-        return serverAddress;
+    public boolean[] getDiscreteInputs() {
+        return getCoils();
+    }
+
+    @Override
+    public ModbusFunction getFunction() {
+        return ModbusFunction.READ_DISCRETE_INPUTS;
     }
 }

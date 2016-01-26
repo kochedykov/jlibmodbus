@@ -1,6 +1,7 @@
-package com.sbpinvertor.modbus.exception;
+package com.sbpinvertor.modbus.msg.request;
 
-import com.sbpinvertor.modbus.ModbusException;
+import com.sbpinvertor.modbus.ModbusFunction;
+import com.sbpinvertor.modbus.exception.ModbusNumberException;
 
 /**
  * Copyright (c) 2015-2016 JSC "Zavod "Invertor"
@@ -25,22 +26,18 @@ import com.sbpinvertor.modbus.ModbusException;
  * email: vladislav.kochedykov@gmail.com
  */
 
-public class ModbusProtocolException extends ModbusTransportException {
+public class ReadDiscreteInputsRequest extends ReadCoilsRequest {
 
-    private final ModbusException exception;
-    private final int serverAddress;
-
-    public ModbusProtocolException(ModbusException exception, int serverAddress) {
-        super(exception.toString() + "; server: " + serverAddress);
-        this.exception = exception;
-        this.serverAddress = serverAddress;
+    public ReadDiscreteInputsRequest(int serverAddress) throws ModbusNumberException {
+        super(serverAddress);
     }
 
-    public ModbusException getException() {
-        return exception;
+    public ReadDiscreteInputsRequest(int serverAddress, int startAddress, int quantity) throws ModbusNumberException {
+        super(serverAddress, startAddress, quantity);
     }
 
-    public int getServerAddress() {
-        return serverAddress;
+    @Override
+    public ModbusFunction getFunction() {
+        return ModbusFunction.READ_DISCRETE_INPUTS;
     }
 }

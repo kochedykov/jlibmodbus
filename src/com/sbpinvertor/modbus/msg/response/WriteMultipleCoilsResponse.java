@@ -1,10 +1,10 @@
-package com.sbpinvertor.modbus.net.streaming;
+package com.sbpinvertor.modbus.msg.response;
 
-import com.sbpinvertor.modbus.net.streaming.base.ModbusInputStream;
-
-import java.io.BufferedInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import com.sbpinvertor.modbus.Modbus;
+import com.sbpinvertor.modbus.ModbusFunction;
+import com.sbpinvertor.modbus.exception.ModbusNumberException;
+import com.sbpinvertor.modbus.msg.base.AbstractWriteResponse;
+import com.sbpinvertor.modbus.msg.base.ModbusMessage;
 
 /**
  * Copyright (c) 2015-2016 JSC "Zavod "Invertor"
@@ -28,37 +28,27 @@ import java.io.InputStream;
  * Authors: Vladislav Y. Kochedykov, software engineer.
  * email: vladislav.kochedykov@gmail.com
  */
-public class InputStreamTCP extends ModbusInputStream {
+public class WriteMultipleCoilsResponse extends AbstractWriteResponse {
 
-    volatile private BufferedInputStream is;
+    public WriteMultipleCoilsResponse(int serverAddress) throws ModbusNumberException {
+        super(serverAddress);
+    }
 
-    public InputStreamTCP(InputStream is) {
-        this.is = new BufferedInputStream(is);
+    public WriteMultipleCoilsResponse(int serverAddress, int startAddress, int quantity) throws ModbusNumberException {
+        super(serverAddress, startAddress, quantity);
+    }
+
+    public WriteMultipleCoilsResponse(ModbusMessage msg) {
+        super(msg);
     }
 
     @Override
-    public int read() throws IOException {
-        int c = is.read();
-        if (c == -1) {
-            c = is.read();
-        }
-        return c;
+    protected boolean checkValue() {
+        return Modbus.checkWriteCoilCount(getValue());
     }
 
     @Override
-    public int read(byte[] b, int off, int len) throws IOException {
-        int count = 0;
-        int k = 0;
-        while (count < len && k != -1) {
-            k = is.read(b, off + count, len - count);
-            if (-1 != k)
-                count += k;
-        }
-        return count;
-    }
-
-    @Override
-    public void reset() {
-        //dummy
+    public ModbusFunction getFunction() {
+        return ModbusFunction.WRITE_MULTIPLE_COILS;
     }
 }

@@ -1,13 +1,13 @@
 package com.sbpinvertor.modbus.net;
 
 import com.sbpinvertor.modbus.Modbus;
-import com.sbpinvertor.modbus.data.ModbusInputStream;
-import com.sbpinvertor.modbus.data.ModbusMessageFactory;
-import com.sbpinvertor.modbus.data.ModbusOutputStream;
-import com.sbpinvertor.modbus.data.base.ModbusMessage;
 import com.sbpinvertor.modbus.exception.ModbusTransportException;
+import com.sbpinvertor.modbus.msg.ModbusMessageFactory;
+import com.sbpinvertor.modbus.msg.base.ModbusMessage;
 import com.sbpinvertor.modbus.net.streaming.InputStreamTCP;
 import com.sbpinvertor.modbus.net.streaming.OutputStreamTCP;
+import com.sbpinvertor.modbus.net.streaming.base.ModbusInputStream;
+import com.sbpinvertor.modbus.net.streaming.base.ModbusOutputStream;
 import com.sbpinvertor.modbus.utils.DataUtils;
 
 import java.io.IOException;

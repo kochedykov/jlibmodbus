@@ -1,4 +1,4 @@
-The modbus protocol implementation in pure java. It uses jssc library for serial port support.
+The modbus protocol implementation in pure java. It uses jssc library for communication via serial port.
 
 project homepage:
 https://sourceforge.net/projects/jlibmodbus

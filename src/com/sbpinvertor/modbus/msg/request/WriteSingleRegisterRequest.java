@@ -1,10 +1,9 @@
-package com.sbpinvertor.modbus.net;
+package com.sbpinvertor.modbus.msg.request;
 
-import com.sbpinvertor.conn.SerialPort;
-import com.sbpinvertor.conn.SerialPortException;
 import com.sbpinvertor.modbus.Modbus;
-import com.sbpinvertor.modbus.net.streaming.InputStreamASCII;
-import com.sbpinvertor.modbus.net.streaming.OutputStreamASCII;
+import com.sbpinvertor.modbus.ModbusFunction;
+import com.sbpinvertor.modbus.exception.ModbusNumberException;
+import com.sbpinvertor.modbus.msg.base.AbstractDataRequest;
 import com.sbpinvertor.modbus.net.streaming.base.ModbusInputStream;
 import com.sbpinvertor.modbus.net.streaming.base.ModbusOutputStream;
 
@@ -32,41 +31,41 @@ import java.io.IOException;
  * Authors: Vladislav Y. Kochedykov, software engineer.
  * email: vladislav.kochedykov@gmail.com
  */
-public class ModbusTransportASCII extends ModbusTransportSerial {
-    final private OutputStreamASCII os;
-    final private InputStreamASCII is;
+public class WriteSingleRegisterRequest extends AbstractDataRequest {
 
-    public ModbusTransportASCII(SerialPort serial) throws SerialPortException {
-        super(serial);
-        os = new OutputStreamASCII(serial);
-        is = new InputStreamASCII(serial, this);
+    private int value;
+
+    public WriteSingleRegisterRequest(int serverAddress) throws ModbusNumberException {
+        super(serverAddress);
     }
 
-    @Override
-    void checksumInit() {
-        os.reset();
-        is.reset();
-    }
+    public WriteSingleRegisterRequest(int serverAddress, int startAddress, int value) throws ModbusNumberException {
+        super(serverAddress, startAddress);
 
-    @Override
-    boolean checksumValid() {
-        try {
-            boolean ret = is.getLrc() != is.read();
-            if (is.readByte() != Modbus.ASCII_CODE_CR || is.readByte() != Modbus.ASCII_CODE_LF)
-                Modbus.log().warning("\\r\\n not received.");
-            return ret;
-        } catch (IOException e) {
-            return false;
+        if (!Modbus.checkRegisterValue(value)) {
+            throw new ModbusNumberException("Register value out of range", value);
         }
+
+        this.value = value;
     }
 
     @Override
-    public ModbusOutputStream getOutputStream() {
-        return os;
+    protected void readPDU(ModbusInputStream fifo) throws IOException {
+        value = fifo.readShortBE();
     }
 
     @Override
-    public ModbusInputStream getInputStream() {
-        return is;
+    public ModbusFunction getFunction() {
+        return ModbusFunction.WRITE_SINGLE_REGISTER;
+    }
+
+    @Override
+    public void writeData(ModbusOutputStream fifo) throws IOException {
+        fifo.writeShortBE(value);
+    }
+
+    @Override
+    protected int dataSize() {
+        return 2;
     }
 }
