@@ -71,6 +71,11 @@ public class InputStreamASCII extends ModbusInputStream {
         return (byte) (-lrc) & 0xff;
     }
 
+    @Override
+    public void reset() {
+        fifo.clear();
+    }
+
     public int readByte() throws IOException {
         return serial.readByte(transport.getResponseTimeout());
     }

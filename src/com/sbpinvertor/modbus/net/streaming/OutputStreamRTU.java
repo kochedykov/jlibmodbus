@@ -38,7 +38,7 @@ public class OutputStreamRTU extends ModbusOutputStream {
 
     public OutputStreamRTU(SerialPort serial) {
         this.serial = serial;
-        crc = CRC16.INITIAL_VALUE;
+        reset();
     }
 
     @Override
@@ -57,10 +57,11 @@ public class OutputStreamRTU extends ModbusOutputStream {
     public void flush() throws IOException {
         fifo.writeShortLE(crc);
         serial.write(fifo.toByteArray());
-        clear();
+        reset();
     }
 
-    public void clear() {
+    @Override
+    public void reset() {
         fifo.clear();
         crc = CRC16.INITIAL_VALUE;
     }

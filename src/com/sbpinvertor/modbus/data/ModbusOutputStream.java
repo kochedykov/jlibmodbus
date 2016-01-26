@@ -35,6 +35,8 @@ abstract public class ModbusOutputStream extends OutputStream {
 
     abstract public void flush() throws IOException;
 
+    abstract public void reset();
+
     public void writeShortBE(int s) throws IOException {
         write(DataUtils.byteHigh(s));
         write(DataUtils.byteLow(s));

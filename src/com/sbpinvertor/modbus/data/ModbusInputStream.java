@@ -32,6 +32,8 @@ abstract public class ModbusInputStream extends InputStream {
 
     abstract public int read(byte[] b, int off, int len) throws IOException;
 
+    abstract public void reset();
+
     public int readShortBE() throws IOException {
         int h = read();
         int l = read();

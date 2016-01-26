@@ -37,12 +37,11 @@ public class OutputStreamASCII extends ModbusOutputStream {
 
     public OutputStreamASCII(SerialPort serial) {
         this.serial = serial;
-        fifo.clear();
+        reset();
     }
 
     @Override
     public void write(byte[] bytes) throws IOException {
-        fifoInit();
         for (byte b : bytes) {
             lrc += b;
         }
@@ -52,7 +51,6 @@ public class OutputStreamASCII extends ModbusOutputStream {
 
     @Override
     public void write(int b) throws IOException {
-        fifoInit();
         lrc += (byte) b;
         byte[] bytes = DataUtils.toAscii((byte) b);
         fifo.write(bytes);
@@ -64,17 +62,13 @@ public class OutputStreamASCII extends ModbusOutputStream {
         fifo.write(Modbus.ASCII_CODE_CR);
         fifo.write(Modbus.ASCII_CODE_LF);
         serial.write(fifo.toByteArray());
-        clear();
+        reset();
     }
 
-    public void clear() throws IOException {
+    @Override
+    public void reset() {
         fifo.clear();
-    }
-
-    private void fifoInit() throws IOException {
-        if (fifo.size() == 0) {
-            fifo.write(Modbus.ASCII_CODE_COLON);
-            lrc = 0;
-        }
+        fifo.write(Modbus.ASCII_CODE_COLON);
+        lrc = 0;
     }
 }

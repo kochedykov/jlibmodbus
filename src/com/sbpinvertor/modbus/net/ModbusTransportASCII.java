@@ -44,7 +44,8 @@ public class ModbusTransportASCII extends ModbusTransportSerial {
 
     @Override
     void checksumInit() {
-        //dummy
+        os.reset();
+        is.reset();
     }
 
     @Override

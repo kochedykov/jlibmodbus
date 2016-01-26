@@ -42,7 +42,8 @@ public class InputStreamRTU extends ModbusInputStream {
         crc = CRC16.INITIAL_VALUE;
     }
 
-    public void clear() {
+    @Override
+    public void reset() {
         crc = CRC16.INITIAL_VALUE;
     }
 

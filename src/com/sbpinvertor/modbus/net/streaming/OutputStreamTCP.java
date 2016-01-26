@@ -50,4 +50,13 @@ public class OutputStreamTCP extends ModbusOutputStream {
     public void flush() throws IOException {
         os.flush();
     }
+
+    @Override
+    public void reset() {
+        try {
+            os.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }

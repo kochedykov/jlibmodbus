@@ -43,8 +43,8 @@ public class ModbusTransportRTU extends ModbusTransportSerial {
 
     @Override
     void checksumInit() {
-        os.clear();
-        is.clear();
+        os.reset();
+        is.reset();
     }
 
     @Override

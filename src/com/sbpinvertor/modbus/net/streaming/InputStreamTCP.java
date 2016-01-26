@@ -56,4 +56,9 @@ public class InputStreamTCP extends ModbusInputStream {
         }
         return count;
     }
+
+    @Override
+    public void reset() {
+        //dummy
+    }
 }
