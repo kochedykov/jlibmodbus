@@ -36,8 +36,8 @@ public enum ModbusFunction {
     READ_FILE_RECORD((byte) 0x14),
     WRITE_FILE_RECORD((byte) 0x15);
 
-    static private final int MODBUS_EXCEPTION_FLAG = 0x80;
-    private final int value;
+    final static private int MODBUS_EXCEPTION_FLAG = 0x80;
+    final private int value;
 
     ModbusFunction(int value) {
         this.value = value;

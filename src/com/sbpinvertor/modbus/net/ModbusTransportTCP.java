@@ -43,7 +43,6 @@ final public class ModbusTransportTCP extends ModbusTransport {
     final private boolean keepAlive;
     final private AduHeader headerIn = new AduHeader();
     final private AduHeader headerOut = new AduHeader();
-    private final byte[] pdu = new byte[Modbus.MAX_PDU_LENGTH];
     private Socket socket;
     private InputStreamTCP is;
     private OutputStreamTCP os;
@@ -94,8 +93,8 @@ final public class ModbusTransportTCP extends ModbusTransport {
         if (headerIn.getProtocolId() != headerOut.getProtocolId()) {
             throw new ModbusTransportException("Protocol ID check failed.");
         }
-        if (headerIn.getPduSize() > Modbus.MAX_TCP_ADU_LENGTH) {
-            throw new ModbusTransportException("Maximum ADU size is reached.");
+        if (headerIn.getPduSize() > Modbus.MAX_PDU_LENGTH) {
+            throw new ModbusTransportException("Maximum PDU size is reached.");
         }
     }
 
