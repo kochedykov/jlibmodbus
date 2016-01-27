@@ -1,9 +1,10 @@
-package com.sbpinvertor.modbus.net.streaming.base;
+package com.sbpinvertor.modbus.net.stream;
 
-import com.sbpinvertor.modbus.utils.DataUtils;
+import com.sbpinvertor.modbus.net.stream.base.ModbusInputStream;
 
+import java.io.BufferedInputStream;
 import java.io.IOException;
-import java.io.InputStream;
+import java.net.Socket;
 
 /**
  * Copyright (c) 2015-2016 JSC "Zavod "Invertor"
@@ -27,26 +28,37 @@ import java.io.InputStream;
  * Authors: Vladislav Y. Kochedykov, software engineer.
  * email: vladislav.kochedykov@gmail.com
  */
-abstract public class ModbusInputStream extends InputStream {
-    abstract public int read() throws IOException;
+public class InputStreamTCP extends ModbusInputStream {
 
-    abstract public int read(byte[] b, int off, int len) throws IOException;
+    final private BufferedInputStream is;
 
-    abstract public void reset();
-
-    public int readShortBE() throws IOException {
-        int h = read();
-        int l = read();
-        if (-1 == h || -1 == l)
-            return -1;
-        return DataUtils.toShort(h, l);
+    public InputStreamTCP(Socket s) throws IOException {
+        this.is = new BufferedInputStream(s.getInputStream());
     }
 
-    public int readShortLE() throws IOException {
-        int l = read();
-        int h = read();
-        if (-1 == h || -1 == l)
-            return -1;
-        return DataUtils.toShort(h, l);
+    @Override
+    public int read() throws IOException {
+        int c = is.read();
+        if (c == -1) {
+            c = is.read();
+        }
+        return c;
+    }
+
+    @Override
+    public int read(byte[] b, int off, int len) throws IOException {
+        int count = 0;
+        int k = 0;
+        while (count < len && k != -1) {
+            k = is.read(b, off + count, len - count);
+            if (-1 != k)
+                count += k;
+        }
+        return count;
+    }
+
+    @Override
+    public void reset() {
+        //dummy
     }
 }

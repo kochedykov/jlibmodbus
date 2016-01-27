@@ -6,7 +6,7 @@ import com.sbpinvertor.modbus.exception.ModbusTransportException;
 import com.sbpinvertor.modbus.msg.base.ModbusMessage;
 import com.sbpinvertor.modbus.msg.base.ModbusRequest;
 import com.sbpinvertor.modbus.msg.request.*;
-import com.sbpinvertor.modbus.net.streaming.base.ModbusInputStream;
+import com.sbpinvertor.modbus.net.stream.base.ModbusInputStream;
 
 import java.io.IOException;
 
@@ -75,47 +75,43 @@ final public class ModbusRequestFactory implements ModbusMessageFactory {
     }
 
     @Override
-    public ModbusMessage createMessage(ModbusInputStream fifo) throws ModbusTransportException, ModbusNumberException {
-        try {
-            ModbusMessage msg;
-            int serverAddress = fifo.read();
-            int functionCode = fifo.read();
-            switch (ModbusFunction.getFunction(functionCode)) {
-                case READ_COILS:
-                    msg = new ReadCoilsRequest(serverAddress);
-                    break;
-                case READ_DISCRETE_INPUTS:
-                    msg = new ReadDiscreteInputsRequest(serverAddress);
-                    break;
-                case READ_HOLDING_REGISTERS:
-                    msg = new ReadHoldingRegistersRequest(serverAddress);
-                    break;
-                case READ_INPUT_REGISTERS:
-                    msg = new ReadInputRegistersRequest(serverAddress);
-                    break;
-                case WRITE_SINGLE_COIL:
-                    msg = new WriteSingleCoilRequest(serverAddress);
-                    break;
-                case WRITE_SINGLE_REGISTER:
-                    msg = new WriteSingleRegisterRequest(serverAddress);
-                    break;
-                case WRITE_MULTIPLE_COILS:
-                    msg = new WriteMultipleCoilsRequest(serverAddress);
-                    break;
-                case WRITE_MULTIPLE_REGISTERS:
-                    msg = new WriteMultipleRegistersRequest(serverAddress);
-                    break;
-                case REPORT_SLAVE_ID:
-                case READ_FILE_RECORD:
-                case WRITE_FILE_RECORD:
-                default:
-                    throw new ModbusTransportException("function " + functionCode + " not supported.");
-            }
-            msg.read(fifo);
-            return msg;
-        } catch (IOException e) {
-            throw new ModbusTransportException(e);
+    public ModbusMessage createMessage(ModbusInputStream fifo) throws ModbusTransportException, ModbusNumberException, IOException {
+        ModbusMessage msg;
+        int serverAddress = fifo.read();
+        int functionCode = fifo.read();
+        switch (ModbusFunction.getFunction(functionCode)) {
+            case READ_COILS:
+                msg = new ReadCoilsRequest(serverAddress);
+                break;
+            case READ_DISCRETE_INPUTS:
+                msg = new ReadDiscreteInputsRequest(serverAddress);
+                break;
+            case READ_HOLDING_REGISTERS:
+                msg = new ReadHoldingRegistersRequest(serverAddress);
+                break;
+            case READ_INPUT_REGISTERS:
+                msg = new ReadInputRegistersRequest(serverAddress);
+                break;
+            case WRITE_SINGLE_COIL:
+                msg = new WriteSingleCoilRequest(serverAddress);
+                break;
+            case WRITE_SINGLE_REGISTER:
+                msg = new WriteSingleRegisterRequest(serverAddress);
+                break;
+            case WRITE_MULTIPLE_COILS:
+                msg = new WriteMultipleCoilsRequest(serverAddress);
+                break;
+            case WRITE_MULTIPLE_REGISTERS:
+                msg = new WriteMultipleRegistersRequest(serverAddress);
+                break;
+            case REPORT_SLAVE_ID:
+            case READ_FILE_RECORD:
+            case WRITE_FILE_RECORD:
+            default:
+                throw new ModbusTransportException("function " + functionCode + " not supported.");
         }
+        msg.read(fifo);
+        return msg;
     }
 
     static private class SingletonHolder {

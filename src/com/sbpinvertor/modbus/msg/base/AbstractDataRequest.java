@@ -2,7 +2,7 @@ package com.sbpinvertor.modbus.msg.base;
 
 import com.sbpinvertor.modbus.Modbus;
 import com.sbpinvertor.modbus.exception.ModbusNumberException;
-import com.sbpinvertor.modbus.net.streaming.base.ModbusOutputStream;
+import com.sbpinvertor.modbus.net.stream.base.ModbusOutputStream;
 
 import java.io.IOException;
 

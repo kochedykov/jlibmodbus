@@ -1,10 +1,10 @@
-package com.sbpinvertor.modbus.net.streaming;
+package com.sbpinvertor.modbus.net.stream;
 
-import com.sbpinvertor.modbus.net.streaming.base.ModbusInputStream;
+import com.sbpinvertor.modbus.net.stream.base.ModbusOutputStream;
 
-import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
+import java.net.Socket;
 
 /**
  * Copyright (c) 2015-2016 JSC "Zavod "Invertor"
@@ -28,37 +28,35 @@ import java.io.InputStream;
  * Authors: Vladislav Y. Kochedykov, software engineer.
  * email: vladislav.kochedykov@gmail.com
  */
-public class InputStreamTCP extends ModbusInputStream {
+public class OutputStreamTCP extends ModbusOutputStream {
 
-    volatile private BufferedInputStream is;
+    final private BufferedOutputStream os;
 
-    public InputStreamTCP(InputStream is) {
-        this.is = new BufferedInputStream(is);
+    public OutputStreamTCP(Socket s) throws IOException {
+        this.os = new BufferedOutputStream(s.getOutputStream());
     }
 
     @Override
-    public int read() throws IOException {
-        int c = is.read();
-        if (c == -1) {
-            c = is.read();
-        }
-        return c;
+    public void write(byte[] b) throws IOException {
+        os.write(b);
     }
 
     @Override
-    public int read(byte[] b, int off, int len) throws IOException {
-        int count = 0;
-        int k = 0;
-        while (count < len && k != -1) {
-            k = is.read(b, off + count, len - count);
-            if (-1 != k)
-                count += k;
-        }
-        return count;
+    public void write(int b) throws IOException {
+        os.write(b);
+    }
+
+    @Override
+    public void flush() throws IOException {
+        os.flush();
     }
 
     @Override
     public void reset() {
-        //dummy
+        try {
+            os.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

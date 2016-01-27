@@ -1,8 +1,13 @@
 package com.sbpinvertor.modbus;
 
-import com.sbpinvertor.conn.SerialPort;
-import com.sbpinvertor.conn.SerialPortException;
-import com.sbpinvertor.modbus.net.ModbusTransportASCII;
+import com.sbpinvertor.modbus.exception.ModbusTransportException;
+import com.sbpinvertor.modbus.net.ModbusConnection;
+import com.sbpinvertor.modbus.net.ModbusConnectionRTU;
+import com.sbpinvertor.modbus.net.ModbusTransport;
+import com.sbpinvertor.modbus.net.ModbusTransportRTU;
+import com.sbpinvertor.modbus.serial.SerialParameters;
+import com.sbpinvertor.modbus.serial.SerialPort;
+import com.sbpinvertor.modbus.serial.SerialUtils;
 
 /**
  * Copyright (c) 2015-2016 JSC "Zavod "Invertor"
@@ -28,12 +33,30 @@ import com.sbpinvertor.modbus.net.ModbusTransportASCII;
  */
 
 class ModbusMasterASCII extends ModbusMaster {
+    final private ModbusTransport transport;
+    final private ModbusConnection connection;
 
-    public ModbusMasterASCII(String device, SerialPort.BaudRate baudRate, SerialPort.Parity parity) throws SerialPortException {
-        super(new ModbusTransportASCII(new SerialPort(device, baudRate, 7, parity == SerialPort.Parity.NONE ? 2 : 1, parity)));
+    public ModbusMasterASCII(SerialParameters parameters) throws ModbusTransportException {
+        this.transport = new ModbusTransportRTU();
+        this.connection = new ModbusConnectionRTU(SerialUtils.createSerial(parameters));
+        connection.open();
     }
 
-    public ModbusMasterASCII(String device, SerialPort.BaudRate baudRate) throws SerialPortException {
+    public ModbusMasterASCII(String device, SerialPort.BaudRate baudRate, SerialPort.Parity parity) throws ModbusTransportException {
+        this(new SerialParameters(device, baudRate, 7, parity == SerialPort.Parity.NONE ? 2 : 1, parity));
+    }
+
+    public ModbusMasterASCII(String device, SerialPort.BaudRate baudRate) throws ModbusTransportException {
         this(device, baudRate, SerialPort.Parity.EVEN);
+    }
+
+    @Override
+    protected ModbusTransport getTransport() {
+        return transport;
+    }
+
+    @Override
+    protected ModbusConnection getConnection() {
+        return connection;
     }
 }

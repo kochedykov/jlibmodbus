@@ -1,9 +1,6 @@
-package com.sbpinvertor.modbus.msg.base;
+package com.sbpinvertor.modbus.serial;
 
-import com.sbpinvertor.modbus.exception.ModbusNumberException;
-import com.sbpinvertor.modbus.net.stream.base.ModbusOutputStream;
-
-import java.io.IOException;
+import jssc.SerialPortList;
 
 /**
  * Copyright (c) 2015-2016 JSC "Zavod "Invertor"
@@ -19,7 +16,7 @@ import java.io.IOException;
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * GNU General Public License for more details.
  * <p/>
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
@@ -27,28 +24,12 @@ import java.io.IOException;
  * Authors: Vladislav Y. Kochedykov, software engineer.
  * email: vladislav.kochedykov@gmail.com
  */
-abstract public class ModbusRequest extends ModbusMessage {
-
-    public ModbusRequest(int serverAddress) throws ModbusNumberException {
-        super(serverAddress);
+public class SerialUtils {
+    static public String[] getPortList() {
+        return SerialPortList.getPortNames();
     }
 
-    public ModbusRequest(ModbusMessage msg) {
-        super(msg);
+    static public SerialPort createSerial(SerialParameters sp) {
+        return new SerialPort(sp);
     }
-
-    abstract protected void writeRequest(ModbusOutputStream fifo) throws IOException;
-
-    @Override
-    final public void writePDU(ModbusOutputStream fifo) throws IOException {
-        fifo.write(getFunction().getCode());
-        writeRequest(fifo);
-    }
-
-    @Override
-    final protected int pduSize() {
-        return 1 + requestSize();
-    }
-
-    abstract protected int requestSize();
 }

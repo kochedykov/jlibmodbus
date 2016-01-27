@@ -1,9 +1,6 @@
-package com.sbpinvertor.modbus.net.streaming.base;
+package com.sbpinvertor.modbus.tcp;
 
-import com.sbpinvertor.modbus.utils.DataUtils;
-
-import java.io.IOException;
-import java.io.OutputStream;
+import com.sbpinvertor.modbus.Modbus;
 
 /**
  * Copyright (c) 2015-2016 JSC "Zavod "Invertor"
@@ -27,23 +24,30 @@ import java.io.OutputStream;
  * Authors: Vladislav Y. Kochedykov, software engineer.
  * email: vladislav.kochedykov@gmail.com
  */
-abstract public class ModbusOutputStream extends OutputStream {
+public class TcpParameters {
+    final private String host;
+    final private int port;
+    final private boolean keepAlive;
 
-    abstract public void write(byte[] b) throws IOException;
-
-    abstract public void write(int b) throws IOException;
-
-    abstract public void flush() throws IOException;
-
-    abstract public void reset();
-
-    public void writeShortBE(int s) throws IOException {
-        write(DataUtils.byteHigh(s));
-        write(DataUtils.byteLow(s));
+    public TcpParameters(String host, int port, boolean keepAlive) {
+        this.host = host;
+        this.port = port;
+        this.keepAlive = keepAlive;
     }
 
-    public void writeShortLE(int s) throws IOException {
-        write(DataUtils.byteLow(s));
-        write(DataUtils.byteHigh(s));
+    public TcpParameters(String host) {
+        this(host, Modbus.TCP_PORT, false);
+    }
+
+    public String getHost() {
+        return host;
+    }
+
+    public int getPort() {
+        return port;
+    }
+
+    public boolean isKeepAlive() {
+        return keepAlive;
     }
 }

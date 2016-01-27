@@ -1,8 +1,6 @@
-package com.sbpinvertor.modbus.net.streaming;
+package com.sbpinvertor.modbus.net.stream;
 
-import com.sbpinvertor.conn.SerialPort;
-import com.sbpinvertor.modbus.net.ModbusTransport;
-import com.sbpinvertor.modbus.net.streaming.base.ModbusInputStream;
+import com.sbpinvertor.modbus.serial.SerialPort;
 import com.sbpinvertor.utils.CRC16;
 
 import java.io.IOException;
@@ -29,16 +27,12 @@ import java.io.IOException;
  * Authors: Vladislav Y. Kochedykov, software engineer.
  * email: vladislav.kochedykov@gmail.com
  */
-public class InputStreamRTU extends ModbusInputStream {
-
-    final private SerialPort serial;
-    final private ModbusTransport transport;
+public class InputStreamRTU extends InputStreamSerial {
 
     private int crc;
 
-    public InputStreamRTU(SerialPort serial, ModbusTransport transport) {
-        this.serial = serial;
-        this.transport = transport;
+    public InputStreamRTU(SerialPort serial) {
+        super(serial);
         crc = CRC16.INITIAL_VALUE;
     }
 
@@ -49,14 +43,14 @@ public class InputStreamRTU extends ModbusInputStream {
 
     @Override
     public int read() throws IOException {
-        int b = serial.readByte(transport.getResponseTimeout()) & 0xff;
+        int b = super.read();
         crc = CRC16.calc(crc, (byte) (b & 0xff));
         return b;
     }
 
     @Override
     public int read(byte[] b, int off, int len) throws IOException {
-        int c = serial.read(b, off, len);
+        int c = super.read(b, off, len);
         crc = CRC16.calc(crc, b, off, len);
         return c;
     }

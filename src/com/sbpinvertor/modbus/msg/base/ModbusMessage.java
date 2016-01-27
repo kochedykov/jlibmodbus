@@ -3,8 +3,8 @@ package com.sbpinvertor.modbus.msg.base;
 import com.sbpinvertor.modbus.Modbus;
 import com.sbpinvertor.modbus.ModbusFunction;
 import com.sbpinvertor.modbus.exception.ModbusNumberException;
-import com.sbpinvertor.modbus.net.streaming.base.ModbusInputStream;
-import com.sbpinvertor.modbus.net.streaming.base.ModbusOutputStream;
+import com.sbpinvertor.modbus.net.stream.base.ModbusInputStream;
+import com.sbpinvertor.modbus.net.stream.base.ModbusOutputStream;
 
 import java.io.IOException;
 
@@ -31,9 +31,11 @@ import java.io.IOException;
  * email: vladislav.kochedykov@gmail.com
  */
 
-abstract public class ModbusMessage {
+abstract public class ModbusMessage implements Transportable {
 
-    private final int serverAddress;
+    final private int serverAddress;
+    private int protocolId = Modbus.PROTOCOL_ID;
+    private int transactionId = 0;
 
     public ModbusMessage(int serverAddress) throws ModbusNumberException {
         if (!Modbus.checkServerAddress(serverAddress))
@@ -68,5 +70,21 @@ abstract public class ModbusMessage {
 
     public int getServerAddress() {
         return serverAddress;
+    }
+
+    public int getProtocolId() {
+        return protocolId;
+    }
+
+    public void setProtocolId(int protocolId) {
+        this.protocolId = protocolId;
+    }
+
+    public int getTransactionId() {
+        return transactionId;
+    }
+
+    public void setTransactionId(int transactionId) {
+        this.transactionId = transactionId;
     }
 }

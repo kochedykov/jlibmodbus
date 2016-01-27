@@ -1,9 +1,7 @@
-package com.sbpinvertor.modbus.net.streaming;
+package com.sbpinvertor.modbus.net.stream;
 
-import com.sbpinvertor.conn.SerialPort;
 import com.sbpinvertor.modbus.Modbus;
-import com.sbpinvertor.modbus.net.ModbusTransport;
-import com.sbpinvertor.modbus.net.streaming.base.ModbusInputStream;
+import com.sbpinvertor.modbus.serial.SerialPort;
 import com.sbpinvertor.modbus.utils.ByteFifo;
 import com.sbpinvertor.modbus.utils.DataUtils;
 
@@ -31,14 +29,15 @@ import java.io.IOException;
  * Authors: Vladislav Y. Kochedykov, software engineer.
  * email: vladislav.kochedykov@gmail.com
  */
-public class InputStreamASCII extends ModbusInputStream {
-    final private SerialPort serial;
-    final private ModbusTransport transport;
+public class InputStreamASCII extends InputStreamSerial {
     final private ByteFifo fifo = new ByteFifo(Modbus.MAX_RTU_ADU_LENGTH);
 
-    public InputStreamASCII(SerialPort serial, ModbusTransport transport) {
-        this.serial = serial;
-        this.transport = transport;
+    public InputStreamASCII(SerialPort serial) {
+        super(serial);
+    }
+
+    public int readByte() throws IOException {
+        return super.read();
     }
 
     @Override
@@ -74,9 +73,5 @@ public class InputStreamASCII extends ModbusInputStream {
     @Override
     public void reset() {
         fifo.clear();
-    }
-
-    public int readByte() throws IOException {
-        return serial.readByte(transport.getResponseTimeout());
     }
 }

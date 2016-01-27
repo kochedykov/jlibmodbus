@@ -7,7 +7,7 @@ import com.sbpinvertor.modbus.exception.ModbusTransportException;
 import com.sbpinvertor.modbus.msg.base.ModbusMessage;
 import com.sbpinvertor.modbus.msg.base.ModbusResponse;
 import com.sbpinvertor.modbus.msg.response.*;
-import com.sbpinvertor.modbus.net.streaming.base.ModbusInputStream;
+import com.sbpinvertor.modbus.net.stream.base.ModbusInputStream;
 
 import java.io.IOException;
 
@@ -76,54 +76,50 @@ final public class ModbusResponseFactory implements ModbusMessageFactory {
     }
 
     @Override
-    public ModbusMessage createMessage(ModbusInputStream fifo) throws ModbusTransportException, ModbusNumberException {
-        try {
-            ModbusResponse msg;
-            int serverAddress = fifo.read();
-            int functionCode = fifo.read();
-            switch (ModbusFunction.getFunction(functionCode)) {
-                case READ_COILS:
-                    msg = new ReadCoilsResponse(serverAddress);
-                    break;
-                case READ_DISCRETE_INPUTS:
-                    msg = new ReadDiscreteInputsResponse(serverAddress);
-                    break;
-                case READ_HOLDING_REGISTERS:
-                    msg = new ReadHoldingRegistersResponse(serverAddress);
-                    break;
-                case READ_INPUT_REGISTERS:
-                    msg = new ReadInputRegistersResponse(serverAddress);
-                    break;
-                case WRITE_SINGLE_COIL:
-                    msg = new WriteSingleCoilResponse(serverAddress);
-                    break;
-                case WRITE_SINGLE_REGISTER:
-                    msg = new WriteSingleRegisterResponse(serverAddress);
-                    break;
-                case WRITE_MULTIPLE_COILS:
-                    msg = new WriteMultipleCoilsResponse(serverAddress);
-                    break;
-                case WRITE_MULTIPLE_REGISTERS:
-                    msg = new WriteMultipleRegistersResponse(serverAddress);
-                    break;
-                case REPORT_SLAVE_ID:
-                case READ_FILE_RECORD:
-                case WRITE_FILE_RECORD:
-                default:
-                    throw new ModbusTransportException("function " + functionCode + " not supported.");
-            }
-
-            if (ModbusFunction.isException(functionCode)) {
-                msg.setException();
-            }
-            msg.read(fifo);
-            if (msg.isException()) {
-                throw new ModbusProtocolException(msg.getException(), msg.getServerAddress());
-            }
-            return msg;
-        } catch (IOException e) {
-            throw new ModbusTransportException(e);
+    public ModbusMessage createMessage(ModbusInputStream fifo) throws ModbusTransportException, ModbusNumberException, IOException {
+        ModbusResponse msg;
+        int serverAddress = fifo.read();
+        int functionCode = fifo.read();
+        switch (ModbusFunction.getFunction(functionCode)) {
+            case READ_COILS:
+                msg = new ReadCoilsResponse(serverAddress);
+                break;
+            case READ_DISCRETE_INPUTS:
+                msg = new ReadDiscreteInputsResponse(serverAddress);
+                break;
+            case READ_HOLDING_REGISTERS:
+                msg = new ReadHoldingRegistersResponse(serverAddress);
+                break;
+            case READ_INPUT_REGISTERS:
+                msg = new ReadInputRegistersResponse(serverAddress);
+                break;
+            case WRITE_SINGLE_COIL:
+                msg = new WriteSingleCoilResponse(serverAddress);
+                break;
+            case WRITE_SINGLE_REGISTER:
+                msg = new WriteSingleRegisterResponse(serverAddress);
+                break;
+            case WRITE_MULTIPLE_COILS:
+                msg = new WriteMultipleCoilsResponse(serverAddress);
+                break;
+            case WRITE_MULTIPLE_REGISTERS:
+                msg = new WriteMultipleRegistersResponse(serverAddress);
+                break;
+            case REPORT_SLAVE_ID:
+            case READ_FILE_RECORD:
+            case WRITE_FILE_RECORD:
+            default:
+                throw new ModbusTransportException("function " + functionCode + " not supported.");
         }
+
+        if (ModbusFunction.isException(functionCode)) {
+            msg.setException();
+        }
+        msg.read(fifo);
+        if (msg.isException()) {
+            throw new ModbusProtocolException(msg.getException(), msg.getServerAddress());
+        }
+        return msg;
     }
 
     static private class SingletonHolder {

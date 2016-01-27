@@ -1,4 +1,4 @@
-package com.sbpinvertor.conn;
+package com.sbpinvertor.modbus.serial;
 
 /**
  * Copyright (c) 2015-2016 JSC "Zavod "Invertor"

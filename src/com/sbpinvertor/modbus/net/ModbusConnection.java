@@ -1,10 +1,8 @@
-package com.sbpinvertor.modbus.net.streaming;
+package com.sbpinvertor.modbus.net;
 
-import com.sbpinvertor.modbus.net.streaming.base.ModbusOutputStream;
-
-import java.io.BufferedOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
+import com.sbpinvertor.modbus.exception.ModbusTransportException;
+import com.sbpinvertor.modbus.net.stream.base.ModbusInputStream;
+import com.sbpinvertor.modbus.net.stream.base.ModbusOutputStream;
 
 /**
  * Copyright (c) 2015-2016 JSC "Zavod "Invertor"
@@ -28,35 +26,32 @@ import java.io.OutputStream;
  * Authors: Vladislav Y. Kochedykov, software engineer.
  * email: vladislav.kochedykov@gmail.com
  */
-public class OutputStreamTCP extends ModbusOutputStream {
+abstract public class ModbusConnection {
 
-    volatile private BufferedOutputStream os;
+    private int timeout;
 
-    public OutputStreamTCP(OutputStream os) {
-        this.os = new BufferedOutputStream(os);
+    abstract public ModbusOutputStream getOutputStream();
+
+    abstract public ModbusInputStream getInputStream();
+
+    abstract public void open() throws ModbusTransportException;
+
+    abstract public void close() throws ModbusTransportException;
+
+    abstract public void reset() throws ModbusTransportException;
+
+    public void setReadTimeout(int timeout) {
+        this.timeout = timeout;
+    }
+
+    public int getTimeout() {
+        return timeout;
     }
 
     @Override
-    public void write(byte[] b) throws IOException {
-        os.write(b);
-    }
-
-    @Override
-    public void write(int b) throws IOException {
-        os.write(b);
-    }
-
-    @Override
-    public void flush() throws IOException {
-        os.flush();
-    }
-
-    @Override
-    public void reset() {
-        try {
-            os.flush();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    protected void finalize()
+            throws Throwable {
+        super.finalize();
+        close();
     }
 }

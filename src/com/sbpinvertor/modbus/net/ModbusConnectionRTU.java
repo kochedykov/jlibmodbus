@@ -1,10 +1,11 @@
 package com.sbpinvertor.modbus.net;
 
-import com.sbpinvertor.conn.SerialPort;
-import com.sbpinvertor.conn.SerialPortException;
 import com.sbpinvertor.modbus.exception.ModbusTransportException;
-import com.sbpinvertor.modbus.msg.ModbusMessageFactory;
-import com.sbpinvertor.modbus.msg.base.ModbusMessage;
+import com.sbpinvertor.modbus.net.stream.InputStreamRTU;
+import com.sbpinvertor.modbus.net.stream.OutputStreamRTU;
+import com.sbpinvertor.modbus.net.stream.base.ModbusInputStream;
+import com.sbpinvertor.modbus.net.stream.base.ModbusOutputStream;
+import com.sbpinvertor.modbus.serial.SerialPort;
 
 /**
  * Copyright (c) 2015-2016 JSC "Zavod "Invertor"
@@ -28,38 +29,35 @@ import com.sbpinvertor.modbus.msg.base.ModbusMessage;
  * Authors: Vladislav Y. Kochedykov, software engineer.
  * email: vladislav.kochedykov@gmail.com
  */
-abstract public class ModbusTransportSerial extends ModbusTransport {
+public class ModbusConnectionRTU extends ModbusConnectionSerial {
+    final private OutputStreamRTU os;
+    final private InputStreamRTU is;
 
-    final private SerialPort serial;
-
-    public ModbusTransportSerial(SerialPort serial) throws SerialPortException {
-        this.serial = serial;
-        serial.open();
+    public ModbusConnectionRTU(SerialPort serial) {
+        super(serial);
+        os = new OutputStreamRTU(serial);
+        is = new InputStreamRTU(serial);
     }
 
     @Override
-    public void send(ModbusMessage msg) throws ModbusTransportException {
-        serial.clear();
-        checksumInit();
-        super.send(msg);
+    public void reset() throws ModbusTransportException {
+        super.reset();
+        is.reset();
+        os.reset();
     }
 
     @Override
-    public ModbusMessage recv(ModbusMessageFactory factory) throws ModbusTransportException {
-        ModbusMessage msg = super.recv(factory);
-        if (!checksumValid())
-            throw new ModbusTransportException("control sum check failed.");
-        return msg;
+    public ModbusOutputStream getOutputStream() {
+        return os;
     }
 
     @Override
-    protected void finalize()
-            throws Throwable {
-        super.finalize();
-        serial.close();
+    public ModbusInputStream getInputStream() {
+        return is;
     }
 
-    abstract void checksumInit();
+    @Override
+    public void setReadTimeout(int timeout) {
 
-    abstract boolean checksumValid();
+    }
 }

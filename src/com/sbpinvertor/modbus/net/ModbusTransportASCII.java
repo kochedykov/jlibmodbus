@@ -1,12 +1,11 @@
 package com.sbpinvertor.modbus.net;
 
-import com.sbpinvertor.conn.SerialPort;
-import com.sbpinvertor.conn.SerialPortException;
 import com.sbpinvertor.modbus.Modbus;
-import com.sbpinvertor.modbus.net.streaming.InputStreamASCII;
-import com.sbpinvertor.modbus.net.streaming.OutputStreamASCII;
-import com.sbpinvertor.modbus.net.streaming.base.ModbusInputStream;
-import com.sbpinvertor.modbus.net.streaming.base.ModbusOutputStream;
+import com.sbpinvertor.modbus.exception.ModbusNumberException;
+import com.sbpinvertor.modbus.exception.ModbusTransportException;
+import com.sbpinvertor.modbus.msg.ModbusMessageFactory;
+import com.sbpinvertor.modbus.msg.base.ModbusMessage;
+import com.sbpinvertor.modbus.net.stream.InputStreamASCII;
 
 import java.io.IOException;
 
@@ -24,7 +23,7 @@ import java.io.IOException;
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * GNU General Public License for more details.
  * <p/>
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
@@ -32,41 +31,26 @@ import java.io.IOException;
  * Authors: Vladislav Y. Kochedykov, software engineer.
  * email: vladislav.kochedykov@gmail.com
  */
-public class ModbusTransportASCII extends ModbusTransportSerial {
-    final private OutputStreamASCII os;
-    final private InputStreamASCII is;
+public class ModbusTransportASCII extends ModbusTransport {
 
-    public ModbusTransportASCII(SerialPort serial) throws SerialPortException {
-        super(serial);
-        os = new OutputStreamASCII(serial);
-        is = new InputStreamASCII(serial, this);
+    public ModbusTransportASCII() {
+
     }
 
-    @Override
-    void checksumInit() {
-        os.reset();
-        is.reset();
-    }
-
-    @Override
-    boolean checksumValid() {
-        try {
-            boolean ret = is.getLrc() != is.read();
-            if (is.readByte() != Modbus.ASCII_CODE_CR || is.readByte() != Modbus.ASCII_CODE_LF)
-                Modbus.log().warning("\\r\\n not received.");
-            return ret;
-        } catch (IOException e) {
-            return false;
+    protected ModbusMessage read(ModbusConnection conn, ModbusMessageFactory factory) throws ModbusNumberException, ModbusTransportException, IOException {
+        InputStreamASCII is = (InputStreamASCII) conn.getInputStream();
+        ModbusMessage msg = factory.createMessage(is);
+        boolean check = is.getLrc() != is.read();
+        if (is.readByte() != Modbus.ASCII_CODE_CR || is.readByte() != Modbus.ASCII_CODE_LF)
+            Modbus.log().warning("\\r\\n not received.");
+        if (!check) {
+            throw new ModbusTransportException("control sum check failed.");
         }
+        return msg;
     }
 
     @Override
-    public ModbusOutputStream getOutputStream() {
-        return os;
-    }
-
-    @Override
-    public ModbusInputStream getInputStream() {
-        return is;
+    protected void sendImpl(ModbusConnection conn, ModbusMessage msg) throws IOException {
+        msg.write(conn.getOutputStream());
     }
 }

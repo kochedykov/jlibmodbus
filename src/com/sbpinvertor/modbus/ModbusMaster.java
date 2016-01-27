@@ -1,17 +1,16 @@
 package com.sbpinvertor.modbus;
 
-import com.sbpinvertor.conn.SerialPortException;
 import com.sbpinvertor.modbus.exception.ModbusNumberException;
 import com.sbpinvertor.modbus.exception.ModbusTransportException;
-import com.sbpinvertor.modbus.msg.ModbusMessageFactory;
 import com.sbpinvertor.modbus.msg.ModbusRequestFactory;
-import com.sbpinvertor.modbus.msg.ModbusResponseFactory;
 import com.sbpinvertor.modbus.msg.base.ModbusMessage;
 import com.sbpinvertor.modbus.msg.response.ReadCoilsResponse;
 import com.sbpinvertor.modbus.msg.response.ReadDiscreteInputsResponse;
 import com.sbpinvertor.modbus.msg.response.ReadHoldingRegistersResponse;
 import com.sbpinvertor.modbus.msg.response.ReadInputRegistersResponse;
+import com.sbpinvertor.modbus.net.ModbusConnection;
 import com.sbpinvertor.modbus.net.ModbusTransport;
+import com.sbpinvertor.modbus.serial.SerialPortException;
 
 import java.io.IOException;
 
@@ -37,25 +36,39 @@ import java.io.IOException;
  * Authors: Vladislav Y. Kochedykov, software engineer.
  * email: vladislav.kochedykov@gmail.com
  */
-public class ModbusMaster {
+abstract public class ModbusMaster {
 
-    final private ModbusTransport transport;
     final private ModbusRequestFactory requestFactory = ModbusRequestFactory.getInstance();
-    final private ModbusMessageFactory responseFactory = ModbusResponseFactory.getInstance();
 
-    ModbusMaster(ModbusTransport transport) {
-        this.transport = transport;
+    protected ModbusMaster() {
+
     }
 
-    private ModbusMessage processRequest(ModbusMessage request) throws SerialPortException,
+    abstract protected ModbusTransport getTransport();
+
+    abstract protected ModbusConnection getConnection();
+
+    protected void sendRequest(ModbusMessage msg) throws ModbusTransportException, IOException {
+        getTransport().send(getConnection(), msg);
+    }
+
+    protected ModbusMessage readResponse() throws ModbusTransportException, ModbusNumberException, IOException {
+        return getTransport().readResponse(getConnection());
+    }
+
+    final private ModbusMessage processRequest(ModbusMessage request) throws SerialPortException,
             ModbusTransportException, ModbusNumberException, IOException {
-        transport.send(request);
-        ModbusMessage response = transport.recv(responseFactory);
-        if (request.getServerAddress() != response.getServerAddress())
+        sendRequest(request);
+        ModbusMessage msg = readResponse();
+        if (request.getProtocolId() != msg.getProtocolId())
+            throw new ModbusTransportException("Collision: does not matches the transaction id");
+        if (request.getTransactionId() != msg.getTransactionId())
+            throw new ModbusTransportException("Collision: does not matches the transaction id");
+        if (request.getServerAddress() != msg.getServerAddress())
             throw new ModbusTransportException("Collision: does not matches the slave address");
-        if (request.getFunction() != response.getFunction())
+        if (request.getFunction() != msg.getFunction())
             throw new ModbusTransportException("Collision: does not matches the function code");
-        return response;
+        return msg;
     }
 
     /**
@@ -65,7 +78,7 @@ public class ModbusMaster {
      * @param timeout the specified timeout, in milliseconds.
      */
     public void setResponseTimeout(int timeout) {
-        transport.setResponseTimeout(timeout);
+        getConnection().setReadTimeout(timeout);
     }
 
     final public int[] readHoldingRegisters(int serverAddress, int startAddress, int quantity) throws SerialPortException,
@@ -74,7 +87,6 @@ public class ModbusMaster {
         ReadHoldingRegistersResponse response = (ReadHoldingRegistersResponse) processRequest(request);
         return response.getRegisters();
     }
-
 
     final public int[] readInputRegisters(int serverAddress, int startAddress, int quantity) throws SerialPortException,
             ModbusTransportException, ModbusNumberException, IOException {

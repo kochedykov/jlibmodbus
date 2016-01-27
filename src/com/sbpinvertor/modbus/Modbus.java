@@ -1,7 +1,5 @@
 package com.sbpinvertor.modbus;
 
-import com.sbpinvertor.conn.SerialPort;
-
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -19,7 +17,7 @@ import java.util.logging.Logger;
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * GNU General Public License for more details.
  * <p/>
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
@@ -27,7 +25,6 @@ import java.util.logging.Logger;
  * Authors: Vladislav Y. Kochedykov, software engineer.
  * email: vladislav.kochedykov@gmail.com
  */
-
 public class Modbus {
     final static public int MAX_CONNECTION_TIMEOUT = 3000;
     final static public int MAX_RESPONSE_TIMEOUT = 1000;
@@ -56,10 +53,6 @@ public class Modbus {
     static {
         log = Logger.getLogger(TAG);
         setLogLevel(LogLevel.LEVEL_RELEASE);
-    }
-
-    private Modbus() {
-
     }
 
     /**
@@ -91,10 +84,10 @@ public class Modbus {
         * some of modbus tcp slaves sets the UnitId value to zero, not ignoring value in this field.
         */
         if (0 == serverAddress) {
-            Modbus.log().warning("Server address must be in range from " + MIN_SERVER_ADDRESS + " to " + MAX_SERVER_ADDRESS);
+            Modbus.log().warning("Server address must be in range from " + Modbus.MIN_SERVER_ADDRESS + " to " + Modbus.MAX_SERVER_ADDRESS);
             return true;
         }
-        return !(serverAddress < MIN_SERVER_ADDRESS || serverAddress > MAX_SERVER_ADDRESS);
+        return !(serverAddress < Modbus.MIN_SERVER_ADDRESS || serverAddress > Modbus.MAX_SERVER_ADDRESS);
     }
 
     /**
@@ -200,112 +193,6 @@ public class Modbus {
      */
     static public boolean checkRegisterValue(int value) {
         return checkRange(value, 0, Modbus.MAX_REGISTER_VALUE);
-    }
-
-    /**
-     *  Creates ModbusMasterRTU instance.
-     * @param device - serial port device name
-     * @param baudRate - baud rate
-     * @param dataBits - data bit count
-     * @param stopBits - stop bit count(1,2)
-     * @param parity - parity bit(NONE, EVEN, ODD, MARK, SPACE)
-     * @return ModbusMaster instance if there is no errors, else null
-     *
-     * @see com.sbpinvertor.conn.SerialPort.Parity
-     * @see com.sbpinvertor.conn.SerialPort.BaudRate
-     * @see ModbusMaster
-     */
-    static public ModbusMaster createModbusMasterRTU(String device, SerialPort.BaudRate baudRate, int dataBits, int stopBits, SerialPort.Parity parity) {
-        ModbusMaster m = null;
-        try {
-            m = new ModbusMasterRTU(device, baudRate, dataBits, stopBits, parity);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return m;
-    }
-
-    /**
-     *  Creates ModbusMasterASCII instance.
-     * @param device - serial port device name
-     * @param baudRate - baud rate
-     * @param parity - parity bit(NONE, EVEN, ODD, MARK, SPACE)
-     * @return ModbusMaster instance if there is no errors, else null
-     *
-     * @see com.sbpinvertor.conn.SerialPort.Parity
-     * @see com.sbpinvertor.conn.SerialPort.BaudRate
-     * @see ModbusMaster
-     */
-    static public ModbusMaster createModbusMasterASCII(String device, SerialPort.BaudRate baudRate, SerialPort.Parity parity) {
-        ModbusMaster m = null;
-        try {
-            m = new ModbusMasterASCII(device, baudRate, parity);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return m;
-    }
-
-    /**
-     * Creates ModbusMasterASCII instance with even parity completion.
-     *
-     * @param device   - serial port device name
-     * @param baudRate - baud rate
-     * @return ModbusMaster instance if there is no errors, else null
-     * @see com.sbpinvertor.conn.SerialPort.Parity
-     * @see com.sbpinvertor.conn.SerialPort.BaudRate
-     * @see ModbusMaster
-     */
-    static public ModbusMaster createModbusMasterASCII(String device, SerialPort.BaudRate baudRate) {
-        ModbusMaster m = null;
-        try {
-            m = new ModbusMasterASCII(device, baudRate);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return m;
-    }
-
-    /**
-     * Creates ModbusMasterTCP instance.
-     * @param host - ip address of remote slave
-     * @param keepAlive - whether or not to have socket keep alive turned on.
-     * @return ModbusMaster instance if there is no errors, else null
-     *
-     * @see ModbusMaster
-     */
-    static public ModbusMaster createModbusMasterTCP(String host, boolean keepAlive) {
-        return createModbusMasterTCP(host, Modbus.TCP_PORT, keepAlive);
-    }
-
-    /**
-     * Creates ModbusMasterTCP instance.
-     * @param host - ip address of remote slave
-     * @return ModbusMaster instance if there is no errors, else null
-     *
-     * @see ModbusMaster
-     */
-    static public ModbusMaster createModbusMasterTCP(String host) {
-        return createModbusMasterTCP(host, false);
-    }
-
-    /**
-     * Creates ModbusMasterTCP instance.
-     * @param host - ip address of remote slave
-     * @param port - tcp port
-     * @param keepAlive - whether or not to have socket keep alive turned on.
-     * @return ModbusMaster instance if there is no errors, else null
-     *
-     * @see ModbusMaster
-     */
-    static public ModbusMaster createModbusMasterTCP(String host, int port, boolean keepAlive) {
-        ModbusMaster m = null;
-        try {
-            m = new ModbusMasterTCP(host, port, keepAlive);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return m;
     }
 
     /**

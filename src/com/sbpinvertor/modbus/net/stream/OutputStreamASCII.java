@@ -1,8 +1,8 @@
-package com.sbpinvertor.modbus.net.streaming;
+package com.sbpinvertor.modbus.net.stream;
 
-import com.sbpinvertor.conn.SerialPort;
 import com.sbpinvertor.modbus.Modbus;
-import com.sbpinvertor.modbus.net.streaming.base.ModbusOutputStream;
+import com.sbpinvertor.modbus.net.stream.base.ModbusOutputStream;
+import com.sbpinvertor.modbus.serial.SerialPort;
 import com.sbpinvertor.modbus.utils.ByteFifo;
 import com.sbpinvertor.modbus.utils.DataUtils;
 

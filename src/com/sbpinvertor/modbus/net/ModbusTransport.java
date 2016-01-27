@@ -1,11 +1,11 @@
 package com.sbpinvertor.modbus.net;
 
-import com.sbpinvertor.modbus.Modbus;
+import com.sbpinvertor.modbus.exception.ModbusNumberException;
 import com.sbpinvertor.modbus.exception.ModbusTransportException;
 import com.sbpinvertor.modbus.msg.ModbusMessageFactory;
+import com.sbpinvertor.modbus.msg.ModbusRequestFactory;
+import com.sbpinvertor.modbus.msg.ModbusResponseFactory;
 import com.sbpinvertor.modbus.msg.base.ModbusMessage;
-import com.sbpinvertor.modbus.net.streaming.base.ModbusInputStream;
-import com.sbpinvertor.modbus.net.streaming.base.ModbusOutputStream;
 
 import java.io.IOException;
 
@@ -23,7 +23,7 @@ import java.io.IOException;
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * GNU General Public License for more details.
  * <p/>
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
@@ -33,34 +33,20 @@ import java.io.IOException;
  */
 abstract public class ModbusTransport {
 
-    private volatile int responseTimeout = Modbus.MAX_RESPONSE_TIMEOUT;
-
-    public int getResponseTimeout() {
-        return responseTimeout;
+    public ModbusMessage readRequest(ModbusConnection conn) throws ModbusNumberException, ModbusTransportException, IOException {
+        return read(conn, ModbusRequestFactory.getInstance());
     }
 
-    public void setResponseTimeout(int responseTimeout) {
-        this.responseTimeout = responseTimeout;
+    public ModbusMessage readResponse(ModbusConnection conn) throws ModbusNumberException, ModbusTransportException, IOException {
+        return read(conn, ModbusResponseFactory.getInstance());
     }
 
-    abstract public ModbusOutputStream getOutputStream();
-    abstract public ModbusInputStream getInputStream();
-
-    public ModbusMessage recv(ModbusMessageFactory factory) throws ModbusTransportException {
-        try {
-            return factory.createMessage(getInputStream());
-        } catch (Exception e) {
-            throw new ModbusTransportException(e);
-        }
+    public void send(ModbusConnection conn, ModbusMessage msg) throws ModbusTransportException, IOException {
+        sendImpl(conn, msg);
+        conn.getOutputStream().flush();
     }
 
-    public void send(ModbusMessage msg) throws ModbusTransportException {
-        try {
-            ModbusOutputStream os = getOutputStream();
-            msg.write(os);
-            os.flush();
-        } catch (IOException e) {
-            throw new ModbusTransportException(e);
-        }
-    }
+    abstract protected ModbusMessage read(ModbusConnection conn, ModbusMessageFactory factory) throws ModbusNumberException, ModbusTransportException, IOException;
+
+    abstract protected void sendImpl(ModbusConnection conn, ModbusMessage msg) throws IOException;
 }

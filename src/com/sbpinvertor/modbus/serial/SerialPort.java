@@ -1,11 +1,6 @@
-package com.sbpinvertor.conn;
-
-import com.sbpinvertor.modbus.Modbus;
-import com.sbpinvertor.modbus.utils.ByteFifo;
-import jssc.SerialPortList;
+package com.sbpinvertor.modbus.serial;
 
 import java.io.IOException;
-import java.util.Arrays;
 
 /**
  * Copyright (c) 2015-2016 JSC "Zavod "Invertor"
@@ -33,71 +28,11 @@ import java.util.Arrays;
 public class SerialPort {
 
     final private jssc.SerialPort port;
-    final private String device;
-    final private int baudRate;
-    final private int dataBits;
-    final private int stopBits;
-    final private int parity;
+    final private SerialParameters sp;
 
-    final private ByteFifo fifo = new ByteFifo(Modbus.MAX_RTU_ADU_LENGTH);
-
-    public SerialPort(String device, BaudRate baudRate, int dataBits, int stopBits, Parity parity) {
-        this.device = device;
-        this.baudRate = baudRate.getValue();
-        this.dataBits = dataBits;
-        this.stopBits = stopBits;
-        this.parity = parity.getValue();
-        this.port = new jssc.SerialPort(device);
-    }
-
-    public static String[] getPortList() {
-        return SerialPortList.getPortNames();
-    }
-
-    public String getDevice() {
-        return device;
-    }
-
-    public int getBaudRate() {
-        return baudRate;
-    }
-
-    public int getDataBits() {
-        return dataBits;
-    }
-
-    public int getStopBits() {
-        return stopBits;
-    }
-
-    public int getParity() {
-        return parity;
-    }
-
-    public void writeByte(int b) throws SerialPortException {
-        try {
-            port.writeByte((byte) b);
-        } catch (Exception e) {
-            throw new SerialPortException(e);
-        }
-    }
-
-    public void writeShort(int b) throws SerialPortException {
-        try {
-            port.writeByte((byte) (b & 0xff));
-            port.writeByte((byte) ((b >> 8) & 0xff));
-        } catch (Exception e) {
-            throw new SerialPortException(e);
-        }
-    }
-
-    public void writeShortBig(int b) throws SerialPortException {
-        try {
-            port.writeByte((byte) ((b >> 8) & 0xff));
-            port.writeByte((byte) (b & 0xff));
-        } catch (Exception e) {
-            throw new SerialPortException(e);
-        }
+    SerialPort(SerialParameters sp) {
+        this.sp = sp;
+        this.port = new jssc.SerialPort(sp.getDevice());
     }
 
     public void clear() {
@@ -137,31 +72,10 @@ public class SerialPort {
         }
     }
 
-    private int write(byte[] bytes, int length) throws SerialPortException {
-        try {
-            if (port.writeBytes(Arrays.copyOf(bytes, length))) {
-                return bytes.length;
-            }
-        } catch (Exception e) {
-            throw new SerialPortException(e);
-        }
-        return 0;
-    }
-
-    public int hasBytes() throws SerialPortException {
-        int c;
-        try {
-            c = port.getInputBufferBytesCount();
-        } catch (Exception e) {
-            throw new SerialPortException(e);
-        }
-        return c;
-    }
-
     public void open() throws SerialPortException {
         try {
             port.openPort();
-            port.setParams(baudRate, dataBits, stopBits, parity);
+            port.setParams(sp.getBaudRate(), sp.getDataBits(), sp.getStopBits(), sp.getParity().getValue());
             port.setFlowControlMode(jssc.SerialPort.FLOWCONTROL_NONE);
         } catch (Exception ex) {
             throw new SerialPortException(ex);

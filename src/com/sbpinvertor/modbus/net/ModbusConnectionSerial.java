@@ -1,12 +1,8 @@
 package com.sbpinvertor.modbus.net;
 
-import com.sbpinvertor.modbus.exception.ModbusNumberException;
 import com.sbpinvertor.modbus.exception.ModbusTransportException;
-import com.sbpinvertor.modbus.msg.ModbusMessageFactory;
-import com.sbpinvertor.modbus.msg.base.ModbusMessage;
-import com.sbpinvertor.modbus.net.stream.InputStreamRTU;
-
-import java.io.IOException;
+import com.sbpinvertor.modbus.serial.SerialPort;
+import com.sbpinvertor.modbus.serial.SerialPortException;
 
 /**
  * Copyright (c) 2015-2016 JSC "Zavod "Invertor"
@@ -30,25 +26,32 @@ import java.io.IOException;
  * Authors: Vladislav Y. Kochedykov, software engineer.
  * email: vladislav.kochedykov@gmail.com
  */
-public class ModbusTransportRTU extends ModbusTransport {
+abstract public class ModbusConnectionSerial extends ModbusConnection {
 
-    public ModbusTransportRTU() {
+    final private SerialPort serial;
 
+    public ModbusConnectionSerial(SerialPort serial) {
+        this.serial = serial;
     }
 
     @Override
-    protected ModbusMessage read(ModbusConnection conn, ModbusMessageFactory factory) throws ModbusNumberException, ModbusTransportException, IOException {
-        InputStreamRTU is = (InputStreamRTU) conn.getInputStream();
-        ModbusMessage msg = factory.createMessage(is);
-        int crc = is.readShortLE();
-        // crc from the same crc equals zero
-        if (crc != 0 && is.getCrc() == 0)
-            throw new ModbusTransportException("control sum check failed.");
-        return msg;
+    public void open() throws ModbusTransportException {
+        try {
+            this.serial.close();
+            this.serial.open();
+            this.serial.clear();
+        } catch (SerialPortException e) {
+            throw new ModbusTransportException(e);
+        }
     }
 
     @Override
-    protected void sendImpl(ModbusConnection conn, ModbusMessage msg) throws IOException {
-        msg.write(conn.getOutputStream());
+    public void close() throws ModbusTransportException {
+        this.serial.close();
+    }
+
+    @Override
+    public void reset() throws ModbusTransportException {
+        serial.clear();
     }
 }

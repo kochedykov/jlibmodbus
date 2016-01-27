@@ -1,7 +1,7 @@
-package com.sbpinvertor.modbus.msg.base;
+package com.sbpinvertor.modbus.net.stream;
 
-import com.sbpinvertor.modbus.exception.ModbusNumberException;
-import com.sbpinvertor.modbus.net.stream.base.ModbusOutputStream;
+import com.sbpinvertor.modbus.net.stream.base.ModbusInputStream;
+import com.sbpinvertor.modbus.serial.SerialPort;
 
 import java.io.IOException;
 
@@ -19,7 +19,7 @@ import java.io.IOException;
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * GNU General Public License for more details.
  * <p/>
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
@@ -27,28 +27,26 @@ import java.io.IOException;
  * Authors: Vladislav Y. Kochedykov, software engineer.
  * email: vladislav.kochedykov@gmail.com
  */
-abstract public class ModbusRequest extends ModbusMessage {
+abstract public class InputStreamSerial extends ModbusInputStream {
 
-    public ModbusRequest(int serverAddress) throws ModbusNumberException {
-        super(serverAddress);
-    }
+    final private SerialPort serial;
 
-    public ModbusRequest(ModbusMessage msg) {
-        super(msg);
-    }
-
-    abstract protected void writeRequest(ModbusOutputStream fifo) throws IOException;
-
-    @Override
-    final public void writePDU(ModbusOutputStream fifo) throws IOException {
-        fifo.write(getFunction().getCode());
-        writeRequest(fifo);
+    protected InputStreamSerial(SerialPort serial) {
+        this.serial = serial;
     }
 
     @Override
-    final protected int pduSize() {
-        return 1 + requestSize();
+    public int read() throws IOException {
+        return serial.readByte(getReadTimeout()) & 0xff;
     }
 
-    abstract protected int requestSize();
+    @Override
+    public int read(byte[] b, int off, int len) throws IOException {
+        return serial.read(b, off, len);
+    }
+
+    @Override
+    public void reset() {
+
+    }
 }

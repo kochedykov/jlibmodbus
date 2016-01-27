@@ -3,7 +3,9 @@ package com.sbpinvertor.modbus.msg;
 import com.sbpinvertor.modbus.exception.ModbusNumberException;
 import com.sbpinvertor.modbus.exception.ModbusTransportException;
 import com.sbpinvertor.modbus.msg.base.ModbusMessage;
-import com.sbpinvertor.modbus.net.streaming.base.ModbusInputStream;
+import com.sbpinvertor.modbus.net.stream.base.ModbusInputStream;
+
+import java.io.IOException;
 
 /**
  * Copyright (c) 2015-2016 JSC "Zavod "Invertor"
@@ -28,5 +30,5 @@ import com.sbpinvertor.modbus.net.streaming.base.ModbusInputStream;
  * email: vladislav.kochedykov@gmail.com
  */
 public interface ModbusMessageFactory {
-    ModbusMessage createMessage(ModbusInputStream fifo) throws ModbusTransportException, ModbusNumberException;
+    ModbusMessage createMessage(ModbusInputStream fifo) throws ModbusTransportException, ModbusNumberException, IOException;
 }

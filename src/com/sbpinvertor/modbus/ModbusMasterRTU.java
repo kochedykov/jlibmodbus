@@ -1,8 +1,13 @@
 package com.sbpinvertor.modbus;
 
-import com.sbpinvertor.conn.SerialPort;
-import com.sbpinvertor.conn.SerialPortException;
+import com.sbpinvertor.modbus.exception.ModbusTransportException;
+import com.sbpinvertor.modbus.net.ModbusConnection;
+import com.sbpinvertor.modbus.net.ModbusConnectionRTU;
+import com.sbpinvertor.modbus.net.ModbusTransport;
 import com.sbpinvertor.modbus.net.ModbusTransportRTU;
+import com.sbpinvertor.modbus.serial.SerialParameters;
+import com.sbpinvertor.modbus.serial.SerialPort;
+import com.sbpinvertor.modbus.serial.SerialUtils;
 
 /**
  * Copyright (c) 2015-2016 JSC "Zavod "Invertor"
@@ -29,7 +34,26 @@ import com.sbpinvertor.modbus.net.ModbusTransportRTU;
 
 class ModbusMasterRTU extends ModbusMaster {
 
-    public ModbusMasterRTU(String device, SerialPort.BaudRate baudRate, int dataBits, int stopBits, SerialPort.Parity parity) throws SerialPortException {
-        super(new ModbusTransportRTU(new SerialPort(device, baudRate, dataBits, stopBits, parity)));
+    final private ModbusTransport transport;
+    final private ModbusConnection connection;
+
+    public ModbusMasterRTU(SerialParameters parameters) throws ModbusTransportException {
+        this.transport = new ModbusTransportRTU();
+        this.connection = new ModbusConnectionRTU(SerialUtils.createSerial(parameters));
+        connection.open();
+    }
+
+    public ModbusMasterRTU(String device, SerialPort.BaudRate baudRate, int dataBits, int stopBits, SerialPort.Parity parity) throws ModbusTransportException {
+        this(new SerialParameters(device, baudRate, dataBits, stopBits, parity));
+    }
+
+    @Override
+    protected ModbusTransport getTransport() {
+        return transport;
+    }
+
+    @Override
+    protected ModbusConnection getConnection() {
+        return connection;
     }
 }
