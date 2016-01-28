@@ -34,16 +34,17 @@ import java.io.IOException;
  */
 public class ModbusTransportTCP extends ModbusTransport {
 
-    public ModbusTransportTCP() {
-
+    public ModbusTransportTCP(ModbusInputStream is, ModbusOutputStream os) {
+        super(is, os);
     }
 
-    protected ModbusMessage read(ModbusConnection conn, ModbusMessageFactory factory) throws ModbusNumberException, ModbusTransportException {
+    @Override
+    protected ModbusMessage read(ModbusMessageFactory factory) throws ModbusNumberException, ModbusTransportException {
         try {
-            ModbusInputStream is = conn.getInputStream();
+            ModbusInputStream is = getInputStream();
             TcpAduHeader header = new TcpAduHeader();
             header.read(is);
-            ModbusMessage msg = factory.createMessage(conn.getInputStream());
+            ModbusMessage msg = factory.createMessage(is);
             msg.setTransactionId(header.getTransactionId());
             msg.setProtocolId(header.getProtocolId());
             return msg;
@@ -53,8 +54,8 @@ public class ModbusTransportTCP extends ModbusTransport {
     }
 
     @Override
-    public void sendImpl(ModbusConnection conn, ModbusMessage msg) throws IOException {
-        ModbusOutputStream os = conn.getOutputStream();
+    public void sendImpl(ModbusMessage msg) throws IOException {
+        ModbusOutputStream os = getOutputStream();
         TcpAduHeader header = new TcpAduHeader();
         header.setProtocolId(msg.getProtocolId());
         header.setTransactionId(msg.getTransactionId());

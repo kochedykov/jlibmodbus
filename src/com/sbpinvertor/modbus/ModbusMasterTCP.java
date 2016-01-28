@@ -35,16 +35,16 @@ import java.io.IOException;
  */
 
 public class ModbusMasterTCP extends ModbusMaster {
-    final private ModbusTransport transport;
-    final private ModbusConnection connection;
     final private boolean keepAlive;
+    final private ModbusConnection conn;
+    private ModbusTransport transport = null;
 
     public ModbusMasterTCP(TcpParameters parameters) throws ModbusTransportException {
-        this.transport = new ModbusTransportTCP();
-        this.connection = new ModbusConnectionTCP(parameters);
+        this.conn = new ModbusConnectionTCP(parameters);
         keepAlive = parameters.isKeepAlive();
-        if (keepAlive)
-            connection.open();
+        if (keepAlive) {
+            connect();
+        }
     }
 
     public ModbusMasterTCP(String host, int port, boolean keepAlive) throws ModbusTransportException {
@@ -62,23 +62,35 @@ public class ModbusMasterTCP extends ModbusMaster {
     @Override
     protected void sendRequest(ModbusMessage msg) throws ModbusTransportException, IOException {
         if (!keepAlive)
-            connection.open();
+            connect();
         try {
-            getTransport().send(getConnection(), msg);
+            getTransport().send(msg);
         } catch (IOException e) {
             if (keepAlive) {
-                connection.open();
-                transport.send(connection, msg);
+                connect();
+                transport.send(msg);
             }
         }
     }
 
     @Override
     protected ModbusMessage readResponse() throws ModbusTransportException, ModbusNumberException, IOException {
-        ModbusMessage msg = getTransport().readResponse(getConnection());
-        if (!keepAlive)
-            connection.close();
+        ModbusMessage msg = getTransport().readResponse();
+        if (!keepAlive) {
+            disconnect();
+        }
+
         return msg;
+    }
+
+    private void connect() throws ModbusTransportException {
+        conn.open();
+        transport = new ModbusTransportTCP(conn.getInputStream(), conn.getOutputStream());
+    }
+
+    private void disconnect() throws ModbusTransportException {
+        conn.close();
+        transport = null;
     }
 
     @Override
@@ -88,6 +100,6 @@ public class ModbusMasterTCP extends ModbusMaster {
 
     @Override
     protected ModbusConnection getConnection() {
-        return connection;
+        return conn;
     }
 }

@@ -49,14 +49,14 @@ abstract public class ModbusMaster {
     abstract protected ModbusConnection getConnection();
 
     protected void sendRequest(ModbusMessage msg) throws ModbusTransportException, IOException {
-        getTransport().send(getConnection(), msg);
+        getTransport().send(msg);
     }
 
     protected ModbusMessage readResponse() throws ModbusTransportException, ModbusNumberException, IOException {
-        return getTransport().readResponse(getConnection());
+        return getTransport().readResponse();
     }
 
-    final private ModbusMessage processRequest(ModbusMessage request) throws SerialPortException,
+    private ModbusMessage processRequest(ModbusMessage request) throws SerialPortException,
             ModbusTransportException, ModbusNumberException, IOException {
         sendRequest(request);
         ModbusMessage msg = readResponse();

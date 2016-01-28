@@ -5,6 +5,8 @@ import com.sbpinvertor.modbus.exception.ModbusTransportException;
 import com.sbpinvertor.modbus.msg.ModbusMessageFactory;
 import com.sbpinvertor.modbus.msg.base.ModbusMessage;
 import com.sbpinvertor.modbus.net.stream.InputStreamRTU;
+import com.sbpinvertor.modbus.net.stream.base.ModbusInputStream;
+import com.sbpinvertor.modbus.net.stream.base.ModbusOutputStream;
 
 import java.io.IOException;
 
@@ -32,13 +34,13 @@ import java.io.IOException;
  */
 public class ModbusTransportRTU extends ModbusTransport {
 
-    public ModbusTransportRTU() {
-
+    public ModbusTransportRTU(ModbusInputStream is, ModbusOutputStream os) {
+        super(is, os);
     }
 
     @Override
-    protected ModbusMessage read(ModbusConnection conn, ModbusMessageFactory factory) throws ModbusNumberException, ModbusTransportException, IOException {
-        InputStreamRTU is = (InputStreamRTU) conn.getInputStream();
+    protected ModbusMessage read(ModbusMessageFactory factory) throws ModbusNumberException, ModbusTransportException, IOException {
+        InputStreamRTU is = (InputStreamRTU) getInputStream();
         ModbusMessage msg = factory.createMessage(is);
         int crc = is.readShortLE();
         // crc from the same crc equals zero
@@ -48,7 +50,7 @@ public class ModbusTransportRTU extends ModbusTransport {
     }
 
     @Override
-    protected void sendImpl(ModbusConnection conn, ModbusMessage msg) throws IOException {
-        msg.write(conn.getOutputStream());
+    protected void sendImpl(ModbusMessage msg) throws IOException {
+        msg.write(getOutputStream());
     }
 }

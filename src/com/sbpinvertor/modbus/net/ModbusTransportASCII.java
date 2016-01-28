@@ -6,6 +6,8 @@ import com.sbpinvertor.modbus.exception.ModbusTransportException;
 import com.sbpinvertor.modbus.msg.ModbusMessageFactory;
 import com.sbpinvertor.modbus.msg.base.ModbusMessage;
 import com.sbpinvertor.modbus.net.stream.InputStreamASCII;
+import com.sbpinvertor.modbus.net.stream.base.ModbusInputStream;
+import com.sbpinvertor.modbus.net.stream.base.ModbusOutputStream;
 
 import java.io.IOException;
 
@@ -33,12 +35,13 @@ import java.io.IOException;
  */
 public class ModbusTransportASCII extends ModbusTransport {
 
-    public ModbusTransportASCII() {
-
+    public ModbusTransportASCII(ModbusInputStream is, ModbusOutputStream os) {
+        super(is, os);
     }
 
-    protected ModbusMessage read(ModbusConnection conn, ModbusMessageFactory factory) throws ModbusNumberException, ModbusTransportException, IOException {
-        InputStreamASCII is = (InputStreamASCII) conn.getInputStream();
+    @Override
+    protected ModbusMessage read(ModbusMessageFactory factory) throws ModbusNumberException, ModbusTransportException, IOException {
+        InputStreamASCII is = (InputStreamASCII) getInputStream();
         ModbusMessage msg = factory.createMessage(is);
         boolean check = is.getLrc() != is.read();
         if (is.readByte() != Modbus.ASCII_CODE_CR || is.readByte() != Modbus.ASCII_CODE_LF)
@@ -50,7 +53,7 @@ public class ModbusTransportASCII extends ModbusTransport {
     }
 
     @Override
-    protected void sendImpl(ModbusConnection conn, ModbusMessage msg) throws IOException {
-        msg.write(conn.getOutputStream());
+    protected void sendImpl(ModbusMessage msg) throws IOException {
+        msg.write(getOutputStream());
     }
 }

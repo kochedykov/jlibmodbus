@@ -34,12 +34,12 @@ import com.sbpinvertor.modbus.serial.SerialUtils;
 
 class ModbusMasterASCII extends ModbusMaster {
     final private ModbusTransport transport;
-    final private ModbusConnection connection;
+    final private ModbusConnection conn;
 
     public ModbusMasterASCII(SerialParameters parameters) throws ModbusTransportException {
-        this.transport = new ModbusTransportRTU();
-        this.connection = new ModbusConnectionRTU(SerialUtils.createSerial(parameters));
-        connection.open();
+        this.conn = new ModbusConnectionRTU(SerialUtils.createSerial(parameters));
+        this.transport = new ModbusTransportRTU(conn.getInputStream(), conn.getOutputStream());
+        conn.open();
     }
 
     public ModbusMasterASCII(String device, SerialPort.BaudRate baudRate, SerialPort.Parity parity) throws ModbusTransportException {
@@ -57,6 +57,6 @@ class ModbusMasterASCII extends ModbusMaster {
 
     @Override
     protected ModbusConnection getConnection() {
-        return connection;
+        return conn;
     }
 }

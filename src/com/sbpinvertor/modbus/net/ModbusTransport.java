@@ -6,6 +6,8 @@ import com.sbpinvertor.modbus.msg.ModbusMessageFactory;
 import com.sbpinvertor.modbus.msg.ModbusRequestFactory;
 import com.sbpinvertor.modbus.msg.ModbusResponseFactory;
 import com.sbpinvertor.modbus.msg.base.ModbusMessage;
+import com.sbpinvertor.modbus.net.stream.base.ModbusInputStream;
+import com.sbpinvertor.modbus.net.stream.base.ModbusOutputStream;
 
 import java.io.IOException;
 
@@ -33,20 +35,36 @@ import java.io.IOException;
  */
 abstract public class ModbusTransport {
 
-    public ModbusMessage readRequest(ModbusConnection conn) throws ModbusNumberException, ModbusTransportException, IOException {
-        return read(conn, ModbusRequestFactory.getInstance());
+    final private ModbusInputStream is;
+    final private ModbusOutputStream os;
+
+    public ModbusTransport(ModbusInputStream is, ModbusOutputStream os) {
+        this.is = is;
+        this.os = os;
     }
 
-    public ModbusMessage readResponse(ModbusConnection conn) throws ModbusNumberException, ModbusTransportException, IOException {
-        return read(conn, ModbusResponseFactory.getInstance());
+    public ModbusMessage readRequest() throws ModbusNumberException, ModbusTransportException, IOException {
+        return read(ModbusRequestFactory.getInstance());
     }
 
-    public void send(ModbusConnection conn, ModbusMessage msg) throws ModbusTransportException, IOException {
-        sendImpl(conn, msg);
-        conn.getOutputStream().flush();
+    public ModbusMessage readResponse() throws ModbusNumberException, ModbusTransportException, IOException {
+        return read(ModbusResponseFactory.getInstance());
     }
 
-    abstract protected ModbusMessage read(ModbusConnection conn, ModbusMessageFactory factory) throws ModbusNumberException, ModbusTransportException, IOException;
+    public void send(ModbusMessage msg) throws ModbusTransportException, IOException {
+        sendImpl(msg);
+        os.flush();
+    }
 
-    abstract protected void sendImpl(ModbusConnection conn, ModbusMessage msg) throws IOException;
+    public ModbusInputStream getInputStream() {
+        return is;
+    }
+
+    public ModbusOutputStream getOutputStream() {
+        return os;
+    }
+
+    abstract protected ModbusMessage read(ModbusMessageFactory factory) throws ModbusNumberException, ModbusTransportException, IOException;
+
+    abstract protected void sendImpl(ModbusMessage msg) throws IOException;
 }
