@@ -55,9 +55,4 @@ public class ModbusConnectionRTU extends ModbusConnectionSerial {
     public ModbusInputStream getInputStream() {
         return is;
     }
-
-    @Override
-    public void setReadTimeout(int timeout) {
-
-    }
 }

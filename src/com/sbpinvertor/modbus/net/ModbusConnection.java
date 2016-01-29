@@ -28,8 +28,6 @@ import com.sbpinvertor.modbus.net.stream.base.ModbusOutputStream;
  */
 abstract public class ModbusConnection {
 
-    private int timeout;
-
     abstract public ModbusOutputStream getOutputStream();
 
     abstract public ModbusInputStream getInputStream();
@@ -41,11 +39,11 @@ abstract public class ModbusConnection {
     abstract public void reset() throws ModbusTransportException;
 
     public void setReadTimeout(int timeout) {
-        this.timeout = timeout;
+        getInputStream().setReadTimeout(timeout);
     }
 
     public int getTimeout() {
-        return timeout;
+        return getInputStream().getReadTimeout();
     }
 
     @Override
