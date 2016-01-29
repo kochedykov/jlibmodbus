@@ -40,7 +40,6 @@ class ModbusMasterRTU extends ModbusMaster {
     public ModbusMasterRTU(SerialParameters parameters) throws ModbusTransportException {
         this.conn = new ModbusConnectionRTU(SerialUtils.createSerial(parameters));
         transport = new ModbusTransportRTU(conn.getInputStream(), conn.getOutputStream());
-        conn.open();
     }
 
     public ModbusMasterRTU(String device, SerialPort.BaudRate baudRate, int dataBits, int stopBits, SerialPort.Parity parity) throws ModbusTransportException {

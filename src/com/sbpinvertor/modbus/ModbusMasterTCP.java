@@ -10,6 +10,7 @@ import com.sbpinvertor.modbus.net.ModbusTransportTCP;
 import com.sbpinvertor.modbus.tcp.TcpParameters;
 
 import java.io.IOException;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Copyright (c) 2015-2016 JSC "Zavod "Invertor"
@@ -38,12 +39,13 @@ public class ModbusMasterTCP extends ModbusMaster {
     final private boolean keepAlive;
     final private ModbusConnection conn;
     private ModbusTransport transport = null;
+    private AtomicBoolean connected = new AtomicBoolean(false);
 
     public ModbusMasterTCP(TcpParameters parameters) throws ModbusTransportException {
         this.conn = new ModbusConnectionTCP(parameters);
         keepAlive = parameters.isKeepAlive();
         if (keepAlive) {
-            connect();
+            open();
         }
     }
 
@@ -62,12 +64,12 @@ public class ModbusMasterTCP extends ModbusMaster {
     @Override
     protected void sendRequest(ModbusMessage msg) throws ModbusTransportException, IOException {
         if (!keepAlive)
-            connect();
+            open();
         try {
             getTransport().send(msg);
         } catch (IOException e) {
             if (keepAlive) {
-                connect();
+                open();
                 transport.send(msg);
             }
         }
@@ -77,20 +79,34 @@ public class ModbusMasterTCP extends ModbusMaster {
     protected ModbusMessage readResponse() throws ModbusTransportException, ModbusNumberException, IOException {
         ModbusMessage msg = getTransport().readResponse();
         if (!keepAlive) {
-            disconnect();
+            close();
         }
 
         return msg;
     }
 
-    private void connect() throws ModbusTransportException {
-        conn.open();
-        transport = new ModbusTransportTCP(conn.getInputStream(), conn.getOutputStream());
+    @Override
+    public void open() throws ModbusTransportException {
+        if (!isConnected()) {
+            conn.open();
+            transport = new ModbusTransportTCP(conn.getInputStream(), conn.getOutputStream());
+            setConnected(true);
+        }
     }
 
-    private void disconnect() throws ModbusTransportException {
+    @Override
+    public void close() throws ModbusTransportException {
+        setConnected(false);
         conn.close();
         transport = null;
+    }
+
+    synchronized public boolean isConnected() {
+        return connected.get();
+    }
+
+    public void setConnected(boolean connected) {
+        this.connected.set(connected);
     }
 
     @Override

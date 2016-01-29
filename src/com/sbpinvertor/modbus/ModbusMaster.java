@@ -48,6 +48,14 @@ abstract public class ModbusMaster {
 
     abstract protected ModbusConnection getConnection();
 
+    public void open() throws ModbusTransportException {
+        getConnection().open();
+    }
+
+    public void close() throws ModbusTransportException {
+        getConnection().close();
+    }
+
     protected void sendRequest(ModbusMessage msg) throws ModbusTransportException, IOException {
         getTransport().send(msg);
     }

@@ -39,7 +39,6 @@ class ModbusMasterASCII extends ModbusMaster {
     public ModbusMasterASCII(SerialParameters parameters) throws ModbusTransportException {
         this.conn = new ModbusConnectionRTU(SerialUtils.createSerial(parameters));
         this.transport = new ModbusTransportRTU(conn.getInputStream(), conn.getOutputStream());
-        conn.open();
     }
 
     public ModbusMasterASCII(String device, SerialPort.BaudRate baudRate, SerialPort.Parity parity) throws ModbusTransportException {
