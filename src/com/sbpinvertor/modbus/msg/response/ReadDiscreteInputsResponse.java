@@ -1,7 +1,7 @@
 package com.sbpinvertor.modbus.msg.response;
 
-import com.sbpinvertor.modbus.ModbusFunction;
 import com.sbpinvertor.modbus.exception.ModbusNumberException;
+import com.sbpinvertor.modbus.utils.ModbusFunctionCode;
 
 /**
  * Copyright (c) 2015-2016 JSC "Zavod "Invertor"
@@ -40,7 +40,7 @@ public class ReadDiscreteInputsResponse extends ReadCoilsResponse {
     }
 
     @Override
-    public ModbusFunction getFunction() {
-        return ModbusFunction.READ_DISCRETE_INPUTS;
+    public ModbusFunctionCode getFunction() {
+        return ModbusFunctionCode.READ_DISCRETE_INPUTS;
     }
 }

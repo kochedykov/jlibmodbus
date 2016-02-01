@@ -1,10 +1,10 @@
 package com.sbpinvertor.modbus.msg.response;
 
 import com.sbpinvertor.modbus.Modbus;
-import com.sbpinvertor.modbus.ModbusFunction;
 import com.sbpinvertor.modbus.exception.ModbusNumberException;
 import com.sbpinvertor.modbus.msg.base.AbstractWriteResponse;
 import com.sbpinvertor.modbus.msg.base.ModbusMessage;
+import com.sbpinvertor.modbus.utils.ModbusFunctionCode;
 
 /**
  * Copyright (c) 2015-2016 JSC "Zavod "Invertor"
@@ -48,7 +48,7 @@ public class WriteSingleCoilResponse extends AbstractWriteResponse {
     }
 
     @Override
-    public ModbusFunction getFunction() {
-        return ModbusFunction.WRITE_SINGLE_COIL;
+    public ModbusFunctionCode getFunction() {
+        return ModbusFunctionCode.WRITE_SINGLE_COIL;
     }
 }

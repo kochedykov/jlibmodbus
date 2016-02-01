@@ -1,4 +1,4 @@
-package com.sbpinvertor.modbus;
+package com.sbpinvertor.modbus.utils;
 
 /**
  * Copyright (c) 2015-2016 JSC "Zavod "Invertor"
@@ -22,8 +22,7 @@ package com.sbpinvertor.modbus;
  * Authors: Vladislav Y. Kochedykov, software engineer.
  * email: vladislav.kochedykov@gmail.com
  */
-public enum ModbusException {
-
+public enum ModbusExceptionCode {
     ILLEGAL_FUNCTION(0x01),
     ILLEGAL_DATA_ADDRESS(0x02),
     ILLEGAL_DATA_VALUE(0x03),
@@ -37,31 +36,31 @@ public enum ModbusException {
     UNKNOWN_EXCEPTION(0x100),
     NO_EXCEPTION(0x101);
 
-    private final int code;
+    private final int value;
 
-    ModbusException(int code) {
-        this.code = code;
+    ModbusExceptionCode(int value) {
+        this.value = value;
     }
 
-    static private ModbusException get(int code) {
-        for (ModbusException type : ModbusException.values()) {
-            if (type.code == code) {
+    static private ModbusExceptionCode get(int value) {
+        for (ModbusExceptionCode type : ModbusExceptionCode.values()) {
+            if (type.value == value) {
                 return type;
             }
         }
         return UNKNOWN_EXCEPTION;
     }
 
-    static public ModbusException getExceptionCode(int code) {
-        return get(code);
+    static public ModbusExceptionCode getExceptionCode(int value) {
+        return get(value);
     }
 
-    public int getCode() {
-        return code;
+    public int getValue() {
+        return value;
     }
 
     @Override
     public String toString() {
-        return name() + "; code: " + code;
+        return name() + "; value: " + value;
     }
 }

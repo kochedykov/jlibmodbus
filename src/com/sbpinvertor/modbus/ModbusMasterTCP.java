@@ -42,7 +42,7 @@ public class ModbusMasterTCP extends ModbusMaster {
     private AtomicBoolean connected = new AtomicBoolean(false);
 
     public ModbusMasterTCP(TcpParameters parameters) throws ModbusTransportException {
-        this.conn = new ModbusConnectionTCP(parameters);
+        conn = new ModbusConnectionTCP(parameters);
         keepAlive = parameters.isKeepAlive();
         if (keepAlive) {
             open();

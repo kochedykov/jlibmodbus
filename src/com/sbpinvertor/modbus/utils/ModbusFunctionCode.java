@@ -1,4 +1,4 @@
-package com.sbpinvertor.modbus;
+package com.sbpinvertor.modbus.utils;
 
 /**
  * Copyright (c) 2015-2016 JSC "Zavod "Invertor"
@@ -23,7 +23,7 @@ package com.sbpinvertor.modbus;
  * email: vladislav.kochedykov@gmail.com
  */
 
-public enum ModbusFunction {
+public enum ModbusFunctionCode {
     READ_COILS((byte) 0x1),
     READ_DISCRETE_INPUTS((byte) 0x2),
     READ_HOLDING_REGISTERS((byte) 0x3),
@@ -39,15 +39,15 @@ public enum ModbusFunction {
     final static private int MODBUS_EXCEPTION_FLAG = 0x80;
     final private int value;
 
-    ModbusFunction(int value) {
+    ModbusFunctionCode(int value) {
         this.value = value;
     }
 
-    static public ModbusFunction getFunction(int value) {
+    static public ModbusFunctionCode getFunction(int value) {
         if (isException(value)) {
             value &= ~MODBUS_EXCEPTION_FLAG;
         }
-        for (ModbusFunction func : ModbusFunction.values()) {
+        for (ModbusFunctionCode func : ModbusFunctionCode.values()) {
             if (func.value == value) {
                 return func;
             }
@@ -55,15 +55,15 @@ public enum ModbusFunction {
         throw new RuntimeException("Invalid modbus function");
     }
 
-    static public boolean isException(int code) {
-        return (code & MODBUS_EXCEPTION_FLAG) != 0;
+    static public boolean isException(int value) {
+        return (value & MODBUS_EXCEPTION_FLAG) != 0;
     }
 
-    public int getCode() {
+    public int getValue() {
         return value;
     }
 
-    public int getExceptionCode() {
+    public int getExceptionValue() {
         return value | MODBUS_EXCEPTION_FLAG;
     }
 

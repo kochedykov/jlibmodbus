@@ -1,11 +1,11 @@
 package com.sbpinvertor.modbus.msg.response;
 
-import com.sbpinvertor.modbus.ModbusFunction;
 import com.sbpinvertor.modbus.exception.ModbusNumberException;
 import com.sbpinvertor.modbus.msg.base.AbstractReadResponse;
 import com.sbpinvertor.modbus.net.stream.base.ModbusInputStream;
 import com.sbpinvertor.modbus.net.stream.base.ModbusOutputStream;
 import com.sbpinvertor.modbus.utils.DataUtils;
+import com.sbpinvertor.modbus.utils.ModbusFunctionCode;
 
 import java.io.IOException;
 
@@ -60,7 +60,7 @@ public class ReadHoldingRegistersResponse extends AbstractReadResponse {
     }
 
     @Override
-    public ModbusFunction getFunction() {
-        return ModbusFunction.READ_HOLDING_REGISTERS;
+    public ModbusFunctionCode getFunction() {
+        return ModbusFunctionCode.READ_HOLDING_REGISTERS;
     }
 }

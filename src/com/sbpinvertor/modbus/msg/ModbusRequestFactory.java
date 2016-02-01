@@ -1,12 +1,12 @@
 package com.sbpinvertor.modbus.msg;
 
-import com.sbpinvertor.modbus.ModbusFunction;
 import com.sbpinvertor.modbus.exception.ModbusNumberException;
 import com.sbpinvertor.modbus.exception.ModbusTransportException;
 import com.sbpinvertor.modbus.msg.base.ModbusMessage;
 import com.sbpinvertor.modbus.msg.base.ModbusRequest;
 import com.sbpinvertor.modbus.msg.request.*;
 import com.sbpinvertor.modbus.net.stream.base.ModbusInputStream;
+import com.sbpinvertor.modbus.utils.ModbusFunctionCode;
 
 import java.io.IOException;
 
@@ -79,7 +79,7 @@ final public class ModbusRequestFactory implements ModbusMessageFactory {
         ModbusMessage msg;
         int serverAddress = fifo.read();
         int functionCode = fifo.read();
-        switch (ModbusFunction.getFunction(functionCode)) {
+        switch (ModbusFunctionCode.getFunction(functionCode)) {
             case READ_COILS:
                 msg = new ReadCoilsRequest(serverAddress);
                 break;

@@ -1,6 +1,5 @@
 package com.sbpinvertor.modbus.msg;
 
-import com.sbpinvertor.modbus.ModbusFunction;
 import com.sbpinvertor.modbus.exception.ModbusNumberException;
 import com.sbpinvertor.modbus.exception.ModbusProtocolException;
 import com.sbpinvertor.modbus.exception.ModbusTransportException;
@@ -8,6 +7,7 @@ import com.sbpinvertor.modbus.msg.base.ModbusMessage;
 import com.sbpinvertor.modbus.msg.base.ModbusResponse;
 import com.sbpinvertor.modbus.msg.response.*;
 import com.sbpinvertor.modbus.net.stream.base.ModbusInputStream;
+import com.sbpinvertor.modbus.utils.ModbusFunctionCode;
 
 import java.io.IOException;
 
@@ -80,7 +80,7 @@ final public class ModbusResponseFactory implements ModbusMessageFactory {
         ModbusResponse msg;
         int serverAddress = fifo.read();
         int functionCode = fifo.read();
-        switch (ModbusFunction.getFunction(functionCode)) {
+        switch (ModbusFunctionCode.getFunction(functionCode)) {
             case READ_COILS:
                 msg = new ReadCoilsResponse(serverAddress);
                 break;
@@ -112,7 +112,7 @@ final public class ModbusResponseFactory implements ModbusMessageFactory {
                 throw new ModbusTransportException("function " + functionCode + " not supported.");
         }
 
-        if (ModbusFunction.isException(functionCode)) {
+        if (ModbusFunctionCode.isException(functionCode)) {
             msg.setException();
         }
         msg.read(fifo);

@@ -1,11 +1,11 @@
 package com.sbpinvertor.modbus.msg.request;
 
 import com.sbpinvertor.modbus.Modbus;
-import com.sbpinvertor.modbus.ModbusFunction;
 import com.sbpinvertor.modbus.exception.ModbusNumberException;
 import com.sbpinvertor.modbus.msg.base.AbstractWriteMultipleRequest;
 import com.sbpinvertor.modbus.net.stream.base.ModbusInputStream;
 import com.sbpinvertor.modbus.utils.DataUtils;
+import com.sbpinvertor.modbus.utils.ModbusFunctionCode;
 
 import java.io.IOException;
 
@@ -58,7 +58,7 @@ final public class WriteMultipleRegistersRequest extends AbstractWriteMultipleRe
     }
 
     @Override
-    public ModbusFunction getFunction() {
-        return ModbusFunction.WRITE_MULTIPLE_REGISTERS;
+    public ModbusFunctionCode getFunction() {
+        return ModbusFunctionCode.WRITE_MULTIPLE_REGISTERS;
     }
 }

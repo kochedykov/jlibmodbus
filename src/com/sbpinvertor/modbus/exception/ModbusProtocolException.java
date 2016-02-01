@@ -1,6 +1,6 @@
 package com.sbpinvertor.modbus.exception;
 
-import com.sbpinvertor.modbus.ModbusException;
+import com.sbpinvertor.modbus.utils.ModbusExceptionCode;
 
 /**
  * Copyright (c) 2015-2016 JSC "Zavod "Invertor"
@@ -27,16 +27,16 @@ import com.sbpinvertor.modbus.ModbusException;
 
 public class ModbusProtocolException extends ModbusTransportException {
 
-    private final ModbusException exception;
+    private final ModbusExceptionCode exception;
     private final int serverAddress;
 
-    public ModbusProtocolException(ModbusException exception, int serverAddress) {
+    public ModbusProtocolException(ModbusExceptionCode exception, int serverAddress) {
         super(exception.toString() + "; server: " + serverAddress);
         this.exception = exception;
         this.serverAddress = serverAddress;
     }
 
-    public ModbusException getException() {
+    public ModbusExceptionCode getException() {
         return exception;
     }
 

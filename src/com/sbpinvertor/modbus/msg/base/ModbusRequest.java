@@ -41,7 +41,7 @@ abstract public class ModbusRequest extends ModbusMessage {
 
     @Override
     final public void writePDU(ModbusOutputStream fifo) throws IOException {
-        fifo.write(getFunction().getCode());
+        fifo.write(getFunction().getValue());
         writeRequest(fifo);
     }
 

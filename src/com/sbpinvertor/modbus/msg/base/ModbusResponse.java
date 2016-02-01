@@ -1,9 +1,9 @@
 package com.sbpinvertor.modbus.msg.base;
 
-import com.sbpinvertor.modbus.ModbusException;
 import com.sbpinvertor.modbus.exception.ModbusNumberException;
 import com.sbpinvertor.modbus.net.stream.base.ModbusInputStream;
 import com.sbpinvertor.modbus.net.stream.base.ModbusOutputStream;
+import com.sbpinvertor.modbus.utils.ModbusExceptionCode;
 
 import java.io.IOException;
 
@@ -32,7 +32,7 @@ import java.io.IOException;
 
 public abstract class ModbusResponse extends ModbusMessage {
 
-    private volatile ModbusException modbusException = ModbusException.NO_EXCEPTION;
+    private volatile ModbusExceptionCode modbusExceptionCode = ModbusExceptionCode.NO_EXCEPTION;
 
     public ModbusResponse(int serverAddress) throws ModbusNumberException {
         super(serverAddress);
@@ -43,20 +43,20 @@ public abstract class ModbusResponse extends ModbusMessage {
     }
 
     final public boolean isException() {
-        return modbusException != ModbusException.NO_EXCEPTION;
+        return modbusExceptionCode != ModbusExceptionCode.NO_EXCEPTION;
     }
 
     final public void setException() {
-        modbusException = ModbusException.UNKNOWN_EXCEPTION;
+        modbusExceptionCode = ModbusExceptionCode.UNKNOWN_EXCEPTION;
     }
 
     @Override
     final protected void writePDU(ModbusOutputStream fifo) throws IOException {
         if (isException()) {
-            fifo.write(getFunction().getExceptionCode());
-            fifo.write(getModbusException());
+            fifo.write(getFunction().getExceptionValue());
+            fifo.write(getModbusExceptionCode());
         } else {
-            fifo.write(getFunction().getCode());
+            fifo.write(getFunction().getValue());
             writeResponse(fifo);
         }
     }
@@ -64,7 +64,7 @@ public abstract class ModbusResponse extends ModbusMessage {
     @Override
     final protected void readPDU(ModbusInputStream fifo) throws IOException {
         if (isException()) {
-            setModbusException(fifo.read());
+            setModbusExceptionCode(fifo.read());
         } else {
             readResponse(fifo);
         }
@@ -74,16 +74,16 @@ public abstract class ModbusResponse extends ModbusMessage {
 
     abstract public void writeResponse(ModbusOutputStream fifo) throws IOException;
 
-    final public ModbusException getException() {
-        return modbusException;
+    final public ModbusExceptionCode getException() {
+        return modbusExceptionCode;
     }
 
-    final public int getModbusException() {
-        return getException().getCode();
+    final public int getModbusExceptionCode() {
+        return getException().getValue();
     }
 
-    final protected void setModbusException(int code) {
-        modbusException = ModbusException.getExceptionCode(code);
+    final protected void setModbusExceptionCode(int code) {
+        modbusExceptionCode = ModbusExceptionCode.getExceptionCode(code);
     }
 
     @Override
