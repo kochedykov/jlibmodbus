@@ -30,6 +30,7 @@ public enum ModbusFunctionCode {
     READ_INPUT_REGISTERS((byte) 0x4),
     WRITE_SINGLE_COIL((byte) 0x5),
     WRITE_SINGLE_REGISTER((byte) 0x6),
+    READ_EXCEPTION_STATUS((byte) 0x7),
     WRITE_MULTIPLE_COILS((byte) 0x0F),
     WRITE_MULTIPLE_REGISTERS((byte) 0x10),
     REPORT_SLAVE_ID((byte) 0x11),
