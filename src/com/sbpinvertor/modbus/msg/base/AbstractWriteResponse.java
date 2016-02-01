@@ -48,10 +48,6 @@ public abstract class AbstractWriteResponse extends ModbusResponse {
         setValue(value);
     }
 
-    protected AbstractWriteResponse(ModbusMessage msg) {
-        super(msg);
-    }
-
     @Override
     final protected void readResponse(ModbusInputStream fifo) throws IOException {
         setStartAddress(fifo.readShortBE());

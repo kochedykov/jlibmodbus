@@ -1,5 +1,6 @@
 package com.sbpinvertor.modbus.msg.base;
 
+import com.sbpinvertor.modbus.Modbus;
 import com.sbpinvertor.modbus.exception.ModbusNumberException;
 import com.sbpinvertor.modbus.net.stream.base.ModbusInputStream;
 import com.sbpinvertor.modbus.net.stream.base.ModbusOutputStream;
@@ -44,10 +45,6 @@ abstract public class AbstractWriteMultipleRequest extends AbstractMultipleReque
         setValues(values);
     }
 
-    public AbstractWriteMultipleRequest(AbstractMultipleRequest msg) {
-        super(msg);
-    }
-
     @Override
     public void writeData(ModbusOutputStream fifo) throws IOException {
         super.writeData(fifo);
@@ -60,7 +57,9 @@ abstract public class AbstractWriteMultipleRequest extends AbstractMultipleReque
         super.readPDU(fifo);
         setByteCount(fifo.read());
         setValues(new byte[byteCount]);
-        fifo.read(getValues(), 0, getByteCount());
+        int size;
+        if ((size = fifo.read(getValues(), 0, getByteCount())) < getByteCount())
+            Modbus.log().warning(getByteCount() + " bytes expected, but " + size + " received.");
     }
 
     protected int getByteCount() {

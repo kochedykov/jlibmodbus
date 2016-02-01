@@ -38,7 +38,7 @@ abstract public class ModbusTransport {
     final private ModbusInputStream is;
     final private ModbusOutputStream os;
 
-    public ModbusTransport(ModbusInputStream is, ModbusOutputStream os) {
+    ModbusTransport(ModbusInputStream is, ModbusOutputStream os) {
         this.is = is;
         this.os = os;
     }
@@ -51,16 +51,16 @@ abstract public class ModbusTransport {
         return read(ModbusResponseFactory.getInstance());
     }
 
-    public void send(ModbusMessage msg) throws ModbusTransportException, IOException {
+    public void send(ModbusMessage msg) throws IOException {
         sendImpl(msg);
         os.flush();
     }
 
-    public ModbusInputStream getInputStream() {
+    ModbusInputStream getInputStream() {
         return is;
     }
 
-    public ModbusOutputStream getOutputStream() {
+    ModbusOutputStream getOutputStream() {
         return os;
     }
 

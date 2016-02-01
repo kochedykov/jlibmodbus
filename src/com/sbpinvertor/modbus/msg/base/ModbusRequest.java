@@ -33,10 +33,6 @@ abstract public class ModbusRequest extends ModbusMessage {
         super(serverAddress);
     }
 
-    public ModbusRequest(ModbusMessage msg) {
-        super(msg);
-    }
-
     abstract protected void writeRequest(ModbusOutputStream fifo) throws IOException;
 
     @Override

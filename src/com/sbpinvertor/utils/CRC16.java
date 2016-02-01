@@ -88,15 +88,10 @@ public class CRC16 {
     }
 
     static public int calc(int crc, short[] words, int length) {
-        return calc(crc, words, 0, length);
-    }
-
-    static public int calc(int crc, short[] words, int offset, int length) {
-        for (int i = offset; i < offset + length; i++) {
+        for (int i = 0; i < length; i++) {
             crc = calc(crc, (byte) (words[i] & 0xff));
             crc = calc(crc, (byte) ((words[i] >> 8) & 0xff));
         }
-
         return crc;
     }
 

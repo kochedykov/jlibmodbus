@@ -1,5 +1,6 @@
 package com.sbpinvertor.modbus.msg.response;
 
+import com.sbpinvertor.modbus.Modbus;
 import com.sbpinvertor.modbus.exception.ModbusNumberException;
 import com.sbpinvertor.modbus.msg.base.AbstractReadResponse;
 import com.sbpinvertor.modbus.net.stream.base.ModbusInputStream;
@@ -52,7 +53,9 @@ public class ReadCoilsResponse extends AbstractReadResponse {
     @Override
     final protected void readData(ModbusInputStream fifo) throws IOException {
         byte[] coils = new byte[getByteCount()];
-        fifo.read(coils, 0, getByteCount());
+        int size;
+        if ((size = fifo.read(coils, 0, getByteCount())) < getByteCount())
+            Modbus.log().warning(getByteCount() + " bytes expected, but " + size + " received.");
         this.coils = DataUtils.toBitsArray(coils, getByteCount() * 8);
     }
 

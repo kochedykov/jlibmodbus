@@ -23,11 +23,11 @@ package com.sbpinvertor.modbus.serial;
  * email: vladislav.kochedykov@gmail.com
  */
 public class SerialParameters {
-    final String device;
-    final SerialPort.BaudRate baudRate;
-    final int dataBits;
-    final int stopBits;
-    final SerialPort.Parity parity;
+    final private String device;
+    final private SerialPort.BaudRate baudRate;
+    final private int dataBits;
+    final private int stopBits;
+    final private SerialPort.Parity parity;
 
     public SerialParameters(String device, SerialPort.BaudRate baudRate, int dataBits, int stopBits, SerialPort.Parity parity) {
         this.device = device;

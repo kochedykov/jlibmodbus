@@ -43,10 +43,6 @@ abstract public class ModbusMessage implements Transportable {
         this.serverAddress = serverAddress;
     }
 
-    public ModbusMessage(ModbusMessage msg) {
-        this.serverAddress = msg.serverAddress;
-    }
-
     final public void write(ModbusOutputStream fifo) throws IOException {
         fifo.write(getServerAddress());
         writePDU(fifo);

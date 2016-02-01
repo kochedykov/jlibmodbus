@@ -1,7 +1,6 @@
 package com.sbpinvertor.modbus.msg;
 
 import com.sbpinvertor.modbus.exception.ModbusNumberException;
-import com.sbpinvertor.modbus.exception.ModbusProtocolException;
 import com.sbpinvertor.modbus.exception.ModbusTransportException;
 import com.sbpinvertor.modbus.msg.base.ModbusMessage;
 import com.sbpinvertor.modbus.msg.base.ModbusResponse;
@@ -111,14 +110,10 @@ final public class ModbusResponseFactory implements ModbusMessageFactory {
             default:
                 throw new ModbusTransportException("function " + functionCode + " not supported.");
         }
-
         if (ModbusFunctionCode.isException(functionCode)) {
             msg.setException();
         }
         msg.read(fifo);
-        if (msg.isException()) {
-            throw new ModbusProtocolException(msg.getException(), msg.getServerAddress());
-        }
         return msg;
     }
 

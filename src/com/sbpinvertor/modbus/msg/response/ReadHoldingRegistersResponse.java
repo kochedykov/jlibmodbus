@@ -1,5 +1,6 @@
 package com.sbpinvertor.modbus.msg.response;
 
+import com.sbpinvertor.modbus.Modbus;
 import com.sbpinvertor.modbus.exception.ModbusNumberException;
 import com.sbpinvertor.modbus.msg.base.AbstractReadResponse;
 import com.sbpinvertor.modbus.net.stream.base.ModbusInputStream;
@@ -50,7 +51,9 @@ public class ReadHoldingRegistersResponse extends AbstractReadResponse {
     @Override
     protected void readData(ModbusInputStream fifo) throws IOException {
         byte[] buffer = new byte[getByteCount()];
-        fifo.read(buffer, 0, getByteCount());
+        int size;
+        if ((size = fifo.read(buffer, 0, getByteCount())) < getByteCount())
+            Modbus.log().warning(getByteCount() + " bytes expected, but " + size + " received.");
         registers = DataUtils.toIntArray(buffer);
     }
 

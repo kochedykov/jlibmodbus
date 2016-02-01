@@ -34,12 +34,8 @@ public abstract class ModbusResponse extends ModbusMessage {
 
     private volatile ModbusExceptionCode modbusExceptionCode = ModbusExceptionCode.NO_EXCEPTION;
 
-    public ModbusResponse(int serverAddress) throws ModbusNumberException {
+    ModbusResponse(int serverAddress) throws ModbusNumberException {
         super(serverAddress);
-    }
-
-    public ModbusResponse(ModbusMessage msg) {
-        super(msg);
     }
 
     final public boolean isException() {
@@ -54,7 +50,7 @@ public abstract class ModbusResponse extends ModbusMessage {
     final protected void writePDU(ModbusOutputStream fifo) throws IOException {
         if (isException()) {
             fifo.write(getFunction().getExceptionValue());
-            fifo.write(getModbusExceptionCode());
+            fifo.write(getModbusExceptionCode().getValue());
         } else {
             fifo.write(getFunction().getValue());
             writeResponse(fifo);
@@ -72,17 +68,13 @@ public abstract class ModbusResponse extends ModbusMessage {
 
     abstract protected void readResponse(ModbusInputStream fifo) throws IOException;
 
-    abstract public void writeResponse(ModbusOutputStream fifo) throws IOException;
+    abstract protected void writeResponse(ModbusOutputStream fifo) throws IOException;
 
-    final public ModbusExceptionCode getException() {
+    final public ModbusExceptionCode getModbusExceptionCode() {
         return modbusExceptionCode;
     }
 
-    final public int getModbusExceptionCode() {
-        return getException().getValue();
-    }
-
-    final protected void setModbusExceptionCode(int code) {
+    private void setModbusExceptionCode(int code) {
         modbusExceptionCode = ModbusExceptionCode.getExceptionCode(code);
     }
 

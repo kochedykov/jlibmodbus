@@ -3,7 +3,6 @@ package com.sbpinvertor.modbus.msg.response;
 import com.sbpinvertor.modbus.Modbus;
 import com.sbpinvertor.modbus.exception.ModbusNumberException;
 import com.sbpinvertor.modbus.msg.base.AbstractWriteResponse;
-import com.sbpinvertor.modbus.msg.base.ModbusMessage;
 import com.sbpinvertor.modbus.utils.ModbusFunctionCode;
 
 /**
@@ -36,10 +35,6 @@ public class WriteSingleRegisterResponse extends AbstractWriteResponse {
 
     public WriteSingleRegisterResponse(int serverAddress, int startAddress, int register) throws ModbusNumberException {
         super(serverAddress, startAddress, register);
-    }
-
-    public WriteSingleRegisterResponse(ModbusMessage msg) {
-        super(msg);
     }
 
     @Override

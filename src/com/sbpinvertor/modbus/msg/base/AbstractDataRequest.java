@@ -45,12 +45,6 @@ abstract public class AbstractDataRequest extends ModbusRequest {
         setStartAddress(startAddress);
     }
 
-    public AbstractDataRequest(AbstractDataRequest msg) {
-        super(msg);
-
-        setStartAddress(msg.startAddress);
-    }
-
     abstract protected void writeData(ModbusOutputStream fifo) throws IOException;
 
     @Override

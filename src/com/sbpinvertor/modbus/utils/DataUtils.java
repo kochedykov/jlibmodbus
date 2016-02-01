@@ -117,10 +117,10 @@ public class DataUtils {
     }
 
     public static byte byteLow(int b) {
-        return (byte) ((short)b & 0xff);
+        return (byte) ((short) b & 0xff);
     }
 
     public static byte byteHigh(int b) {
-        return (byte) (((short)b >> 8) & 0xff);
+        return (byte) (((short) b >> 8) & 0xff);
     }
 }

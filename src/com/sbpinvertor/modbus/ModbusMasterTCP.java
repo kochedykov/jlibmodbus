@@ -38,8 +38,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class ModbusMasterTCP extends ModbusMaster {
     final private boolean keepAlive;
     final private ModbusConnection conn;
+    final private AtomicBoolean connected = new AtomicBoolean(false);
     private ModbusTransport transport = null;
-    private AtomicBoolean connected = new AtomicBoolean(false);
 
     public ModbusMasterTCP(TcpParameters parameters) throws ModbusTransportException {
         conn = new ModbusConnectionTCP(parameters);

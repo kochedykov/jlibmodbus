@@ -63,7 +63,7 @@ final public class ByteFifo {
         return (available() < b.length) ? 0 : bais.read(b);
     }
 
-    public int read(byte[] b, int offset, int length) throws IOException {
+    public int read(byte[] b, int offset, int length) {
         return (available() < b.length) ? 0 : bais.read(b, offset, length);
     }
 
@@ -73,7 +73,7 @@ final public class ByteFifo {
         }
     }
 
-    public void write(byte[] b) throws IOException {
+    public void write(byte[] b) {
         int available = (capacity - size());
         if (available > 0) {
             int count = b.length < available ? b.length : available;

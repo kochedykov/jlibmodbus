@@ -43,12 +43,6 @@ abstract public class AbstractMultipleRequest extends AbstractDataRequest {
         this.quantity = quantity;
     }
 
-    public AbstractMultipleRequest(AbstractMultipleRequest msg) {
-        super(msg);
-
-        this.quantity = msg.quantity;
-    }
-
     protected int getQuantity() {
         return quantity;
     }

@@ -45,7 +45,7 @@ public class ModbusFactory {
      * @see com.sbpinvertor.modbus.serial.SerialPort.BaudRate
      * @see ModbusMaster
      */
-    static public ModbusMaster createModbusMasterRTU(String device, SerialPort.BaudRate baudRate, int dataBits, int stopBits, SerialPort.Parity parity) throws ModbusTransportException {
+    static public ModbusMaster createModbusMasterRTU(String device, SerialPort.BaudRate baudRate, int dataBits, int stopBits, SerialPort.Parity parity) {
         return new ModbusMasterRTU(device, baudRate, dataBits, stopBits, parity);
     }
 
@@ -60,7 +60,7 @@ public class ModbusFactory {
      * @see com.sbpinvertor.modbus.serial.SerialPort.BaudRate
      * @see ModbusMaster
      */
-    static public ModbusMaster createModbusMasterASCII(String device, SerialPort.BaudRate baudRate, SerialPort.Parity parity) throws ModbusTransportException {
+    static public ModbusMaster createModbusMasterASCII(String device, SerialPort.BaudRate baudRate, SerialPort.Parity parity) {
         return new ModbusMasterASCII(device, baudRate, parity);
     }
 
@@ -74,7 +74,7 @@ public class ModbusFactory {
      * @see com.sbpinvertor.modbus.serial.SerialPort.BaudRate
      * @see ModbusMaster
      */
-    static public ModbusMaster createModbusMasterASCII(String device, SerialPort.BaudRate baudRate) throws ModbusTransportException {
+    static public ModbusMaster createModbusMasterASCII(String device, SerialPort.BaudRate baudRate) {
         return new ModbusMasterASCII(device, baudRate);
     }
 

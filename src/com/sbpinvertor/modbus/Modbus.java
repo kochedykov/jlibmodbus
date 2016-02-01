@@ -29,6 +29,7 @@ public class Modbus {
     final static public int MAX_CONNECTION_TIMEOUT = 3000;
     final static public int MAX_RESPONSE_TIMEOUT = 1000;
     final static public int MAX_PDU_LENGTH = 254;
+    final static public int MIN_PDU_LENGTH = 3;
     final static public int MAX_TCP_ADU_LENGTH = 260;
     final static public int MAX_RTU_ADU_LENGTH = 256;
     final static public int MAX_REGISTER_VALUE = 0xFFFF;
@@ -60,12 +61,13 @@ public class Modbus {
      *
      * @return default logger
      */
-    public static Logger log() {
+    static public Logger log() {
         return log;
     }
 
     /**
      * changes the log level of default Logger
+     *
      * @param level - LogLevel instance
      * @see LogLevel
      */
@@ -75,6 +77,7 @@ public class Modbus {
 
     /**
      * validates address of server
+     *
      * @param serverAddress - The modbus server address
      * @return "true" if serverAddress is correct, else "false".
      */
@@ -94,8 +97,8 @@ public class Modbus {
      * validates is the value in the range from min to max.
      *
      * @param value - the value for check
-     * @param min - minimum
-     * @param max - maximum
+     * @param min   - minimum
+     * @param max   - maximum
      * @return "true" if value in the range from min to max, else "false".
      */
     static private boolean checkRange(int value, int min, int max) {
@@ -106,7 +109,7 @@ public class Modbus {
      * validates the value in the range from 1 to max.
      *
      * @param value - the value for check
-     * @param max - maximum
+     * @param max   - maximum
      * @return "true" if value in the range from 1 to max, else "false".
      */
     static private boolean checkQuantity(int value, int max) {
@@ -117,7 +120,7 @@ public class Modbus {
      * validates data offset in the range from Modbus.MIN_START_ADDRESS to max.
      *
      * @param value - the offset for check
-     * @param max - maximum
+     * @param max   - maximum
      * @return "true" if offset in the range from Modbus.MIN_START_ADDRESS to max, else "false".
      */
     static private boolean checkStartAddress(int value, int max) {

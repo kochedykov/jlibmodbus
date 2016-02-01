@@ -1,6 +1,5 @@
 package com.sbpinvertor.modbus;
 
-import com.sbpinvertor.modbus.exception.ModbusTransportException;
 import com.sbpinvertor.modbus.net.ModbusConnection;
 import com.sbpinvertor.modbus.net.ModbusConnectionRTU;
 import com.sbpinvertor.modbus.net.ModbusTransport;
@@ -36,16 +35,16 @@ class ModbusMasterASCII extends ModbusMaster {
     final private ModbusTransport transport;
     final private ModbusConnection conn;
 
-    public ModbusMasterASCII(SerialParameters parameters) throws ModbusTransportException {
+    public ModbusMasterASCII(SerialParameters parameters) {
         conn = new ModbusConnectionRTU(SerialUtils.createSerial(parameters));
         transport = new ModbusTransportRTU(conn.getInputStream(), conn.getOutputStream());
     }
 
-    public ModbusMasterASCII(String device, SerialPort.BaudRate baudRate, SerialPort.Parity parity) throws ModbusTransportException {
+    public ModbusMasterASCII(String device, SerialPort.BaudRate baudRate, SerialPort.Parity parity) {
         this(new SerialParameters(device, baudRate, 7, parity == SerialPort.Parity.NONE ? 2 : 1, parity));
     }
 
-    public ModbusMasterASCII(String device, SerialPort.BaudRate baudRate) throws ModbusTransportException {
+    public ModbusMasterASCII(String device, SerialPort.BaudRate baudRate) {
         this(device, baudRate, SerialPort.Parity.EVEN);
     }
 

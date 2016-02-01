@@ -32,11 +32,15 @@ import java.io.IOException;
  * email: vladislav.kochedykov@gmail.com
  */
 final public class TcpAduHeader implements Transportable {
-    final static public int SIZE = 6;
     final private byte[] buffer;
 
     public TcpAduHeader() {
-        buffer = new byte[SIZE];
+        /*
+        * 2 bytes for the transaction id (often not used)
+        * 2 bytes for the protocol id (should be set to 0)
+        * 2 bytes for the pdu length (from 3 to 260)
+        */
+        buffer = new byte[6];
         setProtocolId(Modbus.PROTOCOL_ID);
     }
 
@@ -45,7 +49,7 @@ final public class TcpAduHeader implements Transportable {
         buffer[offset] = DataUtils.byteLow(value);
     }
 
-    public short getPduSize() {
+    private short getPduSize() {
         return DataUtils.toShort(buffer[4], buffer[5]);
     }
 
@@ -69,7 +73,7 @@ final public class TcpAduHeader implements Transportable {
         setBufferValue(value, 0);
     }
 
-    public byte[] byteArray() {
+    private byte[] byteArray() {
         return buffer;
     }
 
@@ -80,7 +84,12 @@ final public class TcpAduHeader implements Transportable {
 
     @Override
     public void read(ModbusInputStream fifo) throws ModbusNumberException, IOException {
-        fifo.read(byteArray());
+        int size;
+        if ((size = fifo.read(byteArray())) < buffer.length)
+            Modbus.log().warning(buffer.length + " bytes expected, but " + size + " received.");
+        if (getPduSize() < Modbus.MIN_PDU_LENGTH) {
+            throw new ModbusNumberException("the PDU length is less than the minimum expected.", getPduSize());
+        }
         if (getPduSize() > Modbus.MAX_PDU_LENGTH) {
             throw new ModbusNumberException("Maximum PDU size is reached.", getPduSize());
         }

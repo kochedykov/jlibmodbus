@@ -56,7 +56,7 @@ public class SerialPort {
         }
     }
 
-    public void write(int b) throws IOException {
+    public void write(int b) {
         try {
             port.writeByte((byte) b);
         } catch (Exception e) {
@@ -90,11 +90,11 @@ public class SerialPort {
         }
     }
 
-    public int read(byte[] b, int off, int len) throws IOException {
+    public int read(byte[] b, int off, int len) {
         int c = -1;
         try {
             byte[] rb = port.readBytes(b.length);
-            System.arraycopy(rb, 0, b, 0, b.length);
+            System.arraycopy(rb, 0, b, off, len);
             c = rb.length;
         } catch (Exception e) {
             e.printStackTrace();
