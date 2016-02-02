@@ -48,7 +48,7 @@ public class ReadExceptionStatusResponse extends ModbusResponse {
     }
 
     public void setExceptionStatus(int exceptionStatus) {
-        this.exceptionStatus = exceptionStatus;
+        this.exceptionStatus = (byte) exceptionStatus & 0xff;
     }
 
     @Override
