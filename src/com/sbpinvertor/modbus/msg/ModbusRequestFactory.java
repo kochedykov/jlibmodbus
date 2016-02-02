@@ -1,11 +1,12 @@
 package com.sbpinvertor.modbus.msg;
 
 import com.sbpinvertor.modbus.exception.ModbusNumberException;
-import com.sbpinvertor.modbus.exception.ModbusTransportException;
+import com.sbpinvertor.modbus.exception.ModbusProtocolException;
 import com.sbpinvertor.modbus.msg.base.ModbusMessage;
 import com.sbpinvertor.modbus.msg.base.ModbusRequest;
 import com.sbpinvertor.modbus.msg.request.*;
 import com.sbpinvertor.modbus.net.stream.base.ModbusInputStream;
+import com.sbpinvertor.modbus.utils.ModbusExceptionCode;
 import com.sbpinvertor.modbus.utils.ModbusFunctionCode;
 
 import java.io.IOException;
@@ -74,8 +75,12 @@ final public class ModbusRequestFactory implements ModbusMessageFactory {
         return new WriteSingleRegisterRequest(serverAddress, startAddress, register);
     }
 
+    public ModbusRequest createReadExceptionStatus(int serverAddress) throws ModbusNumberException {
+        return new ReadExceptionStatusRequest(serverAddress);
+    }
+
     @Override
-    public ModbusMessage createMessage(ModbusInputStream fifo) throws ModbusTransportException, ModbusNumberException, IOException {
+    public ModbusMessage createMessage(ModbusInputStream fifo) throws ModbusProtocolException, ModbusNumberException, IOException {
         ModbusMessage msg;
         int serverAddress = fifo.read();
         int functionCode = fifo.read();
@@ -104,11 +109,14 @@ final public class ModbusRequestFactory implements ModbusMessageFactory {
             case WRITE_MULTIPLE_REGISTERS:
                 msg = new WriteMultipleRegistersRequest(serverAddress);
                 break;
+            case READ_EXCEPTION_STATUS:
+                msg = new ReadExceptionStatusRequest(serverAddress);
+                break;
             case REPORT_SLAVE_ID:
             case READ_FILE_RECORD:
             case WRITE_FILE_RECORD:
             default:
-                throw new ModbusTransportException("function " + functionCode + " not supported.");
+                throw new ModbusProtocolException(ModbusExceptionCode.ILLEGAL_FUNCTION, serverAddress);
         }
         msg.read(fifo);
         return msg;

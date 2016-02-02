@@ -1,7 +1,7 @@
 package com.sbpinvertor.modbus.net;
 
 import com.sbpinvertor.modbus.exception.ModbusNumberException;
-import com.sbpinvertor.modbus.exception.ModbusTransportException;
+import com.sbpinvertor.modbus.exception.ModbusProtocolException;
 import com.sbpinvertor.modbus.msg.ModbusMessageFactory;
 import com.sbpinvertor.modbus.msg.base.ModbusMessage;
 import com.sbpinvertor.modbus.net.stream.base.ModbusInputStream;
@@ -39,18 +39,14 @@ public class ModbusTransportTCP extends ModbusTransport {
     }
 
     @Override
-    protected ModbusMessage read(ModbusMessageFactory factory) throws ModbusNumberException, ModbusTransportException {
-        try {
-            ModbusInputStream is = getInputStream();
-            TcpAduHeader header = new TcpAduHeader();
-            header.read(is);
-            ModbusMessage msg = factory.createMessage(is);
-            msg.setTransactionId(header.getTransactionId());
-            msg.setProtocolId(header.getProtocolId());
-            return msg;
-        } catch (IOException e) {
-            throw new ModbusTransportException(e);
-        }
+    protected ModbusMessage read(ModbusMessageFactory factory) throws ModbusNumberException, IOException, ModbusProtocolException {
+        ModbusInputStream is = getInputStream();
+        TcpAduHeader header = new TcpAduHeader();
+        header.read(is);
+        ModbusMessage msg = factory.createMessage(is);
+        msg.setTransactionId(header.getTransactionId());
+        msg.setProtocolId(header.getProtocolId());
+        return msg;
     }
 
     @Override

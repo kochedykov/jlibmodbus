@@ -37,7 +37,7 @@ abstract public class ModbusMessage implements Transportable {
     private int protocolId = Modbus.PROTOCOL_ID;
     private int transactionId = 0;
 
-    public ModbusMessage(int serverAddress) throws ModbusNumberException {
+    ModbusMessage(int serverAddress) throws ModbusNumberException {
         if (!Modbus.checkServerAddress(serverAddress))
             throw new ModbusNumberException("Error in slave id", serverAddress);
         this.serverAddress = serverAddress;

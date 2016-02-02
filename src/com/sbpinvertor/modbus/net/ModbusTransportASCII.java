@@ -2,7 +2,7 @@ package com.sbpinvertor.modbus.net;
 
 import com.sbpinvertor.modbus.Modbus;
 import com.sbpinvertor.modbus.exception.ModbusNumberException;
-import com.sbpinvertor.modbus.exception.ModbusTransportException;
+import com.sbpinvertor.modbus.exception.ModbusProtocolException;
 import com.sbpinvertor.modbus.msg.ModbusMessageFactory;
 import com.sbpinvertor.modbus.msg.base.ModbusMessage;
 import com.sbpinvertor.modbus.net.stream.InputStreamASCII;
@@ -40,14 +40,15 @@ public class ModbusTransportASCII extends ModbusTransport {
     }
 
     @Override
-    protected ModbusMessage read(ModbusMessageFactory factory) throws ModbusNumberException, ModbusTransportException, IOException {
+    protected ModbusMessage read(ModbusMessageFactory factory) throws ModbusNumberException, IOException, ModbusProtocolException {
         InputStreamASCII is = (InputStreamASCII) getInputStream();
         ModbusMessage msg = factory.createMessage(is);
-        boolean check = is.getLrc() != is.read();
+        int lrc = is.getLrc();
+        boolean check = lrc != is.read();
         if (is.readByte() != Modbus.ASCII_CODE_CR || is.readByte() != Modbus.ASCII_CODE_LF)
             Modbus.log().warning("\\r\\n not received.");
         if (!check) {
-            throw new ModbusTransportException("control sum check failed.");
+            throw new ModbusNumberException("control sum check failed.", lrc);
         }
         return msg;
     }

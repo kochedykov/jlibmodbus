@@ -14,7 +14,7 @@ package com.sbpinvertor.modbus.exception;
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * GNU General Public License for more details.
  * <p/>
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
@@ -22,15 +22,13 @@ package com.sbpinvertor.modbus.exception;
  * Authors: Vladislav Y. Kochedykov, software engineer.
  * email: vladislav.kochedykov@gmail.com
  */
+public class ModbusMasterException extends Exception {
 
-public class ModbusTransportException extends Exception {
-
-    public ModbusTransportException(String message) {
+    public ModbusMasterException(String message) {
         super(message);
     }
 
-    public ModbusTransportException(Throwable cause) {
+    public ModbusMasterException(Throwable cause) {
         super(cause);
     }
-
 }

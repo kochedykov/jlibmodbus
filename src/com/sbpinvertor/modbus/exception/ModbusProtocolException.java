@@ -25,7 +25,7 @@ import com.sbpinvertor.modbus.utils.ModbusExceptionCode;
  * email: vladislav.kochedykov@gmail.com
  */
 
-public class ModbusProtocolException extends ModbusTransportException {
+public class ModbusProtocolException extends Exception {
 
     private final ModbusExceptionCode exception;
     private final int serverAddress;

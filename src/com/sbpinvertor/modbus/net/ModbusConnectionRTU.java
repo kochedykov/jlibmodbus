@@ -1,6 +1,5 @@
 package com.sbpinvertor.modbus.net;
 
-import com.sbpinvertor.modbus.exception.ModbusTransportException;
 import com.sbpinvertor.modbus.net.stream.InputStreamRTU;
 import com.sbpinvertor.modbus.net.stream.OutputStreamRTU;
 import com.sbpinvertor.modbus.net.stream.base.ModbusInputStream;
@@ -40,7 +39,7 @@ public class ModbusConnectionRTU extends ModbusConnectionSerial {
     }
 
     @Override
-    public void reset() throws ModbusTransportException {
+    public void reset() {
         super.reset();
         is.reset();
         os.reset();

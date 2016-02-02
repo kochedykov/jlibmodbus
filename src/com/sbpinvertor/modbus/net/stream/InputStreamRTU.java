@@ -1,7 +1,7 @@
 package com.sbpinvertor.modbus.net.stream;
 
 import com.sbpinvertor.modbus.serial.SerialPort;
-import com.sbpinvertor.utils.CRC16;
+import com.sbpinvertor.modbus.utils.CRC16;
 
 import java.io.IOException;
 

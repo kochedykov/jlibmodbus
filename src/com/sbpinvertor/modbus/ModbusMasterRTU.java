@@ -31,7 +31,7 @@ import com.sbpinvertor.modbus.serial.SerialUtils;
  * email: vladislav.kochedykov@gmail.com
  */
 
-class ModbusMasterRTU extends ModbusMaster {
+class ModbusMasterRTU extends ModbusMasterSerial {
 
     final private ModbusTransport transport;
     final private ModbusConnection conn;

@@ -1,8 +1,9 @@
 package com.sbpinvertor.modbus.net;
 
-import com.sbpinvertor.modbus.exception.ModbusTransportException;
 import com.sbpinvertor.modbus.net.stream.base.ModbusInputStream;
 import com.sbpinvertor.modbus.net.stream.base.ModbusOutputStream;
+
+import java.io.IOException;
 
 /**
  * Copyright (c) 2015-2016 JSC "Zavod "Invertor"
@@ -32,11 +33,11 @@ abstract public class ModbusConnection {
 
     abstract public ModbusInputStream getInputStream();
 
-    abstract public void open() throws ModbusTransportException;
+    abstract public void open() throws IOException;
 
-    abstract public void close() throws ModbusTransportException;
+    abstract public void close() throws IOException;
 
-    abstract public void reset() throws ModbusTransportException;
+    abstract public void reset() throws IOException;
 
     public void setReadTimeout(int timeout) {
         getInputStream().setReadTimeout(timeout);

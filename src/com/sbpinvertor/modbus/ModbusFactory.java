@@ -1,6 +1,5 @@
 package com.sbpinvertor.modbus;
 
-import com.sbpinvertor.modbus.exception.ModbusTransportException;
 import com.sbpinvertor.modbus.serial.SerialPort;
 
 /**
@@ -86,7 +85,7 @@ public class ModbusFactory {
      * @return ModbusMaster instance if there is no errors, else null
      * @see ModbusMaster
      */
-    static public ModbusMaster createModbusMasterTCP(String host, boolean keepAlive) throws ModbusTransportException {
+    static public ModbusMaster createModbusMasterTCP(String host, boolean keepAlive) {
         return createModbusMasterTCP(host, Modbus.TCP_PORT, keepAlive);
     }
 
@@ -97,7 +96,7 @@ public class ModbusFactory {
      * @return ModbusMaster instance if there is no errors, else null
      * @see ModbusMaster
      */
-    static public ModbusMaster createModbusMasterTCP(String host) throws ModbusTransportException {
+    static public ModbusMaster createModbusMasterTCP(String host) {
         return createModbusMasterTCP(host, false);
     }
 
@@ -110,7 +109,7 @@ public class ModbusFactory {
      * @return ModbusMaster instance if there is no errors, else null
      * @see ModbusMaster
      */
-    static public ModbusMaster createModbusMasterTCP(String host, int port, boolean keepAlive) throws ModbusTransportException {
+    static public ModbusMaster createModbusMasterTCP(String host, int port, boolean keepAlive) {
         return new ModbusMasterTCP(host, port, keepAlive);
     }
 }

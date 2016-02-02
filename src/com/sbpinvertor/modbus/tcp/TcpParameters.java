@@ -1,7 +1,5 @@
 package com.sbpinvertor.modbus.tcp;
 
-import com.sbpinvertor.modbus.Modbus;
-
 /**
  * Copyright (c) 2015-2016 JSC "Zavod "Invertor"
  * [http://www.sbp-invertor.ru]
@@ -33,10 +31,6 @@ public class TcpParameters {
         this.host = host;
         this.port = port;
         this.keepAlive = keepAlive;
-    }
-
-    public TcpParameters(String host) {
-        this(host, Modbus.TCP_PORT, false);
     }
 
     public String getHost() {

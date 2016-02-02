@@ -1,9 +1,9 @@
 package com.sbpinvertor.modbus;
 
 import com.sbpinvertor.modbus.net.ModbusConnection;
-import com.sbpinvertor.modbus.net.ModbusConnectionRTU;
+import com.sbpinvertor.modbus.net.ModbusConnectionASCII;
 import com.sbpinvertor.modbus.net.ModbusTransport;
-import com.sbpinvertor.modbus.net.ModbusTransportRTU;
+import com.sbpinvertor.modbus.net.ModbusTransportASCII;
 import com.sbpinvertor.modbus.serial.SerialParameters;
 import com.sbpinvertor.modbus.serial.SerialPort;
 import com.sbpinvertor.modbus.serial.SerialUtils;
@@ -31,13 +31,14 @@ import com.sbpinvertor.modbus.serial.SerialUtils;
  * email: vladislav.kochedykov@gmail.com
  */
 
-class ModbusMasterASCII extends ModbusMaster {
+class ModbusMasterASCII extends ModbusMasterSerial {
+
     final private ModbusTransport transport;
     final private ModbusConnection conn;
 
     public ModbusMasterASCII(SerialParameters parameters) {
-        conn = new ModbusConnectionRTU(SerialUtils.createSerial(parameters));
-        transport = new ModbusTransportRTU(conn.getInputStream(), conn.getOutputStream());
+        conn = new ModbusConnectionASCII(SerialUtils.createSerial(parameters));
+        transport = new ModbusTransportASCII(conn.getInputStream(), conn.getOutputStream());
     }
 
     public ModbusMasterASCII(String device, SerialPort.BaudRate baudRate, SerialPort.Parity parity) {

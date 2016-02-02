@@ -2,7 +2,6 @@ package com.sbpinvertor.tests.modbus;
 
 import com.sbpinvertor.modbus.ModbusFactory;
 import com.sbpinvertor.modbus.ModbusMaster;
-import com.sbpinvertor.modbus.exception.ModbusTransportException;
 
 /**
  * Copyright (c) 2015-2016 JSC "Zavod "Invertor"
@@ -28,7 +27,7 @@ import com.sbpinvertor.modbus.exception.ModbusTransportException;
  */
 public class ModbusMasterTest {
 
-    public static void main(String[] argv) throws ModbusTransportException {
+    public static void main(String[] argv) {
         //ModbusMaster m = ModbusFactory.createModbusMasterRTU("COM1", SerialPort.BaudRate.BAUD_RATE_115200, 8, 1, SerialPort.Parity.NONE);
         //ModbusMaster m = ModbusFactory.createModbusMasterASCII("COM1", SerialPort.BaudRate.BAUD_RATE_115200);
         ModbusMaster m = ModbusFactory.createModbusMasterTCP("127.0.0.1", false);

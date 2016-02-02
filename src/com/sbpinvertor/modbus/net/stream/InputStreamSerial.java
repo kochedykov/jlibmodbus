@@ -31,7 +31,7 @@ abstract public class InputStreamSerial extends ModbusInputStream {
 
     final private SerialPort serial;
 
-    protected InputStreamSerial(SerialPort serial) {
+    InputStreamSerial(SerialPort serial) {
         this.serial = serial;
     }
 

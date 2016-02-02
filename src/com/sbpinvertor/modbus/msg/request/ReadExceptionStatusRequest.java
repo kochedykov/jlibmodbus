@@ -1,10 +1,10 @@
-package com.sbpinvertor.modbus.net.stream;
+package com.sbpinvertor.modbus.msg.request;
 
-import com.sbpinvertor.modbus.Modbus;
+import com.sbpinvertor.modbus.exception.ModbusNumberException;
+import com.sbpinvertor.modbus.msg.base.ModbusRequest;
+import com.sbpinvertor.modbus.net.stream.base.ModbusInputStream;
 import com.sbpinvertor.modbus.net.stream.base.ModbusOutputStream;
-import com.sbpinvertor.modbus.serial.SerialPort;
-import com.sbpinvertor.modbus.utils.ByteFifo;
-import com.sbpinvertor.modbus.utils.CRC16;
+import com.sbpinvertor.modbus.utils.ModbusFunctionCode;
 
 import java.io.IOException;
 
@@ -22,7 +22,7 @@ import java.io.IOException;
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Lesser General Public License for more details.
  * <p/>
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
@@ -30,39 +30,29 @@ import java.io.IOException;
  * Authors: Vladislav Y. Kochedykov, software engineer.
  * email: vladislav.kochedykov@gmail.com
  */
-public class OutputStreamRTU extends ModbusOutputStream {
+public class ReadExceptionStatusRequest extends ModbusRequest {
 
-    final private SerialPort serial;
-    private final ByteFifo fifo = new ByteFifo(Modbus.MAX_RTU_ADU_LENGTH);
-    private int crc;
-
-    public OutputStreamRTU(SerialPort serial) {
-        this.serial = serial;
-        reset();
+    public ReadExceptionStatusRequest(int serverAddress) throws ModbusNumberException {
+        super(serverAddress);
     }
 
     @Override
-    public void write(byte[] b) throws IOException {
-        fifo.write(b);
-        crc = CRC16.calc(crc, b);
+    protected void writeRequest(ModbusOutputStream fifo) throws IOException {
+        //no operation
     }
 
     @Override
-    public void write(int b) throws IOException {
-        fifo.write(b);
-        crc = CRC16.calc(crc, (byte) (b & 0xff));
+    protected int requestSize() {
+        return 0;
     }
 
     @Override
-    public void flush() throws IOException {
-        writeShortLE(crc);
-        serial.write(fifo.toByteArray());
-        reset();
+    protected void readPDU(ModbusInputStream fifo) throws ModbusNumberException, IOException {
+        //no operation
     }
 
     @Override
-    public void reset() {
-        fifo.clear();
-        crc = CRC16.INITIAL_VALUE;
+    public ModbusFunctionCode getFunction() {
+        return ModbusFunctionCode.READ_EXCEPTION_STATUS;
     }
 }

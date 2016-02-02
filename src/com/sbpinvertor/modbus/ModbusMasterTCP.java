@@ -1,13 +1,14 @@
 package com.sbpinvertor.modbus;
 
 import com.sbpinvertor.modbus.exception.ModbusNumberException;
-import com.sbpinvertor.modbus.exception.ModbusTransportException;
+import com.sbpinvertor.modbus.exception.ModbusProtocolException;
 import com.sbpinvertor.modbus.msg.base.ModbusMessage;
 import com.sbpinvertor.modbus.net.ModbusConnection;
 import com.sbpinvertor.modbus.net.ModbusConnectionTCP;
 import com.sbpinvertor.modbus.net.ModbusTransport;
 import com.sbpinvertor.modbus.net.ModbusTransportTCP;
 import com.sbpinvertor.modbus.tcp.TcpParameters;
+import com.sbpinvertor.modbus.utils.ModbusExceptionCode;
 
 import java.io.IOException;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -41,28 +42,28 @@ public class ModbusMasterTCP extends ModbusMaster {
     final private AtomicBoolean connected = new AtomicBoolean(false);
     private ModbusTransport transport = null;
 
-    public ModbusMasterTCP(TcpParameters parameters) throws ModbusTransportException {
+    public ModbusMasterTCP(TcpParameters parameters) {
         conn = new ModbusConnectionTCP(parameters);
         keepAlive = parameters.isKeepAlive();
-        if (keepAlive) {
-            open();
+        try {
+            if (keepAlive) {
+                open();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
-    public ModbusMasterTCP(String host, int port, boolean keepAlive) throws ModbusTransportException {
+    public ModbusMasterTCP(String host, int port, boolean keepAlive) {
         this(new TcpParameters(host, port, keepAlive));
     }
 
-    public ModbusMasterTCP(String host, boolean keepAlive) throws ModbusTransportException {
+    public ModbusMasterTCP(String host, boolean keepAlive) {
         this(host, Modbus.TCP_PORT, keepAlive);
     }
 
-    public ModbusMasterTCP(String host) throws ModbusTransportException {
-        this(host, false);
-    }
-
     @Override
-    protected void sendRequest(ModbusMessage msg) throws ModbusTransportException, IOException {
+    protected void sendRequest(ModbusMessage msg) throws IOException {
         if (!keepAlive)
             open();
         try {
@@ -76,7 +77,7 @@ public class ModbusMasterTCP extends ModbusMaster {
     }
 
     @Override
-    protected ModbusMessage readResponse() throws ModbusTransportException, ModbusNumberException, IOException {
+    protected ModbusMessage readResponse() throws ModbusNumberException, IOException, ModbusProtocolException {
         ModbusMessage msg = getTransport().readResponse();
         if (!keepAlive) {
             close();
@@ -86,7 +87,12 @@ public class ModbusMasterTCP extends ModbusMaster {
     }
 
     @Override
-    public void open() throws ModbusTransportException {
+    public int readExceptionStatus(int serverAddress) throws ModbusNumberException, IOException, ModbusProtocolException {
+        throw new ModbusProtocolException(ModbusExceptionCode.ILLEGAL_FUNCTION, serverAddress);
+    }
+
+    @Override
+    public void open() throws IOException {
         if (!isConnected()) {
             conn.open();
             transport = new ModbusTransportTCP(conn.getInputStream(), conn.getOutputStream());
@@ -95,7 +101,7 @@ public class ModbusMasterTCP extends ModbusMaster {
     }
 
     @Override
-    public void close() throws ModbusTransportException {
+    public void close() throws IOException {
         setConnected(false);
         conn.close();
         transport = null;

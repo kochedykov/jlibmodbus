@@ -34,11 +34,11 @@ public class ReadExceptionStatusResponse extends ModbusResponse {
 
     private int exceptionStatus = 0;
 
-    ReadExceptionStatusResponse(int serverAddress) throws ModbusNumberException {
+    public ReadExceptionStatusResponse(int serverAddress) throws ModbusNumberException {
         super(serverAddress);
     }
 
-    ReadExceptionStatusResponse(int serverAddress, int exceptionStatus) throws ModbusNumberException {
+    public ReadExceptionStatusResponse(int serverAddress, int exceptionStatus) throws ModbusNumberException {
         this(serverAddress);
         setExceptionStatus(exceptionStatus);
     }

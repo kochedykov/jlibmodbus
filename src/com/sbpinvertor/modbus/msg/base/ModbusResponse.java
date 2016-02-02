@@ -74,7 +74,7 @@ public abstract class ModbusResponse extends ModbusMessage {
         return modbusExceptionCode;
     }
 
-    private void setModbusExceptionCode(int code) {
+    final public void setModbusExceptionCode(int code) {
         modbusExceptionCode = ModbusExceptionCode.getExceptionCode(code);
     }
 

@@ -1,6 +1,5 @@
 package com.sbpinvertor.modbus.net;
 
-import com.sbpinvertor.modbus.exception.ModbusTransportException;
 import com.sbpinvertor.modbus.net.stream.InputStreamASCII;
 import com.sbpinvertor.modbus.net.stream.OutputStreamASCII;
 import com.sbpinvertor.modbus.net.stream.base.ModbusInputStream;
@@ -40,7 +39,7 @@ public class ModbusConnectionASCII extends ModbusConnectionSerial {
     }
 
     @Override
-    public void reset() throws ModbusTransportException {
+    public void reset() {
         super.reset();
         is.reset();
         os.reset();

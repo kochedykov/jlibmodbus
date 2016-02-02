@@ -1,7 +1,7 @@
 package com.sbpinvertor.modbus.net;
 
 import com.sbpinvertor.modbus.exception.ModbusNumberException;
-import com.sbpinvertor.modbus.exception.ModbusTransportException;
+import com.sbpinvertor.modbus.exception.ModbusProtocolException;
 import com.sbpinvertor.modbus.msg.ModbusMessageFactory;
 import com.sbpinvertor.modbus.msg.base.ModbusMessage;
 import com.sbpinvertor.modbus.net.stream.InputStreamRTU;
@@ -39,13 +39,13 @@ public class ModbusTransportRTU extends ModbusTransport {
     }
 
     @Override
-    protected ModbusMessage read(ModbusMessageFactory factory) throws ModbusNumberException, ModbusTransportException, IOException {
+    protected ModbusMessage read(ModbusMessageFactory factory) throws ModbusNumberException, IOException, ModbusProtocolException {
         InputStreamRTU is = (InputStreamRTU) getInputStream();
         ModbusMessage msg = factory.createMessage(is);
         int crc = is.readShortLE();
         // crc from the same crc equals zero
         if (crc != 0 && is.getCrc() == 0)
-            throw new ModbusTransportException("control sum check failed.");
+            throw new ModbusNumberException("control sum check failed.", crc);
         return msg;
     }
 

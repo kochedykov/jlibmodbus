@@ -1,4 +1,4 @@
-package com.sbpinvertor.utils;
+package com.sbpinvertor.modbus.utils;
 
 /**
  * Copyright (c) 2015-2016 JSC "Zavod "Invertor"

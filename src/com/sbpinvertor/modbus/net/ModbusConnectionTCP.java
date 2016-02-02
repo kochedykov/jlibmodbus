@@ -1,7 +1,6 @@
 package com.sbpinvertor.modbus.net;
 
 import com.sbpinvertor.modbus.Modbus;
-import com.sbpinvertor.modbus.exception.ModbusTransportException;
 import com.sbpinvertor.modbus.net.stream.InputStreamTCP;
 import com.sbpinvertor.modbus.net.stream.OutputStreamTCP;
 import com.sbpinvertor.modbus.net.stream.base.ModbusInputStream;
@@ -62,35 +61,29 @@ public class ModbusConnectionTCP extends ModbusConnection {
     }
 
     @Override
-    public void reset() throws ModbusTransportException {
+    public void reset() throws IOException {
         open();
     }
 
     @Override
-    public void open() throws ModbusTransportException {
-        try {
-            if (parameters != null) {
-                close();
-                socket = new Socket();
-                socket.setKeepAlive(parameters.isKeepAlive());
-                InetSocketAddress isa = new InetSocketAddress(parameters.getHost(), parameters.getPort());
-                socket.connect(isa, Modbus.MAX_CONNECTION_TIMEOUT);
-            }
-            is = new InputStreamTCP(socket);
-            os = new OutputStreamTCP(socket);
-            is.setReadTimeout(readTimeout);
-        } catch (IOException e) {
-            throw new ModbusTransportException(e);
+    public void open() throws IOException {
+        if (parameters != null) {
+            close();
+            socket = new Socket();
+            socket.setKeepAlive(parameters.isKeepAlive());
+            InetSocketAddress isa = new InetSocketAddress(parameters.getHost(), parameters.getPort());
+            socket.connect(isa, Modbus.MAX_CONNECTION_TIMEOUT);
         }
+        is = new InputStreamTCP(socket);
+        os = new OutputStreamTCP(socket);
+        is.setReadTimeout(readTimeout);
     }
 
     @Override
-    public void close() throws ModbusTransportException {
+    public void close() throws IOException {
         try {
             if (socket != null)
                 socket.close();
-        } catch (Exception e) {
-            throw new ModbusTransportException(e);
         } finally {
             is = null;
             os = null;
