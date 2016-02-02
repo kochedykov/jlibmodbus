@@ -1,11 +1,12 @@
 package com.sbpinvertor.modbus.msg.response;
 
-import com.sbpinvertor.modbus.Modbus;
 import com.sbpinvertor.modbus.exception.ModbusNumberException;
 import com.sbpinvertor.modbus.msg.base.AbstractWriteResponse;
 import com.sbpinvertor.modbus.net.stream.base.ModbusInputStream;
 import com.sbpinvertor.modbus.net.stream.base.ModbusOutputStream;
 import com.sbpinvertor.modbus.utils.ModbusFunctionCode;
+
+import java.io.IOException;
 
 /**
  * Copyright (c) 2015-2016 JSC "Zavod "Invertor"
@@ -29,45 +30,54 @@ import com.sbpinvertor.modbus.utils.ModbusFunctionCode;
  * Authors: Vladislav Y. Kochedykov, software engineer.
  * email: vladislav.kochedykov@gmail.com
  */
-public class WriteSingleRegisterResponse extends AbstractWriteResponse {
+public class MaskWriteRegisterResponse extends AbstractWriteResponse {
 
-    int value;
+    private int maskAnd;
+    private int maskOr;
 
-    public WriteSingleRegisterResponse(int serverAddress) throws ModbusNumberException {
+    public MaskWriteRegisterResponse(int serverAddress) throws ModbusNumberException {
         super(serverAddress);
     }
 
-    public WriteSingleRegisterResponse(int serverAddress, int startAddress, int value) throws ModbusNumberException {
+    public MaskWriteRegisterResponse(int serverAddress, int startAddress, int maskAnd, int maskOr) throws ModbusNumberException {
         super(serverAddress, startAddress);
-        if (!checkValue())
-            throw new ModbusNumberException("Error in register value", startAddress);
-        setValue(value);
+
+        setMaskAnd(maskAnd);
+        setMaskOr(maskOr);
     }
 
     @Override
-    protected void readValue(ModbusInputStream fifo) {
-
+    protected void readValue(ModbusInputStream fifo) throws IOException {
+        setMaskAnd(fifo.readShortBE());
+        setMaskOr(fifo.readShortBE());
     }
 
     @Override
-    protected void writeValue(ModbusOutputStream fifo) {
-
+    protected void writeValue(ModbusOutputStream fifo) throws IOException {
+        fifo.writeShortBE(getMaskAnd());
+        fifo.writeShortBE(getMaskOr());
     }
 
-    protected boolean checkValue() {
-        return Modbus.checkRegisterValue(getValue());
-    }
 
     @Override
     public ModbusFunctionCode getFunction() {
-        return ModbusFunctionCode.WRITE_SINGLE_REGISTER;
+        return ModbusFunctionCode.MASK_WRITE_REGISTER;
     }
 
-    final protected int getValue() {
-        return value;
+    public int getMaskAnd() {
+        return maskAnd;
     }
 
-    final public void setValue(int value) {
-        this.value = value;
+    public void setMaskAnd(int maskAnd) {
+        this.maskAnd = maskAnd;
     }
+
+    public int getMaskOr() {
+        return maskOr;
+    }
+
+    public void setMaskOr(int maskOr) {
+        this.maskOr = maskOr;
+    }
+
 }

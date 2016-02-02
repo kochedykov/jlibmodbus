@@ -75,6 +75,10 @@ final public class ModbusRequestFactory implements ModbusMessageFactory {
         return new WriteSingleRegisterRequest(serverAddress, startAddress, register);
     }
 
+    public ModbusRequest createMaskWriteRegister(int serverAddress, int startAddress, int and, int or) throws ModbusNumberException {
+        return new MaskWriteRegisterRequest(serverAddress, startAddress, and, or);
+    }
+
     public ModbusRequest createReadExceptionStatus(int serverAddress) throws ModbusNumberException {
         return new ReadExceptionStatusRequest(serverAddress);
     }
@@ -122,6 +126,8 @@ final public class ModbusRequestFactory implements ModbusMessageFactory {
             case READ_FILE_RECORD:
             case WRITE_FILE_RECORD:
             case MASK_WRITE_REGISTER:
+                msg = new MaskWriteRegisterRequest(serverAddress);
+                break;
             case DIAGNOSTICS:
             case GET_COMM_EVENT_COUNTER:
             case GET_COMM_EVENT_LOG:

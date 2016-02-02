@@ -2,7 +2,6 @@ package com.sbpinvertor.modbus.msg.response;
 
 import com.sbpinvertor.modbus.Modbus;
 import com.sbpinvertor.modbus.exception.ModbusNumberException;
-import com.sbpinvertor.modbus.msg.base.AbstractWriteResponse;
 import com.sbpinvertor.modbus.utils.ModbusFunctionCode;
 
 /**
@@ -27,7 +26,7 @@ import com.sbpinvertor.modbus.utils.ModbusFunctionCode;
  * Authors: Vladislav Y. Kochedykov, software engineer.
  * email: vladislav.kochedykov@gmail.com
  */
-public class WriteMultipleCoilsResponse extends AbstractWriteResponse {
+public class WriteMultipleCoilsResponse extends WriteSingleRegisterResponse {
 
     public WriteMultipleCoilsResponse(int serverAddress) throws ModbusNumberException {
         super(serverAddress);

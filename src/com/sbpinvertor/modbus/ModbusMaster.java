@@ -140,6 +140,24 @@ abstract public class ModbusMaster {
         processRequest(requestFactory.createWriteMultipleRegisters(serverAddress, startAddress, registers));
     }
 
+    /**
+     * TODO
+     * result = ((reg & and) | (or & !and))
+     *
+     * @param serverAddress slave id
+     * @param startAddress  reference address
+     * @param and           the AND mask
+     * @param or            the OR mask
+     * @throws ModbusProtocolException
+     * @throws ModbusNumberException
+     * @throws IOException
+     * @throws ModbusMasterException
+     */
+    final public void maskWriteRegister(int serverAddress, int startAddress, int and, int or) throws
+            ModbusProtocolException, ModbusNumberException, IOException, ModbusMasterException {
+        processRequest(requestFactory.createMaskWriteRegister(serverAddress, startAddress, and, or));
+    }
+
     abstract public int readExceptionStatus(int serverAddress) throws
             ModbusProtocolException, ModbusNumberException, IOException, ModbusMasterException;
 
