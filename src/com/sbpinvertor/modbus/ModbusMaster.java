@@ -142,4 +142,7 @@ abstract public class ModbusMaster {
 
     abstract public int readExceptionStatus(int serverAddress) throws
             ModbusProtocolException, ModbusNumberException, IOException, ModbusMasterException;
+
+    abstract public byte[] reportSlaveId(int serverAddress) throws
+            ModbusProtocolException, ModbusNumberException, IOException, ModbusMasterException;
 }

@@ -5,6 +5,7 @@ import com.sbpinvertor.modbus.exception.ModbusNumberException;
 import com.sbpinvertor.modbus.exception.ModbusProtocolException;
 import com.sbpinvertor.modbus.msg.base.ModbusMessage;
 import com.sbpinvertor.modbus.msg.response.ReadExceptionStatusResponse;
+import com.sbpinvertor.modbus.msg.response.ReportSlaveIdResponse;
 
 import java.io.IOException;
 
@@ -37,5 +38,12 @@ abstract public class ModbusMasterSerial extends ModbusMaster {
         ModbusMessage request = requestFactory.createReadExceptionStatus(serverAddress);
         ReadExceptionStatusResponse response = (ReadExceptionStatusResponse) processRequest(request);
         return response.getExceptionStatus();
+    }
+
+    @Override
+    public byte[] reportSlaveId(int serverAddress) throws ModbusProtocolException, ModbusNumberException, IOException, ModbusMasterException {
+        ModbusMessage request = requestFactory.createReportSlaveId(serverAddress);
+        ReportSlaveIdResponse response = (ReportSlaveIdResponse) processRequest(request);
+        return response.getSlaveId();
     }
 }

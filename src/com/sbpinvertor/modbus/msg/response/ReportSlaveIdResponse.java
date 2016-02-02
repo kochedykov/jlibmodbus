@@ -5,7 +5,6 @@ import com.sbpinvertor.modbus.exception.ModbusNumberException;
 import com.sbpinvertor.modbus.msg.base.AbstractReadResponse;
 import com.sbpinvertor.modbus.net.stream.base.ModbusInputStream;
 import com.sbpinvertor.modbus.net.stream.base.ModbusOutputStream;
-import com.sbpinvertor.modbus.utils.DataUtils;
 import com.sbpinvertor.modbus.utils.ModbusFunctionCode;
 
 import java.io.IOException;
@@ -32,40 +31,39 @@ import java.io.IOException;
  * Authors: Vladislav Y. Kochedykov, software engineer.
  * email: vladislav.kochedykov@gmail.com
  */
-public class ReadHoldingRegistersResponse extends AbstractReadResponse {
+public class ReportSlaveIdResponse extends AbstractReadResponse {
 
-    private int[] registers;
+    private byte[] slaveId;
 
-    public ReadHoldingRegistersResponse(int serverAddress) throws ModbusNumberException {
+    public ReportSlaveIdResponse(int serverAddress) throws ModbusNumberException {
         super(serverAddress);
     }
 
-    public ReadHoldingRegistersResponse(int serverAddress, int[] registers) throws ModbusNumberException {
-        super(serverAddress, registers.length * 2);
+    public ReportSlaveIdResponse(int serverAddress, byte[] slaveId) throws ModbusNumberException {
+        super(serverAddress, slaveId.length);
 
-        this.registers = registers;
+        this.slaveId = slaveId;
     }
 
-    public int[] getRegisters() {
-        return registers;
+    public byte[] getSlaveId() {
+        return slaveId;
     }
 
     @Override
     protected void readData(ModbusInputStream fifo) throws IOException {
-        byte[] buffer = new byte[getByteCount()];
+        slaveId = new byte[getByteCount()];
         int size;
-        if ((size = fifo.read(buffer)) < buffer.length)
-            Modbus.log().warning(buffer.length + " bytes expected, but " + size + " received.");
-        registers = DataUtils.toIntArray(buffer);
+        if ((size = fifo.read(slaveId)) < slaveId.length)
+            Modbus.log().warning(slaveId.length + " bytes expected, but " + size + " received.");
     }
 
     @Override
     protected void writeData(ModbusOutputStream fifo) throws IOException {
-        fifo.write(DataUtils.toByteArray(registers));
+        fifo.write(slaveId);
     }
 
     @Override
     public ModbusFunctionCode getFunction() {
-        return ModbusFunctionCode.READ_HOLDING_REGISTERS;
+        return ModbusFunctionCode.REPORT_SLAVE_ID;
     }
 }

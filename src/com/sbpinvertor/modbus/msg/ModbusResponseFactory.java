@@ -79,6 +79,10 @@ final public class ModbusResponseFactory implements ModbusMessageFactory {
         return new ReadExceptionStatusResponse(serverAddress, status);
     }
 
+    public ModbusResponse createReportSlaveId(int serverAddress, byte[] slaveId) throws ModbusNumberException {
+        return new ReportSlaveIdResponse(serverAddress, slaveId);
+    }
+
     @Override
     public ModbusMessage createMessage(ModbusInputStream fifo) throws ModbusNumberException, IOException, ModbusProtocolException {
         ModbusResponse msg;
@@ -113,8 +117,19 @@ final public class ModbusResponseFactory implements ModbusMessageFactory {
                 msg = new ReadExceptionStatusResponse(serverAddress);
                 break;
             case REPORT_SLAVE_ID:
+                msg = new ReportSlaveIdResponse(serverAddress);
+                break;
             case READ_FILE_RECORD:
             case WRITE_FILE_RECORD:
+            case MASK_WRITE_REGISTER:
+            case DIAGNOSTICS:
+            case GET_COMM_EVENT_COUNTER:
+            case GET_COMM_EVENT_LOG:
+            case READ_WRITE_MULTIPLE_REGISTERS:
+            case READ_FIFO_QUEUE:
+            case ENCAPSULATED_INTERFACE_TRANSPORT:
+            case CAN_OPEN_PDU:
+            case READ_DEVICE_IDENTIFICATION:
             default:
                 throw new ModbusProtocolException(ModbusExceptionCode.ILLEGAL_FUNCTION, serverAddress);
         }

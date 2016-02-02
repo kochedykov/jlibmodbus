@@ -54,9 +54,9 @@ public class ReadCoilsResponse extends AbstractReadResponse {
     final protected void readData(ModbusInputStream fifo) throws IOException {
         byte[] coils = new byte[getByteCount()];
         int size;
-        if ((size = fifo.read(coils, 0, getByteCount())) < getByteCount())
-            Modbus.log().warning(getByteCount() + " bytes expected, but " + size + " received.");
-        this.coils = DataUtils.toBitsArray(coils, getByteCount() * 8);
+        if ((size = fifo.read(coils)) < coils.length)
+            Modbus.log().warning(coils.length + " bytes expected, but " + size + " received.");
+        this.coils = DataUtils.toBitsArray(coils, coils.length * 8);
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.sbpinvertor.modbus;
 
+import com.sbpinvertor.modbus.exception.ModbusMasterException;
 import com.sbpinvertor.modbus.exception.ModbusNumberException;
 import com.sbpinvertor.modbus.exception.ModbusProtocolException;
 import com.sbpinvertor.modbus.msg.base.ModbusMessage;
@@ -58,10 +59,6 @@ public class ModbusMasterTCP extends ModbusMaster {
         this(new TcpParameters(host, port, keepAlive));
     }
 
-    public ModbusMasterTCP(String host, boolean keepAlive) {
-        this(host, Modbus.TCP_PORT, keepAlive);
-    }
-
     @Override
     protected void sendRequest(ModbusMessage msg) throws IOException {
         if (!keepAlive)
@@ -82,13 +79,7 @@ public class ModbusMasterTCP extends ModbusMaster {
         if (!keepAlive) {
             close();
         }
-
         return msg;
-    }
-
-    @Override
-    public int readExceptionStatus(int serverAddress) throws ModbusNumberException, IOException, ModbusProtocolException {
-        throw new ModbusProtocolException(ModbusExceptionCode.ILLEGAL_FUNCTION, serverAddress);
     }
 
     @Override
@@ -123,5 +114,15 @@ public class ModbusMasterTCP extends ModbusMaster {
     @Override
     protected ModbusConnection getConnection() {
         return conn;
+    }
+
+    @Override
+    public int readExceptionStatus(int serverAddress) throws ModbusNumberException, IOException, ModbusProtocolException {
+        throw new ModbusProtocolException(ModbusExceptionCode.ILLEGAL_FUNCTION, serverAddress);
+    }
+
+    @Override
+    public byte[] reportSlaveId(int serverAddress) throws ModbusProtocolException, ModbusNumberException, IOException, ModbusMasterException {
+        throw new ModbusProtocolException(ModbusExceptionCode.ILLEGAL_FUNCTION, serverAddress);
     }
 }
