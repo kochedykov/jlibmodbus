@@ -40,7 +40,14 @@ import com.sbpinvertor.modbus.utils.ModbusExceptionCode;
  * value of any particular register."
  */
 public class IllegalDataValueException extends ModbusProtocolException {
-    public IllegalDataValueException(int serverAddress) {
-        super(ModbusExceptionCode.ILLEGAL_DATA_VALUE, serverAddress);
+    final int value;
+
+    public IllegalDataValueException(int value) {
+        super(ModbusExceptionCode.ILLEGAL_DATA_VALUE);
+        this.value = value;
+    }
+
+    public int getValue() {
+        return value;
     }
 }

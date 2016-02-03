@@ -33,7 +33,7 @@ import com.sbpinvertor.modbus.utils.ModbusExceptionCode;
  * requested action."
  */
 public class SlaveDeviceFailureException extends ModbusProtocolException {
-    public SlaveDeviceFailureException(int serverAddress) {
-        super(ModbusExceptionCode.SLAVE_DEVICE_FAILURE, serverAddress);
+    public SlaveDeviceFailureException() {
+        super(ModbusExceptionCode.SLAVE_DEVICE_FAILURE);
     }
 }

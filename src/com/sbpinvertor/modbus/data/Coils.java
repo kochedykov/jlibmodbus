@@ -1,6 +1,7 @@
-package com.sbpinvertor.modbus.exception;
+package com.sbpinvertor.modbus.data;
 
-import com.sbpinvertor.modbus.utils.ModbusExceptionCode;
+import com.sbpinvertor.modbus.exception.IllegalDataAddressException;
+import com.sbpinvertor.modbus.exception.IllegalDataValueException;
 
 /**
  * Copyright (c) 2015-2016 JSC "Zavod "Invertor"
@@ -16,7 +17,7 @@ import com.sbpinvertor.modbus.utils.ModbusExceptionCode;
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * GNU General Public License for more details.
  * <p/>
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
@@ -24,17 +25,12 @@ import com.sbpinvertor.modbus.utils.ModbusExceptionCode;
  * Authors: Vladislav Y. Kochedykov, software engineer.
  * email: vladislav.kochedykov@gmail.com
  */
+public interface Coils {
+    boolean get(int offset) throws IllegalDataAddressException;
 
-public class ModbusProtocolException extends Exception {
+    boolean[] getRange(int offset, int quantity) throws IllegalDataAddressException;
 
-    private final ModbusExceptionCode exception;
+    void set(int offset, boolean value) throws IllegalDataAddressException, IllegalDataValueException;
 
-    public ModbusProtocolException(ModbusExceptionCode exception) {
-        super(exception.toString());
-        this.exception = exception;
-    }
-
-    public ModbusExceptionCode getException() {
-        return exception;
-    }
+    void setRange(int offset, boolean[] range) throws IllegalDataAddressException, IllegalDataValueException;
 }

@@ -47,8 +47,9 @@ import com.sbpinvertor.modbus.utils.ModbusExceptionCode;
  */
 public class IllegalDataAddressException extends ModbusProtocolException {
     final private int dataAddress;
-    public IllegalDataAddressException(int serverAddress, int dataAddress) {
-        super(ModbusExceptionCode.ILLEGAL_DATA_ADDRESS, serverAddress);
+
+    public IllegalDataAddressException(int dataAddress) {
+        super(ModbusExceptionCode.ILLEGAL_DATA_ADDRESS);
         this.dataAddress = dataAddress;
     }
 

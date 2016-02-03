@@ -1,7 +1,8 @@
-package com.sbpinvertor.modbus.net.stream;
+package com.sbpinvertor.modbus.slave;
 
-import com.sbpinvertor.modbus.serial.SerialPort;
-import com.sbpinvertor.modbus.utils.CRC16;
+import com.sbpinvertor.modbus.ModbusSlave;
+import com.sbpinvertor.modbus.net.ModbusConnection;
+import com.sbpinvertor.modbus.net.ModbusConnectionSerial;
 
 import java.io.IOException;
 
@@ -27,35 +28,35 @@ import java.io.IOException;
  * Authors: Vladislav Y. Kochedykov, software engineer.
  * email: vladislav.kochedykov@gmail.com
  */
-public class InputStreamRTU extends InputStreamSerial {
+public class ModbusSlaveSerial extends ModbusSlave {
 
-    private int crc;
+    final private ModbusConnection conn;
+    private Thread thread = null;
+    private RequestHandler requestHandler;
 
-    public InputStreamRTU(SerialPort serial) {
-        super(serial);
-        crc = CRC16.INITIAL_VALUE;
+    public ModbusSlaveSerial(ModbusConnectionSerial conn) {
+        this.conn = conn;
+        this.requestHandler = new RequestHandler(this, conn);
     }
 
     @Override
-    public void reset() {
-        crc = CRC16.INITIAL_VALUE;
+    public void open() throws IOException {
+        close();
+        conn.open();
+        thread = new Thread(requestHandler);
+        thread.start();
     }
 
     @Override
-    public int read() throws IOException {
-        int b = (byte) super.read() & 0xff;
-        crc = CRC16.calc(crc, (byte) b);
-        return b;
-    }
-
-    @Override
-    public int read(byte[] b, int off, int len) throws IOException {
-        int c = super.read(b, off, len);
-        crc = CRC16.calc(crc, b, off, len);
-        return c;
-    }
-
-    public int getCrc() {
-        return crc;
+    public void close() throws IOException {
+        requestHandler.setListening(false);
+        try {
+            if (thread != null)
+                thread.join(1000);
+            thread = null;
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        conn.close();
     }
 }

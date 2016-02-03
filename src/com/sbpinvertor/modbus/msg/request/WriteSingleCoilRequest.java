@@ -1,7 +1,11 @@
 package com.sbpinvertor.modbus.msg.request;
 
 import com.sbpinvertor.modbus.Modbus;
+import com.sbpinvertor.modbus.data.DataHolder;
 import com.sbpinvertor.modbus.exception.ModbusNumberException;
+import com.sbpinvertor.modbus.exception.ModbusProtocolException;
+import com.sbpinvertor.modbus.msg.base.ModbusResponse;
+import com.sbpinvertor.modbus.msg.response.WriteSingleCoilResponse;
 import com.sbpinvertor.modbus.utils.ModbusFunctionCode;
 
 /**
@@ -32,8 +36,24 @@ public final class WriteSingleCoilRequest extends WriteSingleRegisterRequest {
         super(serverAddress);
     }
 
-    public WriteSingleCoilRequest(int serverAddress, int startAddress, boolean value) throws ModbusNumberException {
-        super(serverAddress, startAddress, value ? Modbus.COIL_VALUE_ON : Modbus.COIL_VALUE_OFF);
+    public WriteSingleCoilRequest(int serverAddress, int startAddress, boolean coil) throws ModbusNumberException {
+        super(serverAddress, startAddress, coil ? Modbus.COIL_VALUE_ON : Modbus.COIL_VALUE_OFF);
+    }
+
+    @Override
+    public ModbusResponse getResponse(DataHolder dataHolder) throws ModbusNumberException {
+        WriteSingleCoilResponse response = new WriteSingleCoilResponse(getServerAddress(), getStartAddress(), getCoil());
+        try {
+            dataHolder.writeCoil(getStartAddress(), getCoil());
+        } catch (ModbusProtocolException e) {
+            response.setException();
+            response.setModbusExceptionCode(e.getException().getValue());
+        }
+        return response;
+    }
+
+    public boolean getCoil() {
+        return (getValue() == Modbus.COIL_VALUE_ON);
     }
 
     @Override

@@ -2,6 +2,7 @@ package com.sbpinvertor.modbus.msg.base;
 
 import com.sbpinvertor.modbus.Modbus;
 import com.sbpinvertor.modbus.exception.ModbusNumberException;
+import com.sbpinvertor.modbus.net.stream.base.ModbusInputStream;
 import com.sbpinvertor.modbus.net.stream.base.ModbusOutputStream;
 
 import java.io.IOException;
@@ -47,13 +48,21 @@ abstract public class AbstractDataRequest extends ModbusRequest {
 
     abstract protected void writeData(ModbusOutputStream fifo) throws IOException;
 
+    abstract protected void readData(ModbusInputStream fifo) throws IOException, ModbusNumberException;
+
+    @Override
+    final protected void readPDU(ModbusInputStream fifo) throws ModbusNumberException, IOException {
+        setStartAddress(fifo.readShortBE());
+        readData(fifo);
+    }
+
     @Override
     protected void writeRequest(ModbusOutputStream fifo) throws IOException {
         fifo.writeShortBE(getStartAddress());
         writeData(fifo);
     }
 
-    private int getStartAddress() {
+    protected int getStartAddress() {
         return startAddress;
     }
 

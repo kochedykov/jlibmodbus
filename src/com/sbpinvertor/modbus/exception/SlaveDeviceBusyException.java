@@ -36,7 +36,7 @@ import com.sbpinvertor.modbus.utils.ModbusExceptionCode;
  * the server (or slave) is free."
  */
 public class SlaveDeviceBusyException extends ModbusProtocolException {
-    public SlaveDeviceBusyException(int serverAddress) {
-        super(ModbusExceptionCode.SLAVE_DEVICE_BUSY, serverAddress);
+    public SlaveDeviceBusyException() {
+        super(ModbusExceptionCode.SLAVE_DEVICE_BUSY);
     }
 }

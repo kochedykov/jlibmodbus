@@ -53,8 +53,8 @@ abstract public class AbstractWriteMultipleRequest extends AbstractMultipleReque
     }
 
     @Override
-    protected void readPDU(ModbusInputStream fifo) throws ModbusNumberException, IOException {
-        super.readPDU(fifo);
+    protected void readData(ModbusInputStream fifo) throws IOException, ModbusNumberException {
+        super.readData(fifo);
         setByteCount(fifo.read());
         setValues(new byte[byteCount]);
         int size;

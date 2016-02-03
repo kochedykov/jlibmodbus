@@ -55,8 +55,7 @@ final public class ModbusMasterFactory {
     /**
      * Creates ModbusMasterRTU instance.
      *
-     * @param sp  - a SerialParameters instance.
-     *
+     * @param sp - a SerialParameters instance.
      * @return ModbusMaster instance if there is no errors, else null
      * @see com.sbpinvertor.modbus.serial.SerialPort.Parity
      * @see com.sbpinvertor.modbus.serial.SerialPort.BaudRate

@@ -36,7 +36,7 @@ import com.sbpinvertor.modbus.utils.ModbusExceptionCode;
  * or overloaded."
  */
 public class GatewayPathUnavailableException extends ModbusProtocolException {
-    public GatewayPathUnavailableException(int serverAddress) {
-        super(ModbusExceptionCode.GATEWAY_PATH_UNAVAILABLE, serverAddress);
+    public GatewayPathUnavailableException() {
+        super(ModbusExceptionCode.GATEWAY_PATH_UNAVAILABLE);
     }
 }

@@ -109,11 +109,11 @@ final public class ModbusMasterTCP extends ModbusMaster {
 
     @Override
     public int readExceptionStatus(int serverAddress) throws ModbusNumberException, IOException, ModbusProtocolException {
-        throw new ModbusProtocolException(ModbusExceptionCode.ILLEGAL_FUNCTION, serverAddress);
+        throw new ModbusProtocolException(ModbusExceptionCode.ILLEGAL_FUNCTION);
     }
 
     @Override
     public byte[] reportSlaveId(int serverAddress) throws ModbusProtocolException, ModbusNumberException, IOException, ModbusMasterException {
-        throw new ModbusProtocolException(ModbusExceptionCode.ILLEGAL_FUNCTION, serverAddress);
+        throw new ModbusProtocolException(ModbusExceptionCode.ILLEGAL_FUNCTION);
     }
 }

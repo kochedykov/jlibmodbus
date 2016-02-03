@@ -1,8 +1,12 @@
 package com.sbpinvertor.modbus.msg.request;
 
 import com.sbpinvertor.modbus.Modbus;
+import com.sbpinvertor.modbus.data.DataHolder;
 import com.sbpinvertor.modbus.exception.ModbusNumberException;
+import com.sbpinvertor.modbus.exception.ModbusProtocolException;
 import com.sbpinvertor.modbus.msg.base.AbstractMultipleRequest;
+import com.sbpinvertor.modbus.msg.base.ModbusResponse;
+import com.sbpinvertor.modbus.msg.response.ReadCoilsResponse;
 import com.sbpinvertor.modbus.utils.ModbusFunctionCode;
 
 /**
@@ -48,5 +52,18 @@ public class ReadCoilsRequest extends AbstractMultipleRequest {
     @Override
     public ModbusFunctionCode getFunction() {
         return ModbusFunctionCode.READ_COILS;
+    }
+
+    @Override
+    public ModbusResponse getResponse(DataHolder dataHolder) throws ModbusNumberException {
+        ReadCoilsResponse response = new ReadCoilsResponse(getServerAddress());
+        try {
+            boolean[] range = dataHolder.readCoilRange(getStartAddress(), getQuantity());
+            response.setCoils(range);
+        } catch (ModbusProtocolException e) {
+            response.setException();
+            response.setModbusExceptionCode(e.getException().getValue());
+        }
+        return response;
     }
 }

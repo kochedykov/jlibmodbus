@@ -1,6 +1,10 @@
 package com.sbpinvertor.modbus.msg.request;
 
+import com.sbpinvertor.modbus.data.DataHolder;
 import com.sbpinvertor.modbus.exception.ModbusNumberException;
+import com.sbpinvertor.modbus.exception.ModbusProtocolException;
+import com.sbpinvertor.modbus.msg.base.ModbusResponse;
+import com.sbpinvertor.modbus.msg.response.ReadInputRegistersResponse;
 import com.sbpinvertor.modbus.utils.ModbusFunctionCode;
 
 /**
@@ -34,6 +38,19 @@ final public class ReadInputRegistersRequest extends ReadHoldingRegistersRequest
 
     public ReadInputRegistersRequest(int serverAddress, int startAddress, int quantity) throws ModbusNumberException {
         super(serverAddress, startAddress, quantity);
+    }
+
+    @Override
+    public ModbusResponse getResponse(DataHolder dataHolder) throws ModbusNumberException {
+        ReadInputRegistersResponse response = new ReadInputRegistersResponse(getServerAddress());
+        try {
+            int[] range = dataHolder.readInputRegisterRange(getStartAddress(), getQuantity());
+            response.setRegisters(range);
+        } catch (ModbusProtocolException e) {
+            response.setException();
+            response.setModbusExceptionCode(e.getException().getValue());
+        }
+        return response;
     }
 
     @Override

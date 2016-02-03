@@ -43,13 +43,13 @@ public class IllegalFunctionException extends ModbusProtocolException {
 
     final private ModbusFunctionCode functionCode;
 
-    public IllegalFunctionException(int serverAddress, ModbusFunctionCode functionCode) {
-        super(ModbusExceptionCode.ILLEGAL_FUNCTION, serverAddress);
+    public IllegalFunctionException(ModbusFunctionCode functionCode) {
+        super(ModbusExceptionCode.ILLEGAL_FUNCTION);
         this.functionCode = functionCode;
     }
 
-    public IllegalFunctionException(int serverAddress, int code) {
-        this(serverAddress, ModbusFunctionCode.getFunctionCode(code));
+    public IllegalFunctionException(int code) {
+        this(ModbusFunctionCode.getFunctionCode(code));
     }
 
     public ModbusFunctionCode getFunctionCode() {

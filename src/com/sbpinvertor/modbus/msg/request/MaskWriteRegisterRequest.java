@@ -1,7 +1,11 @@
 package com.sbpinvertor.modbus.msg.request;
 
+import com.sbpinvertor.modbus.data.DataHolder;
 import com.sbpinvertor.modbus.exception.ModbusNumberException;
+import com.sbpinvertor.modbus.exception.ModbusProtocolException;
 import com.sbpinvertor.modbus.msg.base.AbstractDataRequest;
+import com.sbpinvertor.modbus.msg.base.ModbusResponse;
+import com.sbpinvertor.modbus.msg.response.MaskWriteRegisterResponse;
 import com.sbpinvertor.modbus.net.stream.base.ModbusInputStream;
 import com.sbpinvertor.modbus.net.stream.base.ModbusOutputStream;
 import com.sbpinvertor.modbus.utils.ModbusFunctionCode;
@@ -46,8 +50,22 @@ public class MaskWriteRegisterRequest extends AbstractDataRequest {
         setMaskOr(maskOr);
     }
 
+    /*result = ((reg & and) | (or & !and))*/
     @Override
-    protected void readPDU(ModbusInputStream fifo) throws IOException {
+    public ModbusResponse getResponse(DataHolder dataHolder) throws ModbusNumberException {
+        MaskWriteRegisterResponse response = new MaskWriteRegisterResponse(getServerAddress(), getStartAddress(), getMaskAnd(), getMaskOr());
+        try {
+            int reg = dataHolder.readHoldingRegister(getStartAddress());
+            dataHolder.writeHoldingRegister(getStartAddress(), (reg & getMaskAnd()) | (getMaskOr() & (~getMaskAnd())));
+        } catch (ModbusProtocolException e) {
+            response.setException();
+            response.setModbusExceptionCode(e.getException().getValue());
+        }
+        return response;
+    }
+
+    @Override
+    protected void readData(ModbusInputStream fifo) throws IOException {
         setMaskAnd(fifo.readShortBE());
         setMaskOr(fifo.readShortBE());
     }

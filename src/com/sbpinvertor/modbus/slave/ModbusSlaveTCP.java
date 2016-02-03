@@ -1,6 +1,9 @@
-package com.sbpinvertor.modbus.exception;
+package com.sbpinvertor.modbus.slave;
 
-import com.sbpinvertor.modbus.utils.ModbusExceptionCode;
+import com.sbpinvertor.modbus.ModbusSlave;
+import com.sbpinvertor.modbus.tcp.TcpParameters;
+
+import java.io.IOException;
 
 /**
  * Copyright (c) 2015-2016 JSC "Zavod "Invertor"
@@ -16,7 +19,7 @@ import com.sbpinvertor.modbus.utils.ModbusExceptionCode;
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * GNU General Public License for more details.
  * <p/>
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
@@ -24,17 +27,27 @@ import com.sbpinvertor.modbus.utils.ModbusExceptionCode;
  * Authors: Vladislav Y. Kochedykov, software engineer.
  * email: vladislav.kochedykov@gmail.com
  */
+public class ModbusSlaveTCP extends ModbusSlave {
 
-public class ModbusProtocolException extends Exception {
+    public ModbusSlaveTCP(TcpParameters parameters) {
 
-    private final ModbusExceptionCode exception;
-
-    public ModbusProtocolException(ModbusExceptionCode exception) {
-        super(exception.toString());
-        this.exception = exception;
     }
 
-    public ModbusExceptionCode getException() {
-        return exception;
+    public ModbusSlaveTCP(String host, int port) {
+
+    }
+
+    public ModbusSlaveTCP(String host) {
+
+    }
+
+    @Override
+    public void open() throws IOException {
+
+    }
+
+    @Override
+    public void close() throws IOException {
+
     }
 }

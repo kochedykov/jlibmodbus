@@ -1,7 +1,7 @@
 package com.sbpinvertor.tests.modbus;
 
-import com.sbpinvertor.modbus.ModbusMaster;
-import com.sbpinvertor.modbus.ModbusMasterFactory;
+import com.sbpinvertor.modbus.ModbusSlave;
+import com.sbpinvertor.modbus.ModbusSlaveFactory;
 import com.sbpinvertor.modbus.serial.SerialPort;
 
 import java.io.IOException;
@@ -28,32 +28,23 @@ import java.io.IOException;
  * Authors: Vladislav Y. Kochedykov, software engineer.
  * email: vladislav.kochedykov@gmail.com
  */
-public class ModbusMasterTest {
+public class ModbusSlaveTest {
 
     public static void main(String[] argv) throws IOException {
-        ModbusMaster m = ModbusMasterFactory.createModbusMasterRTU("COM1", SerialPort.BaudRate.BAUD_RATE_115200, 8, 1, SerialPort.Parity.NONE);
-        //ModbusMaster m = ModbusMasterFactory.createModbusMasterASCII("COM1", SerialPort.BaudRate.BAUD_RATE_115200);
-        //ModbusMaster m = ModbusMasterFactory.createModbusMasterTCP("127.0.0.1", false);
-        m.setResponseTimeout(1000);
-        m.open();
-
-        for (int r = 0; r < 5; r++) {
-            try {
+        ModbusSlave s = ModbusSlaveFactory.createModbusSlaveRTU("COM1", SerialPort.BaudRate.BAUD_RATE_115200, 8, 1, SerialPort.Parity.NONE);
+        //ModbusSlave m = ModbusSlaveFactory.createModbusSlaveASCII("COM1", SerialPort.BaudRate.BAUD_RATE_115200);
+        //ModbusSlave m = ModbusSlaveFactory.createModbusSlaveTCP("127.0.0.1");
+        try {
+            s.open();
+            for (; ; ) {
                 Thread.sleep(1000);
-                printRegisters(m.readHoldingRegisters(1, 0, 10));
-                /*printRegisters(m.readInputRegisters(1, 0, 10));
-                printBits(m.readCoils(1, 0, 8));
-                printBits(m.readDiscreteInputs(1, 0, 8));
-                m.writeSingleRegister(1, 0, 69);
-                m.writeSingleCoil(1, 5, true);
-                m.writeMultipleRegisters(1, 1, new int[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10});
-                m.writeMultipleCoils(1, 0, new boolean[]{true, false, true});
-                System.out.println();*/
-            } catch (Exception e) {
-                e.printStackTrace();
             }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            s.close();
         }
-        m.close();
+
     }
 
     private static void printRegisters(int[] ir) {

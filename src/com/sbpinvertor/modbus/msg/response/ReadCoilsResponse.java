@@ -41,13 +41,22 @@ public class ReadCoilsResponse extends AbstractReadResponse {
     }
 
     public ReadCoilsResponse(int serverAddress, boolean[] coils) throws ModbusNumberException {
-        super(serverAddress, (int) Math.ceil(coils.length / 8));
+        super(serverAddress, calcByteCount(coils));
 
         this.coils = coils;
     }
 
+    static private int calcByteCount(boolean[] coils) {
+        return (int) Math.ceil(coils.length / 8);
+    }
+
     final public boolean[] getCoils() {
         return coils;
+    }
+
+    public void setCoils(boolean[] coils) {
+        this.coils = coils;
+        setByteCount(calcByteCount(coils));
     }
 
     @Override

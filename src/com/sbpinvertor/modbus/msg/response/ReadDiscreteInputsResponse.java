@@ -39,6 +39,10 @@ public class ReadDiscreteInputsResponse extends ReadCoilsResponse {
         return getCoils();
     }
 
+    public void setDiscreteInputs(boolean[] coils) {
+        setCoils(coils);
+    }
+
     @Override
     public ModbusFunctionCode getFunction() {
         return ModbusFunctionCode.READ_DISCRETE_INPUTS;

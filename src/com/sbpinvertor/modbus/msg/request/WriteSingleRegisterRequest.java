@@ -1,8 +1,12 @@
 package com.sbpinvertor.modbus.msg.request;
 
 import com.sbpinvertor.modbus.Modbus;
+import com.sbpinvertor.modbus.data.DataHolder;
 import com.sbpinvertor.modbus.exception.ModbusNumberException;
+import com.sbpinvertor.modbus.exception.ModbusProtocolException;
 import com.sbpinvertor.modbus.msg.base.AbstractDataRequest;
+import com.sbpinvertor.modbus.msg.base.ModbusResponse;
+import com.sbpinvertor.modbus.msg.response.WriteSingleRegisterResponse;
 import com.sbpinvertor.modbus.net.stream.base.ModbusInputStream;
 import com.sbpinvertor.modbus.net.stream.base.ModbusOutputStream;
 import com.sbpinvertor.modbus.utils.ModbusFunctionCode;
@@ -45,13 +49,24 @@ public class WriteSingleRegisterRequest extends AbstractDataRequest {
         if (!Modbus.checkRegisterValue(value)) {
             throw new ModbusNumberException("Register value out of range", value);
         }
-
-        this.value = value;
+        setValue(value);
     }
 
     @Override
-    protected void readPDU(ModbusInputStream fifo) throws IOException {
-        value = fifo.readShortBE();
+    public ModbusResponse getResponse(DataHolder dataHolder) throws ModbusNumberException {
+        WriteSingleRegisterResponse response = new WriteSingleRegisterResponse(getServerAddress(), getStartAddress(), getValue());
+        try {
+            dataHolder.writeHoldingRegister(getStartAddress(), getValue());
+        } catch (ModbusProtocolException e) {
+            response.setException();
+            response.setModbusExceptionCode(e.getException().getValue());
+        }
+        return response;
+    }
+
+    @Override
+    protected void readData(ModbusInputStream fifo) throws IOException {
+        setValue(fifo.readShortBE());
     }
 
     @Override
@@ -61,11 +76,19 @@ public class WriteSingleRegisterRequest extends AbstractDataRequest {
 
     @Override
     public void writeData(ModbusOutputStream fifo) throws IOException {
-        fifo.writeShortBE(value);
+        fifo.writeShortBE(getValue());
     }
 
     @Override
     protected int dataSize() {
         return 2;
+    }
+
+    public int getValue() {
+        return value;
+    }
+
+    public void setValue(int value) {
+        this.value = value;
     }
 }

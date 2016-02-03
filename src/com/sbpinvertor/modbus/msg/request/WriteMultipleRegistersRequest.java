@@ -1,8 +1,12 @@
 package com.sbpinvertor.modbus.msg.request;
 
 import com.sbpinvertor.modbus.Modbus;
+import com.sbpinvertor.modbus.data.DataHolder;
 import com.sbpinvertor.modbus.exception.ModbusNumberException;
+import com.sbpinvertor.modbus.exception.ModbusProtocolException;
 import com.sbpinvertor.modbus.msg.base.AbstractWriteMultipleRequest;
+import com.sbpinvertor.modbus.msg.base.ModbusResponse;
+import com.sbpinvertor.modbus.msg.response.WriteMultipleRegistersResponse;
 import com.sbpinvertor.modbus.net.stream.base.ModbusInputStream;
 import com.sbpinvertor.modbus.utils.DataUtils;
 import com.sbpinvertor.modbus.utils.ModbusFunctionCode;
@@ -34,12 +38,16 @@ import java.io.IOException;
 
 final public class WriteMultipleRegistersRequest extends AbstractWriteMultipleRequest {
 
+    private int[] registers = null;
+
     public WriteMultipleRegistersRequest(int serverAddress) throws ModbusNumberException {
         super(serverAddress);
     }
 
     public WriteMultipleRegistersRequest(int serverAddress, int startAddress, int[] registers) throws ModbusNumberException {
         super(serverAddress, startAddress, DataUtils.toByteArray(registers), registers.length);
+
+        setRegisters(registers);
     }
 
     @Override
@@ -50,11 +58,32 @@ final public class WriteMultipleRegistersRequest extends AbstractWriteMultipleRe
     }
 
     @Override
-    public void readPDU(ModbusInputStream fifo) throws ModbusNumberException, IOException {
-        super.readPDU(fifo);
+    public ModbusResponse getResponse(DataHolder dataHolder) throws ModbusNumberException {
+        WriteMultipleRegistersResponse response = new WriteMultipleRegistersResponse(getServerAddress(), getStartAddress(), getQuantity());
+        try {
+            dataHolder.writeHoldingRegisterRange(getStartAddress(), getRegisters());
+        } catch (ModbusProtocolException e) {
+            response.setException();
+            response.setModbusExceptionCode(e.getException().getValue());
+        }
+        return response;
+    }
+
+    @Override
+    public void readData(ModbusInputStream fifo) throws IOException, ModbusNumberException {
+        super.readData(fifo);
         if (getQuantity() * 2 != getByteCount()) {
             throw new ModbusNumberException("Byte count not matches quantity*2", getByteCount());
         }
+        setRegisters(DataUtils.toIntArray(getValues()));
+    }
+
+    public int[] getRegisters() {
+        return registers;
+    }
+
+    public void setRegisters(int[] registers) {
+        this.registers = registers;
     }
 
     @Override

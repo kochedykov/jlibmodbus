@@ -40,16 +40,12 @@ abstract public class AbstractMultipleRequest extends AbstractDataRequest {
         if (!checkAddressRange(startAddress, quantity))
             throw new ModbusNumberException("Error in start address", startAddress);
 
-        this.quantity = quantity;
-    }
-
-    protected int getQuantity() {
-        return quantity;
+        setQuantity(quantity);
     }
 
     @Override
-    protected void readPDU(ModbusInputStream fifo) throws ModbusNumberException, IOException {
-        quantity = fifo.readShortBE();
+    protected void readData(ModbusInputStream fifo) throws IOException, ModbusNumberException {
+        setQuantity(fifo.readShortBE());
     }
 
     @Override
@@ -60,6 +56,14 @@ abstract public class AbstractMultipleRequest extends AbstractDataRequest {
     @Override
     protected int dataSize() {
         return 2;
+    }
+
+    protected int getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
     }
 
     protected abstract boolean checkAddressRange(int startAddress, int quantity);

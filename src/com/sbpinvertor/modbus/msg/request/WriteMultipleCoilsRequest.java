@@ -1,8 +1,12 @@
 package com.sbpinvertor.modbus.msg.request;
 
 import com.sbpinvertor.modbus.Modbus;
+import com.sbpinvertor.modbus.data.DataHolder;
 import com.sbpinvertor.modbus.exception.ModbusNumberException;
+import com.sbpinvertor.modbus.exception.ModbusProtocolException;
 import com.sbpinvertor.modbus.msg.base.AbstractWriteMultipleRequest;
+import com.sbpinvertor.modbus.msg.base.ModbusResponse;
+import com.sbpinvertor.modbus.msg.response.WriteMultipleCoilsResponse;
 import com.sbpinvertor.modbus.net.stream.base.ModbusInputStream;
 import com.sbpinvertor.modbus.utils.DataUtils;
 import com.sbpinvertor.modbus.utils.ModbusFunctionCode;
@@ -34,12 +38,15 @@ import java.io.IOException;
 
 final public class WriteMultipleCoilsRequest extends AbstractWriteMultipleRequest {
 
+    private boolean[] coils = null;
+
     public WriteMultipleCoilsRequest(int serverAddress) throws ModbusNumberException {
         super(serverAddress);
     }
 
     public WriteMultipleCoilsRequest(int serverAddress, int startAddress, boolean[] coils) throws ModbusNumberException {
         super(serverAddress, startAddress, DataUtils.toByteArray(coils), coils.length);
+        setCoils(coils);
     }
 
     @Override
@@ -50,12 +57,32 @@ final public class WriteMultipleCoilsRequest extends AbstractWriteMultipleReques
     }
 
     @Override
-    public void readPDU(ModbusInputStream fifo) throws ModbusNumberException, IOException {
-        super.readPDU(fifo);
+    public ModbusResponse getResponse(DataHolder dataHolder) throws ModbusNumberException {
+        WriteMultipleCoilsResponse response = new WriteMultipleCoilsResponse(getServerAddress(), getStartAddress(), getQuantity());
+        try {
+            dataHolder.writeCoilRange(getStartAddress(), getCoils());
+        } catch (ModbusProtocolException e) {
+            response.setException();
+            response.setModbusExceptionCode(e.getException().getValue());
+        }
+        return response;
+    }
 
+    @Override
+    public void readData(ModbusInputStream fifo) throws IOException, ModbusNumberException {
         if (Math.ceil(getQuantity() / 8) != getByteCount()) {
             throw new ModbusNumberException("Byte count not matches quantity/8", getByteCount());
         }
+
+        setCoils(DataUtils.toBitsArray(getValues(), getQuantity()));
+    }
+
+    public boolean[] getCoils() {
+        return coils;
+    }
+
+    public void setCoils(boolean[] coils) {
+        this.coils = coils;
     }
 
     @Override

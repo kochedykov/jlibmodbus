@@ -44,8 +44,9 @@ public class ModbusTransportRTU extends ModbusTransport {
         ModbusMessage msg = factory.createMessage(is);
         int crc = is.readShortLE();
         // crc from the same crc equals zero
-        if (crc != 0 && is.getCrc() == 0)
+        if (is.getCrc() != 0 || crc == 0)
             throw new ModbusNumberException("control sum check failed.", crc);
+        is.reset();
         return msg;
     }
 

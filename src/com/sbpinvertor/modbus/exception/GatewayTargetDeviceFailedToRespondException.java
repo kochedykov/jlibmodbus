@@ -34,7 +34,7 @@ import com.sbpinvertor.modbus.utils.ModbusExceptionCode;
  * not present on the network."
  */
 public class GatewayTargetDeviceFailedToRespondException extends ModbusProtocolException {
-    public GatewayTargetDeviceFailedToRespondException(int serverAddress) {
-        super(ModbusExceptionCode.GATEWAY_TARGET_DEVICE_FAILED_TO_RESPOND, serverAddress);
+    public GatewayTargetDeviceFailedToRespondException() {
+        super(ModbusExceptionCode.GATEWAY_TARGET_DEVICE_FAILED_TO_RESPOND);
     }
 }

@@ -39,7 +39,7 @@ import com.sbpinvertor.modbus.utils.ModbusExceptionCode;
  * to determine if processing is completed."
  */
 public class AcknowledgeException extends ModbusProtocolException {
-    public AcknowledgeException(int serverAddress) {
-        super(ModbusExceptionCode.ACKNOWLEDGE, serverAddress);
+    public AcknowledgeException() {
+        super(ModbusExceptionCode.ACKNOWLEDGE);
     }
 }

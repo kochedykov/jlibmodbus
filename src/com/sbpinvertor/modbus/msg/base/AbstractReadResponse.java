@@ -46,7 +46,7 @@ abstract public class AbstractReadResponse extends ModbusResponse {
         return byteCount;
     }
 
-    private void setByteCount(int byteCount) {
+    protected void setByteCount(int byteCount) {
         this.byteCount = byteCount;
     }
 

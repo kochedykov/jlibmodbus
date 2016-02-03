@@ -67,7 +67,7 @@ abstract public class ModbusMaster {
         sendRequest(request);
         ModbusResponse msg = (ModbusResponse) readResponse();
         if (msg.isException())
-            throw new ModbusProtocolException(msg.getModbusExceptionCode(), msg.getServerAddress());
+            throw new ModbusProtocolException(msg.getModbusExceptionCode());
         if (request.getProtocolId() != msg.getProtocolId())
             throw new ModbusMasterException("Collision: does not matches the transaction id");
         if (request.getTransactionId() != msg.getTransactionId())

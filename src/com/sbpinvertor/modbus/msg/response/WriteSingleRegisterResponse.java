@@ -41,9 +41,9 @@ public class WriteSingleRegisterResponse extends AbstractWriteResponse {
 
     public WriteSingleRegisterResponse(int serverAddress, int startAddress, int value) throws ModbusNumberException {
         super(serverAddress, startAddress);
+        setValue(value);
         if (!checkValue())
             throw new ModbusNumberException("Error in register value", startAddress);
-        setValue(value);
     }
 
     @Override

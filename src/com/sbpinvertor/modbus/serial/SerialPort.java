@@ -84,7 +84,9 @@ public class SerialPort {
 
     public int readByte(int timeout) throws IOException {
         try {
-            return port.readBytes(1, timeout)[0];
+            if (timeout > 0)
+                return port.readBytes(1, timeout)[0];
+            return port.readBytes(1)[0];
         } catch (Exception e) {
             throw new IOException(e);
         }

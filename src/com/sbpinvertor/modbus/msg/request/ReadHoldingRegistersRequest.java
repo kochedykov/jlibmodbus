@@ -1,8 +1,12 @@
 package com.sbpinvertor.modbus.msg.request;
 
 import com.sbpinvertor.modbus.Modbus;
+import com.sbpinvertor.modbus.data.DataHolder;
 import com.sbpinvertor.modbus.exception.ModbusNumberException;
+import com.sbpinvertor.modbus.exception.ModbusProtocolException;
 import com.sbpinvertor.modbus.msg.base.AbstractMultipleRequest;
+import com.sbpinvertor.modbus.msg.base.ModbusResponse;
+import com.sbpinvertor.modbus.msg.response.ReadHoldingRegistersResponse;
 import com.sbpinvertor.modbus.utils.ModbusFunctionCode;
 
 /**
@@ -36,6 +40,19 @@ public class ReadHoldingRegistersRequest extends AbstractMultipleRequest {
 
     public ReadHoldingRegistersRequest(int serverAddress, int startAddress, int quantity) throws ModbusNumberException {
         super(serverAddress, startAddress, quantity);
+    }
+
+    @Override
+    public ModbusResponse getResponse(DataHolder dataHolder) throws ModbusNumberException {
+        ReadHoldingRegistersResponse response = new ReadHoldingRegistersResponse(getServerAddress());
+        try {
+            int[] range = dataHolder.readHoldingRegisterRange(getStartAddress(), getQuantity());
+            response.setRegisters(range);
+        } catch (ModbusProtocolException e) {
+            response.setException();
+            response.setModbusExceptionCode(e.getException().getValue());
+        }
+        return response;
     }
 
     @Override

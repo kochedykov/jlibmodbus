@@ -1,5 +1,6 @@
 package com.sbpinvertor.modbus.msg.base;
 
+import com.sbpinvertor.modbus.data.DataHolder;
 import com.sbpinvertor.modbus.exception.ModbusNumberException;
 import com.sbpinvertor.modbus.net.stream.base.ModbusOutputStream;
 
@@ -47,4 +48,6 @@ abstract public class ModbusRequest extends ModbusMessage {
     }
 
     abstract protected int requestSize();
+
+    abstract public ModbusResponse getResponse(DataHolder dataHolder) throws ModbusNumberException;
 }

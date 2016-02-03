@@ -1,6 +1,10 @@
 package com.sbpinvertor.modbus.msg.request;
 
+import com.sbpinvertor.modbus.data.DataHolder;
 import com.sbpinvertor.modbus.exception.ModbusNumberException;
+import com.sbpinvertor.modbus.exception.ModbusProtocolException;
+import com.sbpinvertor.modbus.msg.base.ModbusResponse;
+import com.sbpinvertor.modbus.msg.response.ReadDiscreteInputsResponse;
 import com.sbpinvertor.modbus.utils.ModbusFunctionCode;
 
 /**
@@ -34,6 +38,19 @@ public class ReadDiscreteInputsRequest extends ReadCoilsRequest {
 
     public ReadDiscreteInputsRequest(int serverAddress, int startAddress, int quantity) throws ModbusNumberException {
         super(serverAddress, startAddress, quantity);
+    }
+
+    @Override
+    public ModbusResponse getResponse(DataHolder dataHolder) throws ModbusNumberException {
+        ReadDiscreteInputsResponse response = new ReadDiscreteInputsResponse(getServerAddress());
+        try {
+            boolean[] range = dataHolder.readDiscreteInputRange(getStartAddress(), getQuantity());
+            response.setDiscreteInputs(range);
+        } catch (ModbusProtocolException e) {
+            response.setException();
+            response.setModbusExceptionCode(e.getException().getValue());
+        }
+        return response;
     }
 
     @Override

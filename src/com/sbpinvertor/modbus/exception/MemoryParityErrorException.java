@@ -39,7 +39,7 @@ import com.sbpinvertor.modbus.utils.ModbusExceptionCode;
  * device."
  */
 public class MemoryParityErrorException extends ModbusProtocolException {
-    public MemoryParityErrorException(int serverAddress) {
-        super(ModbusExceptionCode.MEMORY_PARITY_ERROR, serverAddress);
+    public MemoryParityErrorException() {
+        super(ModbusExceptionCode.MEMORY_PARITY_ERROR);
     }
 }

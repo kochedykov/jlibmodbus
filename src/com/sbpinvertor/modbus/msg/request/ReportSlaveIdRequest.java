@@ -1,7 +1,9 @@
 package com.sbpinvertor.modbus.msg.request;
 
+import com.sbpinvertor.modbus.data.DataHolder;
 import com.sbpinvertor.modbus.exception.ModbusNumberException;
 import com.sbpinvertor.modbus.msg.base.ModbusRequest;
+import com.sbpinvertor.modbus.msg.base.ModbusResponse;
 import com.sbpinvertor.modbus.net.stream.base.ModbusInputStream;
 import com.sbpinvertor.modbus.net.stream.base.ModbusOutputStream;
 import com.sbpinvertor.modbus.utils.ModbusFunctionCode;
@@ -44,6 +46,12 @@ public class ReportSlaveIdRequest extends ModbusRequest {
     @Override
     protected int requestSize() {
         return 0;
+    }
+
+    @Override
+    public ModbusResponse getResponse(DataHolder dataHolder) throws ModbusNumberException {
+        /*TODO*/
+        return null;
     }
 
     @Override

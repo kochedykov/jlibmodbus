@@ -137,7 +137,7 @@ final public class ModbusRequestFactory implements ModbusMessageFactory {
             case CAN_OPEN_PDU:
             case READ_DEVICE_IDENTIFICATION:
             default:
-                throw new ModbusProtocolException(ModbusExceptionCode.ILLEGAL_FUNCTION, serverAddress);
+                throw new ModbusProtocolException(ModbusExceptionCode.ILLEGAL_FUNCTION);
         }
         msg.read(fifo);
         return msg;
