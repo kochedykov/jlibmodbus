@@ -3,6 +3,7 @@ package com.sbpinvertor.modbus;
 import com.sbpinvertor.modbus.master.ModbusMasterASCII;
 import com.sbpinvertor.modbus.master.ModbusMasterRTU;
 import com.sbpinvertor.modbus.master.ModbusMasterTCP;
+import com.sbpinvertor.modbus.serial.SerialParameters;
 import com.sbpinvertor.modbus.serial.SerialPort;
 
 /**
@@ -49,6 +50,21 @@ final public class ModbusMasterFactory {
      */
     static public ModbusMaster createModbusMasterRTU(String device, SerialPort.BaudRate baudRate, int dataBits, int stopBits, SerialPort.Parity parity) {
         return new ModbusMasterRTU(device, baudRate, dataBits, stopBits, parity);
+    }
+
+    /**
+     * Creates ModbusMasterRTU instance.
+     *
+     * @param sp  - a SerialParameters instance.
+     *
+     * @return ModbusMaster instance if there is no errors, else null
+     * @see com.sbpinvertor.modbus.serial.SerialPort.Parity
+     * @see com.sbpinvertor.modbus.serial.SerialPort.BaudRate
+     * @see ModbusMaster
+     * @see SerialParameters
+     */
+    static public ModbusMaster createModbusMasterRTU(SerialParameters sp) {
+        return new ModbusMasterRTU(sp);
     }
 
     /**
