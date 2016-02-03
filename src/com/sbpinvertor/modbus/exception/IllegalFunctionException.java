@@ -1,6 +1,7 @@
 package com.sbpinvertor.modbus.exception;
 
 import com.sbpinvertor.modbus.utils.ModbusExceptionCode;
+import com.sbpinvertor.modbus.utils.ModbusFunctionCode;
 
 /**
  * Copyright (c) 2015-2016 JSC "Zavod "Invertor"
@@ -39,7 +40,19 @@ import com.sbpinvertor.modbus.utils.ModbusExceptionCode;
  * asked to return register values."
  */
 public class IllegalFunctionException extends ModbusProtocolException {
-    public IllegalFunctionException(int serverAddress) {
+
+    final private ModbusFunctionCode functionCode;
+
+    public IllegalFunctionException(int serverAddress, ModbusFunctionCode functionCode) {
         super(ModbusExceptionCode.ILLEGAL_FUNCTION, serverAddress);
+        this.functionCode = functionCode;
+    }
+
+    public IllegalFunctionException(int serverAddress, int code) {
+        this(serverAddress, ModbusFunctionCode.getFunctionCode(code));
+    }
+
+    public ModbusFunctionCode getFunctionCode() {
+        return functionCode;
     }
 }
