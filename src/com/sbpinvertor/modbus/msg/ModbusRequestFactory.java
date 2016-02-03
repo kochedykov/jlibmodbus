@@ -92,7 +92,7 @@ final public class ModbusRequestFactory implements ModbusMessageFactory {
         ModbusMessage msg;
         int serverAddress = fifo.read();
         int functionCode = fifo.read();
-        switch (ModbusFunctionCode.getFunction(functionCode)) {
+        switch (ModbusFunctionCode.getFunctionCode(functionCode)) {
             case READ_COILS:
                 msg = new ReadCoilsRequest(serverAddress);
                 break;

@@ -79,7 +79,7 @@ public enum ModbusFunctionCode {
         this.value = value;
     }
 
-    static public ModbusFunctionCode getFunction(int value) {
+    static public ModbusFunctionCode getFunctionCode(int value) {
         if (isException(value)) {
             value &= ~MODBUS_EXCEPTION_FLAG;
         }
