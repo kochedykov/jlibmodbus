@@ -28,7 +28,7 @@ import com.sbpinvertor.modbus.exception.IllegalDataValueException;
 public interface HoldingRegisters {
     int get(int offset) throws IllegalDataAddressException;
 
-    int[] getRange(int offset, int quantity) throws IllegalDataAddressException;
+    int[] getRange(int offset, int quantity) throws IllegalDataAddressException, IllegalDataValueException;
 
     void set(int offset, int value) throws IllegalDataAddressException, IllegalDataValueException;
 

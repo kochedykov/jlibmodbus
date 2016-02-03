@@ -28,45 +28,46 @@ import java.util.Arrays;
  * Authors: Vladislav Y. Kochedykov, software engineer.
  * email: vladislav.kochedykov@gmail.com
  */
-public class SimpleHoldingRegisters implements HoldingRegisters {
+public class SimpleCoils implements Coils {
 
-    private int[] registers;
+    private boolean[] coils;
 
-    public SimpleHoldingRegisters(int size) {
-        this.registers = new int[Modbus.checkStartAddress(size) ? size : Modbus.MAX_START_ADDRESS];
+    public SimpleCoils(int size) {
+        this.coils = new boolean[Modbus.checkStartAddress(size) ? size : Modbus.MAX_START_ADDRESS];
     }
 
     void setSize(int size) {
-        if (registers.length != size) {
-            registers = Arrays.copyOf(registers, size);
+        if (coils.length != size) {
+            coils = Arrays.copyOf(coils, size);
         }
     }
 
     @Override
-    public void set(int offset, int value) throws IllegalDataAddressException, IllegalDataValueException {
+    public void set(int offset, boolean coil) throws IllegalDataAddressException {
         checkAddress(offset);
-        checkValue(value);
-        registers[offset] = value;
+        coils[offset] = coil;
     }
 
     @Override
-    public void setRange(int offset, int[] range) throws IllegalDataAddressException, IllegalDataValueException {
+    public void setRange(int offset, boolean[] range) throws IllegalDataAddressException, IllegalDataValueException {
+        if (!Modbus.checkWriteCoilCount(range.length))
+            throw new IllegalDataValueException(offset);
         for (int i = 0; i < range.length; i++)
             set(offset + i, range[i]);
     }
 
     @Override
-    public int get(int offset) throws IllegalDataAddressException {
+    public boolean get(int offset) throws IllegalDataAddressException {
         checkAddress(offset);
-        return registers[offset];
+        return coils[offset];
     }
 
     @Override
-    public int[] getRange(int offset, int quantity) throws IllegalDataAddressException, IllegalDataValueException {
-        if (!Modbus.checkReadRegisterCount(quantity))
+    public boolean[] getRange(int offset, int quantity) throws IllegalDataAddressException, IllegalDataValueException {
+        if (!Modbus.checkReadCoilCount(quantity))
             throw new IllegalDataValueException(offset);
         checkRange(offset, quantity);
-        return Arrays.copyOfRange(registers, offset, offset + quantity);
+        return Arrays.copyOfRange(coils, offset, offset + quantity);
     }
 
     private void checkRange(int offset, int quantity) throws IllegalDataAddressException {
@@ -77,10 +78,5 @@ public class SimpleHoldingRegisters implements HoldingRegisters {
     private void checkAddress(int offset) throws IllegalDataAddressException {
         if (!Modbus.checkStartAddress(offset))
             throw new IllegalDataAddressException(offset);
-    }
-
-    private void checkValue(int value) throws IllegalDataValueException {
-        if (!Modbus.checkRegisterValue(value))
-            throw new IllegalDataValueException(value);
     }
 }

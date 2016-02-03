@@ -28,7 +28,7 @@ import com.sbpinvertor.modbus.exception.IllegalDataValueException;
 public interface Coils {
     boolean get(int offset) throws IllegalDataAddressException;
 
-    boolean[] getRange(int offset, int quantity) throws IllegalDataAddressException;
+    boolean[] getRange(int offset, int quantity) throws IllegalDataAddressException, IllegalDataValueException;
 
     void set(int offset, boolean value) throws IllegalDataAddressException, IllegalDataValueException;
 

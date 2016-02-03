@@ -36,76 +36,69 @@ public class DataHolder {
     private HoldingRegisters holdingRegisters = null;
     private HoldingRegisters inputRegisters = null;
 
+    private void checkPointer(Object o, int offset) throws IllegalDataAddressException {
+        if (o == null)
+            throw new IllegalDataAddressException(offset);
+    }
+
     public int readHoldingRegister(int offset) throws IllegalDataAddressException {
-        if (holdingRegisters != null)
-            return holdingRegisters.get(offset);
-        throw new IllegalDataAddressException(offset);
+        checkPointer(holdingRegisters, offset);
+        return holdingRegisters.get(offset);
     }
 
     public int[] readHoldingRegisterRange(int offset, int quantity) throws IllegalDataAddressException {
-        if (holdingRegisters != null)
-            return holdingRegisters.getRange(offset, quantity);
-        throw new IllegalDataAddressException(offset);
+        checkPointer(holdingRegisters, offset);
+        return holdingRegisters.getRange(offset, quantity);
     }
 
     public void writeHoldingRegister(int offset, int value) throws IllegalDataAddressException, IllegalDataValueException {
-        if (holdingRegisters == null)
-            throw new IllegalDataAddressException(offset);
+        checkPointer(holdingRegisters, offset);
         holdingRegisters.set(offset, value);
     }
 
     public void writeHoldingRegisterRange(int offset, int[] range) throws IllegalDataAddressException, IllegalDataValueException {
-        if (holdingRegisters == null)
-            throw new IllegalDataAddressException(offset);
+        checkPointer(holdingRegisters, offset);
         holdingRegisters.setRange(offset, range);
     }
 
     public int readInputRegister(int offset) throws IllegalDataAddressException {
-        if (inputRegisters != null)
-            return inputRegisters.get(offset);
-        throw new IllegalDataAddressException(offset);
+        checkPointer(inputRegisters, offset);
+        return inputRegisters.get(offset);
     }
 
     public int[] readInputRegisterRange(int offset, int quantity) throws IllegalDataAddressException {
-        if (inputRegisters != null)
-            return inputRegisters.getRange(offset, quantity);
-        throw new IllegalDataAddressException(offset);
+        checkPointer(inputRegisters, offset);
+        return inputRegisters.getRange(offset, quantity);
     }
 
     public boolean readCoil(int offset) throws IllegalDataAddressException {
-        if (coils != null)
-            return coils.get(offset);
-        throw new IllegalDataAddressException(offset);
+        checkPointer(coils, offset);
+        return coils.get(offset);
     }
 
-    public boolean[] readCoilRange(int offset, int quantity) throws IllegalDataAddressException {
-        if (coils != null)
-            return coils.getRange(offset, quantity);
-        throw new IllegalDataAddressException(offset);
+    public boolean[] readCoilRange(int offset, int quantity) throws IllegalDataAddressException, IllegalDataValueException {
+        checkPointer(holdingRegisters, offset);
+        return coils.getRange(offset, quantity);
     }
 
     public void writeCoil(int offset, boolean value) throws IllegalDataAddressException, IllegalDataValueException {
-        if (coils == null)
-            throw new IllegalDataAddressException(offset);
+        checkPointer(coils, offset);
         coils.set(offset, value);
     }
 
     public void writeCoilRange(int offset, boolean[] range) throws IllegalDataAddressException, IllegalDataValueException {
-        if (coils == null)
-            throw new IllegalDataAddressException(offset);
+        checkPointer(coils, offset);
         coils.setRange(offset, range);
     }
 
     public boolean readDiscreteInput(int offset) throws IllegalDataAddressException {
-        if (discreteInputs != null)
-            return discreteInputs.get(offset);
-        throw new IllegalDataAddressException(offset);
+        checkPointer(discreteInputs, offset);
+        return discreteInputs.get(offset);
     }
 
-    public boolean[] readDiscreteInputRange(int offset, int quantity) throws IllegalDataAddressException {
-        if (discreteInputs != null)
-            return discreteInputs.getRange(offset, quantity);
-        throw new IllegalDataAddressException(offset);
+    public boolean[] readDiscreteInputRange(int offset, int quantity) throws IllegalDataAddressException, IllegalDataValueException {
+        checkPointer(discreteInputs, offset);
+        return discreteInputs.getRange(offset, quantity);
     }
 
     public Coils getCoils() {

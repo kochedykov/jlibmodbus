@@ -1,7 +1,6 @@
 package com.sbpinvertor.modbus;
 
 import com.sbpinvertor.modbus.data.DataHolder;
-import com.sbpinvertor.modbus.data.SimpleHoldingRegisters;
 
 import java.io.IOException;
 
@@ -37,7 +36,7 @@ abstract public class ModbusSlave {
     private DataHolder dataHolder = new DataHolder();
 
     protected ModbusSlave() {
-        dataHolder.setHoldingRegisters(new SimpleHoldingRegisters(1000));
+
     }
 
     /**
