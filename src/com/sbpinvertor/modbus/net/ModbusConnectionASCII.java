@@ -1,9 +1,5 @@
 package com.sbpinvertor.modbus.net;
 
-import com.sbpinvertor.modbus.net.stream.InputStreamASCII;
-import com.sbpinvertor.modbus.net.stream.OutputStreamASCII;
-import com.sbpinvertor.modbus.net.stream.base.ModbusInputStream;
-import com.sbpinvertor.modbus.net.stream.base.ModbusOutputStream;
 import com.sbpinvertor.modbus.serial.SerialPort;
 
 /**
@@ -29,29 +25,8 @@ import com.sbpinvertor.modbus.serial.SerialPort;
  * email: vladislav.kochedykov@gmail.com
  */
 public class ModbusConnectionASCII extends ModbusConnectionSerial {
-    final private OutputStreamASCII os;
-    final private InputStreamASCII is;
 
     public ModbusConnectionASCII(SerialPort serial) {
-        super(serial);
-        os = new OutputStreamASCII(serial);
-        is = new InputStreamASCII(serial);
-    }
-
-    @Override
-    public void reset() {
-        super.reset();
-        is.reset();
-        os.reset();
-    }
-
-    @Override
-    public ModbusOutputStream getOutputStream() {
-        return os;
-    }
-
-    @Override
-    public ModbusInputStream getInputStream() {
-        return is;
+        super(serial, new ModbusTransportASCII(serial));
     }
 }

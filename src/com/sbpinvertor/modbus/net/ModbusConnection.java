@@ -33,6 +33,8 @@ abstract public class ModbusConnection {
 
     abstract public ModbusInputStream getInputStream();
 
+    abstract public ModbusTransport getTransport();
+
     abstract public void open() throws IOException;
 
     abstract public void close() throws IOException;

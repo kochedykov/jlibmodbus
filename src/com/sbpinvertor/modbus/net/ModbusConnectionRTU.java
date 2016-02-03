@@ -1,9 +1,5 @@
 package com.sbpinvertor.modbus.net;
 
-import com.sbpinvertor.modbus.net.stream.InputStreamRTU;
-import com.sbpinvertor.modbus.net.stream.OutputStreamRTU;
-import com.sbpinvertor.modbus.net.stream.base.ModbusInputStream;
-import com.sbpinvertor.modbus.net.stream.base.ModbusOutputStream;
 import com.sbpinvertor.modbus.serial.SerialPort;
 
 /**
@@ -29,29 +25,8 @@ import com.sbpinvertor.modbus.serial.SerialPort;
  * email: vladislav.kochedykov@gmail.com
  */
 public class ModbusConnectionRTU extends ModbusConnectionSerial {
-    final private OutputStreamRTU os;
-    final private InputStreamRTU is;
 
     public ModbusConnectionRTU(SerialPort serial) {
-        super(serial);
-        os = new OutputStreamRTU(serial);
-        is = new InputStreamRTU(serial);
-    }
-
-    @Override
-    public void reset() {
-        super.reset();
-        is.reset();
-        os.reset();
-    }
-
-    @Override
-    public ModbusOutputStream getOutputStream() {
-        return os;
-    }
-
-    @Override
-    public ModbusInputStream getInputStream() {
-        return is;
+        super(serial, new ModbusTransportRTU(serial));
     }
 }

@@ -1,5 +1,7 @@
 package com.sbpinvertor.modbus.net;
 
+import com.sbpinvertor.modbus.net.stream.base.ModbusInputStream;
+import com.sbpinvertor.modbus.net.stream.base.ModbusOutputStream;
 import com.sbpinvertor.modbus.serial.SerialPort;
 import com.sbpinvertor.modbus.serial.SerialPortException;
 
@@ -30,9 +32,11 @@ import java.io.IOException;
 abstract public class ModbusConnectionSerial extends ModbusConnection {
 
     final private SerialPort serial;
+    final private ModbusTransport transport;
 
-    public ModbusConnectionSerial(SerialPort serial) {
+    public ModbusConnectionSerial(SerialPort serial, ModbusTransport transport) {
         this.serial = serial;
+        this.transport = transport;
     }
 
     @Override
@@ -54,5 +58,22 @@ abstract public class ModbusConnectionSerial extends ModbusConnection {
     @Override
     public void reset() {
         serial.clear();
+        getInputStream().reset();
+        getOutputStream().reset();
+    }
+
+    @Override
+    public ModbusOutputStream getOutputStream() {
+        return transport.getOutputStream();
+    }
+
+    @Override
+    public ModbusInputStream getInputStream() {
+        return transport.getInputStream();
+    }
+
+    @Override
+    public ModbusTransport getTransport() {
+        return transport;
     }
 }

@@ -7,8 +7,6 @@ import com.sbpinvertor.modbus.exception.ModbusProtocolException;
 import com.sbpinvertor.modbus.msg.base.ModbusMessage;
 import com.sbpinvertor.modbus.net.ModbusConnection;
 import com.sbpinvertor.modbus.net.ModbusMasterConnectionTCP;
-import com.sbpinvertor.modbus.net.ModbusTransport;
-import com.sbpinvertor.modbus.net.ModbusTransportTCP;
 import com.sbpinvertor.modbus.tcp.TcpParameters;
 import com.sbpinvertor.modbus.utils.ModbusExceptionCode;
 
@@ -42,7 +40,6 @@ final public class ModbusMasterTCP extends ModbusMaster {
     final private boolean keepAlive;
     final private ModbusConnection conn;
     final private AtomicBoolean connected = new AtomicBoolean(false);
-    private ModbusTransport transport = null;
 
     public ModbusMasterTCP(TcpParameters parameters) {
         conn = new ModbusMasterConnectionTCP(parameters);
@@ -65,18 +62,18 @@ final public class ModbusMasterTCP extends ModbusMaster {
         if (!keepAlive)
             open();
         try {
-            getTransport().send(msg);
+            super.sendRequest(msg);
         } catch (IOException e) {
             if (keepAlive) {
                 open();
-                transport.send(msg);
+                super.sendRequest(msg);
             }
         }
     }
 
     @Override
     protected ModbusMessage readResponse() throws ModbusNumberException, IOException, ModbusProtocolException {
-        ModbusMessage msg = getTransport().readResponse();
+        ModbusMessage msg = super.readResponse();
         if (!keepAlive) {
             close();
         }
@@ -87,7 +84,6 @@ final public class ModbusMasterTCP extends ModbusMaster {
     public void open() throws IOException {
         if (!isConnected()) {
             conn.open();
-            transport = new ModbusTransportTCP(conn.getInputStream(), conn.getOutputStream());
             setConnected(true);
         }
     }
@@ -96,7 +92,6 @@ final public class ModbusMasterTCP extends ModbusMaster {
     public void close() throws IOException {
         setConnected(false);
         conn.close();
-        transport = null;
     }
 
     synchronized public boolean isConnected() {
@@ -105,11 +100,6 @@ final public class ModbusMasterTCP extends ModbusMaster {
 
     public void setConnected(boolean connected) {
         this.connected.set(connected);
-    }
-
-    @Override
-    protected ModbusTransport getTransport() {
-        return transport;
     }
 
     @Override

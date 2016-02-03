@@ -2,8 +2,6 @@ package com.sbpinvertor.modbus.master;
 
 import com.sbpinvertor.modbus.net.ModbusConnection;
 import com.sbpinvertor.modbus.net.ModbusConnectionASCII;
-import com.sbpinvertor.modbus.net.ModbusTransport;
-import com.sbpinvertor.modbus.net.ModbusTransportASCII;
 import com.sbpinvertor.modbus.serial.SerialParameters;
 import com.sbpinvertor.modbus.serial.SerialPort;
 import com.sbpinvertor.modbus.serial.SerialUtils;
@@ -33,12 +31,10 @@ import com.sbpinvertor.modbus.serial.SerialUtils;
 
 final public class ModbusMasterASCII extends ModbusMasterSerial {
 
-    final private ModbusTransport transport;
     final private ModbusConnection conn;
 
     public ModbusMasterASCII(SerialParameters parameters) {
         conn = new ModbusConnectionASCII(SerialUtils.createSerial(parameters));
-        transport = new ModbusTransportASCII(conn.getInputStream(), conn.getOutputStream());
     }
 
     public ModbusMasterASCII(String device, SerialPort.BaudRate baudRate, SerialPort.Parity parity) {
@@ -47,11 +43,6 @@ final public class ModbusMasterASCII extends ModbusMasterSerial {
 
     public ModbusMasterASCII(String device, SerialPort.BaudRate baudRate) {
         this(device, baudRate, SerialPort.Parity.EVEN);
-    }
-
-    @Override
-    protected ModbusTransport getTransport() {
-        return transport;
     }
 
     @Override

@@ -1,8 +1,6 @@
 package com.sbpinvertor.modbus.net;
 
 import com.sbpinvertor.modbus.Modbus;
-import com.sbpinvertor.modbus.net.stream.InputStreamTCP;
-import com.sbpinvertor.modbus.net.stream.OutputStreamTCP;
 import com.sbpinvertor.modbus.net.stream.base.ModbusInputStream;
 import com.sbpinvertor.modbus.net.stream.base.ModbusOutputStream;
 
@@ -35,25 +33,28 @@ import java.net.SocketException;
 public class ModbusSlaveConnectionTCP extends ModbusConnection {
 
     private Socket socket;
-    private InputStreamTCP is = null;
-    private OutputStreamTCP os = null;
+    private ModbusTransport transport = null;
 
     private int readTimeout = Modbus.MAX_RESPONSE_TIMEOUT;
 
     public ModbusSlaveConnectionTCP(Socket socket) throws IOException {
         this.socket = socket;
-        is = new InputStreamTCP(socket);
-        os = new OutputStreamTCP(socket);
+        transport = new ModbusTransportTCP(socket);
     }
 
     @Override
     public ModbusOutputStream getOutputStream() {
-        return os;
+        return transport.getOutputStream();
     }
 
     @Override
     public ModbusInputStream getInputStream() {
-        return is;
+        return transport.getInputStream();
+    }
+
+    @Override
+    public ModbusTransport getTransport() {
+        return transport;
     }
 
     @Override
@@ -72,8 +73,7 @@ public class ModbusSlaveConnectionTCP extends ModbusConnection {
             if (socket != null)
                 socket.close();
         } finally {
-            is = null;
-            os = null;
+            transport = null;
             socket = null;
         }
     }
@@ -85,8 +85,8 @@ public class ModbusSlaveConnectionTCP extends ModbusConnection {
     @Override
     public void setReadTimeout(int timeout) {
         readTimeout = timeout;
-        if (is != null)
-            is.setReadTimeout(timeout);
+        if (transport != null)
+            transport.getInputStream().setReadTimeout(timeout);
         if (socket != null) {
             try {
                 socket.setSoTimeout(timeout);

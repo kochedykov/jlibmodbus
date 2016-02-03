@@ -1,8 +1,6 @@
 package com.sbpinvertor.modbus.net;
 
 import com.sbpinvertor.modbus.Modbus;
-import com.sbpinvertor.modbus.net.stream.InputStreamTCP;
-import com.sbpinvertor.modbus.net.stream.OutputStreamTCP;
 import com.sbpinvertor.modbus.net.stream.base.ModbusInputStream;
 import com.sbpinvertor.modbus.net.stream.base.ModbusOutputStream;
 import com.sbpinvertor.modbus.tcp.TcpParameters;
@@ -37,8 +35,7 @@ public class ModbusMasterConnectionTCP extends ModbusConnection {
 
     final private TcpParameters parameters;
     private Socket socket = null;
-    private InputStreamTCP is = null;
-    private OutputStreamTCP os = null;
+    private ModbusTransport transport = null;
     private int readTimeout = Modbus.MAX_RESPONSE_TIMEOUT;
 
     public ModbusMasterConnectionTCP(TcpParameters parameters) {
@@ -47,12 +44,17 @@ public class ModbusMasterConnectionTCP extends ModbusConnection {
 
     @Override
     public ModbusOutputStream getOutputStream() {
-        return os;
+        return transport.getOutputStream();
     }
 
     @Override
     public ModbusInputStream getInputStream() {
-        return is;
+        return transport.getInputStream();
+    }
+
+    @Override
+    public ModbusTransport getTransport() {
+        return transport;
     }
 
     @Override
@@ -69,9 +71,8 @@ public class ModbusMasterConnectionTCP extends ModbusConnection {
             InetSocketAddress isa = new InetSocketAddress(parameters.getHost(), parameters.getPort());
             socket.connect(isa, Modbus.MAX_CONNECTION_TIMEOUT);
         }
-        is = new InputStreamTCP(socket);
-        os = new OutputStreamTCP(socket);
-        is.setReadTimeout(readTimeout);
+        transport = new ModbusTransportTCP(socket);
+        setReadTimeout(readTimeout);
     }
 
     @Override
@@ -80,8 +81,7 @@ public class ModbusMasterConnectionTCP extends ModbusConnection {
             if (socket != null)
                 socket.close();
         } finally {
-            is = null;
-            os = null;
+            transport = null;
             socket = null;
         }
     }
@@ -89,7 +89,7 @@ public class ModbusMasterConnectionTCP extends ModbusConnection {
     @Override
     public void setReadTimeout(int timeout) {
         readTimeout = timeout;
-        if (is != null)
-            is.setReadTimeout(timeout);
+        if (transport != null)
+            transport.getInputStream().setReadTimeout(timeout);
     }
 }

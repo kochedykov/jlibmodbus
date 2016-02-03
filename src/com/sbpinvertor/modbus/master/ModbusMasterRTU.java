@@ -2,8 +2,6 @@ package com.sbpinvertor.modbus.master;
 
 import com.sbpinvertor.modbus.net.ModbusConnection;
 import com.sbpinvertor.modbus.net.ModbusConnectionRTU;
-import com.sbpinvertor.modbus.net.ModbusTransport;
-import com.sbpinvertor.modbus.net.ModbusTransportRTU;
 import com.sbpinvertor.modbus.serial.SerialParameters;
 import com.sbpinvertor.modbus.serial.SerialPort;
 import com.sbpinvertor.modbus.serial.SerialUtils;
@@ -33,21 +31,14 @@ import com.sbpinvertor.modbus.serial.SerialUtils;
 
 final public class ModbusMasterRTU extends ModbusMasterSerial {
 
-    final private ModbusTransport transport;
     final private ModbusConnection conn;
 
     public ModbusMasterRTU(SerialParameters parameters) {
         conn = new ModbusConnectionRTU(SerialUtils.createSerial(parameters));
-        transport = new ModbusTransportRTU(conn.getInputStream(), conn.getOutputStream());
     }
 
     public ModbusMasterRTU(String device, SerialPort.BaudRate baudRate, int dataBits, int stopBits, SerialPort.Parity parity) {
         this(new SerialParameters(device, baudRate, dataBits, stopBits, parity));
-    }
-
-    @Override
-    protected ModbusTransport getTransport() {
-        return transport;
     }
 
     @Override

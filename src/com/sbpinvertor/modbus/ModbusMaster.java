@@ -11,7 +11,6 @@ import com.sbpinvertor.modbus.msg.response.ReadDiscreteInputsResponse;
 import com.sbpinvertor.modbus.msg.response.ReadHoldingRegistersResponse;
 import com.sbpinvertor.modbus.msg.response.ReadInputRegistersResponse;
 import com.sbpinvertor.modbus.net.ModbusConnection;
-import com.sbpinvertor.modbus.net.ModbusTransport;
 
 import java.io.IOException;
 
@@ -45,8 +44,6 @@ abstract public class ModbusMaster {
 
     }
 
-    abstract protected ModbusTransport getTransport();
-
     abstract protected ModbusConnection getConnection();
 
     public void open() throws IOException {
@@ -58,11 +55,11 @@ abstract public class ModbusMaster {
     }
 
     protected void sendRequest(ModbusMessage msg) throws IOException {
-        getTransport().send(msg);
+        getConnection().getTransport().send(msg);
     }
 
     protected ModbusMessage readResponse() throws ModbusProtocolException, ModbusNumberException, IOException {
-        return getTransport().readResponse();
+        return getConnection().getTransport().readResponse();
     }
 
     protected ModbusMessage processRequest(ModbusMessage request) throws ModbusProtocolException,

@@ -5,8 +5,8 @@ import com.sbpinvertor.modbus.exception.ModbusProtocolException;
 import com.sbpinvertor.modbus.msg.ModbusMessageFactory;
 import com.sbpinvertor.modbus.msg.base.ModbusMessage;
 import com.sbpinvertor.modbus.net.stream.InputStreamRTU;
-import com.sbpinvertor.modbus.net.stream.base.ModbusInputStream;
-import com.sbpinvertor.modbus.net.stream.base.ModbusOutputStream;
+import com.sbpinvertor.modbus.net.stream.OutputStreamRTU;
+import com.sbpinvertor.modbus.serial.SerialPort;
 
 import java.io.IOException;
 
@@ -34,8 +34,8 @@ import java.io.IOException;
  */
 public class ModbusTransportRTU extends ModbusTransport {
 
-    public ModbusTransportRTU(ModbusInputStream is, ModbusOutputStream os) {
-        super(is, os);
+    public ModbusTransportRTU(SerialPort serial) {
+        super(new InputStreamRTU(serial), new OutputStreamRTU(serial));
     }
 
     @Override

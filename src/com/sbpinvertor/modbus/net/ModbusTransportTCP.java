@@ -4,11 +4,14 @@ import com.sbpinvertor.modbus.exception.ModbusNumberException;
 import com.sbpinvertor.modbus.exception.ModbusProtocolException;
 import com.sbpinvertor.modbus.msg.ModbusMessageFactory;
 import com.sbpinvertor.modbus.msg.base.ModbusMessage;
+import com.sbpinvertor.modbus.net.stream.InputStreamTCP;
+import com.sbpinvertor.modbus.net.stream.OutputStreamTCP;
 import com.sbpinvertor.modbus.net.stream.base.ModbusInputStream;
 import com.sbpinvertor.modbus.net.stream.base.ModbusOutputStream;
 import com.sbpinvertor.modbus.tcp.TcpAduHeader;
 
 import java.io.IOException;
+import java.net.Socket;
 
 /**
  * Copyright (c) 2015-2016 JSC "Zavod "Invertor"
@@ -34,8 +37,8 @@ import java.io.IOException;
  */
 public class ModbusTransportTCP extends ModbusTransport {
 
-    public ModbusTransportTCP(ModbusInputStream is, ModbusOutputStream os) {
-        super(is, os);
+    public ModbusTransportTCP(Socket socket) throws IOException {
+        super(new InputStreamTCP(socket), new OutputStreamTCP(socket));
     }
 
     @Override

@@ -6,8 +6,8 @@ import com.sbpinvertor.modbus.exception.ModbusProtocolException;
 import com.sbpinvertor.modbus.msg.ModbusMessageFactory;
 import com.sbpinvertor.modbus.msg.base.ModbusMessage;
 import com.sbpinvertor.modbus.net.stream.InputStreamASCII;
-import com.sbpinvertor.modbus.net.stream.base.ModbusInputStream;
-import com.sbpinvertor.modbus.net.stream.base.ModbusOutputStream;
+import com.sbpinvertor.modbus.net.stream.OutputStreamASCII;
+import com.sbpinvertor.modbus.serial.SerialPort;
 
 import java.io.IOException;
 
@@ -35,8 +35,8 @@ import java.io.IOException;
  */
 public class ModbusTransportASCII extends ModbusTransport {
 
-    public ModbusTransportASCII(ModbusInputStream is, ModbusOutputStream os) {
-        super(is, os);
+    public ModbusTransportASCII(SerialPort serial) {
+        super(new InputStreamASCII(serial), new OutputStreamASCII(serial));
     }
 
     @Override
