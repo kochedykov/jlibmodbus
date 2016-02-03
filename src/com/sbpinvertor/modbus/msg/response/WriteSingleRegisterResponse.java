@@ -7,6 +7,8 @@ import com.sbpinvertor.modbus.net.stream.base.ModbusInputStream;
 import com.sbpinvertor.modbus.net.stream.base.ModbusOutputStream;
 import com.sbpinvertor.modbus.utils.ModbusFunctionCode;
 
+import java.io.IOException;
+
 /**
  * Copyright (c) 2015-2016 JSC "Zavod "Invertor"
  * [http://www.sbp-invertor.ru]
@@ -45,13 +47,13 @@ public class WriteSingleRegisterResponse extends AbstractWriteResponse {
     }
 
     @Override
-    protected void readValue(ModbusInputStream fifo) {
-
+    protected void readValue(ModbusInputStream fifo) throws IOException {
+        setValue(fifo.readShortBE());
     }
 
     @Override
-    protected void writeValue(ModbusOutputStream fifo) {
-
+    protected void writeValue(ModbusOutputStream fifo) throws IOException {
+        fifo.writeShortBE(getValue());
     }
 
     protected boolean checkValue() {

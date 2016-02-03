@@ -32,8 +32,8 @@ public class WriteMultipleRegistersResponse extends WriteSingleRegisterResponse 
         super(serverAddress);
     }
 
-    public WriteMultipleRegistersResponse(int serverAddress, int startAddress, int register) throws ModbusNumberException {
-        super(serverAddress, startAddress, register);
+    public WriteMultipleRegistersResponse(int serverAddress, int startAddress, int byteCount) throws ModbusNumberException {
+        super(serverAddress, startAddress, byteCount);
     }
 
     @Override
