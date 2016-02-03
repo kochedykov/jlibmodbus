@@ -1,9 +1,9 @@
-package com.sbpinvertor.modbus;
+package com.sbpinvertor.modbus.master;
 
 import com.sbpinvertor.modbus.net.ModbusConnection;
-import com.sbpinvertor.modbus.net.ModbusConnectionASCII;
+import com.sbpinvertor.modbus.net.ModbusConnectionRTU;
 import com.sbpinvertor.modbus.net.ModbusTransport;
-import com.sbpinvertor.modbus.net.ModbusTransportASCII;
+import com.sbpinvertor.modbus.net.ModbusTransportRTU;
 import com.sbpinvertor.modbus.serial.SerialParameters;
 import com.sbpinvertor.modbus.serial.SerialPort;
 import com.sbpinvertor.modbus.serial.SerialUtils;
@@ -31,22 +31,18 @@ import com.sbpinvertor.modbus.serial.SerialUtils;
  * email: vladislav.kochedykov@gmail.com
  */
 
-class ModbusMasterASCII extends ModbusMasterSerial {
+final public class ModbusMasterRTU extends ModbusMasterSerial {
 
     final private ModbusTransport transport;
     final private ModbusConnection conn;
 
-    public ModbusMasterASCII(SerialParameters parameters) {
-        conn = new ModbusConnectionASCII(SerialUtils.createSerial(parameters));
-        transport = new ModbusTransportASCII(conn.getInputStream(), conn.getOutputStream());
+    public ModbusMasterRTU(SerialParameters parameters) {
+        conn = new ModbusConnectionRTU(SerialUtils.createSerial(parameters));
+        transport = new ModbusTransportRTU(conn.getInputStream(), conn.getOutputStream());
     }
 
-    public ModbusMasterASCII(String device, SerialPort.BaudRate baudRate, SerialPort.Parity parity) {
-        this(new SerialParameters(device, baudRate, 7, parity == SerialPort.Parity.NONE ? 2 : 1, parity));
-    }
-
-    public ModbusMasterASCII(String device, SerialPort.BaudRate baudRate) {
-        this(device, baudRate, SerialPort.Parity.EVEN);
+    public ModbusMasterRTU(String device, SerialPort.BaudRate baudRate, int dataBits, int stopBits, SerialPort.Parity parity) {
+        this(new SerialParameters(device, baudRate, dataBits, stopBits, parity));
     }
 
     @Override

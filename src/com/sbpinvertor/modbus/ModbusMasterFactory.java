@@ -1,5 +1,8 @@
 package com.sbpinvertor.modbus;
 
+import com.sbpinvertor.modbus.master.ModbusMasterASCII;
+import com.sbpinvertor.modbus.master.ModbusMasterRTU;
+import com.sbpinvertor.modbus.master.ModbusMasterTCP;
 import com.sbpinvertor.modbus.serial.SerialPort;
 
 /**
@@ -25,9 +28,9 @@ import com.sbpinvertor.modbus.serial.SerialPort;
  * email: vladislav.kochedykov@gmail.com
  */
 
-public class ModbusFactory {
+final public class ModbusMasterFactory {
 
-    private ModbusFactory() {
+    private ModbusMasterFactory() {
 
     }
 

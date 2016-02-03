@@ -25,7 +25,7 @@ import java.util.logging.Logger;
  * Authors: Vladislav Y. Kochedykov, software engineer.
  * email: vladislav.kochedykov@gmail.com
  */
-public class Modbus {
+final public class Modbus {
     final static public int MAX_CONNECTION_TIMEOUT = 3000;
     final static public int MAX_RESPONSE_TIMEOUT = 1000;
     final static public int MAX_PDU_LENGTH = 254;
@@ -54,6 +54,9 @@ public class Modbus {
     static {
         log = Logger.getLogger(TAG);
         setLogLevel(LogLevel.LEVEL_RELEASE);
+    }
+
+    private Modbus() {
     }
 
     /**

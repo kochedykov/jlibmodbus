@@ -141,7 +141,6 @@ abstract public class ModbusMaster {
     }
 
     /**
-     * TODO
      * result = ((reg & and) | (or & !and))
      *
      * @param serverAddress slave id

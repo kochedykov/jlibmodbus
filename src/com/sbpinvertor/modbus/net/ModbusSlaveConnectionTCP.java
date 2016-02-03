@@ -5,11 +5,10 @@ import com.sbpinvertor.modbus.net.stream.InputStreamTCP;
 import com.sbpinvertor.modbus.net.stream.OutputStreamTCP;
 import com.sbpinvertor.modbus.net.stream.base.ModbusInputStream;
 import com.sbpinvertor.modbus.net.stream.base.ModbusOutputStream;
-import com.sbpinvertor.modbus.tcp.TcpParameters;
 
 import java.io.IOException;
-import java.net.InetSocketAddress;
 import java.net.Socket;
+import java.net.SocketException;
 
 /**
  * Copyright (c) 2015-2016 JSC "Zavod "Invertor"
@@ -33,21 +32,18 @@ import java.net.Socket;
  * Authors: Vladislav Y. Kochedykov, software engineer.
  * email: vladislav.kochedykov@gmail.com
  */
-public class ModbusConnectionTCP extends ModbusConnection {
+public class ModbusSlaveConnectionTCP extends ModbusConnection {
 
-    final private TcpParameters parameters;
-    private Socket socket = null;
+    private Socket socket;
     private InputStreamTCP is = null;
     private OutputStreamTCP os = null;
+
     private int readTimeout = Modbus.MAX_RESPONSE_TIMEOUT;
 
-    public ModbusConnectionTCP(TcpParameters parameters) {
-        this.parameters = parameters;
-    }
-
-    public ModbusConnectionTCP(Socket socket) {
-        this.parameters = null;
+    public ModbusSlaveConnectionTCP(Socket socket) throws IOException {
         this.socket = socket;
+        is = new InputStreamTCP(socket);
+        os = new OutputStreamTCP(socket);
     }
 
     @Override
@@ -67,16 +63,7 @@ public class ModbusConnectionTCP extends ModbusConnection {
 
     @Override
     public void open() throws IOException {
-        if (parameters != null) {
-            close();
-            socket = new Socket();
-            socket.setKeepAlive(parameters.isKeepAlive());
-            InetSocketAddress isa = new InetSocketAddress(parameters.getHost(), parameters.getPort());
-            socket.connect(isa, Modbus.MAX_CONNECTION_TIMEOUT);
-        }
-        is = new InputStreamTCP(socket);
-        os = new OutputStreamTCP(socket);
-        is.setReadTimeout(readTimeout);
+        //no operation
     }
 
     @Override
@@ -91,10 +78,21 @@ public class ModbusConnectionTCP extends ModbusConnection {
         }
     }
 
+    public int getReadTimeout() {
+        return readTimeout;
+    }
+
     @Override
     public void setReadTimeout(int timeout) {
         readTimeout = timeout;
         if (is != null)
             is.setReadTimeout(timeout);
+        if (socket != null) {
+            try {
+                socket.setSoTimeout(timeout);
+            } catch (SocketException e) {
+                Modbus.log().warning("can't set so timeout.");
+            }
+        }
     }
 }

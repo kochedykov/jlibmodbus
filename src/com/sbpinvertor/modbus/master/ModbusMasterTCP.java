@@ -1,11 +1,12 @@
-package com.sbpinvertor.modbus;
+package com.sbpinvertor.modbus.master;
 
+import com.sbpinvertor.modbus.ModbusMaster;
 import com.sbpinvertor.modbus.exception.ModbusMasterException;
 import com.sbpinvertor.modbus.exception.ModbusNumberException;
 import com.sbpinvertor.modbus.exception.ModbusProtocolException;
 import com.sbpinvertor.modbus.msg.base.ModbusMessage;
 import com.sbpinvertor.modbus.net.ModbusConnection;
-import com.sbpinvertor.modbus.net.ModbusConnectionTCP;
+import com.sbpinvertor.modbus.net.ModbusMasterConnectionTCP;
 import com.sbpinvertor.modbus.net.ModbusTransport;
 import com.sbpinvertor.modbus.net.ModbusTransportTCP;
 import com.sbpinvertor.modbus.tcp.TcpParameters;
@@ -37,14 +38,14 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * email: vladislav.kochedykov@gmail.com
  */
 
-public class ModbusMasterTCP extends ModbusMaster {
+final public class ModbusMasterTCP extends ModbusMaster {
     final private boolean keepAlive;
     final private ModbusConnection conn;
     final private AtomicBoolean connected = new AtomicBoolean(false);
     private ModbusTransport transport = null;
 
     public ModbusMasterTCP(TcpParameters parameters) {
-        conn = new ModbusConnectionTCP(parameters);
+        conn = new ModbusMasterConnectionTCP(parameters);
         keepAlive = parameters.isKeepAlive();
         try {
             if (keepAlive) {

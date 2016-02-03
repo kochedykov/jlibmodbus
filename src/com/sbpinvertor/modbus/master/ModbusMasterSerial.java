@@ -1,5 +1,6 @@
-package com.sbpinvertor.modbus;
+package com.sbpinvertor.modbus.master;
 
+import com.sbpinvertor.modbus.ModbusMaster;
 import com.sbpinvertor.modbus.exception.ModbusMasterException;
 import com.sbpinvertor.modbus.exception.ModbusNumberException;
 import com.sbpinvertor.modbus.exception.ModbusProtocolException;
