@@ -30,7 +30,7 @@ import com.sbpinvertor.modbus.utils.ModbusFunctionCode;
  * email: vladislav.kochedykov@gmail.com
  */
 
-public class ReadDiscreteInputsRequest extends ReadCoilsRequest {
+final public class ReadDiscreteInputsRequest extends ReadCoilsRequest {
 
     public ReadDiscreteInputsRequest(int serverAddress) throws ModbusNumberException {
         super(serverAddress);
@@ -45,7 +45,7 @@ public class ReadDiscreteInputsRequest extends ReadCoilsRequest {
         ReadDiscreteInputsResponse response = new ReadDiscreteInputsResponse(getServerAddress());
         try {
             boolean[] range = dataHolder.readDiscreteInputRange(getStartAddress(), getQuantity());
-            response.setDiscreteInputs(range);
+            response.setCoils(range);
         } catch (ModbusProtocolException e) {
             response.setException();
             response.setModbusExceptionCode(e.getException().getValue());

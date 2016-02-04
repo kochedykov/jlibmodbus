@@ -45,17 +45,17 @@ public class ReadHoldingRegistersResponse extends AbstractReadResponse {
         this.registers = registers;
     }
 
-    public int[] getRegisters() {
+    final public int[] getRegisters() {
         return registers;
     }
 
-    public void setRegisters(int[] registers) {
+    final public void setRegisters(int[] registers) {
         this.registers = registers;
         setByteCount(registers.length * 2);
     }
 
     @Override
-    protected void readData(ModbusInputStream fifo) throws IOException {
+    final protected void readData(ModbusInputStream fifo) throws IOException {
         byte[] buffer = new byte[getByteCount()];
         int size;
         if ((size = fifo.read(buffer)) < buffer.length)
@@ -64,7 +64,7 @@ public class ReadHoldingRegistersResponse extends AbstractReadResponse {
     }
 
     @Override
-    protected void writeData(ModbusOutputStream fifo) throws IOException {
+    final protected void writeData(ModbusOutputStream fifo) throws IOException {
         fifo.write(DataUtils.toByteArray(registers));
     }
 

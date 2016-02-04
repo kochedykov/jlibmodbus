@@ -30,7 +30,7 @@ import java.io.IOException;
  * Authors: Vladislav Y. Kochedykov, software engineer.
  * email: vladislav.kochedykov@gmail.com
  */
-public class ReadExceptionStatusResponse extends ModbusResponse {
+final public class ReadExceptionStatusResponse extends ModbusResponse {
 
     private int exceptionStatus = 0;
 

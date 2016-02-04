@@ -65,7 +65,7 @@ public class WriteSingleRegisterRequest extends AbstractDataRequest {
     }
 
     @Override
-    protected void readData(ModbusInputStream fifo) throws IOException {
+    final protected void readData(ModbusInputStream fifo) throws IOException {
         setValue(fifo.readShortBE());
     }
 
@@ -75,7 +75,7 @@ public class WriteSingleRegisterRequest extends AbstractDataRequest {
     }
 
     @Override
-    public void writeData(ModbusOutputStream fifo) throws IOException {
+    final public void writeData(ModbusOutputStream fifo) throws IOException {
         fifo.writeShortBE(getValue());
     }
 

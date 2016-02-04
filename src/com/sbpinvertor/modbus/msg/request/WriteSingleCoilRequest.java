@@ -30,7 +30,7 @@ import com.sbpinvertor.modbus.utils.ModbusFunctionCode;
  * Authors: Vladislav Y. Kochedykov, software engineer.
  * email: vladislav.kochedykov@gmail.com
  */
-public final class WriteSingleCoilRequest extends WriteSingleRegisterRequest {
+final public class WriteSingleCoilRequest extends WriteSingleRegisterRequest {
 
     public WriteSingleCoilRequest(int serverAddress) throws ModbusNumberException {
         super(serverAddress);

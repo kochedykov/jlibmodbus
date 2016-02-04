@@ -34,7 +34,7 @@ import java.io.IOException;
  * Authors: Vladislav Y. Kochedykov, software engineer.
  * email: vladislav.kochedykov@gmail.com
  */
-public class MaskWriteRegisterRequest extends AbstractDataRequest {
+final public class MaskWriteRegisterRequest extends AbstractDataRequest {
 
     private int maskAnd;
     private int maskOr;

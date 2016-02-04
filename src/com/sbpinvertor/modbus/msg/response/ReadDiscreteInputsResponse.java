@@ -25,7 +25,7 @@ import com.sbpinvertor.modbus.utils.ModbusFunctionCode;
  * Authors: Vladislav Y. Kochedykov, software engineer.
  * email: vladislav.kochedykov@gmail.com
  */
-public class ReadDiscreteInputsResponse extends ReadCoilsResponse {
+final public class ReadDiscreteInputsResponse extends ReadCoilsResponse {
 
     public ReadDiscreteInputsResponse(int serverAddress) throws ModbusNumberException {
         super(serverAddress);
@@ -33,14 +33,6 @@ public class ReadDiscreteInputsResponse extends ReadCoilsResponse {
 
     public ReadDiscreteInputsResponse(int serverAddress, boolean[] coils) throws ModbusNumberException {
         super(serverAddress, coils);
-    }
-
-    public boolean[] getDiscreteInputs() {
-        return getCoils();
-    }
-
-    public void setDiscreteInputs(boolean[] coils) {
-        setCoils(coils);
     }
 
     @Override

@@ -26,7 +26,7 @@ import com.sbpinvertor.modbus.utils.ModbusFunctionCode;
  * Authors: Vladislav Y. Kochedykov, software engineer.
  * email: vladislav.kochedykov@gmail.com
  */
-public class WriteMultipleCoilsResponse extends WriteSingleRegisterResponse {
+final public class WriteMultipleCoilsResponse extends WriteSingleRegisterResponse {
 
     public WriteMultipleCoilsResponse(int serverAddress) throws ModbusNumberException {
         super(serverAddress);

@@ -32,7 +32,7 @@ import java.io.IOException;
  * Authors: Vladislav Y. Kochedykov, software engineer.
  * email: vladislav.kochedykov@gmail.com
  */
-public class ReadExceptionStatusRequest extends ModbusRequest {
+final public class ReadExceptionStatusRequest extends ModbusRequest {
 
     public ReadExceptionStatusRequest(int serverAddress) throws ModbusNumberException {
         super(serverAddress);

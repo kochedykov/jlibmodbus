@@ -30,7 +30,7 @@ import java.io.IOException;
  * Authors: Vladislav Y. Kochedykov, software engineer.
  * email: vladislav.kochedykov@gmail.com
  */
-public class MaskWriteRegisterResponse extends AbstractWriteResponse {
+final public class MaskWriteRegisterResponse extends AbstractWriteResponse {
 
     private int maskAnd;
     private int maskOr;

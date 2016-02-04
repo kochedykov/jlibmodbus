@@ -47,12 +47,12 @@ public class WriteSingleRegisterResponse extends AbstractWriteResponse {
     }
 
     @Override
-    protected void readValue(ModbusInputStream fifo) throws IOException {
+    final protected void readValue(ModbusInputStream fifo) throws IOException {
         setValue(fifo.readShortBE());
     }
 
     @Override
-    protected void writeValue(ModbusOutputStream fifo) throws IOException {
+    final protected void writeValue(ModbusOutputStream fifo) throws IOException {
         fifo.writeShortBE(getValue());
     }
 
