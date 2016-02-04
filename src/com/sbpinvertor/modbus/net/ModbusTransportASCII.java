@@ -44,7 +44,7 @@ public class ModbusTransportASCII extends ModbusTransport {
         InputStreamASCII is = (InputStreamASCII) getInputStream();
         ModbusMessage msg = factory.createMessage(is);
         int lrc = is.getLrc();
-        boolean check = lrc != is.read();
+        boolean check = lrc == is.read();
         if (is.readByte() != Modbus.ASCII_CODE_CR || is.readByte() != Modbus.ASCII_CODE_LF)
             Modbus.log().warning("\\r\\n not received.");
         /*clear fifo*/
