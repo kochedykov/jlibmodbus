@@ -78,24 +78,13 @@ final public class ModbusMasterTCP extends ModbusMaster {
 
     @Override
     public void open() throws IOException {
-        if (!isConnected()) {
-            conn.open();
-            setConnected(true);
-        }
+        close();
+        conn.open();
     }
 
     @Override
     public void close() throws IOException {
-        setConnected(false);
         conn.close();
-    }
-
-    synchronized public boolean isConnected() {
-        return connected.get();
-    }
-
-    public void setConnected(boolean connected) {
-        this.connected.set(connected);
     }
 
     @Override

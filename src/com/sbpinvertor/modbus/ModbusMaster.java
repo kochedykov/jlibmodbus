@@ -11,6 +11,7 @@ import com.sbpinvertor.modbus.msg.response.ReadDiscreteInputsResponse;
 import com.sbpinvertor.modbus.msg.response.ReadHoldingRegistersResponse;
 import com.sbpinvertor.modbus.msg.response.ReadInputRegistersResponse;
 import com.sbpinvertor.modbus.net.ModbusConnection;
+import com.sbpinvertor.modbus.net.ModbusTransport;
 
 import java.io.IOException;
 
@@ -55,7 +56,10 @@ abstract public class ModbusMaster {
     }
 
     protected void sendRequest(ModbusMessage msg) throws IOException {
-        getConnection().getTransport().send(msg);
+        ModbusTransport transport = getConnection().getTransport();
+        if (transport == null)
+            throw new IOException("transport is null");
+        transport.send(msg);
     }
 
     protected ModbusMessage readResponse() throws ModbusProtocolException, ModbusNumberException, IOException {
