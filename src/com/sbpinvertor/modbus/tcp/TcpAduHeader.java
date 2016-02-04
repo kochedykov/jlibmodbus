@@ -2,7 +2,6 @@ package com.sbpinvertor.modbus.tcp;
 
 import com.sbpinvertor.modbus.Modbus;
 import com.sbpinvertor.modbus.exception.ModbusNumberException;
-import com.sbpinvertor.modbus.msg.base.Transportable;
 import com.sbpinvertor.modbus.net.stream.base.ModbusInputStream;
 import com.sbpinvertor.modbus.net.stream.base.ModbusOutputStream;
 import com.sbpinvertor.modbus.utils.DataUtils;
@@ -31,7 +30,7 @@ import java.io.IOException;
  * Authors: Vladislav Y. Kochedykov, software engineer.
  * email: vladislav.kochedykov@gmail.com
  */
-final public class TcpAduHeader implements Transportable {
+final public class TcpAduHeader {
     final private byte[] buffer;
 
     public TcpAduHeader() {
@@ -77,12 +76,10 @@ final public class TcpAduHeader implements Transportable {
         return buffer;
     }
 
-    @Override
     public void write(ModbusOutputStream fifo) throws IOException {
         fifo.write(byteArray());
     }
 
-    @Override
     public void read(ModbusInputStream fifo) throws ModbusNumberException, IOException {
         int size;
         if ((size = fifo.read(byteArray())) < buffer.length)

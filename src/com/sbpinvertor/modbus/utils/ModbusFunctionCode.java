@@ -45,7 +45,7 @@ the list of available modbus functions
 23 (0x17) Read/Write Multiple registers
 24 (0x18) Read FIFO Queue
 43 ( 0x2B) Encapsulated Interface Transport
-43 / 13 (0x2B / 0x0D) CANopen General Reference Request and Response PDU
+43 / 13 (0x2B / 0x0D) CAN open General Reference Request and Response PDU
 43 / 14 (0x2B / 0x0E) Read Device Identification
 */
 

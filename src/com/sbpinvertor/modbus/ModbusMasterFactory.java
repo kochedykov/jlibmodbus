@@ -5,6 +5,7 @@ import com.sbpinvertor.modbus.master.ModbusMasterRTU;
 import com.sbpinvertor.modbus.master.ModbusMasterTCP;
 import com.sbpinvertor.modbus.serial.SerialParameters;
 import com.sbpinvertor.modbus.serial.SerialPort;
+import com.sbpinvertor.modbus.tcp.TcpParameters;
 
 /**
  * Copyright (c) 2015-2016 JSC "Zavod "Invertor"
@@ -128,6 +129,6 @@ final public class ModbusMasterFactory {
      * @see ModbusMaster
      */
     static public ModbusMaster createModbusMasterTCP(String host, int port, boolean keepAlive) {
-        return new ModbusMasterTCP(host, port, keepAlive);
+        return new ModbusMasterTCP(new TcpParameters(host, port, keepAlive));
     }
 }

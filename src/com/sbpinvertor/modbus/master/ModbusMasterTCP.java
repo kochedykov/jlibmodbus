@@ -53,10 +53,6 @@ final public class ModbusMasterTCP extends ModbusMaster {
         }
     }
 
-    public ModbusMasterTCP(String host, int port, boolean keepAlive) {
-        this(new TcpParameters(host, port, keepAlive));
-    }
-
     @Override
     protected void sendRequest(ModbusMessage msg) throws IOException {
         if (!keepAlive)

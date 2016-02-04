@@ -5,6 +5,7 @@ import com.sbpinvertor.modbus.serial.SerialPort;
 import com.sbpinvertor.modbus.slave.ModbusSlaveASCII;
 import com.sbpinvertor.modbus.slave.ModbusSlaveRTU;
 import com.sbpinvertor.modbus.slave.ModbusSlaveTCP;
+import com.sbpinvertor.modbus.tcp.TcpParameters;
 
 /**
  * Copyright (c) 2015-2016 JSC "Zavod "Invertor"
@@ -103,7 +104,7 @@ final public class ModbusSlaveFactory {
      * @see ModbusSlave
      */
     static public ModbusSlave createModbusSlaveTCP(String host) {
-        return new ModbusSlaveTCP(host);
+        return createModbusSlaveTCP(host, Modbus.TCP_PORT);
     }
 
     /**
@@ -115,6 +116,6 @@ final public class ModbusSlaveFactory {
      * @see ModbusSlave
      */
     static public ModbusSlave createModbusSlaveTCP(String host, int port) {
-        return new ModbusSlaveTCP(host, port);
+        return new ModbusSlaveTCP(new TcpParameters(host, port, false));
     }
 }

@@ -81,7 +81,7 @@ public class DataHolder {
         return coils.getRange(offset, quantity);
     }
 
-    public void writeCoil(int offset, boolean value) throws IllegalDataAddressException, IllegalDataValueException {
+    public void writeCoil(int offset, boolean value) throws IllegalDataAddressException {
         checkPointer(coils, offset);
         coils.set(offset, value);
     }

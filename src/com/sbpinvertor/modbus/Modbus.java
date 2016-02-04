@@ -1,5 +1,6 @@
 package com.sbpinvertor.modbus;
 
+import java.util.logging.ConsoleHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -30,7 +31,7 @@ final public class Modbus {
     final static public int MAX_RESPONSE_TIMEOUT = 1000;
     final static public int MAX_PDU_LENGTH = 254;
     final static public int MIN_PDU_LENGTH = 3;
-    final static public int MAX_TCP_ADU_LENGTH = 260;
+    //final static public int MAX_TCP_ADU_LENGTH = 260;
     final static public int MAX_RTU_ADU_LENGTH = 256;
     final static public int MAX_REGISTER_VALUE = 0xFFFF;
     final static public int MIN_START_ADDRESS = 0x0000;
@@ -48,15 +49,26 @@ final public class Modbus {
     final static public int ASCII_CODE_COLON = 0x3a;
     final static public int COIL_VALUE_ON = 0xff00;
     final static public int COIL_VALUE_OFF = 0x0000;
-    final static private String TAG = "JLibModbus";
-    final static private Logger log;
+    final static private Logger log = Logger.getLogger(Modbus.class.getName());
+    final static private ConsoleHandler log_handler = new ConsoleHandler();
 
     static {
-        log = Logger.getLogger(TAG);
         setLogLevel(LogLevel.LEVEL_RELEASE);
+        log.addHandler(log_handler);
     }
 
     private Modbus() {
+    }
+
+    /**
+     * changes the log level for all loggers used
+     *
+     * @param level - LogLevel instance
+     * @see LogLevel
+     */
+    static public void setLogLevel(LogLevel level) {
+        log.setLevel(level.value());
+        log_handler.setLevel(level.value());
     }
 
     /**
@@ -66,16 +78,6 @@ final public class Modbus {
      */
     static public Logger log() {
         return log;
-    }
-
-    /**
-     * changes the log level of default Logger
-     *
-     * @param level - LogLevel instance
-     * @see LogLevel
-     */
-    static public void setLogLevel(LogLevel level) {
-        log().setLevel(level.value());
     }
 
     /**

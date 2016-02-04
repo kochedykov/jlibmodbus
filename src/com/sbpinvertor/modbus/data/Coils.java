@@ -30,7 +30,7 @@ public interface Coils {
 
     boolean[] getRange(int offset, int quantity) throws IllegalDataAddressException, IllegalDataValueException;
 
-    void set(int offset, boolean value) throws IllegalDataAddressException, IllegalDataValueException;
+    void set(int offset, boolean value) throws IllegalDataAddressException;
 
     void setRange(int offset, boolean[] range) throws IllegalDataAddressException, IllegalDataValueException;
 }

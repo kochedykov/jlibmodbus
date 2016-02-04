@@ -31,7 +31,7 @@ import java.io.IOException;
  * email: vladislav.kochedykov@gmail.com
  */
 
-abstract public class ModbusMessage implements Transportable {
+abstract public class ModbusMessage {
 
     final private int serverAddress;
     private int protocolId = Modbus.PROTOCOL_ID;

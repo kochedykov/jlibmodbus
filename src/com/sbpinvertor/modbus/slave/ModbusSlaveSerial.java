@@ -31,8 +31,8 @@ import java.io.IOException;
 public class ModbusSlaveSerial extends ModbusSlave {
 
     final private ModbusConnection conn;
+    final private RequestHandler requestHandler;
     private Thread thread = null;
-    private RequestHandler requestHandler;
 
     public ModbusSlaveSerial(ModbusConnectionSerial conn) {
         this.conn = conn;
