@@ -1,5 +1,6 @@
 package com.sbpinvertor.modbus.slave;
 
+import com.sbpinvertor.modbus.Modbus;
 import com.sbpinvertor.modbus.ModbusSlave;
 import com.sbpinvertor.modbus.exception.ModbusSlaveException;
 import com.sbpinvertor.modbus.msg.base.ModbusRequest;
@@ -48,7 +49,7 @@ public class RequestHandler implements Runnable {
                 ModbusRequest request = (ModbusRequest) conn.getTransport().readRequest();
                 conn.getTransport().send(request.getResponse(slave.getDataHolder()));
             } catch (Exception e) {
-                e.printStackTrace();
+                Modbus.log().fine("Request timeout(no clients connected)");
             }
         } while (isListening());
     }

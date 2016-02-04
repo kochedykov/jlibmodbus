@@ -59,4 +59,8 @@ public class ModbusSlaveSerial extends ModbusSlave {
         }
         conn.close();
     }
+
+    public ModbusConnection getConn() {
+        return conn;
+    }
 }
