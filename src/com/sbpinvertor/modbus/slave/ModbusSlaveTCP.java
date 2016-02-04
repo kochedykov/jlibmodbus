@@ -1,9 +1,16 @@
 package com.sbpinvertor.modbus.slave;
 
 import com.sbpinvertor.modbus.ModbusSlave;
+import com.sbpinvertor.modbus.net.ModbusConnection;
+import com.sbpinvertor.modbus.net.ModbusSlaveConnectionTCP;
 import com.sbpinvertor.modbus.tcp.TcpParameters;
 
 import java.io.IOException;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Copyright (c) 2015-2016 JSC "Zavod "Invertor"
@@ -27,27 +34,69 @@ import java.io.IOException;
  * Authors: Vladislav Y. Kochedykov, software engineer.
  * email: vladislav.kochedykov@gmail.com
  */
-public class ModbusSlaveTCP extends ModbusSlave {
+public class ModbusSlaveTCP extends ModbusSlave implements Runnable {
 
-    public ModbusSlaveTCP(TcpParameters parameters) {
+    final static public int DEFAULT_POOLS_SIZE = 10;
+    final private ExecutorService threadPool;
+    final private TcpParameters tcp;
+    private Thread mainThread = null;
+    private ServerSocket server = null;
+    private volatile boolean listening = false;
 
+    public ModbusSlaveTCP(TcpParameters tcp) {
+        this(tcp, DEFAULT_POOLS_SIZE);
     }
 
-    public ModbusSlaveTCP(String host, int port) {
-
-    }
-
-    public ModbusSlaveTCP(String host) {
-
+    public ModbusSlaveTCP(TcpParameters tcp, int poolsSize) {
+        this.tcp = new TcpParameters(tcp);
+        threadPool = Executors.newFixedThreadPool(poolsSize);
     }
 
     @Override
     public void open() throws IOException {
-
+        server = new ServerSocket(tcp.getPort());
+        listening = true;
+        mainThread = new Thread(this);
+        mainThread.start();
     }
 
     @Override
     public void close() throws IOException {
+        listening = false;
+        server.close();
+        threadPool.shutdown();
+        try {
+            threadPool.awaitTermination(1, TimeUnit.SECONDS);
+        } catch (InterruptedException e) {
+            threadPool.shutdownNow();
+        }
+        server = null;
+        try {
+            mainThread.join(100);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
 
+    @Override
+    public void run() {
+        Socket client;
+        ModbusConnection conn;
+        try {
+            while (listening) {
+                client = server.accept();
+                conn = new ModbusSlaveConnectionTCP(client);
+                conn.setReadTimeout(10000);
+                threadPool.execute(new RequestHandlerTCP(this, conn));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }

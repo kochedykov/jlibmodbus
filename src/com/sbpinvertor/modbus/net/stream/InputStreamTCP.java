@@ -61,4 +61,9 @@ public class InputStreamTCP extends ModbusInputStream {
     public void reset() {
         //dummy
     }
+
+    @Override
+    public void setReadTimeout(int readTimeout) {
+        //no op
+    }
 }

@@ -1,8 +1,11 @@
 package com.sbpinvertor.modbus.slave;
 
+import com.sbpinvertor.modbus.Modbus;
 import com.sbpinvertor.modbus.ModbusSlave;
+import com.sbpinvertor.modbus.data.DataHolder;
+import com.sbpinvertor.modbus.msg.base.ModbusRequest;
 import com.sbpinvertor.modbus.net.ModbusConnection;
-import com.sbpinvertor.modbus.net.ModbusConnectionSerial;
+import com.sbpinvertor.modbus.net.ModbusTransport;
 
 import java.io.IOException;
 
@@ -28,39 +31,31 @@ import java.io.IOException;
  * Authors: Vladislav Y. Kochedykov, software engineer.
  * email: vladislav.kochedykov@gmail.com
  */
-public class ModbusSlaveSerial extends ModbusSlave {
+public class RequestHandlerTCP extends RequestHandler {
 
-    final private ModbusConnection conn;
-    final private RequestHandler requestHandler;
-    private Thread thread = null;
-
-    public ModbusSlaveSerial(ModbusConnectionSerial conn) {
-        this.conn = conn;
-        this.requestHandler = new RequestHandlerSerial(this, conn);
+    public RequestHandlerTCP(ModbusSlave slave, ModbusConnection conn) {
+        super(slave, conn);
     }
 
     @Override
-    public void open() throws IOException {
-        close();
-        conn.open();
-        thread = new Thread(requestHandler);
-        thread.start();
-    }
-
-    @Override
-    public void close() throws IOException {
-        requestHandler.setListening(false);
+    public void run() {
+        setListening(true);
         try {
-            if (thread != null)
-                thread.join(1000);
-            thread = null;
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+            do {
+                DataHolder dataHolder = getSlave().getDataHolder();
+                ModbusTransport transport = getConn().getTransport();
+                ModbusRequest request = (ModbusRequest) transport.readRequest();
+                transport.send(request.getResponse(dataHolder));
+            } while (isListening());
+        } catch (Exception e) {
+            //
+        } finally {
+            setListening(false);
+            try {
+                getConn().close();
+            } catch (IOException ioe) {
+                Modbus.log().warning(ioe.getMessage());
+            }
         }
-        conn.close();
-    }
-
-    public ModbusConnection getConn() {
-        return conn;
     }
 }

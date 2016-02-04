@@ -1,6 +1,5 @@
 package com.sbpinvertor.modbus.net.stream.base;
 
-import com.sbpinvertor.modbus.Modbus;
 import com.sbpinvertor.modbus.utils.DataUtils;
 
 import java.io.IOException;
@@ -29,8 +28,6 @@ import java.io.InputStream;
  * email: vladislav.kochedykov@gmail.com
  */
 abstract public class ModbusInputStream extends InputStream {
-    private int readTimeout = Modbus.MAX_RESPONSE_TIMEOUT;
-
     abstract public int read() throws IOException;
 
     abstract public int read(byte[] b, int off, int len) throws IOException;
@@ -41,13 +38,7 @@ abstract public class ModbusInputStream extends InputStream {
 
     abstract public void reset();
 
-    final public int getReadTimeout() {
-        return readTimeout;
-    }
-
-    final public void setReadTimeout(int readTimeout) {
-        this.readTimeout = readTimeout;
-    }
+    abstract public void setReadTimeout(int readTimeout);
 
     public int readShortBE() throws IOException {
         int h = read();

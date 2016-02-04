@@ -1,9 +1,6 @@
 package com.sbpinvertor.modbus.slave;
 
-import com.sbpinvertor.modbus.Modbus;
 import com.sbpinvertor.modbus.ModbusSlave;
-import com.sbpinvertor.modbus.exception.ModbusSlaveException;
-import com.sbpinvertor.modbus.msg.base.ModbusRequest;
 import com.sbpinvertor.modbus.net.ModbusConnection;
 
 /**
@@ -28,7 +25,7 @@ import com.sbpinvertor.modbus.net.ModbusConnection;
  * Authors: Vladislav Y. Kochedykov, software engineer.
  * email: vladislav.kochedykov@gmail.com
  */
-public class RequestHandler implements Runnable {
+abstract public class RequestHandler implements Runnable {
 
     final private ModbusSlave slave;
     final private ModbusConnection conn;
@@ -39,26 +36,19 @@ public class RequestHandler implements Runnable {
         this.conn = conn;
     }
 
-    @Override
-    public void run() {
-        setListening(true);
-        do {
-            try {
-                if (slave.getDataHolder() == null)
-                    throw new ModbusSlaveException("DataHolder is null");
-                ModbusRequest request = (ModbusRequest) conn.getTransport().readRequest();
-                conn.getTransport().send(request.getResponse(slave.getDataHolder()));
-            } catch (Exception e) {
-                Modbus.log().fine("Request timeout(no clients connected)");
-            }
-        } while (isListening());
-    }
-
     public boolean isListening() {
         return listening;
     }
 
     public void setListening(boolean listening) {
         this.listening = listening;
+    }
+
+    public ModbusSlave getSlave() {
+        return slave;
+    }
+
+    public ModbusConnection getConn() {
+        return conn;
     }
 }

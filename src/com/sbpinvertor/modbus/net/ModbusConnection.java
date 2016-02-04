@@ -41,13 +41,7 @@ abstract public class ModbusConnection {
 
     abstract public void reset() throws IOException;
 
-    public void setReadTimeout(int timeout) {
-        getInputStream().setReadTimeout(timeout);
-    }
-
-    public int getTimeout() {
-        return getInputStream().getReadTimeout();
-    }
+    abstract public void setReadTimeout(int timeout);
 
     @Override
     protected void finalize()

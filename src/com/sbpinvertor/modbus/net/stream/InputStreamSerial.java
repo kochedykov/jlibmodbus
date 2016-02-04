@@ -1,5 +1,6 @@
 package com.sbpinvertor.modbus.net.stream;
 
+import com.sbpinvertor.modbus.Modbus;
 import com.sbpinvertor.modbus.net.stream.base.ModbusInputStream;
 import com.sbpinvertor.modbus.serial.SerialPort;
 
@@ -28,8 +29,8 @@ import java.io.IOException;
  * email: vladislav.kochedykov@gmail.com
  */
 abstract public class InputStreamSerial extends ModbusInputStream {
-
     final private SerialPort serial;
+    private int timeout = Modbus.MAX_RESPONSE_TIMEOUT;
 
     InputStreamSerial(SerialPort serial) {
         this.serial = serial;
@@ -37,7 +38,7 @@ abstract public class InputStreamSerial extends ModbusInputStream {
 
     @Override
     public int read() throws IOException {
-        return serial.readByte(getReadTimeout()) & 0xff;
+        return serial.readByte(timeout) & 0xff;
     }
 
     @Override
@@ -48,5 +49,10 @@ abstract public class InputStreamSerial extends ModbusInputStream {
     @Override
     public void reset() {
 
+    }
+
+    @Override
+    public void setReadTimeout(int readTimeout) {
+        timeout = readTimeout;
     }
 }

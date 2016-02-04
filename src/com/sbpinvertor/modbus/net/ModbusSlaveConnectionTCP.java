@@ -78,10 +78,6 @@ public class ModbusSlaveConnectionTCP extends ModbusConnection {
         }
     }
 
-    public int getReadTimeout() {
-        return readTimeout;
-    }
-
     @Override
     public void setReadTimeout(int timeout) {
         readTimeout = timeout;

@@ -27,6 +27,12 @@ public class TcpParameters {
     final private int port;
     final private boolean keepAlive;
 
+    public TcpParameters(TcpParameters p) {
+        this.host = p.host;
+        this.port = p.port;
+        this.keepAlive = p.keepAlive;
+    }
+
     public TcpParameters(String host, int port, boolean keepAlive) {
         this.host = host;
         this.port = port;

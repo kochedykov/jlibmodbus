@@ -82,13 +82,16 @@ final public class TcpAduHeader {
 
     public void read(ModbusInputStream fifo) throws ModbusNumberException, IOException {
         int size;
-        if ((size = fifo.read(byteArray())) < buffer.length)
-            Modbus.log().warning(buffer.length + " bytes expected, but " + size + " received.");
-        if (getPduSize() < Modbus.MIN_PDU_LENGTH) {
-            throw new ModbusNumberException("the PDU length is less than the minimum expected.", getPduSize());
-        }
-        if (getPduSize() > Modbus.MAX_PDU_LENGTH) {
-            throw new ModbusNumberException("Maximum PDU size is reached.", getPduSize());
+        if ((size = fifo.read(byteArray())) > 0) {
+
+            if (getPduSize() < Modbus.MIN_PDU_LENGTH) {
+                throw new ModbusNumberException("the PDU length is less than the minimum expected.", getPduSize());
+            }
+            if (getPduSize() > Modbus.MAX_PDU_LENGTH) {
+                throw new ModbusNumberException("Maximum PDU size is reached.", getPduSize());
+            }
+        } else {
+            throw new IOException(buffer.length + " bytes expected, but " + size + " received.");
         }
     }
 }
