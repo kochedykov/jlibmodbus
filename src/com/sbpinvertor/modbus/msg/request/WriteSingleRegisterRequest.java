@@ -89,6 +89,6 @@ public class WriteSingleRegisterRequest extends AbstractDataRequest {
     }
 
     public void setValue(int value) {
-        this.value = value;
+        this.value = ((short) value) & 0xffff;
     }
 }

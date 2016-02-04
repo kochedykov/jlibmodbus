@@ -46,7 +46,7 @@ public class DataHolder {
         return holdingRegisters.get(offset);
     }
 
-    public int[] readHoldingRegisterRange(int offset, int quantity) throws IllegalDataAddressException {
+    public int[] readHoldingRegisterRange(int offset, int quantity) throws IllegalDataAddressException, IllegalDataValueException {
         checkPointer(holdingRegisters, offset);
         return holdingRegisters.getRange(offset, quantity);
     }
@@ -66,7 +66,7 @@ public class DataHolder {
         return inputRegisters.get(offset);
     }
 
-    public int[] readInputRegisterRange(int offset, int quantity) throws IllegalDataAddressException {
+    public int[] readInputRegisterRange(int offset, int quantity) throws IllegalDataAddressException, IllegalDataValueException {
         checkPointer(inputRegisters, offset);
         return inputRegisters.getRange(offset, quantity);
     }

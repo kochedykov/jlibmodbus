@@ -37,7 +37,7 @@ public final class WriteSingleCoilRequest extends WriteSingleRegisterRequest {
     }
 
     public WriteSingleCoilRequest(int serverAddress, int startAddress, boolean coil) throws ModbusNumberException {
-        super(serverAddress, startAddress, coil ? Modbus.COIL_VALUE_ON : Modbus.COIL_VALUE_OFF);
+        super(serverAddress, startAddress, Modbus.fromCoil(coil));
     }
 
     @Override
@@ -53,7 +53,7 @@ public final class WriteSingleCoilRequest extends WriteSingleRegisterRequest {
     }
 
     public boolean getCoil() {
-        return (getValue() == Modbus.COIL_VALUE_ON);
+        return Modbus.toCoil(getValue());
     }
 
     @Override

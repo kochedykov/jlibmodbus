@@ -33,7 +33,7 @@ public class WriteSingleCoilResponse extends WriteSingleRegisterResponse {
     }
 
     public WriteSingleCoilResponse(int serverAddress, int startAddress, boolean coil) throws ModbusNumberException {
-        super(serverAddress, startAddress, coil ? Modbus.COIL_VALUE_ON : Modbus.COIL_VALUE_OFF);
+        super(serverAddress, startAddress, Modbus.fromCoil(coil));
     }
 
     @Override

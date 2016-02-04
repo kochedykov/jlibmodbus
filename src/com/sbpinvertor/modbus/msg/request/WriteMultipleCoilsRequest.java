@@ -70,7 +70,8 @@ final public class WriteMultipleCoilsRequest extends AbstractWriteMultipleReques
 
     @Override
     public void readData(ModbusInputStream fifo) throws IOException, ModbusNumberException {
-        if (Math.ceil(getQuantity() / 8) != getByteCount()) {
+        super.readData(fifo);
+        if (Math.ceil((double) getQuantity() / 8) != getByteCount()) {
             throw new ModbusNumberException("Byte count not matches quantity/8", getByteCount());
         }
 

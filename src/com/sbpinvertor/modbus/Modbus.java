@@ -79,6 +79,26 @@ final public class Modbus {
     }
 
     /**
+     * converts ON/OFF value to boolean
+     *
+     * @param s 0xFF00 of 0x0000
+     * @return true if s equals 0xFF00, else false
+     */
+    static public boolean toCoil(int s) {
+        return (((short) s) & 0xffff) == Modbus.COIL_VALUE_ON;
+    }
+
+    /**
+     * converts boolean to ON/OFF value
+     *
+     * @param c a coil value
+     * @return 0xFF00 if coil value is true, else 0x0000
+     */
+    static public int fromCoil(boolean c) {
+        return c ? Modbus.COIL_VALUE_ON : Modbus.COIL_VALUE_OFF;
+    }
+
+    /**
      * validates address of server
      *
      * @param serverAddress - The modbus server address

@@ -42,11 +42,13 @@ public class ModbusTransportRTU extends ModbusTransport {
     protected ModbusMessage read(ModbusMessageFactory factory) throws ModbusNumberException, IOException, ModbusProtocolException {
         InputStreamRTU is = (InputStreamRTU) getInputStream();
         ModbusMessage msg = factory.createMessage(is);
-        int crc = is.readShortLE();
+        int r_crc = is.readShortLE();
         // crc from the same crc equals zero
-        if (is.getCrc() != 0 || crc == 0)
-            throw new ModbusNumberException("control sum check failed.", crc);
+        int c_crc = is.getCrc();
         is.reset();
+        if (c_crc != 0 || r_crc == 0) {
+            throw new ModbusNumberException("control sum check failed.", r_crc);
+        }
         return msg;
     }
 

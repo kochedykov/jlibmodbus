@@ -47,7 +47,7 @@ public class ReadCoilsResponse extends AbstractReadResponse {
     }
 
     static private int calcByteCount(boolean[] coils) {
-        return (int) Math.ceil(coils.length / 8);
+        return (int) Math.ceil((double) coils.length / 8);
     }
 
     final public boolean[] getCoils() {
