@@ -5,7 +5,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * Copyright (c) 2015-2016 JSC "Zavod "Invertor"
+ * Copyright (c) 2015-2016 JSC Invertor
  * [http://www.sbp-invertor.ru]
  * <p/>
  * This file is part of JLibModbus.

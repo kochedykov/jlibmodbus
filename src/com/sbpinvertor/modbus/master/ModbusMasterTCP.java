@@ -15,7 +15,7 @@ import com.sbpinvertor.modbus.utils.ModbusExceptionCode;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
- * Copyright (c) 2015-2016 JSC "Zavod "Invertor"
+ * Copyright (c) 2015-2016 JSC Invertor
  * [http://www.sbp-invertor.ru]
  * <p/>
  * This file is part of JLibModbus.

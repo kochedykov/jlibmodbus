@@ -3,7 +3,7 @@ package com.sbpinvertor.modbus.serial;
 import java.io.IOException;
 
 /**
- * Copyright (c) 2015-2016 JSC "Zavod "Invertor"
+ * Copyright (c) 2015-2016 JSC Invertor
  * [http://www.sbp-invertor.ru]
  * <p/>
  * This file is part of JUniMonitor.

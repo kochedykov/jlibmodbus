@@ -16,7 +16,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Copyright (c) 2015-2016 JSC "Zavod "Invertor"
+ * Copyright (c) 2015-2016 JSC Invertor
  * [http://www.sbp-invertor.ru]
  * <p/>
  * This file is part of JLibModbus.

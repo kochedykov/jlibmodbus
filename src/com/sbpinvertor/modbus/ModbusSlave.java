@@ -5,7 +5,7 @@ import com.sbpinvertor.modbus.data.DataHolderBuilder;
 import com.sbpinvertor.modbus.exception.ModbusIOException;
 
 /**
- * Copyright (c) 2015-2016 JSC "Zavod "Invertor"
+ * Copyright (c) 2015-2016 JSC Invertor
  * [http://www.sbp-invertor.ru]
  * <p/>
  * This file is part of JLibModbus.
@@ -56,12 +56,12 @@ abstract public class ModbusSlave {
         return dataHolder;
     }
 
-    public void setDataHolder(DataHolder dataHolder) {
-        this.dataHolder = dataHolder;
-    }
-
     public void setDataHolder(DataHolderBuilder builder) {
         setDataHolder(builder.build());
+    }
+
+    public void setDataHolder(DataHolder dataHolder) {
+        this.dataHolder = dataHolder;
     }
 
     public int getServerAddress() {
