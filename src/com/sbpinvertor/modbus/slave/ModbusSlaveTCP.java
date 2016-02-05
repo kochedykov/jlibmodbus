@@ -86,9 +86,15 @@ public class ModbusSlaveTCP extends ModbusSlave implements Runnable {
             threadPool.shutdownNow();
         }
         try {
-            mainThread.join(100);
+            if (mainThread != null) {
+                mainThread.join(2000);
+                if (mainThread.isAlive())
+                    mainThread.interrupt();
+            }
         } catch (InterruptedException e) {
             e.printStackTrace();
+        } finally {
+            mainThread = null;
         }
     }
 

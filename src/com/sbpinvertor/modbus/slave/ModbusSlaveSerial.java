@@ -31,7 +31,7 @@ public class ModbusSlaveSerial extends ModbusSlave {
 
     final private ModbusConnection conn;
     final private RequestHandler requestHandler;
-    private Thread thread = null;
+    private Thread mainThread = null;
 
     public ModbusSlaveSerial(ModbusConnectionSerial conn) {
         this.conn = conn;
@@ -42,17 +42,20 @@ public class ModbusSlaveSerial extends ModbusSlave {
     public void open() throws ModbusIOException {
         close();
         conn.open();
-        thread = new Thread(requestHandler);
-        thread.start();
+        mainThread = new Thread(requestHandler);
+        mainThread.start();
     }
 
     @Override
     public void close() throws ModbusIOException {
         requestHandler.setListening(false);
         try {
-            if (thread != null)
-                thread.join(1000);
-            thread = null;
+            if (mainThread != null) {
+                mainThread.join(2000);
+                if (mainThread.isAlive())
+                    mainThread.interrupt();
+            }
+            mainThread = null;
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
