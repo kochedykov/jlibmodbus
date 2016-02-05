@@ -2,8 +2,10 @@ package com.sbpinvertor.modbus.msg.request;
 
 import com.sbpinvertor.modbus.data.DataHolder;
 import com.sbpinvertor.modbus.exception.ModbusNumberException;
+import com.sbpinvertor.modbus.exception.ModbusProtocolException;
 import com.sbpinvertor.modbus.msg.base.ModbusRequest;
 import com.sbpinvertor.modbus.msg.base.ModbusResponse;
+import com.sbpinvertor.modbus.msg.response.ReportSlaveIdResponse;
 import com.sbpinvertor.modbus.net.stream.base.ModbusInputStream;
 import com.sbpinvertor.modbus.net.stream.base.ModbusOutputStream;
 import com.sbpinvertor.modbus.utils.ModbusFunctionCode;
@@ -50,8 +52,15 @@ final public class ReportSlaveIdRequest extends ModbusRequest {
 
     @Override
     public ModbusResponse getResponse(DataHolder dataHolder) throws ModbusNumberException {
-        /*TODO*/
-        return null;
+        ReportSlaveIdResponse response = new ReportSlaveIdResponse(getServerAddress());
+        try {
+            byte[] slaveId = dataHolder.readSlaveId();
+            response.setSlaveId(slaveId);
+        } catch (ModbusProtocolException e) {
+            response.setException();
+            response.setModbusExceptionCode(e.getException().getValue());
+        }
+        return response;
     }
 
     @Override

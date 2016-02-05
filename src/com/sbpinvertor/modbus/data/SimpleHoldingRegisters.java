@@ -64,7 +64,7 @@ public class SimpleHoldingRegisters implements HoldingRegisters {
     @Override
     public int[] getRange(int offset, int quantity) throws IllegalDataAddressException, IllegalDataValueException {
         if (!Modbus.checkReadRegisterCount(quantity))
-            throw new IllegalDataValueException(offset);
+            throw new IllegalDataValueException();
         checkRange(offset, quantity);
         return Arrays.copyOfRange(registers, offset, offset + quantity);
     }
@@ -81,6 +81,6 @@ public class SimpleHoldingRegisters implements HoldingRegisters {
 
     private void checkValue(int value) throws IllegalDataValueException {
         if (!Modbus.checkRegisterValue(value))
-            throw new IllegalDataValueException(value);
+            throw new IllegalDataValueException();
     }
 }

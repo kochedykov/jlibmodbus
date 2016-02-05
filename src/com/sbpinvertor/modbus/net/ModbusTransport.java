@@ -44,7 +44,7 @@ abstract public class ModbusTransport {
         this.os = os;
     }
 
-    public ModbusMessage readRequest() throws ModbusNumberException, ModbusIOException, ModbusProtocolException {
+    public ModbusMessage readRequest() throws ModbusNumberException, ModbusIOException {
         return read(ModbusRequestFactory.getInstance());
     }
 
@@ -69,7 +69,7 @@ abstract public class ModbusTransport {
         return os;
     }
 
-    abstract protected ModbusMessage read(ModbusMessageFactory factory) throws ModbusNumberException, ModbusProtocolException, ModbusIOException;
+    abstract protected ModbusMessage read(ModbusMessageFactory factory) throws ModbusNumberException, ModbusIOException;
 
     abstract protected void sendImpl(ModbusMessage msg) throws ModbusIOException;
 }

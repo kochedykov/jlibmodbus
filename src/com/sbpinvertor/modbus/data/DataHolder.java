@@ -2,6 +2,8 @@ package com.sbpinvertor.modbus.data;
 
 import com.sbpinvertor.modbus.exception.IllegalDataAddressException;
 import com.sbpinvertor.modbus.exception.IllegalDataValueException;
+import com.sbpinvertor.modbus.exception.IllegalFunctionException;
+import com.sbpinvertor.modbus.utils.ModbusFunctionCode;
 
 /**
  * Copyright (c) 2015-2016 JSC "Zavod "Invertor"
@@ -35,6 +37,8 @@ public class DataHolder {
     private Coils discreteInputs = null;
     private HoldingRegisters holdingRegisters = null;
     private HoldingRegisters inputRegisters = null;
+    private SlaveId slaveId = null;
+    private ExceptionStatus exceptionStatus = null;
 
     private void checkPointer(Object o, int offset) throws IllegalDataAddressException {
         if (o == null)
@@ -61,19 +65,9 @@ public class DataHolder {
         holdingRegisters.setRange(offset, range);
     }
 
-    public int readInputRegister(int offset) throws IllegalDataAddressException {
-        checkPointer(inputRegisters, offset);
-        return inputRegisters.get(offset);
-    }
-
     public int[] readInputRegisterRange(int offset, int quantity) throws IllegalDataAddressException, IllegalDataValueException {
         checkPointer(inputRegisters, offset);
         return inputRegisters.getRange(offset, quantity);
-    }
-
-    public boolean readCoil(int offset) throws IllegalDataAddressException {
-        checkPointer(coils, offset);
-        return coils.get(offset);
     }
 
     public boolean[] readCoilRange(int offset, int quantity) throws IllegalDataAddressException, IllegalDataValueException {
@@ -91,9 +85,16 @@ public class DataHolder {
         coils.setRange(offset, range);
     }
 
-    public boolean readDiscreteInput(int offset) throws IllegalDataAddressException {
-        checkPointer(discreteInputs, offset);
-        return discreteInputs.get(offset);
+    public byte[] readSlaveId() throws IllegalFunctionException {
+        if (slaveId == null)
+            throw new IllegalFunctionException(ModbusFunctionCode.REPORT_SLAVE_ID);
+        return slaveId.get();
+    }
+
+    public int readExceptionStatus() throws IllegalFunctionException {
+        if (exceptionStatus == null)
+            throw new IllegalFunctionException(ModbusFunctionCode.READ_EXCEPTION_STATUS);
+        return exceptionStatus.get();
     }
 
     public boolean[] readDiscreteInputRange(int offset, int quantity) throws IllegalDataAddressException, IllegalDataValueException {
@@ -131,5 +132,21 @@ public class DataHolder {
 
     public void setInputRegisters(HoldingRegisters inputRegisters) {
         this.inputRegisters = inputRegisters;
+    }
+
+    public SlaveId getSlaveId() {
+        return slaveId;
+    }
+
+    public void setSlaveId(SlaveId slaveId) {
+        this.slaveId = slaveId;
+    }
+
+    public ExceptionStatus getExceptionStatus() {
+        return exceptionStatus;
+    }
+
+    public void setExceptionStatus(ExceptionStatus exceptionStatus) {
+        this.exceptionStatus = exceptionStatus;
     }
 }

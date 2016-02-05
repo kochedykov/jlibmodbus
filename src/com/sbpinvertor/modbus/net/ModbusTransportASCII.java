@@ -3,7 +3,6 @@ package com.sbpinvertor.modbus.net;
 import com.sbpinvertor.modbus.Modbus;
 import com.sbpinvertor.modbus.exception.ModbusIOException;
 import com.sbpinvertor.modbus.exception.ModbusNumberException;
-import com.sbpinvertor.modbus.exception.ModbusProtocolException;
 import com.sbpinvertor.modbus.msg.ModbusMessageFactory;
 import com.sbpinvertor.modbus.msg.base.ModbusMessage;
 import com.sbpinvertor.modbus.net.stream.InputStreamASCII;
@@ -41,7 +40,7 @@ public class ModbusTransportASCII extends ModbusTransport {
     }
 
     @Override
-    protected ModbusMessage read(ModbusMessageFactory factory) throws ModbusNumberException, ModbusIOException, ModbusProtocolException {
+    protected ModbusMessage read(ModbusMessageFactory factory) throws ModbusNumberException, ModbusIOException {
         InputStreamASCII is = (InputStreamASCII) getInputStream();
         ModbusMessage msg = factory.createMessage(is);
         int lrc = is.getLrc();

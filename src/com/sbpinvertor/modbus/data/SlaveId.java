@@ -1,9 +1,6 @@
-package com.sbpinvertor.modbus.msg;
+package com.sbpinvertor.modbus.data;
 
-import com.sbpinvertor.modbus.exception.ModbusIOException;
-import com.sbpinvertor.modbus.exception.ModbusNumberException;
-import com.sbpinvertor.modbus.msg.base.ModbusMessage;
-import com.sbpinvertor.modbus.net.stream.base.ModbusInputStream;
+import com.sbpinvertor.modbus.exception.IllegalDataValueException;
 
 /**
  * Copyright (c) 2015-2016 JSC "Zavod "Invertor"
@@ -27,6 +24,8 @@ import com.sbpinvertor.modbus.net.stream.base.ModbusInputStream;
  * Authors: Vladislav Y. Kochedykov, software engineer.
  * email: vladislav.kochedykov@gmail.com
  */
-public interface ModbusMessageFactory {
-    ModbusMessage createMessage(ModbusInputStream fifo) throws ModbusNumberException, ModbusIOException;
+public interface SlaveId {
+    byte[] get();
+
+    void set(byte[] data) throws IllegalDataValueException;
 }

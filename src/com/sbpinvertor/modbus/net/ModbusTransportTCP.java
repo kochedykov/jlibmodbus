@@ -2,7 +2,6 @@ package com.sbpinvertor.modbus.net;
 
 import com.sbpinvertor.modbus.exception.ModbusIOException;
 import com.sbpinvertor.modbus.exception.ModbusNumberException;
-import com.sbpinvertor.modbus.exception.ModbusProtocolException;
 import com.sbpinvertor.modbus.msg.ModbusMessageFactory;
 import com.sbpinvertor.modbus.msg.base.ModbusMessage;
 import com.sbpinvertor.modbus.net.stream.InputStreamTCP;
@@ -42,7 +41,7 @@ public class ModbusTransportTCP extends ModbusTransport {
     }
 
     @Override
-    protected ModbusMessage read(ModbusMessageFactory factory) throws ModbusNumberException, ModbusProtocolException, ModbusIOException {
+    protected ModbusMessage read(ModbusMessageFactory factory) throws ModbusNumberException, ModbusIOException {
         ModbusInputStream is = getInputStream();
         TcpAduHeader header = new TcpAduHeader();
         header.read(is);

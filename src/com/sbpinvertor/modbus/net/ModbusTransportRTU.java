@@ -2,7 +2,6 @@ package com.sbpinvertor.modbus.net;
 
 import com.sbpinvertor.modbus.exception.ModbusIOException;
 import com.sbpinvertor.modbus.exception.ModbusNumberException;
-import com.sbpinvertor.modbus.exception.ModbusProtocolException;
 import com.sbpinvertor.modbus.msg.ModbusMessageFactory;
 import com.sbpinvertor.modbus.msg.base.ModbusMessage;
 import com.sbpinvertor.modbus.net.stream.InputStreamRTU;
@@ -40,7 +39,7 @@ public class ModbusTransportRTU extends ModbusTransport {
     }
 
     @Override
-    protected ModbusMessage read(ModbusMessageFactory factory) throws ModbusNumberException, ModbusIOException, ModbusProtocolException {
+    protected ModbusMessage read(ModbusMessageFactory factory) throws ModbusNumberException, ModbusIOException {
         InputStreamRTU is = (InputStreamRTU) getInputStream();
         ModbusMessage msg = factory.createMessage(is);
         int r_crc;

@@ -4,7 +4,7 @@ import com.sbpinvertor.modbus.Modbus;
 import com.sbpinvertor.modbus.ModbusSlave;
 import com.sbpinvertor.modbus.data.DataHolder;
 import com.sbpinvertor.modbus.exception.ModbusIOException;
-import com.sbpinvertor.modbus.exception.ModbusSlaveException;
+import com.sbpinvertor.modbus.exception.ModbusNumberException;
 import com.sbpinvertor.modbus.msg.base.ModbusRequest;
 import com.sbpinvertor.modbus.net.ModbusConnection;
 import com.sbpinvertor.modbus.net.ModbusTransport;
@@ -44,12 +44,12 @@ public class RequestHandlerSerial extends RequestHandler {
             try {
                 DataHolder dataHolder = getSlave().getDataHolder();
                 ModbusTransport transport = getConn().getTransport();
-                if (dataHolder == null)
-                    throw new ModbusSlaveException("DataHolder is null");
                 ModbusRequest request = (ModbusRequest) transport.readRequest();
                 transport.send(request.getResponse(dataHolder));
-            } catch (Exception e) {
+            } catch (ModbusIOException e) {
                 Modbus.log().fine("Request timeout(no clients connected)");
+            } catch (ModbusNumberException e) {
+                Modbus.log().warning(e.getLocalizedMessage());
             }
         } while (isListening());
         try {

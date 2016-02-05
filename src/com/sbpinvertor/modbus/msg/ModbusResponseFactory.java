@@ -2,12 +2,10 @@ package com.sbpinvertor.modbus.msg;
 
 import com.sbpinvertor.modbus.exception.ModbusIOException;
 import com.sbpinvertor.modbus.exception.ModbusNumberException;
-import com.sbpinvertor.modbus.exception.ModbusProtocolException;
 import com.sbpinvertor.modbus.msg.base.ModbusMessage;
 import com.sbpinvertor.modbus.msg.base.ModbusResponse;
 import com.sbpinvertor.modbus.msg.response.*;
 import com.sbpinvertor.modbus.net.stream.base.ModbusInputStream;
-import com.sbpinvertor.modbus.utils.ModbusExceptionCode;
 import com.sbpinvertor.modbus.utils.ModbusFunctionCode;
 
 import java.io.IOException;
@@ -89,7 +87,7 @@ final public class ModbusResponseFactory implements ModbusMessageFactory {
     }
 
     @Override
-    public ModbusMessage createMessage(ModbusInputStream fifo) throws ModbusNumberException, ModbusIOException, ModbusProtocolException {
+    public ModbusMessage createMessage(ModbusInputStream fifo) throws ModbusNumberException, ModbusIOException {
         ModbusResponse msg;
         int serverAddress;
         int functionCode;
@@ -146,7 +144,7 @@ final public class ModbusResponseFactory implements ModbusMessageFactory {
             case CAN_OPEN_PDU:
             case READ_DEVICE_IDENTIFICATION:
             default:
-                throw new ModbusProtocolException(ModbusExceptionCode.ILLEGAL_FUNCTION);
+                throw new ModbusIOException("Illegal function code");
         }
         if (ModbusFunctionCode.isException(functionCode)) {
             msg.setException();

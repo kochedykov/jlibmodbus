@@ -1,9 +1,4 @@
-package com.sbpinvertor.modbus.msg;
-
-import com.sbpinvertor.modbus.exception.ModbusIOException;
-import com.sbpinvertor.modbus.exception.ModbusNumberException;
-import com.sbpinvertor.modbus.msg.base.ModbusMessage;
-import com.sbpinvertor.modbus.net.stream.base.ModbusInputStream;
+package com.sbpinvertor.modbus.data;
 
 /**
  * Copyright (c) 2015-2016 JSC "Zavod "Invertor"
@@ -27,6 +22,25 @@ import com.sbpinvertor.modbus.net.stream.base.ModbusInputStream;
  * Authors: Vladislav Y. Kochedykov, software engineer.
  * email: vladislav.kochedykov@gmail.com
  */
-public interface ModbusMessageFactory {
-    ModbusMessage createMessage(ModbusInputStream fifo) throws ModbusNumberException, ModbusIOException;
+public class SimpleExceptionStatus implements ExceptionStatus {
+
+    int value;
+
+    public SimpleExceptionStatus() {
+        this(0);
+    }
+
+    public SimpleExceptionStatus(int value) {
+        set(value);
+    }
+
+    @Override
+    public int get() {
+        return value;
+    }
+
+    @Override
+    public void set(int value) {
+        this.value = value;
+    }
 }

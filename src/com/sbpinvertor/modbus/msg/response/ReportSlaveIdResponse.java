@@ -49,6 +49,10 @@ final public class ReportSlaveIdResponse extends AbstractReadResponse {
         return slaveId;
     }
 
+    public void setSlaveId(byte[] slaveId) {
+        this.slaveId = slaveId;
+    }
+
     @Override
     protected void readData(ModbusInputStream fifo) throws IOException {
         slaveId = new byte[getByteCount()];
