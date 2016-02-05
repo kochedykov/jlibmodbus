@@ -4,8 +4,7 @@ import com.sbpinvertor.modbus.Modbus;
 import com.sbpinvertor.modbus.ModbusSlave;
 import com.sbpinvertor.modbus.ModbusSlaveFactory;
 import com.sbpinvertor.modbus.data.DataHolder;
-import com.sbpinvertor.modbus.data.SimpleCoils;
-import com.sbpinvertor.modbus.data.SimpleHoldingRegisters;
+import com.sbpinvertor.modbus.data.SimpleDataHolderBuilder;
 import com.sbpinvertor.modbus.exception.IllegalDataAddressException;
 import com.sbpinvertor.modbus.exception.IllegalDataValueException;
 import com.sbpinvertor.modbus.exception.ModbusIOException;
@@ -159,13 +158,10 @@ public class ModbusSlaveTest {
         }
 
         slave.setServerAddress(1);
-        DataHolder dataHolder = new DataHolder();//or slave.getDataHolder();
-        dataHolder.setInputRegisters(new SimpleHoldingRegisters(1000));
-        dataHolder.setHoldingRegisters(new SimpleHoldingRegisters(1000));
-        dataHolder.setDiscreteInputs(new SimpleCoils(1000));
-        dataHolder.setCoils(new SimpleCoils(1000));
+        slave.setDataHolder(new SimpleDataHolderBuilder(1000));
 
         try {
+            DataHolder dataHolder = slave.getDataHolder();
             dataHolder.getCoils().set(1, true);
             dataHolder.getCoils().set(3, true);
             dataHolder.getDiscreteInputs().setRange(0, new boolean[]{false, true, true, false, true});
@@ -177,7 +173,6 @@ public class ModbusSlaveTest {
             e.printStackTrace();
         }
 
-        slave.setDataHolder(dataHolder);//if new DataHolder instance has been created.
         try {
             slave.open();
             while (true) {

@@ -1,6 +1,7 @@
 package com.sbpinvertor.modbus;
 
 import com.sbpinvertor.modbus.data.DataHolder;
+import com.sbpinvertor.modbus.data.DataHolderBuilder;
 import com.sbpinvertor.modbus.exception.ModbusIOException;
 
 /**
@@ -57,6 +58,10 @@ abstract public class ModbusSlave {
 
     public void setDataHolder(DataHolder dataHolder) {
         this.dataHolder = dataHolder;
+    }
+
+    public void setDataHolder(DataHolderBuilder builder) {
+        setDataHolder(builder.build());
     }
 
     public int getServerAddress() {

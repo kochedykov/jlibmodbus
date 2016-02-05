@@ -2,8 +2,7 @@ package com.sbpinvertor.tests.modbus;
 
 import com.sbpinvertor.modbus.*;
 import com.sbpinvertor.modbus.data.DataHolder;
-import com.sbpinvertor.modbus.data.SimpleCoils;
-import com.sbpinvertor.modbus.data.SimpleHoldingRegisters;
+import com.sbpinvertor.modbus.data.SimpleDataHolderBuilder;
 import com.sbpinvertor.modbus.exception.IllegalDataAddressException;
 import com.sbpinvertor.modbus.exception.IllegalDataValueException;
 import com.sbpinvertor.modbus.exception.ModbusIOException;
@@ -190,13 +189,10 @@ public class ModbusTest implements Runnable {
         test.master.setResponseTimeout(1000);
 
         test.slave.setServerAddress(1);
-        DataHolder dataHolder = new DataHolder();//or slave.getDataHolder();
-        dataHolder.setInputRegisters(new SimpleHoldingRegisters(1000));
-        dataHolder.setHoldingRegisters(new SimpleHoldingRegisters(1000));
-        dataHolder.setDiscreteInputs(new SimpleCoils(1000));
-        dataHolder.setCoils(new SimpleCoils(1000));
+        test.slave.setDataHolder(new SimpleDataHolderBuilder(1000));
 
         try {
+            DataHolder dataHolder = test.slave.getDataHolder();
             dataHolder.getCoils().set(1, true);
             dataHolder.getCoils().set(3, true);
             dataHolder.getDiscreteInputs().setRange(0, new boolean[]{false, true, true, false, true});
