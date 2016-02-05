@@ -133,7 +133,7 @@ public class SerialPort {
                     return par;
                 }
             }
-            throw new NumberFormatException("Illegal parity value:" + value);
+            throw new IllegalArgumentException("Illegal parity value:" + value);
         }
 
         public int getValue() {
@@ -167,7 +167,7 @@ public class SerialPort {
                     return br;
                 }
             }
-            throw new NumberFormatException("Illegal baud rate value:" + value);
+            throw new IllegalArgumentException("Illegal baud rate value:" + value);
         }
 
         public int getValue() {
