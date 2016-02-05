@@ -1,6 +1,6 @@
 package com.sbpinvertor.modbus;
 
-import java.util.logging.ConsoleHandler;
+import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -50,11 +50,9 @@ final public class Modbus {
     final static public int COIL_VALUE_ON = 0xff00;
     final static public int COIL_VALUE_OFF = 0x0000;
     final static private Logger log = Logger.getLogger(Modbus.class.getName());
-    final static private ConsoleHandler log_handler = new ConsoleHandler();
 
     static {
         setLogLevel(LogLevel.LEVEL_RELEASE);
-        log.addHandler(log_handler);
     }
 
     private Modbus() {
@@ -68,7 +66,9 @@ final public class Modbus {
      */
     static public void setLogLevel(LogLevel level) {
         log.setLevel(level.value());
-        log_handler.setLevel(level.value());
+        for (Handler handler : log.getHandlers()) {
+            handler.setLevel(level.value());
+        }
     }
 
     /**
