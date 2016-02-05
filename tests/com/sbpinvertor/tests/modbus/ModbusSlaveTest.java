@@ -125,7 +125,7 @@ public class ModbusSlaveTest {
             case ASCII:
                 device_name = SerialUtils.getPortList()[0];
                 baud_rate = SerialPort.BaudRate.BAUD_RATE_115200;
-                parity = SerialPort.Parity.NONE;
+                parity = SerialPort.Parity.ODD;
                 try {
                     device_name = initParameter("baud_rate", device_name, argv[1], new ParameterInitializer<String>() {
                         @Override
@@ -139,7 +139,7 @@ public class ModbusSlaveTest {
                             return SerialPort.BaudRate.getBaudRate(Integer.decode(arg));
                         }
                     });
-                    parity = initParameter("stop_bits", parity, argv[5], new ParameterInitializer<SerialPort.Parity>() {
+                    parity = initParameter("stop_bits", parity, argv[3], new ParameterInitializer<SerialPort.Parity>() {
                         @Override
                         public SerialPort.Parity init(String arg) throws Exception {
                             return SerialPort.Parity.getParity(Integer.decode(arg));
@@ -182,10 +182,12 @@ public class ModbusSlaveTest {
             slave.open();
             while (true) {
                 Thread.sleep(1000);
-                printRegisters(slave.getDataHolder().getHoldingRegisters().getRange(0, 10));
-                printRegisters(slave.getDataHolder().getInputRegisters().getRange(0, 10));
-                printBits(slave.getDataHolder().getCoils().getRange(0, 10));
-                printBits(slave.getDataHolder().getDiscreteInputs().getRange(0, 10));
+                System.out.println();
+                System.out.println("Slave output");
+                printRegisters("Holding registers", slave.getDataHolder().getHoldingRegisters().getRange(0, 10));
+                printRegisters("Input registers", slave.getDataHolder().getInputRegisters().getRange(0, 10));
+                printBits("Coils", slave.getDataHolder().getCoils().getRange(0, 10));
+                printBits("Discrete inputs", slave.getDataHolder().getDiscreteInputs().getRange(0, 10));
             }
         } catch (InterruptedException e) {
             e.printStackTrace();
@@ -204,20 +206,20 @@ public class ModbusSlaveTest {
         }
     }
 
-    private static void printRegisters(int[] ir) {
+    private static void printRegisters(String title, int[] ir) {
         for (int i : ir)
-            System.out.print(i);
-        System.out.println();
+            System.out.format("%6d", i);
+        System.out.format("\t%s\n", title);
     }
 
-    private static void printBits(boolean[] ir) {
+    private static void printBits(String title, boolean[] ir) {
         for (boolean i : ir)
-            System.out.print(i + " ");
-        System.out.println();
+            System.out.format("%6s", i);
+        System.out.format("\t%s\n", title);
     }
 
     private static void printUsage() {
-        System.out.format("Usage:%s [%s, %s, %s]\n", ModbusMasterTest.class.getCanonicalName(), "tcp", "rtu", "ascii");
+        System.out.format("Usage:%s [%s, %s, %s]\n", ModbusSlaveTest.class.getCanonicalName(), "tcp", "rtu", "ascii");
         System.out.println("Additional parameters:");
         System.out.format("\t%s:\t%s %s\n\t\t%s\n", "TCP",
                 "host", "port",

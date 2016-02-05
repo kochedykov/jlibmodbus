@@ -63,7 +63,7 @@ public class ModbusMasterTest {
                             return InetAddress.getByName(arg).getHostAddress();
                         }
                     });
-                    keepAlive = initParameter("baud_rate", keepAlive, argv[1], new ParameterInitializer<Boolean>() {
+                    keepAlive = initParameter("baud_rate", keepAlive, argv[2], new ParameterInitializer<Boolean>() {
                         @Override
                         public Boolean init(String arg) throws Exception {
                             return Boolean.parseBoolean(arg);
@@ -171,15 +171,16 @@ public class ModbusMasterTest {
         for (int r = 0; r < 5; r++) {
             try {
                 Thread.sleep(1000);
-                printRegisters(master.readHoldingRegisters(1, 0, 10));
-                printRegisters(master.readInputRegisters(1, 0, 10));
-                printBits(master.readCoils(1, 0, 8));
-                printBits(master.readDiscreteInputs(1, 0, 8));
+                System.out.println();
+                System.out.println("Master output");
+                printRegisters("Holding registers", master.readHoldingRegisters(1, 0, 10));
+                printRegisters("Input registers", master.readInputRegisters(1, 0, 10));
+                printBits("Coils", master.readCoils(1, 0, 10));
+                printBits("Discrete inputs", master.readDiscreteInputs(1, 0, 10));
                 master.writeSingleRegister(1, 0, 69);
                 master.writeSingleCoil(1, 5, true);
-                master.writeMultipleRegisters(1, 1, new int[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10});
+                master.writeMultipleRegisters(1, 1, new int[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 77});
                 master.writeMultipleCoils(1, 0, new boolean[]{true, false, true});
-                System.out.println();
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -204,16 +205,16 @@ public class ModbusMasterTest {
                 "Example: COM1 115200 odd");
     }
 
-    private static void printRegisters(int[] ir) {
+    private static void printRegisters(String title, int[] ir) {
         for (int i : ir)
-            System.out.print(i);
-        System.out.println();
+            System.out.format("%6d", i);
+        System.out.format("  %s\n", title);
     }
 
-    private static void printBits(boolean[] ir) {
+    private static void printBits(String title, boolean[] ir) {
         for (boolean i : ir)
-            System.out.print(i + " ");
-        System.out.println();
+            System.out.format("%6s", i);
+        System.out.format("  %s\n", title);
     }
 
     private enum TransportType {
