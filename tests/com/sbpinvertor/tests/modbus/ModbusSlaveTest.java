@@ -67,10 +67,14 @@ public class ModbusSlaveTest {
                             return InetAddress.getByName(arg).getHostAddress();
                         }
                     });
+                    port = initParameter("port", port, argv[2], new ParameterInitializer<Integer>() {
+                        @Override
+                        public Integer init(String arg) throws Exception {
+                            return Integer.decode(arg);
+                        }
+                    });
                 } catch (IndexOutOfBoundsException ie) {
                     //it's ok
-                } catch (Exception e) {
-                    System.err.println("Can't create Modbus Slave TCP, invalid command line arguments");
                 }
                 System.out.format("Starting Modbus Slave TCP with settings:\n\t%s\n", host);
                 slave = ModbusSlaveFactory.createModbusSlaveTCP(host, port);
@@ -115,8 +119,6 @@ public class ModbusSlaveTest {
                     });
                 } catch (IndexOutOfBoundsException ie) {
                     //it's ok
-                } catch (Exception e) {
-                    System.err.println("Can't create Modbus Slave RTU, invalid command line arguments");
                 }
                 System.out.format("Starting ModbusMaster RTU with settings:\n\t%s, %s, %d, %d, %s\n",
                         device_name, baud_rate.toString(), data_bits, stop_bits, parity.toString());
@@ -147,8 +149,6 @@ public class ModbusSlaveTest {
                     });
                 } catch (IndexOutOfBoundsException ie) {
                     //it's ok
-                } catch (Exception e) {
-                    System.err.println("Can't create Modbus Slave ASCII, invalid command line arguments");
                 }
                 System.out.format("Starting ModbusMaster ASCII with settings:\n\t%s, %s, %s\n",
                         device_name, baud_rate.toString(), parity.toString());

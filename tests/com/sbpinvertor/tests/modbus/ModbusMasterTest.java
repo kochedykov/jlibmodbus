@@ -71,8 +71,6 @@ public class ModbusMasterTest {
                     });
                 } catch (IndexOutOfBoundsException ie) {
                     //it's ok
-                } catch (Exception e) {
-                    System.err.println("Can't create ModbusMaster TCP, invalid command line arguments");
                 }
                 System.out.format("Starting Modbus Master TCP with settings:\n\t%s\n, %s", host, keepAlive);
                 master = ModbusMasterFactory.createModbusMasterTCP(host, port, keepAlive);
@@ -117,8 +115,6 @@ public class ModbusMasterTest {
                     });
                 } catch (IndexOutOfBoundsException ie) {
                     //it's ok
-                } catch (Exception e) {
-                    System.err.println("Can't create Modbus Master RTU, invalid command line arguments");
                 }
                 System.out.format("Starting ModbusMaster RTU with settings:\n\t%s\n, %s, %d, %d, %s\n",
                         device_name, baud_rate.toString(), data_bits, stop_bits, parity.toString());
@@ -149,8 +145,6 @@ public class ModbusMasterTest {
                     });
                 } catch (IndexOutOfBoundsException ie) {
                     //it's ok
-                } catch (Exception e) {
-                    System.err.println("Can't create Modbus Master ASCII, invalid command line arguments");
                 }
                 System.out.format("Starting ModbusMaster ASCII with settings:\n\t%s\n, %s, %s\n",
                         device_name, baud_rate.toString(), parity.toString());

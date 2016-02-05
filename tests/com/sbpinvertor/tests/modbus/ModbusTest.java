@@ -72,7 +72,13 @@ public class ModbusTest implements Runnable {
                             return InetAddress.getByName(arg).getHostAddress();
                         }
                     });
-                    keepAlive = initParameter("keepAlive", keepAlive, argv[2], new ParameterInitializer<Boolean>() {
+                    port = initParameter("port", port, argv[2], new ParameterInitializer<Integer>() {
+                        @Override
+                        public Integer init(String arg) throws Exception {
+                            return Integer.decode(arg);
+                        }
+                    });
+                    keepAlive = initParameter("keepAlive", keepAlive, argv[3], new ParameterInitializer<Boolean>() {
                         @Override
                         public Boolean init(String arg) throws Exception {
                             return Boolean.parseBoolean(arg);
@@ -80,10 +86,8 @@ public class ModbusTest implements Runnable {
                     });
                 } catch (IndexOutOfBoundsException ie) {
                     //it's ok
-                } catch (Exception e) {
-                    System.err.println(CREATION_ERROR_MESSAGE);
                 }
-                System.out.format("Starting Modbus TCP with settings:\n\t%s, %s\n", host, keepAlive);
+                System.out.format("Starting Modbus TCP with settings:\n\t%s, %s, %s\n", host, port, keepAlive);
                 test.master = ModbusMasterFactory.createModbusMasterTCP(host, port, keepAlive);
                 test.slave = ModbusSlaveFactory.createModbusSlaveTCP(host, port);
                 break;
@@ -134,8 +138,6 @@ public class ModbusTest implements Runnable {
                     });
                 } catch (IndexOutOfBoundsException ie) {
                     //it's ok
-                } catch (Exception e) {
-                    System.err.println(CREATION_ERROR_MESSAGE);
                 }
                 System.out.format("Starting Modbus RTU with settings:\n\t%s, %s, %d, %d, %s\n",
                         device_name_slave, baud_rate.toString(), data_bits, stop_bits, parity.toString());
@@ -174,8 +176,6 @@ public class ModbusTest implements Runnable {
                     });
                 } catch (IndexOutOfBoundsException ie) {
                     //it's ok
-                } catch (Exception e) {
-                    System.err.println(CREATION_ERROR_MESSAGE);
                 }
                 System.out.format("Starting Modbus ASCII with settings:\n\t%s, %s, %s\n",
                         device_name_slave, baud_rate.toString(), parity.toString());
