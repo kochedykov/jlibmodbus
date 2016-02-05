@@ -66,13 +66,13 @@ public class ModbusTest implements Runnable {
                 int port = Modbus.TCP_PORT;
                 boolean keepAlive = false;
                 try {
-                    host = initParameter("baud_rate", host, argv[1], new ParameterInitializer<String>() {
+                    host = initParameter("host", host, argv[1], new ParameterInitializer<String>() {
                         @Override
                         public String init(String arg) throws Exception {
                             return InetAddress.getByName(arg).getHostAddress();
                         }
                     });
-                    keepAlive = initParameter("baud_rate", keepAlive, argv[2], new ParameterInitializer<Boolean>() {
+                    keepAlive = initParameter("keepAlive", keepAlive, argv[2], new ParameterInitializer<Boolean>() {
                         @Override
                         public Boolean init(String arg) throws Exception {
                             return Boolean.parseBoolean(arg);
@@ -96,13 +96,13 @@ public class ModbusTest implements Runnable {
                 SerialPort.Parity parity = SerialPort.Parity.NONE;
 
                 try {
-                    device_name_slave = initParameter("baud_rate", device_name_slave, argv[1], new ParameterInitializer<String>() {
+                    device_name_slave = initParameter("device_name_slave", device_name_slave, argv[1], new ParameterInitializer<String>() {
                         @Override
                         public String init(String arg) throws Exception {
                             return arg;
                         }
                     });
-                    device_name_master = initParameter("baud_rate", device_name_master, argv[2], new ParameterInitializer<String>() {
+                    device_name_master = initParameter("device_name_master", device_name_master, argv[2], new ParameterInitializer<String>() {
                         @Override
                         public String init(String arg) throws Exception {
                             return arg;

@@ -61,7 +61,7 @@ public class ModbusSlaveTest {
                 String host = "localhost";
                 int port = Modbus.TCP_PORT;
                 try {
-                    host = initParameter("baud_rate", host, argv[1], new ParameterInitializer<String>() {
+                    host = initParameter("host", host, argv[1], new ParameterInitializer<String>() {
                         @Override
                         public String init(String arg) throws Exception {
                             return InetAddress.getByName(arg).getHostAddress();
@@ -83,7 +83,7 @@ public class ModbusSlaveTest {
                 SerialPort.Parity parity = SerialPort.Parity.NONE;
 
                 try {
-                    device_name = initParameter("baud_rate", device_name, argv[1], new ParameterInitializer<String>() {
+                    device_name = initParameter("device_name", device_name, argv[1], new ParameterInitializer<String>() {
                         @Override
                         public String init(String arg) throws Exception {
                             return arg;
@@ -107,7 +107,7 @@ public class ModbusSlaveTest {
                             return Integer.decode(arg);
                         }
                     });
-                    parity = initParameter("stop_bits", parity, argv[5], new ParameterInitializer<SerialPort.Parity>() {
+                    parity = initParameter("parity", parity, argv[5], new ParameterInitializer<SerialPort.Parity>() {
                         @Override
                         public SerialPort.Parity init(String arg) throws Exception {
                             return SerialPort.Parity.getParity(Integer.decode(arg));
@@ -127,7 +127,7 @@ public class ModbusSlaveTest {
                 baud_rate = SerialPort.BaudRate.BAUD_RATE_115200;
                 parity = SerialPort.Parity.ODD;
                 try {
-                    device_name = initParameter("baud_rate", device_name, argv[1], new ParameterInitializer<String>() {
+                    device_name = initParameter("device_name", device_name, argv[1], new ParameterInitializer<String>() {
                         @Override
                         public String init(String arg) throws Exception {
                             return arg;
@@ -139,7 +139,7 @@ public class ModbusSlaveTest {
                             return SerialPort.BaudRate.getBaudRate(Integer.decode(arg));
                         }
                     });
-                    parity = initParameter("stop_bits", parity, argv[3], new ParameterInitializer<SerialPort.Parity>() {
+                    parity = initParameter("parity", parity, argv[3], new ParameterInitializer<SerialPort.Parity>() {
                         @Override
                         public SerialPort.Parity init(String arg) throws Exception {
                             return SerialPort.Parity.getParity(Integer.decode(arg));
