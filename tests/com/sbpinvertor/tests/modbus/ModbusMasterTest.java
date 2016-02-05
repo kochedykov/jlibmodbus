@@ -74,7 +74,7 @@ public class ModbusMasterTest {
                 } catch (Exception e) {
                     System.err.println("Can't create ModbusMaster TCP, invalid command line arguments");
                 }
-                System.out.format("Starting ModbusMaster TCP with settings:\n\t%s, %s", host, keepAlive);
+                System.out.format("Starting Modbus Master TCP with settings:\n\t%s\n, %s", host, keepAlive);
                 master = ModbusMasterFactory.createModbusMasterTCP(host, port, keepAlive);
                 break;
             case RTU:
@@ -118,9 +118,9 @@ public class ModbusMasterTest {
                 } catch (IndexOutOfBoundsException ie) {
                     //it's ok
                 } catch (Exception e) {
-                    System.err.println("Can't create ModbusMaster, invalid command line arguments");
+                    System.err.println("Can't create Modbus Master RTU, invalid command line arguments");
                 }
-                System.out.format("Starting ModbusMaster RTU with settings:\n\t%s, %s, %d, %d, %s\n",
+                System.out.format("Starting ModbusMaster RTU with settings:\n\t%s\n, %s, %d, %d, %s\n",
                         device_name, baud_rate.toString(), data_bits, stop_bits, parity.toString());
                 master = ModbusMasterFactory.createModbusMasterRTU(device_name, baud_rate, data_bits, stop_bits, parity);
                 break;
@@ -150,9 +150,9 @@ public class ModbusMasterTest {
                 } catch (IndexOutOfBoundsException ie) {
                     //it's ok
                 } catch (Exception e) {
-                    System.err.println("Can't create ModbusMaster, invalid command line arguments");
+                    System.err.println("Can't create Modbus Master ASCII, invalid command line arguments");
                 }
-                System.out.format("Starting ModbusMaster ASCII with settings:\n\t%s, %s, %s\n",
+                System.out.format("Starting ModbusMaster ASCII with settings:\n\t%s\n, %s, %s\n",
                         device_name, baud_rate.toString(), parity.toString());
                 master = ModbusMasterFactory.createModbusMasterASCII(device_name, baud_rate, parity);
                 break;
