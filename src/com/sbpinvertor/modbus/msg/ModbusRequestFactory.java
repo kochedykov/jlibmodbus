@@ -1,5 +1,6 @@
 package com.sbpinvertor.modbus.msg;
 
+import com.sbpinvertor.modbus.exception.ModbusIOException;
 import com.sbpinvertor.modbus.exception.ModbusNumberException;
 import com.sbpinvertor.modbus.exception.ModbusProtocolException;
 import com.sbpinvertor.modbus.msg.base.ModbusMessage;
@@ -88,10 +89,16 @@ final public class ModbusRequestFactory implements ModbusMessageFactory {
     }
 
     @Override
-    public ModbusMessage createMessage(ModbusInputStream fifo) throws ModbusProtocolException, ModbusNumberException, IOException {
+    public ModbusMessage createMessage(ModbusInputStream fifo) throws ModbusProtocolException, ModbusNumberException, ModbusIOException {
         ModbusMessage msg;
-        int serverAddress = fifo.read();
-        int functionCode = fifo.read();
+        int serverAddress;
+        int functionCode;
+        try {
+            serverAddress = fifo.read();
+            functionCode = fifo.read();
+        } catch (IOException e) {
+            throw new ModbusIOException(e);
+        }
         switch (ModbusFunctionCode.getFunctionCode(functionCode)) {
             case READ_COILS:
                 msg = new ReadCoilsRequest(serverAddress);

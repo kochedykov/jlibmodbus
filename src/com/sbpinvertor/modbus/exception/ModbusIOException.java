@@ -1,10 +1,4 @@
-package com.sbpinvertor.modbus.msg;
-
-import com.sbpinvertor.modbus.exception.ModbusIOException;
-import com.sbpinvertor.modbus.exception.ModbusNumberException;
-import com.sbpinvertor.modbus.exception.ModbusProtocolException;
-import com.sbpinvertor.modbus.msg.base.ModbusMessage;
-import com.sbpinvertor.modbus.net.stream.base.ModbusInputStream;
+package com.sbpinvertor.modbus.exception;
 
 /**
  * Copyright (c) 2015-2016 JSC "Zavod "Invertor"
@@ -20,7 +14,7 @@ import com.sbpinvertor.modbus.net.stream.base.ModbusInputStream;
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * GNU General Public License for more details.
  * <p/>
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
@@ -28,6 +22,17 @@ import com.sbpinvertor.modbus.net.stream.base.ModbusInputStream;
  * Authors: Vladislav Y. Kochedykov, software engineer.
  * email: vladislav.kochedykov@gmail.com
  */
-public interface ModbusMessageFactory {
-    ModbusMessage createMessage(ModbusInputStream fifo) throws ModbusNumberException, ModbusIOException, ModbusProtocolException;
+public class ModbusIOException extends Exception {
+
+    public ModbusIOException(String message) {
+        super(message);
+    }
+
+    public ModbusIOException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
+    public ModbusIOException(Throwable cause) {
+        super(cause);
+    }
 }

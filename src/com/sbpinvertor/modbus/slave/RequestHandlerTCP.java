@@ -3,11 +3,10 @@ package com.sbpinvertor.modbus.slave;
 import com.sbpinvertor.modbus.Modbus;
 import com.sbpinvertor.modbus.ModbusSlave;
 import com.sbpinvertor.modbus.data.DataHolder;
+import com.sbpinvertor.modbus.exception.ModbusIOException;
 import com.sbpinvertor.modbus.msg.base.ModbusRequest;
 import com.sbpinvertor.modbus.net.ModbusConnection;
 import com.sbpinvertor.modbus.net.ModbusTransport;
-
-import java.io.IOException;
 
 /**
  * Copyright (c) 2015-2016 JSC "Zavod "Invertor"
@@ -53,7 +52,7 @@ public class RequestHandlerTCP extends RequestHandler {
             setListening(false);
             try {
                 getConn().close();
-            } catch (IOException ioe) {
+            } catch (ModbusIOException ioe) {
                 Modbus.log().warning(ioe.getMessage());
             }
         }

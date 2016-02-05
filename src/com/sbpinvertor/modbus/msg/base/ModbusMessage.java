@@ -1,6 +1,7 @@
 package com.sbpinvertor.modbus.msg.base;
 
 import com.sbpinvertor.modbus.Modbus;
+import com.sbpinvertor.modbus.exception.ModbusIOException;
 import com.sbpinvertor.modbus.exception.ModbusNumberException;
 import com.sbpinvertor.modbus.net.stream.base.ModbusInputStream;
 import com.sbpinvertor.modbus.net.stream.base.ModbusOutputStream;
@@ -43,13 +44,21 @@ abstract public class ModbusMessage {
         this.serverAddress = serverAddress;
     }
 
-    final public void write(ModbusOutputStream fifo) throws IOException {
-        fifo.write(getServerAddress());
-        writePDU(fifo);
+    final public void write(ModbusOutputStream fifo) throws ModbusIOException {
+        try {
+            fifo.write(getServerAddress());
+            writePDU(fifo);
+        } catch (IOException e) {
+            throw new ModbusIOException(e);
+        }
     }
 
-    final public void read(ModbusInputStream fifo) throws ModbusNumberException, IOException {
-        readPDU(fifo);
+    final public void read(ModbusInputStream fifo) throws ModbusNumberException, ModbusIOException {
+        try {
+            readPDU(fifo);
+        } catch (IOException e) {
+            throw new ModbusIOException(e);
+        }
     }
 
     abstract protected void readPDU(ModbusInputStream fifo) throws ModbusNumberException, IOException;

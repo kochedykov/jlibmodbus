@@ -28,14 +28,19 @@ import java.io.InputStream;
  * email: vladislav.kochedykov@gmail.com
  */
 abstract public class ModbusInputStream extends InputStream {
+
+    @Override
     abstract public int read() throws IOException;
 
+    @Override
     abstract public int read(byte[] b, int off, int len) throws IOException;
 
+    @Override
     public int read(byte[] b) throws IOException {
         return read(b, 0, b.length);
     }
 
+    @Override
     abstract public void reset();
 
     abstract public void setReadTimeout(int readTimeout);

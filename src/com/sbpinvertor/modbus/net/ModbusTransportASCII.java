@@ -1,6 +1,7 @@
 package com.sbpinvertor.modbus.net;
 
 import com.sbpinvertor.modbus.Modbus;
+import com.sbpinvertor.modbus.exception.ModbusIOException;
 import com.sbpinvertor.modbus.exception.ModbusNumberException;
 import com.sbpinvertor.modbus.exception.ModbusProtocolException;
 import com.sbpinvertor.modbus.msg.ModbusMessageFactory;
@@ -40,12 +41,21 @@ public class ModbusTransportASCII extends ModbusTransport {
     }
 
     @Override
-    protected ModbusMessage read(ModbusMessageFactory factory) throws ModbusNumberException, IOException, ModbusProtocolException {
+    protected ModbusMessage read(ModbusMessageFactory factory) throws ModbusNumberException, ModbusIOException, ModbusProtocolException {
         InputStreamASCII is = (InputStreamASCII) getInputStream();
         ModbusMessage msg = factory.createMessage(is);
         int lrc = is.getLrc();
-        boolean check = lrc == is.read();
-        if (is.readByte() != Modbus.ASCII_CODE_CR || is.readByte() != Modbus.ASCII_CODE_LF)
+        boolean check;
+        int cr;
+        int lf;
+        try {
+            check = lrc == is.read();
+            cr = is.readRaw();
+            lf = is.readRaw();
+        } catch (IOException e) {
+            throw new ModbusIOException(e);
+        }
+        if (cr != Modbus.ASCII_CODE_CR || lf != Modbus.ASCII_CODE_LF)
             Modbus.log().warning("\\r\\n not received.");
         /*clear fifo*/
         is.reset();
@@ -56,7 +66,7 @@ public class ModbusTransportASCII extends ModbusTransport {
     }
 
     @Override
-    protected void sendImpl(ModbusMessage msg) throws IOException {
+    protected void sendImpl(ModbusMessage msg) throws ModbusIOException {
         msg.write(getOutputStream());
     }
 }

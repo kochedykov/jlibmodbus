@@ -1,6 +1,7 @@
 package com.sbpinvertor.modbus.net;
 
 import com.sbpinvertor.modbus.Modbus;
+import com.sbpinvertor.modbus.exception.ModbusIOException;
 import com.sbpinvertor.modbus.net.stream.base.ModbusInputStream;
 import com.sbpinvertor.modbus.net.stream.base.ModbusOutputStream;
 import com.sbpinvertor.modbus.tcp.TcpParameters;
@@ -58,28 +59,34 @@ public class ModbusMasterConnectionTCP extends ModbusConnection {
     }
 
     @Override
-    public void reset() throws IOException {
+    public void reset() throws ModbusIOException {
         open();
     }
 
     @Override
-    public void open() throws IOException {
+    public void open() throws ModbusIOException {
         if (parameters != null) {
             close();
             socket = new Socket();
-            socket.setKeepAlive(parameters.isKeepAlive());
             InetSocketAddress isa = new InetSocketAddress(parameters.getHost(), parameters.getPort());
-            socket.connect(isa, Modbus.MAX_CONNECTION_TIMEOUT);
+            try {
+                socket.setKeepAlive(parameters.isKeepAlive());
+                socket.connect(isa, Modbus.MAX_CONNECTION_TIMEOUT);
+            } catch (Exception e) {
+                throw new ModbusIOException(e);
+            }
         }
         transport = new ModbusTransportTCP(socket);
         setReadTimeout(readTimeout);
     }
 
     @Override
-    public void close() throws IOException {
+    public void close() throws ModbusIOException {
         try {
             if (socket != null)
                 socket.close();
+        } catch (IOException e) {
+            throw new ModbusIOException(e);
         } finally {
             transport = null;
             socket = null;

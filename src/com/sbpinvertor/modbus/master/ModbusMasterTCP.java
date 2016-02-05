@@ -1,6 +1,8 @@
 package com.sbpinvertor.modbus.master;
 
+import com.sbpinvertor.modbus.Modbus;
 import com.sbpinvertor.modbus.ModbusMaster;
+import com.sbpinvertor.modbus.exception.ModbusIOException;
 import com.sbpinvertor.modbus.exception.ModbusMasterException;
 import com.sbpinvertor.modbus.exception.ModbusNumberException;
 import com.sbpinvertor.modbus.exception.ModbusProtocolException;
@@ -10,7 +12,6 @@ import com.sbpinvertor.modbus.net.ModbusMasterConnectionTCP;
 import com.sbpinvertor.modbus.tcp.TcpParameters;
 import com.sbpinvertor.modbus.utils.ModbusExceptionCode;
 
-import java.io.IOException;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
@@ -48,27 +49,29 @@ final public class ModbusMasterTCP extends ModbusMaster {
             if (keepAlive) {
                 open();
             }
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (ModbusIOException e) {
+            Modbus.log().warning("keepAlive is set, connection failed at creation time.");
         }
     }
 
     @Override
-    protected void sendRequest(ModbusMessage msg) throws IOException {
+    protected void sendRequest(ModbusMessage msg) throws ModbusIOException {
         if (!keepAlive)
             open();
         try {
             super.sendRequest(msg);
-        } catch (IOException e) {
+        } catch (ModbusIOException e) {
             if (keepAlive) {
                 open();
                 super.sendRequest(msg);
+            } else {
+                throw e;
             }
         }
     }
 
     @Override
-    protected ModbusMessage readResponse() throws ModbusNumberException, IOException, ModbusProtocolException {
+    protected ModbusMessage readResponse() throws ModbusNumberException, ModbusIOException, ModbusProtocolException {
         ModbusMessage msg = super.readResponse();
         if (!keepAlive) {
             close();
@@ -77,13 +80,13 @@ final public class ModbusMasterTCP extends ModbusMaster {
     }
 
     @Override
-    public void open() throws IOException {
+    public void open() throws ModbusIOException {
         close();
         conn.open();
     }
 
     @Override
-    public void close() throws IOException {
+    public void close() throws ModbusIOException {
         conn.close();
     }
 
@@ -93,12 +96,12 @@ final public class ModbusMasterTCP extends ModbusMaster {
     }
 
     @Override
-    public int readExceptionStatus(int serverAddress) throws ModbusNumberException, IOException, ModbusProtocolException {
+    public int readExceptionStatus(int serverAddress) throws ModbusNumberException, ModbusIOException, ModbusProtocolException {
         throw new ModbusProtocolException(ModbusExceptionCode.ILLEGAL_FUNCTION);
     }
 
     @Override
-    public byte[] reportSlaveId(int serverAddress) throws ModbusProtocolException, ModbusNumberException, IOException, ModbusMasterException {
+    public byte[] reportSlaveId(int serverAddress) throws ModbusProtocolException, ModbusNumberException, ModbusIOException, ModbusMasterException {
         throw new ModbusProtocolException(ModbusExceptionCode.ILLEGAL_FUNCTION);
     }
 }

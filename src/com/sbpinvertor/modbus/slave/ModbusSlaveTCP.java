@@ -1,6 +1,8 @@
 package com.sbpinvertor.modbus.slave;
 
+import com.sbpinvertor.modbus.Modbus;
 import com.sbpinvertor.modbus.ModbusSlave;
+import com.sbpinvertor.modbus.exception.ModbusIOException;
 import com.sbpinvertor.modbus.net.ModbusConnection;
 import com.sbpinvertor.modbus.net.ModbusSlaveConnectionTCP;
 import com.sbpinvertor.modbus.tcp.TcpParameters;
@@ -8,6 +10,7 @@ import com.sbpinvertor.modbus.tcp.TcpParameters;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -53,24 +56,35 @@ public class ModbusSlaveTCP extends ModbusSlave implements Runnable {
     }
 
     @Override
-    public void open() throws IOException {
-        server = new ServerSocket(tcp.getPort());
-        listening = true;
-        mainThread = new Thread(this);
-        mainThread.start();
+    public void open() throws ModbusIOException {
+        try {
+            server = new ServerSocket(tcp.getPort());
+            listening = true;
+            mainThread = new Thread(this);
+            mainThread.start();
+        } catch (IOException e) {
+            throw new ModbusIOException(e);
+        }
     }
 
     @Override
-    public void close() throws IOException {
+    public void close() {
         listening = false;
-        server.close();
+
+        try {
+            if (server != null)
+                server.close();
+        } catch (IOException e) {
+            Modbus.log().warning("Something wrong with server socket: " + e.getLocalizedMessage());
+        } finally {
+            server = null;
+        }
         threadPool.shutdown();
         try {
             threadPool.awaitTermination(1, TimeUnit.SECONDS);
         } catch (InterruptedException e) {
             threadPool.shutdownNow();
         }
-        server = null;
         try {
             mainThread.join(100);
         } catch (InterruptedException e) {
@@ -89,14 +103,18 @@ public class ModbusSlaveTCP extends ModbusSlave implements Runnable {
                 conn.setReadTimeout(10000);
                 threadPool.execute(new RequestHandlerTCP(this, conn));
             }
+        } catch (SocketException se) {
+            if (server != null) {
+                if (server.isClosed()) {
+                    Modbus.log().fine("All right, server socket has been closed:" + se.getLocalizedMessage());
+                } else {
+                    Modbus.log().warning("Something wrong:" + se.getLocalizedMessage());
+                }
+            }
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            try {
-                close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            close();
         }
     }
 }

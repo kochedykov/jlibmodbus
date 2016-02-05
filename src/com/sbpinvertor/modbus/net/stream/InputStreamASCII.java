@@ -36,19 +36,19 @@ public class InputStreamASCII extends InputStreamSerial {
         super(serial);
     }
 
-    public int readByte() throws IOException {
+    public int readRaw() throws IOException {
         return super.read();
     }
 
     @Override
     public int read() throws IOException {
         int b;
-        char c = (char) readByte();
+        char c = (char) readRaw();
         if (c == Modbus.ASCII_CODE_COLON) {
             fifo.clear();
-            c = (char) readByte();
+            c = (char) readRaw();
         }
-        b = DataUtils.fromAscii(c, (char) readByte());
+        b = DataUtils.fromAscii(c, (char) readRaw());
         fifo.write(b);
         return b;
     }

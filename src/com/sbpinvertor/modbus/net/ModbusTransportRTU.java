@@ -1,5 +1,6 @@
 package com.sbpinvertor.modbus.net;
 
+import com.sbpinvertor.modbus.exception.ModbusIOException;
 import com.sbpinvertor.modbus.exception.ModbusNumberException;
 import com.sbpinvertor.modbus.exception.ModbusProtocolException;
 import com.sbpinvertor.modbus.msg.ModbusMessageFactory;
@@ -39,10 +40,15 @@ public class ModbusTransportRTU extends ModbusTransport {
     }
 
     @Override
-    protected ModbusMessage read(ModbusMessageFactory factory) throws ModbusNumberException, IOException, ModbusProtocolException {
+    protected ModbusMessage read(ModbusMessageFactory factory) throws ModbusNumberException, ModbusIOException, ModbusProtocolException {
         InputStreamRTU is = (InputStreamRTU) getInputStream();
         ModbusMessage msg = factory.createMessage(is);
-        int r_crc = is.readShortLE();
+        int r_crc;
+        try {
+            r_crc = is.readShortLE();
+        } catch (IOException e) {
+            throw new ModbusIOException(e);
+        }
         // crc from the same crc equals zero
         int c_crc = is.getCrc();
         is.reset();
@@ -53,7 +59,7 @@ public class ModbusTransportRTU extends ModbusTransport {
     }
 
     @Override
-    protected void sendImpl(ModbusMessage msg) throws IOException {
+    protected void sendImpl(ModbusMessage msg) throws ModbusIOException {
         msg.write(getOutputStream());
     }
 }

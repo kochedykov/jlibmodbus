@@ -1,10 +1,9 @@
 package com.sbpinvertor.modbus.slave;
 
 import com.sbpinvertor.modbus.ModbusSlave;
+import com.sbpinvertor.modbus.exception.ModbusIOException;
 import com.sbpinvertor.modbus.net.ModbusConnection;
 import com.sbpinvertor.modbus.net.ModbusConnectionSerial;
-
-import java.io.IOException;
 
 /**
  * Copyright (c) 2015-2016 JSC "Zavod "Invertor"
@@ -40,7 +39,7 @@ public class ModbusSlaveSerial extends ModbusSlave {
     }
 
     @Override
-    public void open() throws IOException {
+    public void open() throws ModbusIOException {
         close();
         conn.open();
         thread = new Thread(requestHandler);
@@ -48,7 +47,7 @@ public class ModbusSlaveSerial extends ModbusSlave {
     }
 
     @Override
-    public void close() throws IOException {
+    public void close() throws ModbusIOException {
         requestHandler.setListening(false);
         try {
             if (thread != null)

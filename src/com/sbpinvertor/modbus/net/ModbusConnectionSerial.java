@@ -1,11 +1,10 @@
 package com.sbpinvertor.modbus.net;
 
+import com.sbpinvertor.modbus.exception.ModbusIOException;
 import com.sbpinvertor.modbus.net.stream.base.ModbusInputStream;
 import com.sbpinvertor.modbus.net.stream.base.ModbusOutputStream;
 import com.sbpinvertor.modbus.serial.SerialPort;
 import com.sbpinvertor.modbus.serial.SerialPortException;
-
-import java.io.IOException;
 
 /**
  * Copyright (c) 2015-2016 JSC "Zavod "Invertor"
@@ -40,13 +39,13 @@ abstract public class ModbusConnectionSerial extends ModbusConnection {
     }
 
     @Override
-    public void open() throws IOException {
+    public void open() throws ModbusIOException {
         try {
             this.serial.close();
             this.serial.open();
             this.serial.clear();
         } catch (SerialPortException e) {
-            throw new IOException(e);
+            throw new ModbusIOException(e);
         }
     }
 

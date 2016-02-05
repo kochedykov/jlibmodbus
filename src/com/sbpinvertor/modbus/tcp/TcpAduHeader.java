@@ -1,6 +1,7 @@
 package com.sbpinvertor.modbus.tcp;
 
 import com.sbpinvertor.modbus.Modbus;
+import com.sbpinvertor.modbus.exception.ModbusIOException;
 import com.sbpinvertor.modbus.exception.ModbusNumberException;
 import com.sbpinvertor.modbus.net.stream.base.ModbusInputStream;
 import com.sbpinvertor.modbus.net.stream.base.ModbusOutputStream;
@@ -76,22 +77,31 @@ final public class TcpAduHeader {
         return buffer;
     }
 
-    public void write(ModbusOutputStream fifo) throws IOException {
-        fifo.write(byteArray());
+    public void write(ModbusOutputStream fifo) throws ModbusIOException {
+        try {
+            fifo.write(byteArray());
+        } catch (IOException e) {
+            throw new ModbusIOException(e);
+        }
     }
 
-    public void read(ModbusInputStream fifo) throws ModbusNumberException, IOException {
+    public void read(ModbusInputStream fifo) throws ModbusNumberException, ModbusIOException {
         int size;
-        if ((size = fifo.read(byteArray())) > 0) {
 
-            if (getPduSize() < Modbus.MIN_PDU_LENGTH) {
-                throw new ModbusNumberException("the PDU length is less than the minimum expected.", getPduSize());
+        try {
+            if ((size = fifo.read(byteArray())) > 0) {
+
+                if (getPduSize() < Modbus.MIN_PDU_LENGTH) {
+                    throw new ModbusNumberException("the PDU length is less than the minimum expected.", getPduSize());
+                }
+                if (getPduSize() > Modbus.MAX_PDU_LENGTH) {
+                    throw new ModbusNumberException("Maximum PDU size is reached.", getPduSize());
+                }
+            } else {
+                throw new ModbusIOException(buffer.length + " bytes expected, but " + size + " received.");
             }
-            if (getPduSize() > Modbus.MAX_PDU_LENGTH) {
-                throw new ModbusNumberException("Maximum PDU size is reached.", getPduSize());
-            }
-        } else {
-            throw new IOException(buffer.length + " bytes expected, but " + size + " received.");
+        } catch (IOException e) {
+            throw new ModbusIOException(e);
         }
     }
 }

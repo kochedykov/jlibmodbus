@@ -1,5 +1,6 @@
 package com.sbpinvertor.modbus;
 
+import com.sbpinvertor.modbus.exception.ModbusIOException;
 import com.sbpinvertor.modbus.exception.ModbusMasterException;
 import com.sbpinvertor.modbus.exception.ModbusNumberException;
 import com.sbpinvertor.modbus.exception.ModbusProtocolException;
@@ -12,8 +13,6 @@ import com.sbpinvertor.modbus.msg.response.ReadHoldingRegistersResponse;
 import com.sbpinvertor.modbus.msg.response.ReadInputRegistersResponse;
 import com.sbpinvertor.modbus.net.ModbusConnection;
 import com.sbpinvertor.modbus.net.ModbusTransport;
-
-import java.io.IOException;
 
 /**
  * Copyright (c) 2015-2016 JSC "Zavod "Invertor"
@@ -47,27 +46,27 @@ abstract public class ModbusMaster {
 
     abstract protected ModbusConnection getConnection();
 
-    public void open() throws IOException {
+    public void open() throws ModbusIOException {
         getConnection().open();
     }
 
-    public void close() throws IOException {
+    public void close() throws ModbusIOException {
         getConnection().close();
     }
 
-    protected void sendRequest(ModbusMessage msg) throws IOException {
+    protected void sendRequest(ModbusMessage msg) throws ModbusIOException {
         ModbusTransport transport = getConnection().getTransport();
         if (transport == null)
-            throw new IOException("transport is null");
+            throw new ModbusIOException("transport is null");
         transport.send(msg);
     }
 
-    protected ModbusMessage readResponse() throws ModbusProtocolException, ModbusNumberException, IOException {
+    protected ModbusMessage readResponse() throws ModbusProtocolException, ModbusNumberException, ModbusIOException {
         return getConnection().getTransport().readResponse();
     }
 
     protected ModbusMessage processRequest(ModbusMessage request) throws ModbusProtocolException,
-            ModbusNumberException, IOException, ModbusMasterException {
+            ModbusNumberException, ModbusIOException, ModbusMasterException {
         sendRequest(request);
         ModbusResponse msg = (ModbusResponse) readResponse();
         if (msg.isException())
@@ -94,50 +93,50 @@ abstract public class ModbusMaster {
     }
 
     final public int[] readHoldingRegisters(int serverAddress, int startAddress, int quantity) throws
-            ModbusProtocolException, ModbusNumberException, IOException, ModbusMasterException {
+            ModbusProtocolException, ModbusNumberException, ModbusIOException, ModbusMasterException {
         ModbusMessage request = requestFactory.createReadHoldingRegisters(serverAddress, startAddress, quantity);
         ReadHoldingRegistersResponse response = (ReadHoldingRegistersResponse) processRequest(request);
         return response.getRegisters();
     }
 
     final public int[] readInputRegisters(int serverAddress, int startAddress, int quantity) throws
-            ModbusProtocolException, ModbusNumberException, IOException, ModbusMasterException {
+            ModbusProtocolException, ModbusNumberException, ModbusIOException, ModbusMasterException {
         ModbusMessage request = requestFactory.createReadInputRegisters(serverAddress, startAddress, quantity);
         ReadHoldingRegistersResponse response = (ReadInputRegistersResponse) processRequest(request);
         return response.getRegisters();
     }
 
     final public boolean[] readCoils(int serverAddress, int startAddress, int quantity) throws
-            ModbusProtocolException, ModbusNumberException, IOException, ModbusMasterException {
+            ModbusProtocolException, ModbusNumberException, ModbusIOException, ModbusMasterException {
         ModbusMessage request = requestFactory.createReadCoils(serverAddress, startAddress, quantity);
         ReadCoilsResponse response = (ReadCoilsResponse) processRequest(request);
         return response.getCoils();
     }
 
     final public boolean[] readDiscreteInputs(int serverAddress, int startAddress, int quantity) throws
-            ModbusProtocolException, ModbusNumberException, IOException, ModbusMasterException {
+            ModbusProtocolException, ModbusNumberException, ModbusIOException, ModbusMasterException {
         ModbusMessage request = requestFactory.createReadDiscreteInputs(serverAddress, startAddress, quantity);
         ReadDiscreteInputsResponse response = (ReadDiscreteInputsResponse) processRequest(request);
         return response.getCoils();
     }
 
     final public void writeSingleCoil(int serverAddress, int startAddress, boolean flag) throws
-            ModbusProtocolException, ModbusNumberException, IOException, ModbusMasterException {
+            ModbusProtocolException, ModbusNumberException, ModbusIOException, ModbusMasterException {
         processRequest(requestFactory.createWriteSingleCoil(serverAddress, startAddress, flag));
     }
 
     final public void writeSingleRegister(int serverAddress, int startAddress, int register) throws
-            ModbusProtocolException, ModbusNumberException, IOException, ModbusMasterException {
+            ModbusProtocolException, ModbusNumberException, ModbusIOException, ModbusMasterException {
         processRequest(requestFactory.createWriteSingleRegister(serverAddress, startAddress, register));
     }
 
     final public void writeMultipleCoils(int serverAddress, int startAddress, boolean[] coils) throws
-            ModbusProtocolException, ModbusNumberException, IOException, ModbusMasterException {
+            ModbusProtocolException, ModbusNumberException, ModbusIOException, ModbusMasterException {
         processRequest(requestFactory.createWriteMultipleCoils(serverAddress, startAddress, coils));
     }
 
     final public void writeMultipleRegisters(int serverAddress, int startAddress, int[] registers) throws
-            ModbusProtocolException, ModbusNumberException, IOException, ModbusMasterException {
+            ModbusProtocolException, ModbusNumberException, ModbusIOException, ModbusMasterException {
         processRequest(requestFactory.createWriteMultipleRegisters(serverAddress, startAddress, registers));
     }
 
@@ -150,17 +149,17 @@ abstract public class ModbusMaster {
      * @param or            the OR mask
      * @throws ModbusProtocolException
      * @throws ModbusNumberException
-     * @throws IOException
+     * @throws ModbusIOException
      * @throws ModbusMasterException
      */
     final public void maskWriteRegister(int serverAddress, int startAddress, int and, int or) throws
-            ModbusProtocolException, ModbusNumberException, IOException, ModbusMasterException {
+            ModbusProtocolException, ModbusNumberException, ModbusIOException, ModbusMasterException {
         processRequest(requestFactory.createMaskWriteRegister(serverAddress, startAddress, and, or));
     }
 
     abstract public int readExceptionStatus(int serverAddress) throws
-            ModbusProtocolException, ModbusNumberException, IOException, ModbusMasterException;
+            ModbusProtocolException, ModbusNumberException, ModbusIOException, ModbusMasterException;
 
     abstract public byte[] reportSlaveId(int serverAddress) throws
-            ModbusProtocolException, ModbusNumberException, IOException, ModbusMasterException;
+            ModbusProtocolException, ModbusNumberException, ModbusIOException, ModbusMasterException;
 }

@@ -1,5 +1,6 @@
 package com.sbpinvertor.modbus.net;
 
+import com.sbpinvertor.modbus.exception.ModbusIOException;
 import com.sbpinvertor.modbus.exception.ModbusNumberException;
 import com.sbpinvertor.modbus.exception.ModbusProtocolException;
 import com.sbpinvertor.modbus.msg.ModbusMessageFactory;
@@ -43,17 +44,21 @@ abstract public class ModbusTransport {
         this.os = os;
     }
 
-    public ModbusMessage readRequest() throws ModbusNumberException, IOException, ModbusProtocolException {
+    public ModbusMessage readRequest() throws ModbusNumberException, ModbusIOException, ModbusProtocolException {
         return read(ModbusRequestFactory.getInstance());
     }
 
-    public ModbusMessage readResponse() throws ModbusNumberException, IOException, ModbusProtocolException {
+    public ModbusMessage readResponse() throws ModbusNumberException, ModbusIOException, ModbusProtocolException {
         return read(ModbusResponseFactory.getInstance());
     }
 
-    public void send(ModbusMessage msg) throws IOException {
+    public void send(ModbusMessage msg) throws ModbusIOException {
         sendImpl(msg);
-        os.flush();
+        try {
+            os.flush();
+        } catch (IOException e) {
+            throw new ModbusIOException(e);
+        }
     }
 
     ModbusInputStream getInputStream() {
@@ -64,7 +69,7 @@ abstract public class ModbusTransport {
         return os;
     }
 
-    abstract protected ModbusMessage read(ModbusMessageFactory factory) throws ModbusNumberException, IOException, ModbusProtocolException;
+    abstract protected ModbusMessage read(ModbusMessageFactory factory) throws ModbusNumberException, ModbusProtocolException, ModbusIOException;
 
-    abstract protected void sendImpl(ModbusMessage msg) throws IOException;
+    abstract protected void sendImpl(ModbusMessage msg) throws ModbusIOException;
 }

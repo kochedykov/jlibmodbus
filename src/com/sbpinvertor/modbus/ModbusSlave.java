@@ -1,8 +1,7 @@
 package com.sbpinvertor.modbus;
 
 import com.sbpinvertor.modbus.data.DataHolder;
-
-import java.io.IOException;
+import com.sbpinvertor.modbus.exception.ModbusIOException;
 
 /**
  * Copyright (c) 2015-2016 JSC "Zavod "Invertor"
@@ -42,12 +41,12 @@ abstract public class ModbusSlave {
     /**
      * starts the ModbusSlave thread.
      */
-    abstract public void open() throws IOException;
+    abstract public void open() throws ModbusIOException;
 
     /**
      * should have stop the thread of the ModbusSlave.
      */
-    abstract public void close() throws IOException;
+    abstract public void close() throws ModbusIOException;
 
 
     /*Getters & Setters*/

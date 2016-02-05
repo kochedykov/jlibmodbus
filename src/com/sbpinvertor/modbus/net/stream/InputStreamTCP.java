@@ -1,5 +1,6 @@
 package com.sbpinvertor.modbus.net.stream;
 
+import com.sbpinvertor.modbus.exception.ModbusIOException;
 import com.sbpinvertor.modbus.net.stream.base.ModbusInputStream;
 
 import java.io.BufferedInputStream;
@@ -32,8 +33,12 @@ public class InputStreamTCP extends ModbusInputStream {
 
     final private BufferedInputStream is;
 
-    public InputStreamTCP(Socket s) throws IOException {
-        this.is = new BufferedInputStream(s.getInputStream());
+    public InputStreamTCP(Socket s) throws ModbusIOException {
+        try {
+            this.is = new BufferedInputStream(s.getInputStream());
+        } catch (IOException e) {
+            throw new ModbusIOException(e);
+        }
     }
 
     @Override

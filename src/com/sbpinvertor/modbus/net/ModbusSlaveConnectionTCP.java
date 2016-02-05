@@ -1,6 +1,7 @@
 package com.sbpinvertor.modbus.net;
 
 import com.sbpinvertor.modbus.Modbus;
+import com.sbpinvertor.modbus.exception.ModbusIOException;
 import com.sbpinvertor.modbus.net.stream.base.ModbusInputStream;
 import com.sbpinvertor.modbus.net.stream.base.ModbusOutputStream;
 
@@ -37,7 +38,7 @@ public class ModbusSlaveConnectionTCP extends ModbusConnection {
 
     private int readTimeout = Modbus.MAX_RESPONSE_TIMEOUT;
 
-    public ModbusSlaveConnectionTCP(Socket socket) throws IOException {
+    public ModbusSlaveConnectionTCP(Socket socket) throws ModbusIOException {
         this.socket = socket;
         transport = new ModbusTransportTCP(socket);
     }
@@ -58,20 +59,22 @@ public class ModbusSlaveConnectionTCP extends ModbusConnection {
     }
 
     @Override
-    public void reset() throws IOException {
+    public void reset() throws ModbusIOException {
         open();
     }
 
     @Override
-    public void open() throws IOException {
+    public void open() throws ModbusIOException {
         //no operation
     }
 
     @Override
-    public void close() throws IOException {
+    public void close() throws ModbusIOException {
         try {
             if (socket != null)
                 socket.close();
+        } catch (IOException e) {
+            throw new ModbusIOException(e);
         } finally {
             transport = null;
             socket = null;

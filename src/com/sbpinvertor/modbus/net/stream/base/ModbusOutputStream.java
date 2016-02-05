@@ -29,10 +29,13 @@ import java.io.OutputStream;
  */
 abstract public class ModbusOutputStream extends OutputStream {
 
+    @Override
     abstract public void write(byte[] b) throws IOException;
 
+    @Override
     abstract public void write(int b) throws IOException;
 
+    @Override
     abstract public void flush() throws IOException;
 
     abstract public void reset();

@@ -1,5 +1,6 @@
 package com.sbpinvertor.modbus.net;
 
+import com.sbpinvertor.modbus.exception.ModbusIOException;
 import com.sbpinvertor.modbus.exception.ModbusNumberException;
 import com.sbpinvertor.modbus.exception.ModbusProtocolException;
 import com.sbpinvertor.modbus.msg.ModbusMessageFactory;
@@ -10,7 +11,6 @@ import com.sbpinvertor.modbus.net.stream.base.ModbusInputStream;
 import com.sbpinvertor.modbus.net.stream.base.ModbusOutputStream;
 import com.sbpinvertor.modbus.tcp.TcpAduHeader;
 
-import java.io.IOException;
 import java.net.Socket;
 
 /**
@@ -37,12 +37,12 @@ import java.net.Socket;
  */
 public class ModbusTransportTCP extends ModbusTransport {
 
-    public ModbusTransportTCP(Socket socket) throws IOException {
+    public ModbusTransportTCP(Socket socket) throws ModbusIOException {
         super(new InputStreamTCP(socket), new OutputStreamTCP(socket));
     }
 
     @Override
-    protected ModbusMessage read(ModbusMessageFactory factory) throws ModbusNumberException, IOException, ModbusProtocolException {
+    protected ModbusMessage read(ModbusMessageFactory factory) throws ModbusNumberException, ModbusProtocolException, ModbusIOException {
         ModbusInputStream is = getInputStream();
         TcpAduHeader header = new TcpAduHeader();
         header.read(is);
@@ -53,7 +53,7 @@ public class ModbusTransportTCP extends ModbusTransport {
     }
 
     @Override
-    public void sendImpl(ModbusMessage msg) throws IOException {
+    public void sendImpl(ModbusMessage msg) throws ModbusIOException {
         ModbusOutputStream os = getOutputStream();
         TcpAduHeader header = new TcpAduHeader();
         header.setProtocolId(msg.getProtocolId());
