@@ -1,9 +1,13 @@
 package com.sbpinvertor.tests.modbus;
 
+import com.sbpinvertor.modbus.Modbus;
 import com.sbpinvertor.modbus.ModbusMaster;
 import com.sbpinvertor.modbus.ModbusMasterFactory;
+import com.sbpinvertor.modbus.exception.ModbusIOException;
+import com.sbpinvertor.modbus.serial.SerialPort;
+import com.sbpinvertor.modbus.serial.SerialUtils;
 
-import java.io.IOException;
+import java.net.InetAddress;
 
 /**
  * Copyright (c) 2015-2016 JSC "Zavod "Invertor"
@@ -29,30 +33,175 @@ import java.io.IOException;
  */
 public class ModbusMasterTest {
 
-    public static void main(String[] argv) throws IOException {
-        //ModbusMaster m = ModbusMasterFactory.createModbusMasterRTU("COM1", SerialPort.BaudRate.BAUD_RATE_115200, 8, 1, SerialPort.Parity.NONE);
-        //ModbusMaster m = ModbusMasterFactory.createModbusMasterASCII("COM1", SerialPort.BaudRate.BAUD_RATE_115200);
-        ModbusMaster m = ModbusMasterFactory.createModbusMasterTCP("127.0.0.1", false);
-        m.setResponseTimeout(1000);
-        m.open();
+    static private <T> T initParameter(String title, T parameter, String arg, ParameterInitializer<T> pi) {
+        try {
+            parameter = pi.init(arg);
+        } catch (Exception e) {
+            System.out.format("Invalid %s value:%s\n", title, arg);
+        }
+        return parameter;
+    }
+
+    public static void main(String[] argv) {
+        if (argv.length < 1) {
+            printUsage();
+            return;
+        }
+
+        ModbusMaster master;
+
+        switch (TransportType.get(argv[0])) {
+
+            case TCP:
+                String host = "localhost";
+                int port = Modbus.TCP_PORT;
+                boolean keepAlive = false;
+                try {
+                    host = initParameter("baud_rate", host, argv[1], new ParameterInitializer<String>() {
+                        @Override
+                        public String init(String arg) throws Exception {
+                            return InetAddress.getByName(arg).getHostAddress();
+                        }
+                    });
+                    keepAlive = initParameter("baud_rate", keepAlive, argv[1], new ParameterInitializer<Boolean>() {
+                        @Override
+                        public Boolean init(String arg) throws Exception {
+                            return Boolean.parseBoolean(arg);
+                        }
+                    });
+                } catch (IndexOutOfBoundsException ie) {
+                    //it's ok
+                } catch (Exception e) {
+                    System.err.println("Can't create ModbusMaster TCP, invalid command line arguments");
+                }
+                System.out.format("Starting ModbusMaster TCP with settings:\n\t%s, %s", host, keepAlive);
+                master = ModbusMasterFactory.createModbusMasterTCP(host, port, keepAlive);
+                break;
+            case RTU:
+                String device_name = SerialUtils.getPortList()[0];
+                SerialPort.BaudRate baud_rate = SerialPort.BaudRate.BAUD_RATE_115200;
+                int data_bits = 8;
+                int stop_bits = 1;
+                SerialPort.Parity parity = SerialPort.Parity.NONE;
+
+                try {
+                    device_name = initParameter("baud_rate", device_name, argv[1], new ParameterInitializer<String>() {
+                        @Override
+                        public String init(String arg) throws Exception {
+                            return arg;
+                        }
+                    });
+                    baud_rate = initParameter("baud_rate", baud_rate, argv[2], new ParameterInitializer<SerialPort.BaudRate>() {
+                        @Override
+                        public SerialPort.BaudRate init(String arg) throws Exception {
+                            return SerialPort.BaudRate.getBaudRate(Integer.decode(arg));
+                        }
+                    });
+                    data_bits = initParameter("data_bits", data_bits, argv[3], new ParameterInitializer<Integer>() {
+                        @Override
+                        public Integer init(String arg) throws Exception {
+                            return Integer.decode(arg);
+                        }
+                    });
+                    stop_bits = initParameter("stop_bits", data_bits, argv[4], new ParameterInitializer<Integer>() {
+                        @Override
+                        public Integer init(String arg) throws Exception {
+                            return Integer.decode(arg);
+                        }
+                    });
+                    parity = initParameter("stop_bits", parity, argv[5], new ParameterInitializer<SerialPort.Parity>() {
+                        @Override
+                        public SerialPort.Parity init(String arg) throws Exception {
+                            return SerialPort.Parity.getParity(Integer.decode(arg));
+                        }
+                    });
+                } catch (IndexOutOfBoundsException ie) {
+                    //it's ok
+                } catch (Exception e) {
+                    System.err.println("Can't create ModbusMaster, invalid command line arguments");
+                }
+                System.out.format("Starting ModbusMaster RTU with settings:\n\t%s, %s, %d, %d, %s\n",
+                        device_name, baud_rate.toString(), data_bits, stop_bits, parity.toString());
+                master = ModbusMasterFactory.createModbusMasterRTU(device_name, baud_rate, data_bits, stop_bits, parity);
+                break;
+            case ASCII:
+                device_name = SerialUtils.getPortList()[0];
+                baud_rate = SerialPort.BaudRate.BAUD_RATE_115200;
+                parity = SerialPort.Parity.NONE;
+                try {
+                    device_name = initParameter("baud_rate", device_name, argv[1], new ParameterInitializer<String>() {
+                        @Override
+                        public String init(String arg) throws Exception {
+                            return arg;
+                        }
+                    });
+                    baud_rate = initParameter("baud_rate", baud_rate, argv[2], new ParameterInitializer<SerialPort.BaudRate>() {
+                        @Override
+                        public SerialPort.BaudRate init(String arg) throws Exception {
+                            return SerialPort.BaudRate.getBaudRate(Integer.decode(arg));
+                        }
+                    });
+                    parity = initParameter("stop_bits", parity, argv[5], new ParameterInitializer<SerialPort.Parity>() {
+                        @Override
+                        public SerialPort.Parity init(String arg) throws Exception {
+                            return SerialPort.Parity.getParity(Integer.decode(arg));
+                        }
+                    });
+                } catch (IndexOutOfBoundsException ie) {
+                    //it's ok
+                } catch (Exception e) {
+                    System.err.println("Can't create ModbusMaster, invalid command line arguments");
+                }
+                System.out.format("Starting ModbusMaster ASCII with settings:\n\t%s, %s, %s\n",
+                        device_name, baud_rate.toString(), parity.toString());
+                master = ModbusMasterFactory.createModbusMasterASCII(device_name, baud_rate, parity);
+                break;
+            default:
+                master = ModbusMasterFactory.createModbusMasterTCP("127.0.0.1", false);
+        }
+
+        master.setResponseTimeout(1000);
+
+        try {
+            master.open();
+        } catch (ModbusIOException e) {
+            System.out.format("%s %s\n", "Can't open connection:", e.getLocalizedMessage());
+        }
 
         for (int r = 0; r < 5; r++) {
             try {
                 Thread.sleep(1000);
-                printRegisters(m.readHoldingRegisters(1, 0, 10));
-                printRegisters(m.readInputRegisters(1, 0, 10));
-                printBits(m.readCoils(1, 0, 8));
-                printBits(m.readDiscreteInputs(1, 0, 8));
-                m.writeSingleRegister(1, 0, 69);
-                m.writeSingleCoil(1, 5, true);
-                m.writeMultipleRegisters(1, 1, new int[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10});
-                m.writeMultipleCoils(1, 0, new boolean[]{true, false, true});
+                printRegisters(master.readHoldingRegisters(1, 0, 10));
+                printRegisters(master.readInputRegisters(1, 0, 10));
+                printBits(master.readCoils(1, 0, 8));
+                printBits(master.readDiscreteInputs(1, 0, 8));
+                master.writeSingleRegister(1, 0, 69);
+                master.writeSingleCoil(1, 5, true);
+                master.writeMultipleRegisters(1, 1, new int[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10});
+                master.writeMultipleCoils(1, 0, new boolean[]{true, false, true});
                 System.out.println();
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
-        m.close();
+        try {
+            master.close();
+        } catch (ModbusIOException e) {
+            System.out.format("%s %s\n", "Can't close connection:", e.getLocalizedMessage());
+        }
+    }
+
+    private static void printUsage() {
+        System.out.format("Usage: %s [%s, %s, %s]\n", ModbusMasterTest.class.getCanonicalName(), "tcp", "rtu", "ascii");
+        System.out.format("\t%s additional parameters:%s %s %s\n\t\t%s\n", "tcp",
+                "ip address", "port", "keep_alive(true, false)",
+                "Example: 127.0.0.1 502 true");
+        System.out.format("\t%s additional parameters:%s %s %s %s %s\n\t\t%s\n", "rtu",
+                "device_name", "baud_rate", "data_bits", "stop_bits", "parity(none, odd, even, mark, space)",
+                "Example: COM1 115200 8 1 none");
+        System.out.format("\t%s additional parameters:%s %s %s\n\t\t%s\n", "ascii",
+                "device_name", "baud_rate", "parity(none, odd, even, mark, space)",
+                "Example: COM1 115200 odd");
     }
 
     private static void printRegisters(int[] ir) {
@@ -65,5 +214,34 @@ public class ModbusMasterTest {
         for (boolean i : ir)
             System.out.print(i + " ");
         System.out.println();
+    }
+
+    private enum TransportType {
+        TCP("tcp"),
+        RTU("rtu"),
+        ASCII("ascii");
+
+        final private String type;
+
+        TransportType(String type) {
+            this.type = type;
+        }
+
+        static public TransportType get(String s) {
+            for (TransportType type : TransportType.values()) {
+                if (type.toString().equalsIgnoreCase(s))
+                    return type;
+            }
+            return TCP;
+        }
+
+        @Override
+        final public String toString() {
+            return type;
+        }
+    }
+
+    interface ParameterInitializer<T> {
+        T init(String arg) throws Exception;
     }
 }
