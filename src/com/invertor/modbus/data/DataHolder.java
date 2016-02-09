@@ -39,6 +39,7 @@ public class DataHolder {
     private HoldingRegisters inputRegisters = null;
     private SlaveId slaveId = null;
     private ExceptionStatus exceptionStatus = null;
+    private CommStatus commStatus = new CommStatus();
 
     private void checkPointer(Object o, int offset) throws IllegalDataAddressException {
         if (o == null)
@@ -132,6 +133,14 @@ public class DataHolder {
 
     public void setInputRegisters(HoldingRegisters inputRegisters) {
         this.inputRegisters = inputRegisters;
+    }
+
+    public CommStatus getCommStatus() {
+        return commStatus;
+    }
+
+    public void setCommStatus(CommStatus commStatus) {
+        this.commStatus = commStatus;
     }
 
     public SlaveId getSlaveId() {

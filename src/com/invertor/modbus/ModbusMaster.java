@@ -166,4 +166,7 @@ abstract public class ModbusMaster {
 
     abstract public byte[] reportSlaveId(int serverAddress) throws
             ModbusProtocolException, ModbusNumberException, ModbusIOException, ModbusMasterException;
+
+    abstract public int[] getCommEventCount(int serverAddress) throws
+            ModbusProtocolException, ModbusNumberException, ModbusIOException, ModbusMasterException;
 }

@@ -90,6 +90,10 @@ final public class ModbusRequestFactory implements ModbusMessageFactory {
         return new ReportSlaveIdRequest(serverAddress);
     }
 
+    public ModbusRequest createGetCommEventCounter(int serverAddress) throws ModbusNumberException {
+        return new GetCommEventCounterRequest(serverAddress);
+    }
+
     @Override
     public ModbusMessage createMessage(ModbusInputStream fifo) throws ModbusNumberException, ModbusIOException {
         ModbusMessage msg;
@@ -126,24 +130,26 @@ final public class ModbusRequestFactory implements ModbusMessageFactory {
             case WRITE_MULTIPLE_REGISTERS:
                 msg = new WriteMultipleRegistersRequest(serverAddress);
                 break;
-            case READ_EXCEPTION_STATUS:
-                msg = new ReadExceptionStatusRequest(serverAddress);
-                break;
-            case REPORT_SLAVE_ID:
-                msg = new ReportSlaveIdRequest(serverAddress);
-                break;
-            case READ_FILE_RECORD:
-            case WRITE_FILE_RECORD:
             case MASK_WRITE_REGISTER:
                 msg = new MaskWriteRegisterRequest(serverAddress);
                 break;
             case READ_WRITE_MULTIPLE_REGISTERS:
                 msg = new ReadWriteMultipleRegistersRequest(serverAddress);
                 break;
-            case DIAGNOSTICS:
+            case READ_EXCEPTION_STATUS:
+                msg = new ReadExceptionStatusRequest(serverAddress);
+                break;
+            case REPORT_SLAVE_ID:
+                msg = new ReportSlaveIdRequest(serverAddress);
+                break;
             case GET_COMM_EVENT_COUNTER:
+                msg = new GetCommEventCounterRequest(serverAddress);
+                break;
             case GET_COMM_EVENT_LOG:
 
+            case READ_FILE_RECORD:
+            case WRITE_FILE_RECORD:
+            case DIAGNOSTICS:
             case READ_FIFO_QUEUE:
             case ENCAPSULATED_INTERFACE_TRANSPORT:
             case CAN_OPEN_PDU:

@@ -6,6 +6,7 @@ import com.invertor.modbus.data.DataHolder;
 import com.invertor.modbus.exception.ModbusIOException;
 import com.invertor.modbus.exception.ModbusNumberException;
 import com.invertor.modbus.msg.base.ModbusRequest;
+import com.invertor.modbus.msg.base.ModbusResponse;
 import com.invertor.modbus.net.ModbusConnection;
 import com.invertor.modbus.net.ModbusTransport;
 
@@ -45,7 +46,10 @@ public class RequestHandlerSerial extends RequestHandler {
                 DataHolder dataHolder = getSlave().getDataHolder();
                 ModbusTransport transport = getConn().getTransport();
                 ModbusRequest request = (ModbusRequest) transport.readRequest();
-                transport.send(request.getResponse(dataHolder));
+                ModbusResponse response = request.getResponse(dataHolder);
+                if (!response.isException())
+                    getSlave().getDataHolder().getCommStatus().incrementEventCount();
+                transport.send(response);
             } catch (ModbusIOException e) {
                 Modbus.log().fine("Request timeout(no clients connected)");
             } catch (ModbusNumberException e) {

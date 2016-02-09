@@ -56,21 +56,22 @@ public enum ModbusFunctionCode {
     READ_INPUT_REGISTERS(0x4),
     WRITE_SINGLE_COIL(0x5),
     WRITE_SINGLE_REGISTER(0x6),
-    READ_EXCEPTION_STATUS(0x7),
-    DIAGNOSTICS(0x8),
-    GET_COMM_EVENT_COUNTER(0x0B),
-    GET_COMM_EVENT_LOG(0x0C),
+    READ_EXCEPTION_STATUS(0x7),//serial line only
+    DIAGNOSTICS(0x8),//TODO: not implemented, serial line only
+    GET_COMM_EVENT_COUNTER(0x0B),//serial line only
+    GET_COMM_EVENT_LOG(0x0C),//TODO: not implemented, serial line only
     WRITE_MULTIPLE_COILS(0x0F),
     WRITE_MULTIPLE_REGISTERS(0x10),
-    REPORT_SLAVE_ID(0x11),
-    READ_FILE_RECORD(0x14),
-    WRITE_FILE_RECORD(0x15),
+    REPORT_SLAVE_ID(0x11),//serial line only
+    READ_FILE_RECORD(0x14),//TODO: not implemented
+    WRITE_FILE_RECORD(0x15),//TODO: not implemented
     MASK_WRITE_REGISTER(0x16),
     READ_WRITE_MULTIPLE_REGISTERS(0x17),
-    READ_FIFO_QUEUE(0x18),
-    ENCAPSULATED_INTERFACE_TRANSPORT(0x2B),
-    CAN_OPEN_PDU(0x0D),
-    READ_DEVICE_IDENTIFICATION(0x0E);
+    READ_FIFO_QUEUE(0x18),//TODO: not implemented
+
+    ENCAPSULATED_INTERFACE_TRANSPORT(0x2B),//TODO: not implemented
+    CAN_OPEN_PDU(0x0D),//TODO: not implemented
+    READ_DEVICE_IDENTIFICATION(0x0E);//TODO: not implemented
 
     final static private int MODBUS_EXCEPTION_FLAG = 0x80;
     final private int value;

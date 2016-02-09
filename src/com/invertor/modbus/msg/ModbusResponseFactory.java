@@ -80,23 +80,25 @@ final public class ModbusResponseFactory implements ModbusMessageFactory {
             case WRITE_MULTIPLE_REGISTERS:
                 msg = new WriteMultipleRegistersResponse(serverAddress);
                 break;
-            case READ_EXCEPTION_STATUS:
-                msg = new ReadExceptionStatusResponse(serverAddress);
-                break;
-            case REPORT_SLAVE_ID:
-                msg = new ReportSlaveIdResponse(serverAddress);
-                break;
-            case READ_FILE_RECORD:
-            case WRITE_FILE_RECORD:
             case MASK_WRITE_REGISTER:
                 msg = new MaskWriteRegisterResponse(serverAddress);
                 break;
             case READ_WRITE_MULTIPLE_REGISTERS:
                 msg = new ReadWriteMultipleRegistersResponse(serverAddress);
                 break;
-            case DIAGNOSTICS:
+            case READ_EXCEPTION_STATUS:
+                msg = new ReadExceptionStatusResponse(serverAddress);
+                break;
+            case REPORT_SLAVE_ID:
+                msg = new ReportSlaveIdResponse(serverAddress);
+                break;
             case GET_COMM_EVENT_COUNTER:
+                msg = new GetCommEventCounterResponse(serverAddress);
+                break;
             case GET_COMM_EVENT_LOG:
+            case READ_FILE_RECORD:
+            case WRITE_FILE_RECORD:
+            case DIAGNOSTICS:
             case READ_FIFO_QUEUE:
             case ENCAPSULATED_INTERFACE_TRANSPORT:
             case CAN_OPEN_PDU:
