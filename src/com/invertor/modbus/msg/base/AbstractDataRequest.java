@@ -51,27 +51,27 @@ abstract public class AbstractDataRequest extends ModbusRequest {
     abstract protected void readData(ModbusInputStream fifo) throws IOException, ModbusNumberException;
 
     @Override
-    final protected void readPDU(ModbusInputStream fifo) throws ModbusNumberException, IOException {
+    final public void readPDU(ModbusInputStream fifo) throws ModbusNumberException, IOException {
         setStartAddress(fifo.readShortBE());
         readData(fifo);
     }
 
     @Override
-    protected void writeRequest(ModbusOutputStream fifo) throws IOException {
+    public void writeRequest(ModbusOutputStream fifo) throws IOException {
         fifo.writeShortBE(getStartAddress());
         writeData(fifo);
     }
 
-    protected int getStartAddress() {
+    public int getStartAddress() {
         return startAddress;
     }
 
-    private void setStartAddress(int startAddress) {
+    public void setStartAddress(int startAddress) {
         this.startAddress = startAddress;
     }
 
     @Override
-    final protected int requestSize() {
+    final public int requestSize() {
         return 2 + dataSize();
     }
 

@@ -61,7 +61,7 @@ abstract public class ModbusMessage {
         }
     }
 
-    abstract protected void readPDU(ModbusInputStream fifo) throws ModbusNumberException, IOException;
+    abstract public void readPDU(ModbusInputStream fifo) throws ModbusNumberException, IOException;
 
     abstract protected void writePDU(ModbusOutputStream fifo) throws IOException;
 

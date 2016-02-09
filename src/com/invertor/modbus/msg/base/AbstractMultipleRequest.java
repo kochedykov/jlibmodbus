@@ -58,7 +58,7 @@ abstract public class AbstractMultipleRequest extends AbstractDataRequest {
         return 2;
     }
 
-    protected int getQuantity() {
+    public int getQuantity() {
         return quantity;
     }
 

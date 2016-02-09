@@ -42,50 +42,6 @@ final public class ModbusResponseFactory implements ModbusMessageFactory {
         return SingletonHolder.instance;
     }
 
-    public ModbusResponse createReadCoils(int serverAddress, boolean[] coils) throws ModbusNumberException {
-        return new ReadCoilsResponse(serverAddress, coils);
-    }
-
-    public ModbusResponse createReadDiscreteInputs(int serverAddress, boolean[] discreteInputs) throws ModbusNumberException {
-        return new ReadDiscreteInputsResponse(serverAddress, discreteInputs);
-    }
-
-    public ModbusResponse createReadInputRegisters(int serverAddress, int[] inputRegisters) throws ModbusNumberException {
-        return new ReadInputRegistersResponse(serverAddress, inputRegisters);
-    }
-
-    public ModbusResponse createReadHoldingRegisters(int serverAddress, int[] holdingRegisters) throws ModbusNumberException {
-        return new ReadHoldingRegistersResponse(serverAddress, holdingRegisters);
-    }
-
-    public ModbusResponse createWriteSingleCoil(int serverAddress, int startAddress, boolean coil) throws ModbusNumberException {
-        return new WriteSingleCoilResponse(serverAddress, startAddress, coil);
-    }
-
-    public ModbusResponse createWriteMultipleCoils(int serverAddress, int startAddress, int quantity) throws ModbusNumberException {
-        return new WriteMultipleCoilsResponse(serverAddress, startAddress, quantity);
-    }
-
-    public ModbusResponse createWriteMultipleRegisters(int serverAddress, int startAddress, int quantity) throws ModbusNumberException {
-        return new WriteMultipleRegistersResponse(serverAddress, startAddress, quantity);
-    }
-
-    public ModbusResponse createWriteSingleRegister(int serverAddress, int startAddress, int register) throws ModbusNumberException {
-        return new WriteSingleRegisterResponse(serverAddress, startAddress, register);
-    }
-
-    public ModbusResponse createMaskWriteRegister(int serverAddress, int startAddress, int and, int or) throws ModbusNumberException {
-        return new MaskWriteRegisterResponse(serverAddress, startAddress, and, or);
-    }
-
-    public ModbusResponse createReadExceptionStatus(int serverAddress, int status) throws ModbusNumberException {
-        return new ReadExceptionStatusResponse(serverAddress, status);
-    }
-
-    public ModbusResponse createReportSlaveId(int serverAddress, byte[] slaveId) throws ModbusNumberException {
-        return new ReportSlaveIdResponse(serverAddress, slaveId);
-    }
-
     @Override
     public ModbusMessage createMessage(ModbusInputStream fifo) throws ModbusNumberException, ModbusIOException {
         ModbusResponse msg;
@@ -135,10 +91,12 @@ final public class ModbusResponseFactory implements ModbusMessageFactory {
             case MASK_WRITE_REGISTER:
                 msg = new MaskWriteRegisterResponse(serverAddress);
                 break;
+            case READ_WRITE_MULTIPLE_REGISTERS:
+                msg = new ReadWriteMultipleRegistersResponse(serverAddress);
+                break;
             case DIAGNOSTICS:
             case GET_COMM_EVENT_COUNTER:
             case GET_COMM_EVENT_LOG:
-            case READ_WRITE_MULTIPLE_REGISTERS:
             case READ_FIFO_QUEUE:
             case ENCAPSULATED_INTERFACE_TRANSPORT:
             case CAN_OPEN_PDU:

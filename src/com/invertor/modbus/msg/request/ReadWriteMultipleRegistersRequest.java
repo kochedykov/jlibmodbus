@@ -5,7 +5,7 @@ import com.invertor.modbus.exception.ModbusNumberException;
 import com.invertor.modbus.exception.ModbusProtocolException;
 import com.invertor.modbus.msg.base.ModbusRequest;
 import com.invertor.modbus.msg.base.ModbusResponse;
-import com.invertor.modbus.msg.response.ReadExceptionStatusResponse;
+import com.invertor.modbus.msg.response.ReadWriteMultipleRegistersResponse;
 import com.invertor.modbus.net.stream.base.ModbusInputStream;
 import com.invertor.modbus.net.stream.base.ModbusOutputStream;
 import com.invertor.modbus.utils.ModbusFunctionCode;
@@ -13,7 +13,7 @@ import com.invertor.modbus.utils.ModbusFunctionCode;
 import java.io.IOException;
 
 /**
- * Copyright (c) 2015-2016 JSC Invertor
+ * Copyright (c) 2015-2016 JSC "Zavod "Invertor"
  * [http://www.sbp-invertor.ru]
  * <p/>
  * This file is part of JLibModbus.
@@ -26,7 +26,7 @@ import java.io.IOException;
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * GNU General Public License for more details.
  * <p/>
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
@@ -34,28 +34,42 @@ import java.io.IOException;
  * Authors: Vladislav Y. Kochedykov, software engineer.
  * email: vladislav.kochedykov@gmail.com
  */
-final public class ReadExceptionStatusRequest extends ModbusRequest {
+//facade
+public class ReadWriteMultipleRegistersRequest extends ModbusRequest {
 
-    public ReadExceptionStatusRequest(int serverAddress) throws ModbusNumberException {
+    private ReadHoldingRegistersRequest reader;
+    private WriteMultipleRegistersRequest writer;
+
+    public ReadWriteMultipleRegistersRequest(int serverAddress) throws ModbusNumberException {
         super(serverAddress);
+        reader = new ReadHoldingRegistersRequest(serverAddress);
+        writer = new WriteMultipleRegistersRequest(serverAddress);
+    }
+
+    public ReadWriteMultipleRegistersRequest(int serverAddress, int readAddress, int readQuantity, int writeAddress, int[] buffer) throws ModbusNumberException {
+        super(serverAddress);
+        reader = new ReadHoldingRegistersRequest(serverAddress, readAddress, readQuantity);
+        writer = new WriteMultipleRegistersRequest(serverAddress, writeAddress, buffer);
     }
 
     @Override
     public void writeRequest(ModbusOutputStream fifo) throws IOException {
-        //no operation
+        reader.writeRequest(fifo);
+        writer.writeRequest(fifo);
     }
 
     @Override
     public int requestSize() {
-        return 0;
+        return reader.requestSize() + writer.requestSize();
     }
 
     @Override
     public ModbusResponse getResponse(DataHolder dataHolder) throws ModbusNumberException {
-        ReadExceptionStatusResponse response = new ReadExceptionStatusResponse(getServerAddress());
+        ReadWriteMultipleRegistersResponse response = new ReadWriteMultipleRegistersResponse(getServerAddress());
         try {
-            int exceptionStatus = dataHolder.readExceptionStatus();
-            response.setExceptionStatus(exceptionStatus);
+            dataHolder.writeHoldingRegisterRange(writer.getStartAddress(), writer.getRegisters());
+            int[] range = dataHolder.readHoldingRegisterRange(reader.getStartAddress(), reader.getQuantity());
+            response.setRegisters(range);
         } catch (ModbusProtocolException e) {
             response.setException();
             response.setModbusExceptionCode(e.getException().getValue());
@@ -65,11 +79,12 @@ final public class ReadExceptionStatusRequest extends ModbusRequest {
 
     @Override
     public void readPDU(ModbusInputStream fifo) throws ModbusNumberException, IOException {
-        //no operation
+        reader.readPDU(fifo);
+        writer.readPDU(fifo);
     }
 
     @Override
     public ModbusFunctionCode getFunction() {
-        return ModbusFunctionCode.READ_EXCEPTION_STATUS;
+        return ModbusFunctionCode.READ_WRITE_MULTIPLE_REGISTERS;
     }
 }

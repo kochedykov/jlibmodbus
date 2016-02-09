@@ -41,12 +41,12 @@ final public class ReportSlaveIdRequest extends ModbusRequest {
     }
 
     @Override
-    protected void writeRequest(ModbusOutputStream fifo) throws IOException {
+    public void writeRequest(ModbusOutputStream fifo) throws IOException {
         //no operation
     }
 
     @Override
-    protected int requestSize() {
+    public int requestSize() {
         return 0;
     }
 
@@ -64,7 +64,7 @@ final public class ReportSlaveIdRequest extends ModbusRequest {
     }
 
     @Override
-    protected void readPDU(ModbusInputStream fifo) throws ModbusNumberException, IOException {
+    public void readPDU(ModbusInputStream fifo) throws ModbusNumberException, IOException {
         //no operation
     }
 

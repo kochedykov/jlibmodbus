@@ -7,10 +7,7 @@ import com.invertor.modbus.exception.ModbusProtocolException;
 import com.invertor.modbus.msg.ModbusRequestFactory;
 import com.invertor.modbus.msg.base.ModbusMessage;
 import com.invertor.modbus.msg.base.ModbusResponse;
-import com.invertor.modbus.msg.response.ReadCoilsResponse;
-import com.invertor.modbus.msg.response.ReadDiscreteInputsResponse;
-import com.invertor.modbus.msg.response.ReadHoldingRegistersResponse;
-import com.invertor.modbus.msg.response.ReadInputRegistersResponse;
+import com.invertor.modbus.msg.response.*;
 import com.invertor.modbus.net.ModbusConnection;
 import com.invertor.modbus.net.ModbusTransport;
 
@@ -138,6 +135,13 @@ abstract public class ModbusMaster {
     final public void writeMultipleRegisters(int serverAddress, int startAddress, int[] registers) throws
             ModbusProtocolException, ModbusNumberException, ModbusIOException, ModbusMasterException {
         processRequest(requestFactory.createWriteMultipleRegisters(serverAddress, startAddress, registers));
+    }
+
+    final public int[] readWriteMultipleRegisters(int serverAddress, int readAddress, int readQuantity, int writeAddress, int[] registers) throws
+            ModbusProtocolException, ModbusNumberException, ModbusIOException, ModbusMasterException {
+        ModbusMessage request = requestFactory.createReadWriteMultipleRegisters(serverAddress, readAddress, readQuantity, writeAddress, registers);
+        ReadWriteMultipleRegistersResponse response = (ReadWriteMultipleRegistersResponse) processRequest(request);
+        return response.getRegisters();
     }
 
     /**

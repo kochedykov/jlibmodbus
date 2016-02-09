@@ -58,6 +58,10 @@ final public class ModbusRequestFactory implements ModbusMessageFactory {
         return new ReadHoldingRegistersRequest(serverAddress, startAddress, quantity);
     }
 
+    public ModbusRequest createReadWriteMultipleRegisters(int serverAddress, int readAddress, int readQuantity, int writeAddress, int[] registers) throws ModbusNumberException {
+        return new ReadWriteMultipleRegistersRequest(serverAddress, readAddress, readQuantity, writeAddress, registers);
+    }
+
     public ModbusRequest createWriteSingleCoil(int serverAddress, int startAddress, boolean coil) throws ModbusNumberException {
         return new WriteSingleCoilRequest(serverAddress, startAddress, coil);
     }
@@ -133,10 +137,13 @@ final public class ModbusRequestFactory implements ModbusMessageFactory {
             case MASK_WRITE_REGISTER:
                 msg = new MaskWriteRegisterRequest(serverAddress);
                 break;
+            case READ_WRITE_MULTIPLE_REGISTERS:
+                msg = new ReadWriteMultipleRegistersRequest(serverAddress);
+                break;
             case DIAGNOSTICS:
             case GET_COMM_EVENT_COUNTER:
             case GET_COMM_EVENT_LOG:
-            case READ_WRITE_MULTIPLE_REGISTERS:
+
             case READ_FIFO_QUEUE:
             case ENCAPSULATED_INTERFACE_TRANSPORT:
             case CAN_OPEN_PDU:

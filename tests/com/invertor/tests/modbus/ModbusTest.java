@@ -36,7 +36,6 @@ import java.net.InetAddress;
 public class ModbusTest implements Runnable {
 
     public static final String DEFAULT_HOST = "localhost";
-    public static final String CREATION_ERROR_MESSAGE = "Can't create Modbus pair, invalid command line arguments";
     private ModbusMaster master;
     private ModbusSlave slave;
     private long timeout = 0;
@@ -196,8 +195,9 @@ public class ModbusTest implements Runnable {
             dataHolder.getCoils().set(1, true);
             dataHolder.getCoils().set(3, true);
             dataHolder.getDiscreteInputs().setRange(0, new boolean[]{false, true, true, false, true});
-            dataHolder.getInputRegisters().set(5, 69);
-            dataHolder.getHoldingRegisters().setRange(0, new int[]{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 55});
+            dataHolder.getInputRegisters().setRange(0, new int[]{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10});
+            dataHolder.getInputRegisters().set(11, 69);
+            dataHolder.getHoldingRegisters().setRange(0, new int[]{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10});
             test.slave.setDataHolder(dataHolder);//if new DataHolder instance has been created.
         } catch (IllegalDataAddressException e) {
             e.printStackTrace();
@@ -257,20 +257,21 @@ public class ModbusTest implements Runnable {
             try {
                 Thread.sleep(1000);
                 System.out.println();
-                System.out.println("Master output");
+                System.out.println("Slave output");
                 printRegisters("Holding registers", slave.getDataHolder().getHoldingRegisters().getRange(0, 16));
                 printRegisters("Input registers", slave.getDataHolder().getInputRegisters().getRange(0, 16));
                 printBits("Coils", slave.getDataHolder().getCoils().getRange(0, 16));
                 printBits("Discrete inputs", slave.getDataHolder().getDiscreteInputs().getRange(0, 16));
                 System.out.println();
-                System.out.println("Slave output");
+                System.out.println("Master output");
                 printRegisters("Holding registers", master.readHoldingRegisters(1, 0, 16));
                 printRegisters("Input registers", master.readInputRegisters(1, 0, 16));
+                printRegisters("Read write registers", master.readWriteMultipleRegisters(1, 0, 16, 3, new int[]{33, 44}));
                 printBits("Coils", master.readCoils(1, 0, 16));
                 printBits("Discrete inputs", master.readDiscreteInputs(1, 0, 16));
                 master.writeSingleRegister(1, 0, 69);
                 master.writeSingleCoil(1, 13, true);
-                master.writeMultipleRegisters(1, 1, new int[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10});
+                master.writeMultipleRegisters(1, 5, new int[]{55, 66, 77, 88, 99});
                 master.writeMultipleCoils(1, 0, new boolean[]{true, true, true});
             } catch (Exception e) {
                 e.printStackTrace();

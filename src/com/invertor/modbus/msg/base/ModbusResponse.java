@@ -58,7 +58,7 @@ public abstract class ModbusResponse extends ModbusMessage {
     }
 
     @Override
-    final protected void readPDU(ModbusInputStream fifo) throws IOException {
+    final public void readPDU(ModbusInputStream fifo) throws IOException {
         if (isException()) {
             setModbusExceptionCode(fifo.read());
         } else {
