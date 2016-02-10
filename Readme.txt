@@ -5,3 +5,4 @@ https://sourceforge.net/projects/jlibmodbus
 
 jssc homepage:
 https://code.google.com/p/java-simple-serial-connector
+https://github.com/scream3r/java-simple-serial-connector
