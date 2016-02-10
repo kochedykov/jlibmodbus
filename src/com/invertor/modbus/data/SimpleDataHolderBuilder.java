@@ -75,4 +75,9 @@ public class SimpleDataHolderBuilder extends DataHolderBuilder {
     public void buildExceptionStatus() {
         dataHolder.setExceptionStatus(new SimpleExceptionStatus(0));
     }
+
+    @Override
+    public void buildFifoQueue() {
+        dataHolder.setFifoQueue(new SimpleFifoQueue());
+    }
 }

@@ -86,6 +86,9 @@ final public class ModbusResponseFactory implements ModbusMessageFactory {
             case READ_WRITE_MULTIPLE_REGISTERS:
                 msg = new ReadWriteMultipleRegistersResponse(serverAddress);
                 break;
+            case READ_FIFO_QUEUE:
+                msg = new ReadFifoQueueResponse(serverAddress);
+                break;
             case READ_EXCEPTION_STATUS:
                 msg = new ReadExceptionStatusResponse(serverAddress);
                 break;
@@ -99,7 +102,6 @@ final public class ModbusResponseFactory implements ModbusMessageFactory {
             case READ_FILE_RECORD:
             case WRITE_FILE_RECORD:
             case DIAGNOSTICS:
-            case READ_FIFO_QUEUE:
             case ENCAPSULATED_INTERFACE_TRANSPORT:
             case CAN_OPEN_PDU:
             case READ_DEVICE_IDENTIFICATION:

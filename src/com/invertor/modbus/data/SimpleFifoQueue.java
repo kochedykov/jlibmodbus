@@ -1,5 +1,11 @@
 package com.invertor.modbus.data;
 
+import com.invertor.modbus.Modbus;
+
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.Queue;
+
 /**
  * Copyright (c) 2015-2016 JSC Invertor
  * [http://www.sbp-invertor.ru]
@@ -22,32 +28,36 @@ package com.invertor.modbus.data;
  * Authors: Vladislav Y. Kochedykov, software engineer.
  * email: vladislav.kochedykov@gmail.com
  */
-public class CommStatus {
-    private int status;
-    private int eventCount;
+public class SimpleFifoQueue extends FifoQueue {
 
-    public CommStatus() {
-        status = 0;
-        eventCount = 0;
+    Queue<Integer> queue = new LinkedList<Integer>();
+
+    public SimpleFifoQueue() {
+        super(Modbus.MAX_FIFO_COUNT);
     }
 
-    public int incrementEventCount() {
-        return eventCount++;
+    @Override
+    public int size() {
+        return queue.size();
     }
 
-    public void enter() {
-        status = 0xffff;
+    @Override
+    protected int[] peekImpl() {
+        int[] r = new int[queue.size()];
+        Iterator<Integer> iterator = queue.iterator();
+        for (int i = 0; i < r.length && iterator.hasNext(); i++) {
+            r[i] = iterator.next();
+        }
+        return r;
     }
 
-    public void leave() {
-        status = 0;
+    @Override
+    protected void addImpl(int register) {
+        queue.add(register);
     }
 
-    public int getStatus() {
-        return status;
-    }
-
-    public int getEventCount() {
-        return eventCount;
+    @Override
+    protected void pollImpl() {
+        queue.remove();
     }
 }

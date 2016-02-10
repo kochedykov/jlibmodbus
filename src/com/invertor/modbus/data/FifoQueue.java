@@ -1,5 +1,7 @@
 package com.invertor.modbus.data;
 
+import com.invertor.modbus.exception.IllegalDataValueException;
+
 /**
  * Copyright (c) 2015-2016 JSC Invertor
  * [http://www.sbp-invertor.ru]
@@ -22,32 +24,36 @@ package com.invertor.modbus.data;
  * Authors: Vladislav Y. Kochedykov, software engineer.
  * email: vladislav.kochedykov@gmail.com
  */
-public class CommStatus {
-    private int status;
-    private int eventCount;
+abstract public class FifoQueue {
 
-    public CommStatus() {
-        status = 0;
-        eventCount = 0;
+    final private int capacity;
+
+    public FifoQueue(int capacity) {
+        this.capacity = capacity;
     }
 
-    public int incrementEventCount() {
-        return eventCount++;
+    public abstract int size();
+
+    abstract protected int[] peekImpl();
+
+    abstract protected void addImpl(int register);
+
+    abstract protected void pollImpl();
+
+    final public void poll() {
+        if (size() != 0)
+            pollImpl();
     }
 
-    public void enter() {
-        status = 0xffff;
+    final public void add(int register) {
+        if (size() < capacity)
+            addImpl(register);
     }
 
-    public void leave() {
-        status = 0;
-    }
-
-    public int getStatus() {
-        return status;
-    }
-
-    public int getEventCount() {
-        return eventCount;
+    final public int[] get() throws IllegalDataValueException {
+        if (size() > 31 || size() == 0) {
+            throw new IllegalDataValueException();
+        }
+        return peekImpl();
     }
 }

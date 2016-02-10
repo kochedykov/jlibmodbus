@@ -67,7 +67,7 @@ public enum ModbusFunctionCode {
     WRITE_FILE_RECORD(0x15),//TODO: not implemented
     MASK_WRITE_REGISTER(0x16),
     READ_WRITE_MULTIPLE_REGISTERS(0x17),
-    READ_FIFO_QUEUE(0x18),//TODO: not implemented
+    READ_FIFO_QUEUE(0x18),
 
     ENCAPSULATED_INTERFACE_TRANSPORT(0x2B),//TODO: not implemented
     CAN_OPEN_PDU(0x0D),//TODO: not implemented

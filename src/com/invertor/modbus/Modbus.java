@@ -40,6 +40,7 @@ final public class Modbus {
     final static public int MAX_WRITE_COIL_COUNT = 0x7B0;
     final static public int MAX_READ_REGISTER_COUNT = 0x7D;
     final static public int MAX_WRITE_REGISTER_COUNT = 0x7B;
+    final static public int MAX_FIFO_COUNT = 31;
     final static public int MIN_SERVER_ADDRESS = 1;
     final static public int MAX_SERVER_ADDRESS = 247;
     final static public int TCP_PORT = 502;

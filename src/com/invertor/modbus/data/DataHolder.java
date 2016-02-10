@@ -39,11 +39,17 @@ public class DataHolder {
     private HoldingRegisters inputRegisters = null;
     private SlaveId slaveId = null;
     private ExceptionStatus exceptionStatus = null;
+    private FifoQueue fifoQueue = null;
     private CommStatus commStatus = new CommStatus();
 
     private void checkPointer(Object o, int offset) throws IllegalDataAddressException {
         if (o == null)
             throw new IllegalDataAddressException(offset);
+    }
+
+    private void checkPointer(Object o) throws IllegalDataValueException {
+        if (o == null)
+            throw new IllegalDataValueException();
     }
 
     public int readHoldingRegister(int offset) throws IllegalDataAddressException {
@@ -69,6 +75,11 @@ public class DataHolder {
     public int[] readInputRegisterRange(int offset, int quantity) throws IllegalDataAddressException, IllegalDataValueException {
         checkPointer(inputRegisters, offset);
         return inputRegisters.getRange(offset, quantity);
+    }
+
+    public int[] readFifoQueue() throws IllegalDataValueException {
+        checkPointer(fifoQueue);
+        return fifoQueue.get();
     }
 
     public boolean[] readCoilRange(int offset, int quantity) throws IllegalDataAddressException, IllegalDataValueException {
@@ -157,5 +168,13 @@ public class DataHolder {
 
     public void setExceptionStatus(ExceptionStatus exceptionStatus) {
         this.exceptionStatus = exceptionStatus;
+    }
+
+    public FifoQueue getFifoQueue() {
+        return fifoQueue;
+    }
+
+    public void setFifoQueue(FifoQueue fifoQueue) {
+        this.fifoQueue = fifoQueue;
     }
 }

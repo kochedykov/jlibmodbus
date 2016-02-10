@@ -2,9 +2,10 @@ package com.invertor.modbus.msg.request;
 
 import com.invertor.modbus.data.DataHolder;
 import com.invertor.modbus.exception.ModbusNumberException;
-import com.invertor.modbus.msg.base.ModbusRequest;
+import com.invertor.modbus.exception.ModbusProtocolException;
+import com.invertor.modbus.msg.base.AbstractDataRequest;
 import com.invertor.modbus.msg.base.ModbusResponse;
-import com.invertor.modbus.msg.response.GetCommEventCounterResponse;
+import com.invertor.modbus.msg.response.ReadFifoQueueResponse;
 import com.invertor.modbus.net.stream.base.ModbusInputStream;
 import com.invertor.modbus.net.stream.base.ModbusOutputStream;
 import com.invertor.modbus.utils.ModbusFunctionCode;
@@ -33,37 +34,46 @@ import java.io.IOException;
  * Authors: Vladislav Y. Kochedykov, software engineer.
  * email: vladislav.kochedykov@gmail.com
  */
-final public class GetCommEventCounterRequest extends ModbusRequest {
+public class ReadFifoQueueRequest extends AbstractDataRequest {
 
-    public GetCommEventCounterRequest(int serverAddress) throws ModbusNumberException {
+    public ReadFifoQueueRequest(int serverAddress) throws ModbusNumberException {
         super(serverAddress);
     }
 
+    public ReadFifoQueueRequest(int serverAddress, int startAddress) throws ModbusNumberException {
+        super(serverAddress, startAddress);
+    }
+
     @Override
-    public void writeRequest(ModbusOutputStream fifo) throws IOException {
+    protected void writeData(ModbusOutputStream fifo) throws IOException {
         //no op
     }
 
     @Override
-    public int requestSize() {
+    protected void readData(ModbusInputStream fifo) throws IOException, ModbusNumberException {
+        //no op
+    }
+
+    @Override
+    protected int dataSize() {
         return 0;
     }
 
     @Override
     public ModbusResponse getResponse(DataHolder dataHolder) throws ModbusNumberException {
-        GetCommEventCounterResponse response = new GetCommEventCounterResponse(getServerAddress());
-        response.setEventCount(dataHolder.getCommStatus().getEventCount());
-        response.setStatus(dataHolder.getCommStatus().getStatus());
+        ReadFifoQueueResponse response = new ReadFifoQueueResponse(getServerAddress());
+        try {
+            int[] r = dataHolder.readFifoQueue();
+            response.setFifoValueRegister(r);
+        } catch (ModbusProtocolException e) {
+            response.setException();
+            response.setModbusExceptionCode(e.getException().getValue());
+        }
         return response;
     }
 
     @Override
-    public void readPDU(ModbusInputStream fifo) throws ModbusNumberException, IOException {
-        //no op
-    }
-
-    @Override
     public ModbusFunctionCode getFunction() {
-        return ModbusFunctionCode.GET_COMM_EVENT_COUNTER;
+        return ModbusFunctionCode.READ_FIFO_QUEUE;
     }
 }

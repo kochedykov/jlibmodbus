@@ -49,6 +49,8 @@ abstract public class DataHolderBuilder {
 
     public abstract void buildExceptionStatus();
 
+    public abstract void buildFifoQueue();
+
     final public DataHolder build() {
         createNewDataHolder();
         buildCoils();
@@ -57,6 +59,7 @@ abstract public class DataHolderBuilder {
         buildInputRegisters();
         buildSlaveId();
         buildExceptionStatus();
+        buildFifoQueue();
         return getDataHolder();
     }
 }
