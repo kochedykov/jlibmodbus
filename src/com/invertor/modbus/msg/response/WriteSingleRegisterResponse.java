@@ -65,11 +65,11 @@ public class WriteSingleRegisterResponse extends AbstractWriteResponse {
         return ModbusFunctionCode.WRITE_SINGLE_REGISTER;
     }
 
-    final protected int getValue() {
+    final public int getValue() {
         return value;
     }
 
     final public void setValue(int value) {
-        this.value = value;
+        this.value = ((short) value) & 0xffff;
     }
 }

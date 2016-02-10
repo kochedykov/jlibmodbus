@@ -78,6 +78,12 @@ public class ReadWriteMultipleRegistersRequest extends ModbusRequest {
     }
 
     @Override
+    public boolean validateResponseImpl(ModbusResponse response) {
+        ReadWriteMultipleRegistersResponse r = (ReadWriteMultipleRegistersResponse) response;
+        return r.getByteCount() == reader.getQuantity() * 2;
+    }
+
+    @Override
     public void readPDU(ModbusInputStream fifo) throws ModbusNumberException, IOException {
         reader.readPDU(fifo);
         writer.readPDU(fifo);

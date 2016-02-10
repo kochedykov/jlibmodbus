@@ -58,6 +58,11 @@ final public class GetCommEventCounterRequest extends ModbusRequest {
     }
 
     @Override
+    public boolean validateResponseImpl(ModbusResponse response) {
+        return true;
+    }
+
+    @Override
     public void readPDU(ModbusInputStream fifo) throws ModbusNumberException, IOException {
         //no op
     }

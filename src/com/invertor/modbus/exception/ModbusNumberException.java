@@ -26,4 +26,8 @@ public class ModbusNumberException extends Exception {
     public ModbusNumberException(String message, int number) {
         super(message + " : " + number);
     }
+
+    public ModbusNumberException(String message) {
+        super(message);
+    }
 }

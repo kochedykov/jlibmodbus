@@ -65,6 +65,14 @@ final public class MaskWriteRegisterRequest extends AbstractDataRequest {
     }
 
     @Override
+    public boolean validateResponseImpl(ModbusResponse response) {
+        MaskWriteRegisterResponse r = (MaskWriteRegisterResponse) response;
+        return (r.getStartAddress() == getStartAddress()) &&
+                (r.getMaskAnd() != getMaskAnd()) &&
+                (r.getMaskOr() == getMaskOr());
+    }
+
+    @Override
     protected void readData(ModbusInputStream fifo) throws IOException {
         setMaskAnd(fifo.readShortBE());
         setMaskOr(fifo.readShortBE());

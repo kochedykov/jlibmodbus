@@ -42,7 +42,7 @@ abstract public class AbstractReadResponse extends ModbusResponse {
         this.byteCount = byteCount;
     }
 
-    protected int getByteCount() {
+    public int getByteCount() {
         return byteCount;
     }
 
@@ -51,7 +51,7 @@ abstract public class AbstractReadResponse extends ModbusResponse {
     }
 
     @Override
-    final public void readResponse(ModbusInputStream fifo) throws IOException {
+    final public void readResponse(ModbusInputStream fifo) throws IOException, ModbusNumberException {
         setByteCount(fifo.read());
         readData(fifo);
     }

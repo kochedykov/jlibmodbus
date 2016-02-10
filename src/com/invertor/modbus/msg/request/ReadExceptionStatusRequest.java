@@ -64,6 +64,11 @@ final public class ReadExceptionStatusRequest extends ModbusRequest {
     }
 
     @Override
+    public boolean validateResponseImpl(ModbusResponse response) {
+        return true;
+    }
+
+    @Override
     public void readPDU(ModbusInputStream fifo) throws ModbusNumberException, IOException {
         //no operation
     }

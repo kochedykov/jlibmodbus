@@ -65,6 +65,12 @@ public class WriteSingleRegisterRequest extends AbstractDataRequest {
     }
 
     @Override
+    public boolean validateResponseImpl(ModbusResponse response) {
+        WriteSingleRegisterResponse r = (WriteSingleRegisterResponse) response;
+        return r.getStartAddress() == getStartAddress() && r.getValue() == getValue();
+    }
+
+    @Override
     final protected void readData(ModbusInputStream fifo) throws IOException {
         setValue(fifo.readShortBE());
     }

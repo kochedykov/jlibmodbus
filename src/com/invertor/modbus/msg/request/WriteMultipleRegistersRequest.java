@@ -52,7 +52,7 @@ final public class WriteMultipleRegistersRequest extends AbstractWriteMultipleRe
 
     @Override
     public boolean checkAddressRange(int startAddress, int quantity) {
-        return Modbus.checkReadRegisterCount(quantity) &&
+        return Modbus.checkWriteRegisterCount(quantity) &&
                 Modbus.checkStartAddress(startAddress) &&
                 Modbus.checkEndAddress(startAddress + quantity);
     }
@@ -70,11 +70,19 @@ final public class WriteMultipleRegistersRequest extends AbstractWriteMultipleRe
     }
 
     @Override
+    public boolean validateResponseImpl(ModbusResponse response) {
+        WriteMultipleRegistersResponse r = (WriteMultipleRegistersResponse) response;
+        return r.getStartAddress() == getStartAddress() && r.getValue() == getQuantity();
+    }
+
+    @Override
     public void readData(ModbusInputStream fifo) throws IOException, ModbusNumberException {
         super.readData(fifo);
         if (getQuantity() * 2 != getByteCount()) {
             throw new ModbusNumberException("Byte count not matches quantity*2", getByteCount());
         }
+        if (!checkAddressRange(getStartAddress(), getQuantity()))
+            throw new ModbusNumberException("Register count greater then max register count", getQuantity());
         setRegisters(DataUtils.toIntArray(getValues()));
     }
 
@@ -82,7 +90,7 @@ final public class WriteMultipleRegistersRequest extends AbstractWriteMultipleRe
         return registers;
     }
 
-    public void setRegisters(int[] registers) {
+    protected void setRegisters(int[] registers) throws ModbusNumberException {
         this.registers = registers;
     }
 

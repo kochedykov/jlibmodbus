@@ -54,6 +54,12 @@ final public class ReadInputRegistersRequest extends ReadHoldingRegistersRequest
     }
 
     @Override
+    public boolean validateResponseImpl(ModbusResponse response) {
+        ReadInputRegistersResponse r = (ReadInputRegistersResponse) response;
+        return r.getByteCount() == getQuantity() * 2;
+    }
+
+    @Override
     public ModbusFunctionCode getFunction() {
         return ModbusFunctionCode.READ_INPUT_REGISTERS;
     }

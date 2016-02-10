@@ -5,7 +5,7 @@ import com.invertor.modbus.exception.ModbusIOException;
 import com.invertor.modbus.exception.ModbusMasterException;
 import com.invertor.modbus.exception.ModbusNumberException;
 import com.invertor.modbus.exception.ModbusProtocolException;
-import com.invertor.modbus.msg.base.ModbusMessage;
+import com.invertor.modbus.msg.base.ModbusRequest;
 import com.invertor.modbus.msg.response.GetCommEventCounterResponse;
 import com.invertor.modbus.msg.response.ReadExceptionStatusResponse;
 import com.invertor.modbus.msg.response.ReportSlaveIdResponse;
@@ -37,21 +37,21 @@ abstract public class ModbusMasterSerial extends ModbusMaster {
     @Override
     public int readExceptionStatus(int serverAddress) throws
             ModbusProtocolException, ModbusNumberException, ModbusIOException, ModbusMasterException {
-        ModbusMessage request = requestFactory.createReadExceptionStatus(serverAddress);
+        ModbusRequest request = requestFactory.createReadExceptionStatus(serverAddress);
         ReadExceptionStatusResponse response = (ReadExceptionStatusResponse) processRequest(request);
         return response.getExceptionStatus();
     }
 
     @Override
     public byte[] reportSlaveId(int serverAddress) throws ModbusProtocolException, ModbusNumberException, ModbusIOException, ModbusMasterException {
-        ModbusMessage request = requestFactory.createReportSlaveId(serverAddress);
+        ModbusRequest request = requestFactory.createReportSlaveId(serverAddress);
         ReportSlaveIdResponse response = (ReportSlaveIdResponse) processRequest(request);
         return response.getSlaveId();
     }
 
     @Override
     public int[] getCommEventCount(int serverAddress) throws ModbusProtocolException, ModbusNumberException, ModbusIOException, ModbusMasterException {
-        ModbusMessage request = requestFactory.createGetCommEventCounter(serverAddress);
+        ModbusRequest request = requestFactory.createGetCommEventCounter(serverAddress);
         GetCommEventCounterResponse response = (GetCommEventCounterResponse) processRequest(request);
         return new int[]{response.getStatus(), response.getEventCount()};
     }

@@ -56,6 +56,12 @@ public class ReadHoldingRegistersRequest extends AbstractMultipleRequest {
     }
 
     @Override
+    public boolean validateResponseImpl(ModbusResponse response) {
+        ReadHoldingRegistersResponse r = (ReadHoldingRegistersResponse) response;
+        return (r.getByteCount() == getQuantity() * 2);
+    }
+
+    @Override
     public boolean checkAddressRange(int startAddress, int quantity) {
         return Modbus.checkReadRegisterCount(quantity) &&
                 Modbus.checkStartAddress(startAddress) &&

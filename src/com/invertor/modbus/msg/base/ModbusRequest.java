@@ -50,4 +50,19 @@ abstract public class ModbusRequest extends ModbusMessage {
     abstract public int requestSize();
 
     abstract public ModbusResponse getResponse(DataHolder dataHolder) throws ModbusNumberException;
+
+    abstract protected boolean validateResponseImpl(ModbusResponse response);
+
+    public void validateResponse(ModbusResponse msg) throws ModbusNumberException {
+        if (getProtocolId() != msg.getProtocolId())
+            throw new ModbusNumberException("Collision: does not matches the transaction id");
+        if (getTransactionId() != msg.getTransactionId())
+            throw new ModbusNumberException("Collision: does not matches the transaction id");
+        if (getServerAddress() != msg.getServerAddress())
+            throw new ModbusNumberException("Does not matches the slave address", msg.getServerAddress());
+        if (getFunction() != msg.getFunction())
+            throw new ModbusNumberException("Does not matches the slave address", msg.getFunction().getValue());
+        if (!validateResponseImpl(msg))
+            throw new ModbusNumberException("Collision: response does not matches the request");
+    }
 }

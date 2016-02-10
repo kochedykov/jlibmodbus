@@ -4,6 +4,7 @@ import com.invertor.modbus.data.DataHolder;
 import com.invertor.modbus.exception.ModbusNumberException;
 import com.invertor.modbus.exception.ModbusProtocolException;
 import com.invertor.modbus.msg.base.ModbusResponse;
+import com.invertor.modbus.msg.response.ReadCoilsResponse;
 import com.invertor.modbus.msg.response.ReadDiscreteInputsResponse;
 import com.invertor.modbus.utils.ModbusFunctionCode;
 
@@ -56,5 +57,11 @@ final public class ReadDiscreteInputsRequest extends ReadCoilsRequest {
     @Override
     public ModbusFunctionCode getFunction() {
         return ModbusFunctionCode.READ_DISCRETE_INPUTS;
+    }
+
+    @Override
+    public boolean validateResponseImpl(ModbusResponse response) {
+        ReadDiscreteInputsResponse r = (ReadDiscreteInputsResponse) response;
+        return (r.getByteCount() == ReadCoilsResponse.calcByteCount(getQuantity()));
     }
 }

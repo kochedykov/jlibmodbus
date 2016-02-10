@@ -51,7 +51,7 @@ final public class WriteMultipleCoilsRequest extends AbstractWriteMultipleReques
 
     @Override
     public boolean checkAddressRange(int startAddress, int quantity) {
-        return Modbus.checkReadCoilCount(quantity) &&
+        return Modbus.checkWriteCoilCount(quantity) &&
                 Modbus.checkStartAddress(startAddress) &&
                 Modbus.checkEndAddress(startAddress + quantity);
     }
@@ -69,12 +69,19 @@ final public class WriteMultipleCoilsRequest extends AbstractWriteMultipleReques
     }
 
     @Override
+    public boolean validateResponseImpl(ModbusResponse response) {
+        WriteMultipleCoilsResponse r = (WriteMultipleCoilsResponse) response;
+        return r.getStartAddress() == getStartAddress() && r.getValue() == getQuantity();
+    }
+
+    @Override
     public void readData(ModbusInputStream fifo) throws IOException, ModbusNumberException {
         super.readData(fifo);
         if (Math.ceil((double) getQuantity() / 8) != getByteCount()) {
             throw new ModbusNumberException("Byte count not matches quantity/8", getByteCount());
         }
-
+        if (!checkAddressRange(getStartAddress(), getQuantity()))
+            throw new ModbusNumberException("Coil count greater then max coil count", getQuantity());
         setCoils(DataUtils.toBitsArray(getValues(), getQuantity()));
     }
 
@@ -82,7 +89,7 @@ final public class WriteMultipleCoilsRequest extends AbstractWriteMultipleReques
         return coils;
     }
 
-    public void setCoils(boolean[] coils) {
+    protected void setCoils(boolean[] coils) {
         this.coils = coils;
     }
 
