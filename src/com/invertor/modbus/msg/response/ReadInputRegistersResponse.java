@@ -31,10 +31,6 @@ final public class ReadInputRegistersResponse extends ReadHoldingRegistersRespon
         super(serverAddress);
     }
 
-    public ReadInputRegistersResponse(int serverAddress, int[] registers) throws ModbusNumberException {
-        super(serverAddress, registers);
-    }
-
     @Override
     public ModbusFunctionCode getFunction() {
         return ModbusFunctionCode.READ_INPUT_REGISTERS;

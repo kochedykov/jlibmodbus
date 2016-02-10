@@ -37,8 +37,8 @@ import java.io.IOException;
 //facade
 public class ReadWriteMultipleRegistersRequest extends ModbusRequest {
 
-    private ReadHoldingRegistersRequest reader;
-    private WriteMultipleRegistersRequest writer;
+    final private ReadHoldingRegistersRequest reader;
+    final private WriteMultipleRegistersRequest writer;
 
     public ReadWriteMultipleRegistersRequest(int serverAddress) throws ModbusNumberException {
         super(serverAddress);

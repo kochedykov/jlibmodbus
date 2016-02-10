@@ -51,7 +51,7 @@ final public class WriteMultipleRegistersRequest extends AbstractWriteMultipleRe
     }
 
     @Override
-    public boolean checkAddressRange(int startAddress, int quantity) {
+    protected boolean checkAddressRange(int startAddress, int quantity) {
         return Modbus.checkWriteRegisterCount(quantity) &&
                 Modbus.checkStartAddress(startAddress) &&
                 Modbus.checkEndAddress(startAddress + quantity);
@@ -90,7 +90,7 @@ final public class WriteMultipleRegistersRequest extends AbstractWriteMultipleRe
         return registers;
     }
 
-    protected void setRegisters(int[] registers) throws ModbusNumberException {
+    private void setRegisters(int[] registers) {
         this.registers = registers;
     }
 

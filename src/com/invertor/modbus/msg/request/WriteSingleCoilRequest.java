@@ -58,7 +58,7 @@ final public class WriteSingleCoilRequest extends WriteSingleRegisterRequest {
         return r.getStartAddress() == getStartAddress() && r.getValue() == getValue();
     }
 
-    public boolean getCoil() {
+    private boolean getCoil() {
         return Modbus.toCoil(getValue());
     }
 

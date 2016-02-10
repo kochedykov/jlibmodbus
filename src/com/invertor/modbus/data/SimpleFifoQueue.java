@@ -30,7 +30,7 @@ import java.util.Queue;
  */
 public class SimpleFifoQueue extends FifoQueue {
 
-    Queue<Integer> queue = new LinkedList<Integer>();
+    final private Queue<Integer> queue = new LinkedList<Integer>();
 
     public SimpleFifoQueue() {
         super(Modbus.MAX_FIFO_COUNT);

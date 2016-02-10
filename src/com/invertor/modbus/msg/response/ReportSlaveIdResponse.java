@@ -39,12 +39,6 @@ final public class ReportSlaveIdResponse extends AbstractReadResponse {
         super(serverAddress);
     }
 
-    public ReportSlaveIdResponse(int serverAddress, byte[] slaveId) throws ModbusNumberException {
-        super(serverAddress, slaveId.length);
-
-        this.slaveId = slaveId;
-    }
-
     public byte[] getSlaveId() {
         return slaveId;
     }

@@ -31,8 +31,8 @@ public class CommStatus {
         eventCount = 0;
     }
 
-    public int incrementEventCount() {
-        return eventCount++;
+    public void incrementEventCount() {
+        eventCount++;
     }
 
     public void enter() {

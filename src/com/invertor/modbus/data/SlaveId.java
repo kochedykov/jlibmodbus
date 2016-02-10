@@ -1,7 +1,5 @@
 package com.invertor.modbus.data;
 
-import com.invertor.modbus.exception.IllegalDataValueException;
-
 /**
  * Copyright (c) 2015-2016 JSC Invertor
  * [http://www.sbp-invertor.ru]
@@ -27,5 +25,5 @@ import com.invertor.modbus.exception.IllegalDataValueException;
 public interface SlaveId {
     byte[] get();
 
-    void set(byte[] data) throws IllegalDataValueException;
+    void set(byte[] data);
 }

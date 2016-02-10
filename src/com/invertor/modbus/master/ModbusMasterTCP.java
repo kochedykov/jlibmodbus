@@ -2,7 +2,10 @@ package com.invertor.modbus.master;
 
 import com.invertor.modbus.Modbus;
 import com.invertor.modbus.ModbusMaster;
-import com.invertor.modbus.exception.*;
+import com.invertor.modbus.exception.IllegalFunctionException;
+import com.invertor.modbus.exception.ModbusIOException;
+import com.invertor.modbus.exception.ModbusNumberException;
+import com.invertor.modbus.exception.ModbusProtocolException;
 import com.invertor.modbus.msg.base.ModbusMessage;
 import com.invertor.modbus.net.ModbusConnection;
 import com.invertor.modbus.net.ModbusMasterConnectionTCP;
@@ -98,12 +101,12 @@ final public class ModbusMasterTCP extends ModbusMaster {
     }
 
     @Override
-    public byte[] reportSlaveId(int serverAddress) throws ModbusProtocolException, ModbusNumberException, ModbusIOException, ModbusMasterException {
+    public byte[] reportSlaveId(int serverAddress) throws ModbusProtocolException, ModbusNumberException, ModbusIOException {
         throw new IllegalFunctionException(ModbusFunctionCode.REPORT_SLAVE_ID);
     }
 
     @Override
-    public int[] getCommEventCount(int serverAddress) throws ModbusProtocolException, ModbusNumberException, ModbusIOException, ModbusMasterException {
+    public int[] getCommEventCount(int serverAddress) throws ModbusProtocolException, ModbusNumberException, ModbusIOException {
         throw new IllegalFunctionException(ModbusFunctionCode.GET_COMM_EVENT_COUNTER);
     }
 }

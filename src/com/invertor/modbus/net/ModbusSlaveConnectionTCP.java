@@ -36,8 +36,6 @@ public class ModbusSlaveConnectionTCP extends ModbusConnection {
     private Socket socket;
     private ModbusTransport transport = null;
 
-    private int readTimeout = Modbus.MAX_RESPONSE_TIMEOUT;
-
     public ModbusSlaveConnectionTCP(Socket socket) throws ModbusIOException {
         this.socket = socket;
         transport = new ModbusTransportTCP(socket);
@@ -83,7 +81,6 @@ public class ModbusSlaveConnectionTCP extends ModbusConnection {
 
     @Override
     public void setReadTimeout(int timeout) {
-        readTimeout = timeout;
         if (transport != null)
             transport.getInputStream().setReadTimeout(timeout);
         if (socket != null) {

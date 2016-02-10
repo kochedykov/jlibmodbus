@@ -50,7 +50,7 @@ final public class WriteMultipleCoilsRequest extends AbstractWriteMultipleReques
     }
 
     @Override
-    public boolean checkAddressRange(int startAddress, int quantity) {
+    protected boolean checkAddressRange(int startAddress, int quantity) {
         return Modbus.checkWriteCoilCount(quantity) &&
                 Modbus.checkStartAddress(startAddress) &&
                 Modbus.checkEndAddress(startAddress + quantity);
@@ -85,11 +85,11 @@ final public class WriteMultipleCoilsRequest extends AbstractWriteMultipleReques
         setCoils(DataUtils.toBitsArray(getValues(), getQuantity()));
     }
 
-    public boolean[] getCoils() {
+    private boolean[] getCoils() {
         return coils;
     }
 
-    protected void setCoils(boolean[] coils) {
+    private void setCoils(boolean[] coils) {
         this.coils = coils;
     }
 

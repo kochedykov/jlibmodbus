@@ -31,10 +31,6 @@ final public class ReadWriteMultipleRegistersResponse extends ReadHoldingRegiste
         super(serverAddress);
     }
 
-    public ReadWriteMultipleRegistersResponse(int serverAddress, int[] registers) throws ModbusNumberException {
-        super(serverAddress, registers);
-    }
-
     @Override
     public ModbusFunctionCode getFunction() {
         return ModbusFunctionCode.READ_WRITE_MULTIPLE_REGISTERS;

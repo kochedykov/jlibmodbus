@@ -31,10 +31,6 @@ final public class ReadDiscreteInputsResponse extends ReadCoilsResponse {
         super(serverAddress);
     }
 
-    public ReadDiscreteInputsResponse(int serverAddress, boolean[] coils) throws ModbusNumberException {
-        super(serverAddress, coils);
-    }
-
     @Override
     public ModbusFunctionCode getFunction() {
         return ModbusFunctionCode.READ_DISCRETE_INPUTS;
