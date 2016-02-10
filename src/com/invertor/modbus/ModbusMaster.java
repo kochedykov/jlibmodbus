@@ -10,6 +10,7 @@ import com.invertor.modbus.msg.base.ModbusResponse;
 import com.invertor.modbus.msg.response.*;
 import com.invertor.modbus.net.ModbusConnection;
 import com.invertor.modbus.net.ModbusTransport;
+import com.invertor.modbus.utils.ModbusExceptionCode;
 
 /**
  * Copyright (c) 2015-2016 JSC Invertor
@@ -65,7 +66,11 @@ abstract public class ModbusMaster {
     protected ModbusMessage processRequest(ModbusRequest request) throws ModbusProtocolException,
             ModbusNumberException, ModbusIOException {
         sendRequest(request);
-        ModbusResponse msg = (ModbusResponse) readResponse();
+        ModbusResponse msg;
+        int i = 0;
+        do {
+            msg = (ModbusResponse) readResponse();
+        } while (msg.getModbusExceptionCode() == ModbusExceptionCode.ACKNOWLEDGE && i++ < 3);//3 repeats
         if (msg.isException())
             throw new ModbusProtocolException(msg.getModbusExceptionCode());
         request.validateResponse(msg);
