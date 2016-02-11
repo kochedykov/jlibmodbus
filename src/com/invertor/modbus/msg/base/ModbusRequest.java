@@ -3,6 +3,7 @@ package com.invertor.modbus.msg.base;
 import com.invertor.modbus.data.DataHolder;
 import com.invertor.modbus.exception.ModbusNumberException;
 import com.invertor.modbus.net.stream.base.ModbusOutputStream;
+import com.invertor.modbus.utils.ModbusFunctionCode;
 
 import java.io.IOException;
 
@@ -60,9 +61,14 @@ abstract public class ModbusRequest extends ModbusMessage {
             throw new ModbusNumberException("Collision: does not matches the transaction id");
         if (getServerAddress() != msg.getServerAddress())
             throw new ModbusNumberException("Does not matches the slave address", msg.getServerAddress());
-        if (getFunction() != msg.getFunction())
-            throw new ModbusNumberException("Does not matches the slave address", msg.getFunction());
-        if (!validateResponseImpl(msg))
-            throw new ModbusNumberException("Collision: response does not matches the request");
+        if (msg.isException()) {
+            if (ModbusFunctionCode.getExceptionValue(getFunction()) != msg.getFunction())
+                throw new ModbusNumberException("Does not matches the function code", msg.getFunction());
+        } else {
+            if (getFunction() != msg.getFunction())
+                throw new ModbusNumberException("Does not matches the function code", msg.getFunction());
+            if (!validateResponseImpl(msg))
+                throw new ModbusNumberException("Collision: response does not matches the request");
+        }
     }
 }
