@@ -70,16 +70,14 @@ abstract public class ModbusMaster {
         do {
             try {
                 msg = (ModbusResponse) readResponse();
-                if (msg.isException())
-                    throw new ModbusProtocolException(msg.getModbusExceptionCode());
                 request.validateResponse(msg);
                 if (msg.getModbusExceptionCode() != ModbusExceptionCode.ACKNOWLEDGE) {
+                    if (msg.isException())
+                        throw new ModbusProtocolException(msg.getModbusExceptionCode());
                     return msg;
                 }
             } catch (ModbusNumberException mne) {
                 Modbus.log().warning(mne.getLocalizedMessage());
-            } catch (ModbusProtocolException mpe) {
-                Modbus.log().warning(mpe.getLocalizedMessage());
             }
         } while (true);
     }
