@@ -10,6 +10,7 @@ import com.invertor.modbus.serial.SerialPort;
 import com.invertor.modbus.serial.SerialUtils;
 
 import java.net.InetAddress;
+import java.nio.charset.Charset;
 
 /**
  * Copyright (c) 2015-2016 JSC Invertor
@@ -50,6 +51,7 @@ public class ModbusTest implements Runnable {
     }
 
     public static void main(String[] argv) {
+
         if (argv.length < 1) {
             printUsage();
             return;
@@ -189,6 +191,7 @@ public class ModbusTest implements Runnable {
 
         test.slave.setServerAddress(1);
         test.slave.setDataHolder(new SimpleDataHolderBuilder(1000));
+        Modbus.setLogLevel(Modbus.LogLevel.LEVEL_DEBUG);
 
         try {
             DataHolder dataHolder = test.slave.getDataHolder();
@@ -198,7 +201,7 @@ public class ModbusTest implements Runnable {
             dataHolder.getInputRegisters().setRange(0, new int[]{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10});
             dataHolder.getInputRegisters().set(11, 69);
             dataHolder.getHoldingRegisters().setRange(0, new int[]{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10});
-            test.slave.setDataHolder(dataHolder);//if new DataHolder instance has been created.
+            dataHolder.getSlaveId().set("slave implementation = jlibmodbus".getBytes());
         } catch (IllegalDataAddressException e) {
             e.printStackTrace();
         } catch (IllegalDataValueException e) {
@@ -238,7 +241,7 @@ public class ModbusTest implements Runnable {
         Thread thread = new Thread(this);
         thread.start();
         try {
-            thread.join(100000);
+            thread.join(10000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -250,12 +253,14 @@ public class ModbusTest implements Runnable {
         try {
             slave.open();
             master.open();
+            master.writeSingleRegister(1, 0, 69);
         } catch (Exception e) {
             e.printStackTrace();
         }
+        master.setResponseTimeout(100);
         while ((System.currentTimeMillis() - time) < timeout) {
             try {
-                Thread.sleep(1000);
+                Thread.sleep(1);
                 System.out.println();
                 System.out.println("Slave output");
                 printRegisters("Holding registers", slave.getDataHolder().getHoldingRegisters().getRange(0, 16));
@@ -269,7 +274,10 @@ public class ModbusTest implements Runnable {
                 printRegisters("Read write registers", master.readWriteMultipleRegisters(1, 0, 16, 3, new int[]{33, 44}));
                 printBits("Coils", master.readCoils(1, 0, 16));
                 printBits("Discrete inputs", master.readDiscreteInputs(1, 0, 16));
-                master.writeSingleRegister(1, 0, 69);
+                System.out.println(new String(master.reportSlaveId(1), Charset.defaultCharset()));
+                System.out.println(master.readExceptionStatus(1));
+                System.out.println(master.getCommEventCount(1)[1]);
+                master.maskWriteRegister(1, 0, 7, 10);
                 master.writeSingleCoil(1, 13, true);
                 master.writeMultipleRegisters(1, 5, new int[]{55, 66, 77, 88, 99});
                 master.writeMultipleCoils(1, 0, new boolean[]{true, true, true});
@@ -277,6 +285,7 @@ public class ModbusTest implements Runnable {
                 e.printStackTrace();
             }
         }
+
         try {
             slave.close();
             master.close();
