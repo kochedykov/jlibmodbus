@@ -41,13 +41,15 @@ public class ModbusTransportASCII extends ModbusTransport {
 
     @Override
     protected ModbusMessage read(ModbusMessageFactory factory) throws ModbusNumberException, ModbusIOException {
-        InputStreamASCII is = (InputStreamASCII) getInputStream();
-        ModbusMessage msg = factory.createMessage(is);
-        int lrc = is.getLrc();
-        boolean check;
         int cr;
         int lf;
+        boolean check;
+        int lrc;
+        ModbusMessage msg;
+        InputStreamASCII is = (InputStreamASCII) getInputStream();
         try {
+            msg = factory.createMessage(is);
+            lrc = is.getLrc();
             check = lrc == is.read();
             cr = is.readRaw();
             lf = is.readRaw();
@@ -57,10 +59,11 @@ public class ModbusTransportASCII extends ModbusTransport {
         if (cr != Modbus.ASCII_CODE_CR || lf != Modbus.ASCII_CODE_LF)
             Modbus.log().warning("\\r\\n not received.");
         /*clear fifo*/
-        is.reset();
+
         if (!check) {
             throw new ModbusNumberException("control sum check failed.", lrc);
         }
+        is.reset();
         return msg;
     }
 

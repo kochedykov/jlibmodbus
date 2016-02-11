@@ -1,10 +1,12 @@
-package com.invertor.modbus.msg.response;
+package com.invertor.modbus.msg.request;
 
+import com.invertor.modbus.data.DataHolder;
 import com.invertor.modbus.exception.ModbusNumberException;
+import com.invertor.modbus.msg.base.ModbusRequest;
 import com.invertor.modbus.msg.base.ModbusResponse;
+import com.invertor.modbus.msg.response.IllegalFunctionResponse;
 import com.invertor.modbus.net.stream.base.ModbusInputStream;
 import com.invertor.modbus.net.stream.base.ModbusOutputStream;
-import com.invertor.modbus.utils.ModbusFunctionCode;
 
 import java.io.IOException;
 
@@ -22,7 +24,7 @@ import java.io.IOException;
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * GNU General Public License for more details.
  * <p/>
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
@@ -30,39 +32,42 @@ import java.io.IOException;
  * Authors: Vladislav Y. Kochedykov, software engineer.
  * email: vladislav.kochedykov@gmail.com
  */
-final public class ReadExceptionStatusResponse extends ModbusResponse {
+public class IllegalFunctionRequest extends ModbusRequest {
 
-    private int exceptionStatus = 0;
+    final private int functionCode;
 
-    public ReadExceptionStatusResponse(int serverAddress) throws ModbusNumberException {
+    public IllegalFunctionRequest(int serverAddress, int functionCode) throws ModbusNumberException {
         super(serverAddress);
-    }
-
-    public int getExceptionStatus() {
-        return exceptionStatus;
-    }
-
-    public void setExceptionStatus(int exceptionStatus) {
-        this.exceptionStatus = (byte) exceptionStatus & 0xff;
+        this.functionCode = functionCode;
     }
 
     @Override
-    protected void readResponse(ModbusInputStream fifo) throws IOException {
-        setExceptionStatus(fifo.read());
+    public void writeRequest(ModbusOutputStream fifo) throws IOException {
+        throw new IOException("Can't send Illegal request");
     }
 
     @Override
-    protected void writeResponse(ModbusOutputStream fifo) throws IOException {
-        fifo.write(getExceptionStatus());
+    public int requestSize() {
+        return 0;
     }
 
     @Override
-    protected int responseSize() {
-        return 1;
+    public ModbusResponse getResponse(DataHolder dataHolder) throws ModbusNumberException {
+        return new IllegalFunctionResponse(getServerAddress(), getFunction());
+    }
+
+    @Override
+    protected boolean validateResponseImpl(ModbusResponse response) {
+        return response.getFunction() == getFunction();
+    }
+
+    @Override
+    public void readPDU(ModbusInputStream fifo) throws ModbusNumberException, IOException {
+        //no op
     }
 
     @Override
     public int getFunction() {
-        return ModbusFunctionCode.READ_EXCEPTION_STATUS.toInt();
+        return functionCode;
     }
 }

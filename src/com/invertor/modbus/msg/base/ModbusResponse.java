@@ -4,6 +4,7 @@ import com.invertor.modbus.exception.ModbusNumberException;
 import com.invertor.modbus.net.stream.base.ModbusInputStream;
 import com.invertor.modbus.net.stream.base.ModbusOutputStream;
 import com.invertor.modbus.utils.ModbusExceptionCode;
+import com.invertor.modbus.utils.ModbusFunctionCode;
 
 import java.io.IOException;
 
@@ -49,10 +50,10 @@ public abstract class ModbusResponse extends ModbusMessage {
     @Override
     final protected void writePDU(ModbusOutputStream fifo) throws IOException {
         if (isException()) {
-            fifo.write(getFunction().getExceptionValue());
+            fifo.write(ModbusFunctionCode.getExceptionValue(getFunction()));
             fifo.write(getModbusExceptionCode().getValue());
         } else {
-            fifo.write(getFunction().getValue());
+            fifo.write(getFunction());
             writeResponse(fifo);
         }
     }

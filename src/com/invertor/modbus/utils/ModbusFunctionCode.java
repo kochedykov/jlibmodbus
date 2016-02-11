@@ -71,7 +71,9 @@ public enum ModbusFunctionCode {
 
     ENCAPSULATED_INTERFACE_TRANSPORT(0x2B),//TODO: not implemented
     CAN_OPEN_PDU(0x0D),//TODO: not implemented
-    READ_DEVICE_IDENTIFICATION(0x0E);//TODO: not implemented
+    READ_DEVICE_IDENTIFICATION(0x0E),//TODO: not implemented
+
+    UNKNOWN(0);//
 
     final static private int MODBUS_EXCEPTION_FLAG = 0x80;
     final private int value;
@@ -89,19 +91,19 @@ public enum ModbusFunctionCode {
                 return func;
             }
         }
-        throw new RuntimeException("Invalid modbus function");
+        return UNKNOWN;
     }
 
     static public boolean isException(int value) {
         return (value & MODBUS_EXCEPTION_FLAG) != 0;
     }
 
-    public int getValue() {
-        return value;
+    static public int getExceptionValue(int functionCode) {
+        return functionCode | MODBUS_EXCEPTION_FLAG;
     }
 
-    public int getExceptionValue() {
-        return value | MODBUS_EXCEPTION_FLAG;
+    public int toInt() {
+        return value;
     }
 
     @Override

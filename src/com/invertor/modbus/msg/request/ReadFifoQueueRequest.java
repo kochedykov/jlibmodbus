@@ -78,7 +78,7 @@ public class ReadFifoQueueRequest extends AbstractDataRequest {
     }
 
     @Override
-    public ModbusFunctionCode getFunction() {
-        return ModbusFunctionCode.READ_FIFO_QUEUE;
+    public int getFunction() {
+        return ModbusFunctionCode.READ_FIFO_QUEUE.toInt();
     }
 }

@@ -61,18 +61,8 @@ public class CRC16 {
             0x8201, 0x42C0, 0x4380, 0x8341, 0x4100, 0x81C1, 0x8081, 0x4040,
     };
 
-    static public int calc(byte[] bytes) {
-        return calc(bytes, bytes.length);
-    }
-
     static public int calc(int crc, byte[] bytes) {
         return calc(crc, bytes, bytes.length);
-    }
-
-    static public int calc(byte[] bytes, int length) {
-
-        int crc = INITIAL_VALUE;
-        return calc(crc, bytes, length);
     }
 
     static public int calc(int crc, byte[] bytes, int length) {
@@ -85,19 +75,6 @@ public class CRC16 {
         }
 
         return crc;
-    }
-
-    static public int calc(int crc, short[] words, int length) {
-        for (int i = 0; i < length; i++) {
-            crc = calc(crc, (byte) (words[i] & 0xff));
-            crc = calc(crc, (byte) ((words[i] >> 8) & 0xff));
-        }
-        return crc;
-    }
-
-    static public int calc16(int crc, int b) {
-        crc = calc(crc, (byte) (b & 0xff));
-        return calc(crc, (byte) ((b >> 8) & 0xff));
     }
 
     static public int calc(int crc, byte b) {

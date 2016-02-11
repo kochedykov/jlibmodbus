@@ -68,7 +68,7 @@ final public class GetCommEventCounterRequest extends ModbusRequest {
     }
 
     @Override
-    public ModbusFunctionCode getFunction() {
-        return ModbusFunctionCode.GET_COMM_EVENT_COUNTER;
+    public int getFunction() {
+        return ModbusFunctionCode.GET_COMM_EVENT_COUNTER.toInt();
     }
 }

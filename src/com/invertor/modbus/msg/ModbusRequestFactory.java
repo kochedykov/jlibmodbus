@@ -160,7 +160,7 @@ final public class ModbusRequestFactory implements ModbusMessageFactory {
             case CAN_OPEN_PDU:
             case READ_DEVICE_IDENTIFICATION:
             default:
-                throw new ModbusIOException("Illegal function code");
+                msg = new IllegalFunctionRequest(serverAddress, functionCode);
         }
         msg.read(fifo);
         return msg;

@@ -42,7 +42,7 @@ final public class WriteMultipleRegistersResponse extends WriteSingleRegisterRes
     }
 
     @Override
-    public ModbusFunctionCode getFunction() {
-        return ModbusFunctionCode.WRITE_MULTIPLE_REGISTERS;
+    public int getFunction() {
+        return ModbusFunctionCode.WRITE_MULTIPLE_REGISTERS.toInt();
     }
 }

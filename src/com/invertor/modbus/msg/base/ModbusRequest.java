@@ -38,7 +38,7 @@ abstract public class ModbusRequest extends ModbusMessage {
 
     @Override
     final public void writePDU(ModbusOutputStream fifo) throws IOException {
-        fifo.write(getFunction().getValue());
+        fifo.write(getFunction());
         writeRequest(fifo);
     }
 
@@ -61,7 +61,7 @@ abstract public class ModbusRequest extends ModbusMessage {
         if (getServerAddress() != msg.getServerAddress())
             throw new ModbusNumberException("Does not matches the slave address", msg.getServerAddress());
         if (getFunction() != msg.getFunction())
-            throw new ModbusNumberException("Does not matches the slave address", msg.getFunction().getValue());
+            throw new ModbusNumberException("Does not matches the slave address", msg.getFunction());
         if (!validateResponseImpl(msg))
             throw new ModbusNumberException("Collision: response does not matches the request");
     }

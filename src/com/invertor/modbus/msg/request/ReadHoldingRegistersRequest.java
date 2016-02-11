@@ -69,7 +69,7 @@ public class ReadHoldingRegistersRequest extends AbstractMultipleRequest {
     }
 
     @Override
-    public ModbusFunctionCode getFunction() {
-        return ModbusFunctionCode.READ_HOLDING_REGISTERS;
+    public int getFunction() {
+        return ModbusFunctionCode.READ_HOLDING_REGISTERS.toInt();
     }
 }

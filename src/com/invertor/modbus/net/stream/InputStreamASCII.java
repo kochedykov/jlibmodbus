@@ -72,6 +72,7 @@ public class InputStreamASCII extends InputStreamSerial {
 
     @Override
     public void reset() {
+        super.reset();
         fifo.clear();
     }
 }

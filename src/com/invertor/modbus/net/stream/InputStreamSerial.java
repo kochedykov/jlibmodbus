@@ -48,7 +48,7 @@ abstract public class InputStreamSerial extends ModbusInputStream {
 
     @Override
     public void reset() {
-
+        serial.purgeRx();
     }
 
     @Override

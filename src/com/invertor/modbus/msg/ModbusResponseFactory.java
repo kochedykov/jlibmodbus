@@ -106,7 +106,7 @@ final public class ModbusResponseFactory implements ModbusMessageFactory {
             case CAN_OPEN_PDU:
             case READ_DEVICE_IDENTIFICATION:
             default:
-                throw new ModbusIOException("Illegal function code");
+                throw new ModbusNumberException("Unknown function code", functionCode);
         }
         if (ModbusFunctionCode.isException(functionCode)) {
             msg.setException();

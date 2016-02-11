@@ -60,7 +60,7 @@ final public class ReadInputRegistersRequest extends ReadHoldingRegistersRequest
     }
 
     @Override
-    public ModbusFunctionCode getFunction() {
-        return ModbusFunctionCode.READ_INPUT_REGISTERS;
+    public int getFunction() {
+        return ModbusFunctionCode.READ_INPUT_REGISTERS.toInt();
     }
 }

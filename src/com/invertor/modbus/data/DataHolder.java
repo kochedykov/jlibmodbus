@@ -99,13 +99,13 @@ public class DataHolder {
 
     public byte[] readSlaveId() throws IllegalFunctionException {
         if (slaveId == null)
-            throw new IllegalFunctionException(ModbusFunctionCode.REPORT_SLAVE_ID);
+            throw new IllegalFunctionException(ModbusFunctionCode.REPORT_SLAVE_ID.toInt());
         return slaveId.get();
     }
 
     public int readExceptionStatus() throws IllegalFunctionException {
         if (exceptionStatus == null)
-            throw new IllegalFunctionException(ModbusFunctionCode.READ_EXCEPTION_STATUS);
+            throw new IllegalFunctionException(ModbusFunctionCode.READ_EXCEPTION_STATUS.toInt());
         return exceptionStatus.get();
     }
 

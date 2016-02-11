@@ -5,7 +5,6 @@ import com.invertor.modbus.exception.ModbusIOException;
 import com.invertor.modbus.exception.ModbusNumberException;
 import com.invertor.modbus.net.stream.base.ModbusInputStream;
 import com.invertor.modbus.net.stream.base.ModbusOutputStream;
-import com.invertor.modbus.utils.ModbusFunctionCode;
 
 import java.io.IOException;
 
@@ -65,7 +64,7 @@ abstract public class ModbusMessage {
 
     abstract protected void writePDU(ModbusOutputStream fifo) throws IOException;
 
-    abstract public ModbusFunctionCode getFunction();
+    abstract public int getFunction();
 
     public int size() {
         return 1 + pduSize();

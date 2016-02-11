@@ -74,7 +74,7 @@ final public class ReportSlaveIdRequest extends ModbusRequest {
     }
 
     @Override
-    public ModbusFunctionCode getFunction() {
-        return ModbusFunctionCode.REPORT_SLAVE_ID;
+    public int getFunction() {
+        return ModbusFunctionCode.REPORT_SLAVE_ID.toInt();
     }
 }

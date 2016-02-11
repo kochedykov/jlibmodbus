@@ -55,8 +55,8 @@ final public class ReadDiscreteInputsRequest extends ReadCoilsRequest {
     }
 
     @Override
-    public ModbusFunctionCode getFunction() {
-        return ModbusFunctionCode.READ_DISCRETE_INPUTS;
+    public int getFunction() {
+        return ModbusFunctionCode.READ_DISCRETE_INPUTS.toInt();
     }
 
     @Override

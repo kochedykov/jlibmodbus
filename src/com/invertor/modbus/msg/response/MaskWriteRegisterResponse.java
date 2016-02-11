@@ -60,8 +60,8 @@ final public class MaskWriteRegisterResponse extends AbstractWriteResponse {
 
 
     @Override
-    public ModbusFunctionCode getFunction() {
-        return ModbusFunctionCode.MASK_WRITE_REGISTER;
+    public int getFunction() {
+        return ModbusFunctionCode.MASK_WRITE_REGISTER.toInt();
     }
 
     public int getMaskAnd() {

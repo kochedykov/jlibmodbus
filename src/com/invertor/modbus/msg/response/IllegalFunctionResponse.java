@@ -1,7 +1,11 @@
 package com.invertor.modbus.msg.response;
 
 import com.invertor.modbus.exception.ModbusNumberException;
-import com.invertor.modbus.utils.ModbusFunctionCode;
+import com.invertor.modbus.msg.base.ModbusResponse;
+import com.invertor.modbus.net.stream.base.ModbusInputStream;
+import com.invertor.modbus.net.stream.base.ModbusOutputStream;
+
+import java.io.IOException;
 
 /**
  * Copyright (c) 2015-2016 JSC Invertor
@@ -25,14 +29,32 @@ import com.invertor.modbus.utils.ModbusFunctionCode;
  * Authors: Vladislav Y. Kochedykov, software engineer.
  * email: vladislav.kochedykov@gmail.com
  */
-final public class ReadDiscreteInputsResponse extends ReadCoilsResponse {
+public class IllegalFunctionResponse extends ModbusResponse {
+    private int function;
 
-    public ReadDiscreteInputsResponse(int serverAddress) throws ModbusNumberException {
+    public IllegalFunctionResponse(int serverAddress, int function) throws ModbusNumberException {
         super(serverAddress);
+        this.function = function;
+        setException();
     }
 
     @Override
     public int getFunction() {
-        return ModbusFunctionCode.READ_DISCRETE_INPUTS.toInt();
+        return function;
+    }
+
+    @Override
+    protected void readResponse(ModbusInputStream fifo) throws IOException, ModbusNumberException {
+        //no op
+    }
+
+    @Override
+    protected void writeResponse(ModbusOutputStream fifo) throws IOException {
+        //no op
+    }
+
+    @Override
+    protected int responseSize() {
+        return 0;
     }
 }

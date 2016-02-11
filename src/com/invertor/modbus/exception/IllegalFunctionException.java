@@ -1,7 +1,6 @@
 package com.invertor.modbus.exception;
 
 import com.invertor.modbus.utils.ModbusExceptionCode;
-import com.invertor.modbus.utils.ModbusFunctionCode;
 
 /**
  * Copyright (c) 2015-2016 JSC Invertor
@@ -41,18 +40,10 @@ import com.invertor.modbus.utils.ModbusFunctionCode;
  */
 public class IllegalFunctionException extends ModbusProtocolException {
 
-    final private ModbusFunctionCode functionCode;
+    final private int functionCode;
 
-    public IllegalFunctionException(ModbusFunctionCode functionCode) {
+    public IllegalFunctionException(int functionCode) {
         super(ModbusExceptionCode.ILLEGAL_FUNCTION);
         this.functionCode = functionCode;
-    }
-
-    public IllegalFunctionException(int code) {
-        this(ModbusFunctionCode.getFunctionCode(code));
-    }
-
-    public ModbusFunctionCode getFunctionCode() {
-        return functionCode;
     }
 }

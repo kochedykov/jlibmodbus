@@ -42,7 +42,7 @@ final public class WriteSingleCoilResponse extends WriteSingleRegisterResponse {
     }
 
     @Override
-    public ModbusFunctionCode getFunction() {
-        return ModbusFunctionCode.WRITE_SINGLE_COIL;
+    public int getFunction() {
+        return ModbusFunctionCode.WRITE_SINGLE_COIL.toInt();
     }
 }

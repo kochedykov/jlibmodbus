@@ -52,6 +52,7 @@ abstract public class ModbusTransport {
     }
 
     public void send(ModbusMessage msg) throws ModbusIOException {
+        os.reset();
         sendImpl(msg);
         try {
             os.flush();

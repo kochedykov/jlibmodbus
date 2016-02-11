@@ -76,8 +76,8 @@ public class WriteSingleRegisterRequest extends AbstractDataRequest {
     }
 
     @Override
-    public ModbusFunctionCode getFunction() {
-        return ModbusFunctionCode.WRITE_SINGLE_REGISTER;
+    public int getFunction() {
+        return ModbusFunctionCode.WRITE_SINGLE_REGISTER.toInt();
     }
 
     @Override

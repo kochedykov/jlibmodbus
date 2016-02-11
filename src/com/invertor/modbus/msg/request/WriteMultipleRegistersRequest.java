@@ -95,7 +95,7 @@ final public class WriteMultipleRegistersRequest extends AbstractWriteMultipleRe
     }
 
     @Override
-    public ModbusFunctionCode getFunction() {
-        return ModbusFunctionCode.WRITE_MULTIPLE_REGISTERS;
+    public int getFunction() {
+        return ModbusFunctionCode.WRITE_MULTIPLE_REGISTERS.toInt();
     }
 }

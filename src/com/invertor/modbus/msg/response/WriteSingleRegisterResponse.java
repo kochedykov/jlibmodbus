@@ -61,8 +61,8 @@ public class WriteSingleRegisterResponse extends AbstractWriteResponse {
     }
 
     @Override
-    public ModbusFunctionCode getFunction() {
-        return ModbusFunctionCode.WRITE_SINGLE_REGISTER;
+    public int getFunction() {
+        return ModbusFunctionCode.WRITE_SINGLE_REGISTER.toInt();
     }
 
     final public int getValue() {

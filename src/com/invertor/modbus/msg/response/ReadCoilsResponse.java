@@ -78,7 +78,7 @@ public class ReadCoilsResponse extends AbstractReadResponse {
     }
 
     @Override
-    public ModbusFunctionCode getFunction() {
-        return ModbusFunctionCode.READ_COILS;
+    public int getFunction() {
+        return ModbusFunctionCode.READ_COILS.toInt();
     }
 }

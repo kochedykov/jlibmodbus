@@ -90,7 +90,7 @@ public class ReadWriteMultipleRegistersRequest extends ModbusRequest {
     }
 
     @Override
-    public ModbusFunctionCode getFunction() {
-        return ModbusFunctionCode.READ_WRITE_MULTIPLE_REGISTERS;
+    public int getFunction() {
+        return ModbusFunctionCode.READ_WRITE_MULTIPLE_REGISTERS.toInt();
     }
 }

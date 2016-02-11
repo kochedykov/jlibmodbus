@@ -74,7 +74,7 @@ final public class ReadExceptionStatusRequest extends ModbusRequest {
     }
 
     @Override
-    public ModbusFunctionCode getFunction() {
-        return ModbusFunctionCode.READ_EXCEPTION_STATUS;
+    public int getFunction() {
+        return ModbusFunctionCode.READ_EXCEPTION_STATUS.toInt();
     }
 }

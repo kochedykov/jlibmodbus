@@ -73,8 +73,8 @@ public class ReadFifoQueueResponse extends ModbusResponse {
     }
 
     @Override
-    public ModbusFunctionCode getFunction() {
-        return ModbusFunctionCode.READ_FIFO_QUEUE;
+    public int getFunction() {
+        return ModbusFunctionCode.READ_FIFO_QUEUE.toInt();
     }
 
     public int[] getFifoValueRegister() {

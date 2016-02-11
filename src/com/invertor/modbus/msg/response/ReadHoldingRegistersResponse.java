@@ -64,7 +64,7 @@ public class ReadHoldingRegistersResponse extends AbstractReadResponse {
     }
 
     @Override
-    public ModbusFunctionCode getFunction() {
-        return ModbusFunctionCode.READ_HOLDING_REGISTERS;
+    public int getFunction() {
+        return ModbusFunctionCode.READ_HOLDING_REGISTERS.toInt();
     }
 }

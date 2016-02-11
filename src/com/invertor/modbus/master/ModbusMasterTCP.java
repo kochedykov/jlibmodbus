@@ -97,16 +97,16 @@ final public class ModbusMasterTCP extends ModbusMaster {
 
     @Override
     public int readExceptionStatus(int serverAddress) throws ModbusNumberException, ModbusIOException, ModbusProtocolException {
-        throw new IllegalFunctionException(ModbusFunctionCode.READ_EXCEPTION_STATUS);
+        throw new IllegalFunctionException(ModbusFunctionCode.READ_EXCEPTION_STATUS.toInt());
     }
 
     @Override
     public byte[] reportSlaveId(int serverAddress) throws ModbusProtocolException, ModbusNumberException, ModbusIOException {
-        throw new IllegalFunctionException(ModbusFunctionCode.REPORT_SLAVE_ID);
+        throw new IllegalFunctionException(ModbusFunctionCode.REPORT_SLAVE_ID.toInt());
     }
 
     @Override
     public int[] getCommEventCount(int serverAddress) throws ModbusProtocolException, ModbusNumberException, ModbusIOException {
-        throw new IllegalFunctionException(ModbusFunctionCode.GET_COMM_EVENT_COUNTER);
+        throw new IllegalFunctionException(ModbusFunctionCode.GET_COMM_EVENT_COUNTER.toInt());
     }
 }

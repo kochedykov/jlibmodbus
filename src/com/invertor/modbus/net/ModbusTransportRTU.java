@@ -39,21 +39,25 @@ public class ModbusTransportRTU extends ModbusTransport {
     }
 
     @Override
-    protected ModbusMessage read(ModbusMessageFactory factory) throws ModbusNumberException, ModbusIOException {
+    protected ModbusMessage read(ModbusMessageFactory factory) throws ModbusIOException {
+        ModbusMessage msg;
         InputStreamRTU is = (InputStreamRTU) getInputStream();
-        ModbusMessage msg = factory.createMessage(is);
         int r_crc;
         try {
+            msg = factory.createMessage(is);
             r_crc = is.readShortLE();
-        } catch (IOException e) {
-            throw new ModbusIOException(e);
+            // crc from the same crc equals zero
+            int c_crc = is.getCrc();
+            if (c_crc != 0 || r_crc == 0) {
+                throw new ModbusNumberException("control sum check failed.", r_crc);
+            }
+        } catch (IOException ioe) {
+            throw new ModbusIOException(ioe);
+        } catch (ModbusNumberException mne) {
+            is.reset();
+            throw new ModbusIOException(mne);
         }
-        // crc from the same crc equals zero
-        int c_crc = is.getCrc();
         is.reset();
-        if (c_crc != 0 || r_crc == 0) {
-            throw new ModbusNumberException("control sum check failed.", r_crc);
-        }
         return msg;
     }
 

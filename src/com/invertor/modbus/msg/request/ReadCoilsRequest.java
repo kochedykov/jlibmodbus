@@ -50,8 +50,8 @@ public class ReadCoilsRequest extends AbstractMultipleRequest {
     }
 
     @Override
-    public ModbusFunctionCode getFunction() {
-        return ModbusFunctionCode.READ_COILS;
+    public int getFunction() {
+        return ModbusFunctionCode.READ_COILS.toInt();
     }
 
     @Override

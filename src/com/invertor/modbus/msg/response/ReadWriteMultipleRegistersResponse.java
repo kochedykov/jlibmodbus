@@ -32,7 +32,7 @@ final public class ReadWriteMultipleRegistersResponse extends ReadHoldingRegiste
     }
 
     @Override
-    public ModbusFunctionCode getFunction() {
-        return ModbusFunctionCode.READ_WRITE_MULTIPLE_REGISTERS;
+    public int getFunction() {
+        return ModbusFunctionCode.READ_WRITE_MULTIPLE_REGISTERS.toInt();
     }
 }

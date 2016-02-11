@@ -42,7 +42,7 @@ final public class WriteMultipleCoilsResponse extends WriteSingleRegisterRespons
     }
 
     @Override
-    public ModbusFunctionCode getFunction() {
-        return ModbusFunctionCode.WRITE_MULTIPLE_COILS;
+    public int getFunction() {
+        return ModbusFunctionCode.WRITE_MULTIPLE_COILS.toInt();
     }
 }
