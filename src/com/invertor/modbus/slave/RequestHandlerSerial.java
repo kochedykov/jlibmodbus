@@ -45,10 +45,12 @@ public class RequestHandlerSerial extends RequestHandler {
                 DataHolder dataHolder = getSlave().getDataHolder();
                 ModbusTransport transport = getConn().getTransport();
                 ModbusRequest request = (ModbusRequest) transport.readRequest();
-                ModbusResponse response = request.getResponse(dataHolder);
-                if (!response.isException())
-                    getSlave().getDataHolder().getCommStatus().incrementEventCount();
-                transport.send(response);
+                if (request.getServerAddress() == getSlave().getServerAddress()) {
+                    ModbusResponse response = request.getResponse(dataHolder);
+                    if (!response.isException())
+                        getSlave().getDataHolder().getCommStatus().incrementEventCount();
+                    transport.send(response);
+                }
             } catch (ModbusIOException e) {
                 Modbus.log().fine("Request timeout(no clients connected)");
             } catch (Exception e) {

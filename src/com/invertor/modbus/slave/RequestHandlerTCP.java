@@ -44,7 +44,9 @@ public class RequestHandlerTCP extends RequestHandler {
                 DataHolder dataHolder = getSlave().getDataHolder();
                 ModbusTransport transport = getConn().getTransport();
                 ModbusRequest request = (ModbusRequest) transport.readRequest();
-                transport.send(request.getResponse(dataHolder));
+                if (request.getServerAddress() == getSlave().getServerAddress()) {
+                    transport.send(request.getResponse(dataHolder));
+                }
             } while (isListening());
         } catch (Exception e) {
             //
