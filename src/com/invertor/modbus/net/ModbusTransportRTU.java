@@ -39,7 +39,7 @@ public class ModbusTransportRTU extends ModbusTransport {
     }
 
     @Override
-    protected ModbusMessage read(ModbusMessageFactory factory) throws ModbusIOException {
+    protected ModbusMessage read(ModbusMessageFactory factory) throws ModbusIOException, ModbusNumberException {
         ModbusMessage msg;
         InputStreamRTU is = (InputStreamRTU) getInputStream();
         int r_crc;
@@ -55,7 +55,7 @@ public class ModbusTransportRTU extends ModbusTransport {
             throw new ModbusIOException(ioe);
         } catch (ModbusNumberException mne) {
             is.reset();
-            throw new ModbusIOException(mne);
+            throw mne;
         }
         is.reset();
         return msg;

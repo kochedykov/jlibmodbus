@@ -67,14 +67,21 @@ abstract public class ModbusMaster {
             ModbusNumberException, ModbusIOException {
         sendRequest(request);
         ModbusResponse msg;
-        int i = 0;
         do {
-            msg = (ModbusResponse) readResponse();
-        } while (msg.getModbusExceptionCode() == ModbusExceptionCode.ACKNOWLEDGE && i++ < 3);//3 repeats
-        if (msg.isException())
-            throw new ModbusProtocolException(msg.getModbusExceptionCode());
-        request.validateResponse(msg);
-        return msg;
+            try {
+                msg = (ModbusResponse) readResponse();
+                if (msg.isException())
+                    throw new ModbusProtocolException(msg.getModbusExceptionCode());
+                request.validateResponse(msg);
+                if (msg.getModbusExceptionCode() != ModbusExceptionCode.ACKNOWLEDGE) {
+                    return msg;
+                }
+            } catch (ModbusNumberException mne) {
+                Modbus.log().warning(mne.getLocalizedMessage());
+            } catch (ModbusProtocolException mpe) {
+                Modbus.log().warning(mpe.getLocalizedMessage());
+            }
+        } while (true);
     }
 
     /**
