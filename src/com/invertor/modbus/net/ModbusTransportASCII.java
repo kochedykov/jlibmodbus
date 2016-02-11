@@ -48,22 +48,24 @@ public class ModbusTransportASCII extends ModbusTransport {
         ModbusMessage msg;
         InputStreamASCII is = (InputStreamASCII) getInputStream();
         try {
-            msg = factory.createMessage(is);
-            lrc = is.getLrc();
-            check = lrc == is.read();
-            cr = is.readRaw();
-            lf = is.readRaw();
-        } catch (IOException e) {
-            throw new ModbusIOException(e);
+            try {
+                msg = factory.createMessage(is);
+                lrc = is.getLrc();
+                check = lrc == is.read();
+                cr = is.readRaw();
+                lf = is.readRaw();
+            } catch (IOException e) {
+                throw new ModbusIOException(e);
+            }
+            if (cr != Modbus.ASCII_CODE_CR || lf != Modbus.ASCII_CODE_LF)
+                Modbus.log().warning("\\r\\n not received.");
+            if (!check) {
+                throw new ModbusNumberException("control sum check failed.", lrc);
+            }
+        } finally {
+            /*clear fifo*/
+            is.reset();
         }
-        if (cr != Modbus.ASCII_CODE_CR || lf != Modbus.ASCII_CODE_LF)
-            Modbus.log().warning("\\r\\n not received.");
-        /*clear fifo*/
-
-        if (!check) {
-            throw new ModbusNumberException("control sum check failed.", lrc);
-        }
-        is.reset();
         return msg;
     }
 

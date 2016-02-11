@@ -38,7 +38,6 @@ public class InputStreamRTU extends InputStreamSerial {
 
     @Override
     public void reset() {
-        super.reset();
         crc = CRC16.INITIAL_VALUE;
     }
 

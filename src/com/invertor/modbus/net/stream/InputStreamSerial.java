@@ -47,9 +47,7 @@ abstract public class InputStreamSerial extends ModbusInputStream {
     }
 
     @Override
-    public void reset() {
-        serial.purgeRx();
-    }
+    abstract public void reset();
 
     @Override
     public void setReadTimeout(int readTimeout) {

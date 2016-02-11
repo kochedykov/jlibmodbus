@@ -42,10 +42,9 @@ public class ModbusTransportRTU extends ModbusTransport {
     protected ModbusMessage read(ModbusMessageFactory factory) throws ModbusIOException, ModbusNumberException {
         ModbusMessage msg;
         InputStreamRTU is = (InputStreamRTU) getInputStream();
-        int r_crc;
         try {
             msg = factory.createMessage(is);
-            r_crc = is.readShortLE();
+            int r_crc = is.readShortLE();
             // crc from the same crc equals zero
             int c_crc = is.getCrc();
             if (c_crc != 0 || r_crc == 0) {
@@ -53,11 +52,9 @@ public class ModbusTransportRTU extends ModbusTransport {
             }
         } catch (IOException ioe) {
             throw new ModbusIOException(ioe);
-        } catch (ModbusNumberException mne) {
+        } finally {
             is.reset();
-            throw mne;
         }
-        is.reset();
         return msg;
     }
 
