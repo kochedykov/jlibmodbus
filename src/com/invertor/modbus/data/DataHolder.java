@@ -119,6 +119,12 @@ public class DataHolder {
         return discreteInputs.getRange(offset, quantity);
     }
 
+    public byte[] readFileRecord(int fileNumber, int recordNumber) throws IllegalDataAddressException, IllegalDataValueException {
+        ModbusFile file = getFile(fileNumber);
+        checkPointer(file, fileNumber);
+        return file.read(recordNumber);
+    }
+
     public Coils getCoils() {
         return coils;
     }

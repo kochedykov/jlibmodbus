@@ -23,6 +23,9 @@ package com.invertor.modbus.data;
  * email: vladislav.kochedykov@gmail.com
  */
 
+import com.invertor.modbus.exception.IllegalDataAddressException;
+import com.invertor.modbus.exception.IllegalDataValueException;
+
 /**
  * quote from MODBUS Application Protocol Specification V1.1b
  * <p/>
@@ -41,7 +44,9 @@ abstract public class ModbusFile {
         this.number = number;
     }
 
-    abstract byte[] read(int recordNumber);
+    abstract public byte[] read(int recordNumber) throws IllegalDataAddressException;
+
+    abstract public void write(int recordNumber, byte[] buffer) throws IllegalDataAddressException, IllegalDataValueException;
 
     public int getNumber() {
         return number;

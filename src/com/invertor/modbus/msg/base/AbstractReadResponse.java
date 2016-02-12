@@ -1,5 +1,6 @@
 package com.invertor.modbus.msg.base;
 
+import com.invertor.modbus.Modbus;
 import com.invertor.modbus.exception.ModbusNumberException;
 import com.invertor.modbus.net.stream.base.ModbusInputStream;
 import com.invertor.modbus.net.stream.base.ModbusOutputStream;
@@ -46,7 +47,9 @@ abstract public class AbstractReadResponse extends ModbusResponse {
         return byteCount;
     }
 
-    protected void setByteCount(int byteCount) {
+    protected void setByteCount(int byteCount) throws ModbusNumberException {
+        if (byteCount > (Modbus.MAX_PDU_LENGTH - 2))
+            throw new ModbusNumberException("Byte count greater then max allowable");
         this.byteCount = byteCount;
     }
 
@@ -62,7 +65,7 @@ abstract public class AbstractReadResponse extends ModbusResponse {
         writeData(fifo);
     }
 
-    abstract protected void readData(ModbusInputStream fifo) throws IOException;
+    abstract protected void readData(ModbusInputStream fifo) throws IOException, ModbusNumberException;
 
     abstract protected void writeData(ModbusOutputStream fifo) throws IOException;
 
