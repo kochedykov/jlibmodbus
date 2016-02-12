@@ -92,6 +92,9 @@ final public class ModbusResponseFactory implements ModbusMessageFactory {
             case READ_FILE_RECORD:
                 msg = new ReadFileRecordResponse(serverAddress);
                 break;
+            case WRITE_FILE_RECORD:
+                msg = new WriteFileRecordResponse(serverAddress);
+                break;
             case READ_EXCEPTION_STATUS:
                 msg = new ReadExceptionStatusResponse(serverAddress);
                 break;
@@ -102,7 +105,6 @@ final public class ModbusResponseFactory implements ModbusMessageFactory {
                 msg = new GetCommEventCounterResponse(serverAddress);
                 break;
             case GET_COMM_EVENT_LOG:
-            case WRITE_FILE_RECORD:
             case DIAGNOSTICS:
             case ENCAPSULATED_INTERFACE_TRANSPORT:
             case CAN_OPEN_PDU:

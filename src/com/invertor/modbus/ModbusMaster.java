@@ -162,6 +162,11 @@ abstract public class ModbusMaster {
         return response.getFileRecords();
     }
 
+    final public void writeFileRecord(int serverAddress, ModbusFileRecord record) throws
+            ModbusProtocolException, ModbusNumberException, ModbusIOException {
+        processRequest(requestFactory.createWriteFileRecord(serverAddress, record));
+    }
+
     /**
      * result = ((reg & and) | (or & !and))
      *

@@ -63,8 +63,8 @@ public enum ModbusFunctionCode {
     WRITE_MULTIPLE_COILS(0x0F),
     WRITE_MULTIPLE_REGISTERS(0x10),
     REPORT_SLAVE_ID(0x11),//serial line only
-    READ_FILE_RECORD(0x14),//TODO: not implemented
-    WRITE_FILE_RECORD(0x15),//TODO: not implemented
+    READ_FILE_RECORD(0x14),
+    WRITE_FILE_RECORD(0x15),
     MASK_WRITE_REGISTER(0x16),
     READ_WRITE_MULTIPLE_REGISTERS(0x17),
     READ_FIFO_QUEUE(0x18),

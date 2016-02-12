@@ -103,6 +103,10 @@ final public class ModbusRequestFactory implements ModbusMessageFactory {
         return new ReadFileRecordRequest(serverAddress, records);
     }
 
+    public ModbusRequest createWriteFileRecord(int serverAddress, ModbusFileRecord record) throws ModbusNumberException {
+        return new WriteFileRecordRequest(serverAddress, record);
+    }
+
     @Override
     public ModbusMessage createMessage(ModbusInputStream fifo) throws ModbusNumberException, ModbusIOException {
         ModbusMessage msg;
@@ -151,6 +155,9 @@ final public class ModbusRequestFactory implements ModbusMessageFactory {
             case READ_FILE_RECORD:
                 msg = new ReadFileRecordRequest(serverAddress);
                 break;
+            case WRITE_FILE_RECORD:
+                msg = new WriteFileRecordRequest(serverAddress);
+                break;
             case READ_EXCEPTION_STATUS:
                 msg = new ReadExceptionStatusRequest(serverAddress);
                 break;
@@ -161,8 +168,6 @@ final public class ModbusRequestFactory implements ModbusMessageFactory {
                 msg = new GetCommEventCounterRequest(serverAddress);
                 break;
             case GET_COMM_EVENT_LOG:
-
-            case WRITE_FILE_RECORD:
             case DIAGNOSTICS:
             case ENCAPSULATED_INTERFACE_TRANSPORT:
             case CAN_OPEN_PDU:
