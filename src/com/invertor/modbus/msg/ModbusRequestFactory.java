@@ -94,8 +94,8 @@ final public class ModbusRequestFactory implements ModbusMessageFactory {
         return new GetCommEventCounterRequest(serverAddress);
     }
 
-    public ModbusRequest createReadFifoQueue(int serverAddress) throws ModbusNumberException {
-        return new ReadFifoQueueRequest(serverAddress);
+    public ModbusRequest createReadFifoQueue(int serverAddress, int fifoPointerAddress) throws ModbusNumberException {
+        return new ReadFifoQueueRequest(serverAddress, fifoPointerAddress);
     }
 
     @Override

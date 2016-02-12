@@ -1,5 +1,7 @@
 package com.invertor.modbus.data;
 
+import com.invertor.modbus.exception.IllegalDataAddressException;
+
 /**
  * Copyright (c) 2015-2016 JSC Invertor
  * [http://www.sbp-invertor.ru]
@@ -78,6 +80,11 @@ public class SimpleDataHolderBuilder extends DataHolderBuilder {
 
     @Override
     public void buildFifoQueue() {
-        dataHolder.setFifoQueue(new SimpleFifoQueue());
+        try {
+            dataHolder.addFifoQueue(new SimpleFifoQueue(), 0);
+        } catch (IllegalDataAddressException e) {
+            //it newer be thrown
+            e.printStackTrace();
+        }
     }
 }

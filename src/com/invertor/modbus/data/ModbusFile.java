@@ -1,7 +1,5 @@
 package com.invertor.modbus.data;
 
-import com.invertor.modbus.exception.IllegalDataValueException;
-
 /**
  * Copyright (c) 2015-2016 JSC Invertor
  * [http://www.sbp-invertor.ru]
@@ -24,36 +22,28 @@ import com.invertor.modbus.exception.IllegalDataValueException;
  * Authors: Vladislav Y. Kochedykov, software engineer.
  * email: vladislav.kochedykov@gmail.com
  */
-abstract public class FifoQueue {
 
-    final private int capacity;
+/**
+ * quote from MODBUS Application Protocol Specification V1.1b
+ * <p/>
+ * "A file is an organization of records. Each file contains 10000 records, addressed 0000 to
+ * 9999 decimal or 0X0000 to 0X270F. For example, record 12 is addressed as 12.
+ * ...
+ * The quantity of registers to be read, combined with all other fields in the expected response,
+ * must not exceed the allowable length of the MODBUS PDU : 253 bytes."
+ * <p/>
+ * so the length of file record must not exceed 250 bytes(253 - function_code - resp_data_len - sub_req_resp_len).
+ */
+abstract public class ModbusFile {
+    private final int number;
 
-    public FifoQueue(int capacity) {
-        this.capacity = capacity;
+    public ModbusFile(int number) {
+        this.number = number;
     }
 
-    public abstract int size();
+    abstract byte[] read(int recordNumber);
 
-    abstract protected int[] peekImpl();
-
-    abstract protected void addImpl(int register);
-
-    abstract protected void pollImpl();
-
-    final public void poll() {
-        if (size() != 0)
-            pollImpl();
-    }
-
-    final public void add(int register) {
-        if (size() < capacity)
-            addImpl(register);
-    }
-
-    final public int[] get() throws IllegalDataValueException {
-        if (size() > 31) {
-            throw new IllegalDataValueException();
-        }
-        return peekImpl();
+    public int getNumber() {
+        return number;
     }
 }

@@ -5,6 +5,9 @@ import com.invertor.modbus.exception.IllegalDataValueException;
 import com.invertor.modbus.exception.IllegalFunctionException;
 import com.invertor.modbus.utils.ModbusFunctionCode;
 
+import java.util.Map;
+import java.util.TreeMap;
+
 /**
  * Copyright (c) 2015-2016 JSC Invertor
  * [http://www.sbp-invertor.ru]
@@ -33,14 +36,15 @@ facade
  */
 public class DataHolder {
 
+    final private CommStatus commStatus = new CommStatus();
+    final private Map<Integer, FifoQueue> fifoMap = new TreeMap<Integer, FifoQueue>();
+    final private Map<Integer, ModbusFile> fileMap = new TreeMap<Integer, ModbusFile>();
     private Coils coils = null;
     private Coils discreteInputs = null;
     private HoldingRegisters holdingRegisters = null;
     private HoldingRegisters inputRegisters = null;
     private SlaveId slaveId = null;
     private ExceptionStatus exceptionStatus = null;
-    private FifoQueue fifoQueue = null;
-    private CommStatus commStatus = new CommStatus();
 
     private void checkPointer(Object o, int offset) throws IllegalDataAddressException {
         if (o == null)
@@ -77,8 +81,9 @@ public class DataHolder {
         return inputRegisters.getRange(offset, quantity);
     }
 
-    public int[] readFifoQueue() throws IllegalDataValueException {
-        checkPointer(fifoQueue);
+    public int[] readFifoQueue(int fifoPointerAddress) throws IllegalDataValueException, IllegalDataAddressException {
+        FifoQueue fifoQueue = fifoMap.get(fifoPointerAddress);
+        checkPointer(fifoQueue, fifoPointerAddress);
         return fifoQueue.get();
     }
 
@@ -150,10 +155,6 @@ public class DataHolder {
         return commStatus;
     }
 
-    public void setCommStatus(CommStatus commStatus) {
-        this.commStatus = commStatus;
-    }
-
     public SlaveId getSlaveId() {
         return slaveId;
     }
@@ -170,11 +171,29 @@ public class DataHolder {
         this.exceptionStatus = exceptionStatus;
     }
 
-    public FifoQueue getFifoQueue() {
-        return fifoQueue;
+    public FifoQueue getFifoQueue(int fifoPointerAddress) throws IllegalDataAddressException {
+        FifoQueue file = fifoMap.get(fifoPointerAddress);
+        if (file == null)
+            throw new IllegalDataAddressException(fifoPointerAddress);
+        return file;
     }
 
-    public void setFifoQueue(FifoQueue fifoQueue) {
-        this.fifoQueue = fifoQueue;
+    public void addFifoQueue(FifoQueue fifoQueue, int fifoPointerAddress) throws IllegalDataAddressException {
+        if (fifoMap.containsKey(fifoPointerAddress))
+            throw new IllegalDataAddressException(fifoPointerAddress);
+        fifoMap.put(fifoPointerAddress, fifoQueue);
+    }
+
+    public void addFile(ModbusFile file) throws IllegalDataAddressException {
+        if (fileMap.containsKey(file.getNumber()))
+            throw new IllegalDataAddressException(file.getNumber());
+        fileMap.put(file.getNumber(), file);
+    }
+
+    public ModbusFile getFile(int number) throws IllegalDataAddressException {
+        ModbusFile file = fileMap.get(number);
+        if (file == null)
+            throw new IllegalDataAddressException(number);
+        return file;
     }
 }

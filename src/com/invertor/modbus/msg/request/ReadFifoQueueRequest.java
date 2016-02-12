@@ -63,7 +63,7 @@ public class ReadFifoQueueRequest extends AbstractDataRequest {
     public ModbusResponse getResponse(DataHolder dataHolder) throws ModbusNumberException {
         ReadFifoQueueResponse response = new ReadFifoQueueResponse(getServerAddress());
         try {
-            int[] r = dataHolder.readFifoQueue();
+            int[] r = dataHolder.readFifoQueue(getStartAddress());
             response.setFifoValueRegister(r);
         } catch (ModbusProtocolException e) {
             response.setException();

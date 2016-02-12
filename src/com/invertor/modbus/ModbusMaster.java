@@ -147,6 +147,13 @@ abstract public class ModbusMaster {
         return response.getRegisters();
     }
 
+    final public int[] readFifoQueue(int serverAddress, int fifoPointerAddress) throws
+            ModbusProtocolException, ModbusNumberException, ModbusIOException {
+        ModbusRequest request = requestFactory.createReadFifoQueue(serverAddress, fifoPointerAddress);
+        ReadFifoQueueResponse response = (ReadFifoQueueResponse) processRequest(request);
+        return response.getFifoValueRegister();
+    }
+
     /**
      * result = ((reg & and) | (or & !and))
      *
