@@ -1,12 +1,8 @@
-package com.invertor.tests.modbus;
+package com.invertor.examples.modbus;
 
 import com.invertor.modbus.Modbus;
-import com.invertor.modbus.ModbusSlave;
-import com.invertor.modbus.ModbusSlaveFactory;
-import com.invertor.modbus.data.DataHolder;
-import com.invertor.modbus.data.SimpleDataHolderBuilder;
-import com.invertor.modbus.exception.IllegalDataAddressException;
-import com.invertor.modbus.exception.IllegalDataValueException;
+import com.invertor.modbus.ModbusMaster;
+import com.invertor.modbus.ModbusMasterFactory;
 import com.invertor.modbus.exception.ModbusIOException;
 import com.invertor.modbus.serial.SerialPort;
 import com.invertor.modbus.serial.SerialUtils;
@@ -35,7 +31,7 @@ import java.net.InetAddress;
  * Authors: Vladislav Y. Kochedykov, software engineer.
  * email: vladislav.kochedykov@gmail.com
  */
-public class ModbusSlaveTest {
+public class ModbusMasterTest {
 
     static private <T> T initParameter(String title, T parameter, String arg, ParameterInitializer<T> pi) {
         try {
@@ -52,31 +48,32 @@ public class ModbusSlaveTest {
             return;
         }
 
-        ModbusSlave slave;
+        ModbusMaster master;
 
         switch (TransportType.get(argv[0])) {
 
             case TCP:
                 String host = "localhost";
                 int port = Modbus.TCP_PORT;
+                boolean keepAlive = false;
                 try {
-                    host = initParameter("host", host, argv[1], new ParameterInitializer<String>() {
+                    host = initParameter("baud_rate", host, argv[1], new ParameterInitializer<String>() {
                         @Override
                         public String init(String arg) throws Exception {
                             return InetAddress.getByName(arg).getHostAddress();
                         }
                     });
-                    port = initParameter("port", port, argv[2], new ParameterInitializer<Integer>() {
+                    keepAlive = initParameter("baud_rate", keepAlive, argv[2], new ParameterInitializer<Boolean>() {
                         @Override
-                        public Integer init(String arg) throws Exception {
-                            return Integer.decode(arg);
+                        public Boolean init(String arg) throws Exception {
+                            return Boolean.parseBoolean(arg);
                         }
                     });
                 } catch (IndexOutOfBoundsException ie) {
                     //it's ok
                 }
-                System.out.format("Starting Modbus Slave TCP with settings:\n\t%s\n", host);
-                slave = ModbusSlaveFactory.createModbusSlaveTCP(host, port);
+                System.out.format("Starting Modbus Master TCP with settings:\n\t%s\n, %s", host, keepAlive);
+                master = ModbusMasterFactory.createModbusMasterTCP(host, port, keepAlive);
                 break;
             case RTU:
                 String device_name = SerialUtils.getPortList()[0];
@@ -86,7 +83,7 @@ public class ModbusSlaveTest {
                 SerialPort.Parity parity = SerialPort.Parity.NONE;
 
                 try {
-                    device_name = initParameter("device_name", device_name, argv[1], new ParameterInitializer<String>() {
+                    device_name = initParameter("baud_rate", device_name, argv[1], new ParameterInitializer<String>() {
                         @Override
                         public String init(String arg) throws Exception {
                             return arg;
@@ -110,7 +107,7 @@ public class ModbusSlaveTest {
                             return Integer.decode(arg);
                         }
                     });
-                    parity = initParameter("parity", parity, argv[5], new ParameterInitializer<SerialPort.Parity>() {
+                    parity = initParameter("stop_bits", parity, argv[5], new ParameterInitializer<SerialPort.Parity>() {
                         @Override
                         public SerialPort.Parity init(String arg) throws Exception {
                             return SerialPort.Parity.getParity(Integer.decode(arg));
@@ -119,16 +116,16 @@ public class ModbusSlaveTest {
                 } catch (IndexOutOfBoundsException ie) {
                     //it's ok
                 }
-                System.out.format("Starting ModbusMaster RTU with settings:\n\t%s, %s, %d, %d, %s\n",
+                System.out.format("Starting ModbusMaster RTU with settings:\n\t%s\n, %s, %d, %d, %s\n",
                         device_name, baud_rate.toString(), data_bits, stop_bits, parity.toString());
-                slave = ModbusSlaveFactory.createModbusSlaveRTU(device_name, baud_rate, data_bits, stop_bits, parity);
+                master = ModbusMasterFactory.createModbusMasterRTU(device_name, baud_rate, data_bits, stop_bits, parity);
                 break;
             case ASCII:
                 device_name = SerialUtils.getPortList()[0];
                 baud_rate = SerialPort.BaudRate.BAUD_RATE_115200;
-                parity = SerialPort.Parity.ODD;
+                parity = SerialPort.Parity.NONE;
                 try {
-                    device_name = initParameter("device_name", device_name, argv[1], new ParameterInitializer<String>() {
+                    device_name = initParameter("baud_rate", device_name, argv[1], new ParameterInitializer<String>() {
                         @Override
                         public String init(String arg) throws Exception {
                             return arg;
@@ -140,7 +137,7 @@ public class ModbusSlaveTest {
                             return SerialPort.BaudRate.getBaudRate(Integer.decode(arg));
                         }
                     });
-                    parity = initParameter("parity", parity, argv[3], new ParameterInitializer<SerialPort.Parity>() {
+                    parity = initParameter("stop_bits", parity, argv[5], new ParameterInitializer<SerialPort.Parity>() {
                         @Override
                         public SerialPort.Parity init(String arg) throws Exception {
                             return SerialPort.Parity.getParity(Integer.decode(arg));
@@ -149,82 +146,69 @@ public class ModbusSlaveTest {
                 } catch (IndexOutOfBoundsException ie) {
                     //it's ok
                 }
-                System.out.format("Starting ModbusMaster ASCII with settings:\n\t%s, %s, %s\n",
+                System.out.format("Starting ModbusMaster ASCII with settings:\n\t%s\n, %s, %s\n",
                         device_name, baud_rate.toString(), parity.toString());
-                slave = ModbusSlaveFactory.createModbusSlaveASCII(device_name, baud_rate, parity);
+                master = ModbusMasterFactory.createModbusMasterASCII(device_name, baud_rate, parity);
                 break;
             default:
-                slave = ModbusSlaveFactory.createModbusSlaveTCP("localhost");
+                master = ModbusMasterFactory.createModbusMasterTCP("127.0.0.1", false);
         }
 
-        slave.setServerAddress(1);
-        slave.setDataHolder(new SimpleDataHolderBuilder(1000));
+        master.setResponseTimeout(1000);
 
         try {
-            DataHolder dataHolder = slave.getDataHolder();
-            dataHolder.getCoils().set(1, true);
-            dataHolder.getCoils().set(3, true);
-            dataHolder.getDiscreteInputs().setRange(0, new boolean[]{false, true, true, false, true});
-            dataHolder.getInputRegisters().set(5, 69);
-            dataHolder.getHoldingRegisters().setRange(0, new int[]{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 55});
-        } catch (IllegalDataAddressException e) {
-            e.printStackTrace();
-        } catch (IllegalDataValueException e) {
-            e.printStackTrace();
+            master.open();
+        } catch (ModbusIOException e) {
+            System.out.format("%s %s\n", "Can't open connection:", e.getLocalizedMessage());
         }
 
-        try {
-            slave.open();
-            while (true) {
+        for (int r = 0; r < 5; r++) {
+            try {
                 Thread.sleep(1000);
                 System.out.println();
-                System.out.println("Slave output");
-                printRegisters("Holding registers", slave.getDataHolder().getHoldingRegisters().getRange(0, 10));
-                printRegisters("Input registers", slave.getDataHolder().getInputRegisters().getRange(0, 10));
-                printBits("Coils", slave.getDataHolder().getCoils().getRange(0, 10));
-                printBits("Discrete inputs", slave.getDataHolder().getDiscreteInputs().getRange(0, 10));
-            }
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (IllegalDataAddressException e) {
-            e.printStackTrace();
-        } catch (IllegalDataValueException e) {
-            e.printStackTrace();
-        } catch (ModbusIOException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                slave.close();
-            } catch (ModbusIOException e) {
+                System.out.println("Master output");
+                printRegisters("Holding registers", master.readHoldingRegisters(1, 0, 10));
+                printRegisters("Input registers", master.readInputRegisters(1, 0, 10));
+                printBits("Coils", master.readCoils(1, 0, 10));
+                printBits("Discrete inputs", master.readDiscreteInputs(1, 0, 10));
+                master.writeSingleRegister(1, 0, 69);
+                master.writeSingleCoil(1, 5, true);
+                master.writeMultipleRegisters(1, 1, new int[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 77});
+                master.writeMultipleCoils(1, 0, new boolean[]{true, false, true});
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
+        try {
+            master.close();
+        } catch (ModbusIOException e) {
+            System.out.format("%s %s\n", "Can't close connection:", e.getLocalizedMessage());
+        }
+    }
+
+    private static void printUsage() {
+        System.out.format("Usage: %s [%s, %s, %s]\n", ModbusMasterTest.class.getCanonicalName(), "tcp", "rtu", "ascii");
+        System.out.format("\t%s additional parameters:%s %s %s\n\t\t%s\n", "tcp",
+                "ip address", "port", "keep_alive(true, false)",
+                "Example: 127.0.0.1 502 true");
+        System.out.format("\t%s additional parameters:%s %s %s %s %s\n\t\t%s\n", "rtu",
+                "device_name", "baud_rate", "data_bits", "stop_bits", "parity(none, odd, even, mark, space)",
+                "Example: COM1 115200 8 1 none");
+        System.out.format("\t%s additional parameters:%s %s %s\n\t\t%s\n", "ascii",
+                "device_name", "baud_rate", "parity(none, odd, even, mark, space)",
+                "Example: COM1 115200 odd");
     }
 
     private static void printRegisters(String title, int[] ir) {
         for (int i : ir)
             System.out.format("%6d", i);
-        System.out.format("\t%s\n", title);
+        System.out.format("  %s\n", title);
     }
 
     private static void printBits(String title, boolean[] ir) {
         for (boolean i : ir)
             System.out.format("%6s", i);
-        System.out.format("\t%s\n", title);
-    }
-
-    private static void printUsage() {
-        System.out.format("Usage:%s [%s, %s, %s]\n", ModbusSlaveTest.class.getCanonicalName(), "tcp", "rtu", "ascii");
-        System.out.println("Additional parameters:");
-        System.out.format("\t%s:\t%s %s\n\t\t%s\n", "TCP",
-                "host", "port",
-                "Example: 127.0.0.1 502");
-        System.out.format("\t%s:\t%s %s %s %s %s\n\t\t%s\n", "RTU",
-                "device_name", "baud_rate", "data_bits", "stop_bits", "parity(none, odd, even, mark, space)",
-                "Example: COM1 115200 8 1 none");
-        System.out.format("\t%s:\t%s %s %s\n\t\t%s\n", "ASCII",
-                "device_name", "baud_rate", "parity(none, odd, even, mark, space)",
-                "Example: COM1 115200 odd");
+        System.out.format("  %s\n", title);
     }
 
     private enum TransportType {
