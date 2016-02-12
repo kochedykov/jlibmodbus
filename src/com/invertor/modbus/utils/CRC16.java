@@ -77,6 +77,24 @@ public class CRC16 {
         return crc;
     }
 
+    static public int calc(int crc, short[] words, int offset, int length) {
+        for (int i = offset; i < offset + length; i++) {
+            crc = calc(crc, (byte) (words[i] & 0xff));
+            crc = calc(crc, (byte) ((words[i] >> 8) & 0xff));
+        }
+        return crc;
+    }
+
+    static public int calc(int crc, int[] dwords, int offset, int length) {
+        for (int i = offset; i < offset + length; i++) {
+            crc = calc(crc, (byte) (dwords[i] & 0xff));
+            crc = calc(crc, (byte) ((dwords[i] >> 8) & 0xff));
+            crc = calc(crc, (byte) ((dwords[i] >> 16) & 0xff));
+            crc = calc(crc, (byte) ((dwords[i] >> 24) & 0xff));
+        }
+        return crc;
+    }
+
     static public int calc(int crc, byte b) {
         crc = (short) crc & 0xffff;
         return (crc >>> 8) ^ table[(crc ^ b) & 0xff];
