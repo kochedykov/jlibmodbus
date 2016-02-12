@@ -44,7 +44,7 @@ public class ReadHoldingRegistersResponse extends AbstractReadResponse {
         return registers;
     }
 
-    final public void setRegisters(int[] registers) {
+    final public void setRegisters(int[] registers) throws ModbusNumberException {
         this.registers = registers;
         setByteCount(registers.length * 2);
     }

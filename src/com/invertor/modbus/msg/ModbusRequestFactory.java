@@ -2,6 +2,7 @@ package com.invertor.modbus.msg;
 
 import com.invertor.modbus.exception.ModbusIOException;
 import com.invertor.modbus.exception.ModbusNumberException;
+import com.invertor.modbus.msg.base.ModbusFileRecord;
 import com.invertor.modbus.msg.base.ModbusMessage;
 import com.invertor.modbus.msg.base.ModbusRequest;
 import com.invertor.modbus.msg.request.*;
@@ -98,6 +99,10 @@ final public class ModbusRequestFactory implements ModbusMessageFactory {
         return new ReadFifoQueueRequest(serverAddress, fifoPointerAddress);
     }
 
+    public ModbusRequest createReadFileRecord(int serverAddress, ModbusFileRecord[] records) throws ModbusNumberException {
+        return new ReadFileRecordRequest(serverAddress, records);
+    }
+
     @Override
     public ModbusMessage createMessage(ModbusInputStream fifo) throws ModbusNumberException, ModbusIOException {
         ModbusMessage msg;
@@ -143,6 +148,9 @@ final public class ModbusRequestFactory implements ModbusMessageFactory {
             case READ_FIFO_QUEUE:
                 msg = new ReadFifoQueueRequest(serverAddress);
                 break;
+            case READ_FILE_RECORD:
+                msg = new ReadFileRecordRequest(serverAddress);
+                break;
             case READ_EXCEPTION_STATUS:
                 msg = new ReadExceptionStatusRequest(serverAddress);
                 break;
@@ -153,7 +161,7 @@ final public class ModbusRequestFactory implements ModbusMessageFactory {
                 msg = new GetCommEventCounterRequest(serverAddress);
                 break;
             case GET_COMM_EVENT_LOG:
-            case READ_FILE_RECORD:
+
             case WRITE_FILE_RECORD:
             case DIAGNOSTICS:
             case ENCAPSULATED_INTERFACE_TRANSPORT:

@@ -4,6 +4,7 @@ import com.invertor.modbus.exception.ModbusIOException;
 import com.invertor.modbus.exception.ModbusNumberException;
 import com.invertor.modbus.exception.ModbusProtocolException;
 import com.invertor.modbus.msg.ModbusRequestFactory;
+import com.invertor.modbus.msg.base.ModbusFileRecord;
 import com.invertor.modbus.msg.base.ModbusMessage;
 import com.invertor.modbus.msg.base.ModbusRequest;
 import com.invertor.modbus.msg.base.ModbusResponse;
@@ -152,6 +153,13 @@ abstract public class ModbusMaster {
         ModbusRequest request = requestFactory.createReadFifoQueue(serverAddress, fifoPointerAddress);
         ReadFifoQueueResponse response = (ReadFifoQueueResponse) processRequest(request);
         return response.getFifoValueRegister();
+    }
+
+    final public ModbusFileRecord[] readFileRecord(int serverAddress, ModbusFileRecord[] records) throws
+            ModbusProtocolException, ModbusNumberException, ModbusIOException {
+        ModbusRequest request = requestFactory.createReadFileRecord(serverAddress, records);
+        ReadFileRecordResponse response = (ReadFileRecordResponse) processRequest(request);
+        return response.getFileRecords();
     }
 
     /**

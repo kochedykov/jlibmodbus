@@ -1,7 +1,5 @@
 package com.invertor.modbus.msg.base;
 
-import com.invertor.modbus.utils.DataUtils;
-
 /**
  * Copyright (c) 2015-2016 JSC Invertor
  * [http://www.sbp-invertor.ru]
@@ -26,36 +24,35 @@ import com.invertor.modbus.utils.DataUtils;
  */
 public class ModbusFileRecord {
     final static public int REF_TYPE = 0x06;
-    final private int file;
     final private int number;
-    private byte[] buffer = null;
+    final private int file;
+    private int length = 0;
+    private int[] registers;
 
-    public ModbusFileRecord(int file, int number) {
+    public ModbusFileRecord(int fileNumber, int recordNumber, int registerCount) {
+        this.file = fileNumber;
+        this.number = recordNumber;
+        this.length = registerCount;
+    }
+
+    public ModbusFileRecord(int file, int number, int[] buffer) {
         this.file = file;
         this.number = number;
+        setRegisters(buffer);
     }
 
-    public byte[] getBuffer() {
-        return buffer;
-    }
-
-    /**
-     * setter for file record data buffer.
-     * this function converts buffer of modbus register values to byte array.
-     *
-     * @param registers modbus register values
-     */
-    public void setBuffer(int[] registers) {
-        this.buffer = DataUtils.toByteArray(registers);
+    public int[] getRegisters() {
+        return registers;
     }
 
     /**
      * setter
      *
-     * @param buffer array of bytes
+     * @param registers modbus register values
      */
-    public void setBuffer(byte[] buffer) {
-        this.buffer = buffer;
+    public void setRegisters(int[] registers) {
+        this.registers = registers;
+        this.length = registers.length;
     }
 
     public int getFileNumber() {
@@ -67,6 +64,6 @@ public class ModbusFileRecord {
     }
 
     public int getRecordLength() {
-        return buffer.length;
+        return length;
     }
 }

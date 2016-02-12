@@ -5,6 +5,7 @@ import com.invertor.modbus.msg.base.AbstractReadResponse;
 import com.invertor.modbus.msg.base.ModbusFileRecord;
 import com.invertor.modbus.net.stream.base.ModbusInputStream;
 import com.invertor.modbus.net.stream.base.ModbusOutputStream;
+import com.invertor.modbus.utils.DataUtils;
 import com.invertor.modbus.utils.ModbusFunctionCode;
 
 import java.io.IOException;
@@ -45,26 +46,25 @@ final public class ReadFileRecordResponse extends AbstractReadResponse {
     @Override
     protected void readData(ModbusInputStream fifo) throws IOException, ModbusNumberException {
         List<ModbusFileRecord> records = new LinkedList<ModbusFileRecord>();
-        int byteCount = getByteCount();
+        int response_byte_count = getByteCount();
         int read = 0;
         int i = 0;
-        while (read < byteCount) {
-            int record_length = fifo.read();
+        while (read < response_byte_count) {
+            int record_byte_count = fifo.read() * 2;
             if (fifo.read() != ModbusFileRecord.REF_TYPE)
                 throw new ModbusNumberException("Reference type mismatch.");
             read += READ_RESP_SUB_REQ_LENGTH;
-            if (record_length > byteCount - read) {
-                record_length = byteCount - read;
+            if (record_byte_count > response_byte_count - read) {
+                record_byte_count = response_byte_count - read;
             }
-            byte[] buffer = new byte[record_length];
-            if (fifo.read(buffer) != record_length)
-                throw new ModbusNumberException(record_length + " bytes expected, but not received.");
-            read += record_length;
-            ModbusFileRecord mfr = new ModbusFileRecord(0, i++);
-            mfr.setBuffer(buffer);
+            byte[] buffer = new byte[record_byte_count];
+            if (fifo.read(buffer) != record_byte_count)
+                throw new ModbusNumberException(record_byte_count + " bytes expected, but not received.");
+            read += record_byte_count;
+            ModbusFileRecord mfr = new ModbusFileRecord(0, i++, DataUtils.toIntArray(buffer));
             records.add(mfr);
         }
-        setFileRecords((ModbusFileRecord[]) records.toArray());
+        setFileRecords(records.toArray(new ModbusFileRecord[records.size()]));
     }
 
     @Override
@@ -72,7 +72,7 @@ final public class ReadFileRecordResponse extends AbstractReadResponse {
         for (ModbusFileRecord r : getFileRecords()) {
             fifo.write(r.getRecordLength());
             fifo.write(ModbusFileRecord.REF_TYPE);
-            fifo.write(r.getBuffer());
+            fifo.write(DataUtils.toByteArray(r.getRegisters()));
         }
     }
 
@@ -85,7 +85,12 @@ final public class ReadFileRecordResponse extends AbstractReadResponse {
         return fileRecords;
     }
 
-    public void setFileRecords(ModbusFileRecord[] fileRecords) {
+    public void setFileRecords(ModbusFileRecord[] fileRecords) throws ModbusNumberException {
         this.fileRecords = fileRecords;
+        int byteCount = 0;
+        for (ModbusFileRecord r : getFileRecords()) {
+            byteCount += 2 + r.getRecordLength() * 2;
+        }
+        setByteCount(byteCount);
     }
 }

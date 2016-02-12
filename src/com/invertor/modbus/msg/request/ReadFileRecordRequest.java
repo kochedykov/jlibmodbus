@@ -77,16 +77,9 @@ final public class ReadFileRecordRequest extends ModbusRequest {
             int record_number = fifo.readShortBE();
             int record_length = fifo.readShortBE();
             read += READ__SUB_REQ_LENGTH;
-            if (record_length > byteCount - read) {
-                record_length = byteCount - read;
-            }
-            byte[] buffer = new byte[record_length];
-            if (fifo.read(buffer) != record_length)
-                throw new ModbusNumberException(record_length + " bytes expected, but not received.");
-            read += record_length;
-            records.add(new ModbusFileRecord(file_number, record_number));
+            records.add(new ModbusFileRecord(file_number, record_number, record_length));
         }
-        this.records = (ModbusFileRecord[]) records.toArray();
+        this.records = records.toArray(new ModbusFileRecord[records.size()]);
     }
 
     @Override
@@ -99,7 +92,7 @@ final public class ReadFileRecordRequest extends ModbusRequest {
         ReadFileRecordResponse response = new ReadFileRecordResponse(getServerAddress());
         try {
             for (ModbusFileRecord r : records) {
-                r.setBuffer(dataHolder.readFileRecord(r.getFileNumber(), r.getRecordNumber()));
+                r.setRegisters(dataHolder.readFileRecord(r.getFileNumber(), r.getRecordNumber(), r.getRecordLength()));
             }
             response.setFileRecords(records);
         } catch (ModbusProtocolException e) {

@@ -89,6 +89,9 @@ final public class ModbusResponseFactory implements ModbusMessageFactory {
             case READ_FIFO_QUEUE:
                 msg = new ReadFifoQueueResponse(serverAddress);
                 break;
+            case READ_FILE_RECORD:
+                msg = new ReadFileRecordResponse(serverAddress);
+                break;
             case READ_EXCEPTION_STATUS:
                 msg = new ReadExceptionStatusResponse(serverAddress);
                 break;
@@ -99,7 +102,6 @@ final public class ModbusResponseFactory implements ModbusMessageFactory {
                 msg = new GetCommEventCounterResponse(serverAddress);
                 break;
             case GET_COMM_EVENT_LOG:
-            case READ_FILE_RECORD:
             case WRITE_FILE_RECORD:
             case DIAGNOSTICS:
             case ENCAPSULATED_INTERFACE_TRANSPORT:

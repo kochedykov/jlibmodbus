@@ -44,9 +44,17 @@ abstract public class ModbusFile {
         this.number = number;
     }
 
-    abstract public byte[] read(int recordNumber) throws IllegalDataAddressException;
+    /**
+     * read modbus file record
+     *
+     * @param recordNumber number of a record
+     * @param recordLength read register count
+     * @return record data
+     * @throws IllegalDataAddressException record with number recordNumber not exist or recordLength bytes not allowable.
+     */
+    abstract public int[] read(int recordNumber, int recordLength) throws IllegalDataAddressException;
 
-    abstract public void write(int recordNumber, byte[] buffer) throws IllegalDataAddressException, IllegalDataValueException;
+    abstract public void write(int recordNumber, int[] buffer) throws IllegalDataAddressException, IllegalDataValueException;
 
     public int getNumber() {
         return number;
