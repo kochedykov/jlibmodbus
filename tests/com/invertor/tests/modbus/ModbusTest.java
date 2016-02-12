@@ -2,6 +2,7 @@ package com.invertor.tests.modbus;
 
 import com.invertor.modbus.*;
 import com.invertor.modbus.data.DataHolder;
+import com.invertor.modbus.data.FifoQueue;
 import com.invertor.modbus.data.SimpleDataHolderBuilder;
 import com.invertor.modbus.exception.IllegalDataAddressException;
 import com.invertor.modbus.exception.IllegalDataValueException;
@@ -202,6 +203,13 @@ public class ModbusTest implements Runnable {
             dataHolder.getInputRegisters().set(11, 69);
             dataHolder.getHoldingRegisters().setRange(0, new int[]{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10});
             dataHolder.getSlaveId().set("slave implementation = jlibmodbus".getBytes());
+            dataHolder.getExceptionStatus().set(123);
+            FifoQueue fifo = dataHolder.getFifoQueue(0);
+            for (int i = 0; i < 35; i++) {
+                if (fifo.size() == Modbus.MAX_FIFO_COUNT)
+                    fifo.poll();
+                fifo.add(i * 11);
+            }
         } catch (IllegalDataAddressException e) {
             e.printStackTrace();
         } catch (IllegalDataValueException e) {
@@ -272,6 +280,7 @@ public class ModbusTest implements Runnable {
                 printRegisters("Holding registers", master.readHoldingRegisters(1, 0, 16));
                 printRegisters("Input registers", master.readInputRegisters(1, 0, 16));
                 printRegisters("Read write registers", master.readWriteMultipleRegisters(1, 0, 16, 3, new int[]{33, 44}));
+                printRegisters("Fifo queue registers", master.readFifoQueue(1, 0));
                 printBits("Coils", master.readCoils(1, 0, 16));
                 printBits("Discrete inputs", master.readDiscreteInputs(1, 0, 16));
                 System.out.println(new String(master.reportSlaveId(1), Charset.defaultCharset()));
