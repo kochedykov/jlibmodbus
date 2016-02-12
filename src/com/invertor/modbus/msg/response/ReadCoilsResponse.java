@@ -58,7 +58,7 @@ public class ReadCoilsResponse extends AbstractReadResponse {
         return coils;
     }
 
-    final public void setCoils(boolean[] coils) {
+    final public void setCoils(boolean[] coils) throws ModbusNumberException {
         this.coils = coils;
         setByteCount(calcByteCount(coils));
     }
