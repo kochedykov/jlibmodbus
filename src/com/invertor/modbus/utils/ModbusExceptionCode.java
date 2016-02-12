@@ -61,6 +61,6 @@ public enum ModbusExceptionCode {
 
     @Override
     public String toString() {
-        return name() + "; value: " + value;
+        return name() + ": Exception Code = " + value;
     }
 }

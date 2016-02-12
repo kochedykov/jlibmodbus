@@ -48,6 +48,7 @@ final public class ModbusMasterFactory {
      * @see SerialPort.Parity
      * @see SerialPort.BaudRate
      * @see ModbusMaster
+     * @see ModbusMasterRTU
      */
     static public ModbusMaster createModbusMasterRTU(String device, SerialPort.BaudRate baudRate, int dataBits, int stopBits, SerialPort.Parity parity) {
         return new ModbusMasterRTU(device, baudRate, dataBits, stopBits, parity);
@@ -61,6 +62,7 @@ final public class ModbusMasterFactory {
      * @see SerialPort.Parity
      * @see SerialPort.BaudRate
      * @see ModbusMaster
+     * @see ModbusMasterRTU
      * @see SerialParameters
      */
     static public ModbusMaster createModbusMasterRTU(SerialParameters sp) {
@@ -77,6 +79,7 @@ final public class ModbusMasterFactory {
      * @see SerialPort.Parity
      * @see SerialPort.BaudRate
      * @see ModbusMaster
+     * @see ModbusMasterASCII
      */
     static public ModbusMaster createModbusMasterASCII(String device, SerialPort.BaudRate baudRate, SerialPort.Parity parity) {
         return new ModbusMasterASCII(device, baudRate, parity);
@@ -91,6 +94,7 @@ final public class ModbusMasterFactory {
      * @see SerialPort.Parity
      * @see SerialPort.BaudRate
      * @see ModbusMaster
+     * @see ModbusMasterASCII
      */
     static public ModbusMaster createModbusMasterASCII(String device, SerialPort.BaudRate baudRate) {
         return new ModbusMasterASCII(device, baudRate);
@@ -103,6 +107,7 @@ final public class ModbusMasterFactory {
      * @param keepAlive - whether or not to have socket keep alive turned on.
      * @return ModbusMaster instance if there is no errors, else null
      * @see ModbusMaster
+     * @see ModbusMasterTCP
      */
     static public ModbusMaster createModbusMasterTCP(String host, boolean keepAlive) {
         return createModbusMasterTCP(host, Modbus.TCP_PORT, keepAlive);
@@ -114,6 +119,7 @@ final public class ModbusMasterFactory {
      * @param host - ip address of remote slave
      * @return ModbusMaster instance if there is no errors, else null
      * @see ModbusMaster
+     * @see ModbusMasterTCP
      */
     static public ModbusMaster createModbusMasterTCP(String host) {
         return createModbusMasterTCP(host, false);
@@ -127,6 +133,7 @@ final public class ModbusMasterFactory {
      * @param keepAlive - whether or not to have socket keep alive turned on.
      * @return ModbusMaster instance if there is no errors, else null
      * @see ModbusMaster
+     * @see ModbusMasterTCP
      */
     static public ModbusMaster createModbusMasterTCP(String host, int port, boolean keepAlive) {
         return new ModbusMasterTCP(new TcpParameters(host, port, keepAlive));
