@@ -3,6 +3,7 @@ package com.invertor.modbus.data;
 import com.invertor.modbus.exception.IllegalDataAddressException;
 import com.invertor.modbus.exception.IllegalDataValueException;
 import com.invertor.modbus.exception.IllegalFunctionException;
+import com.invertor.modbus.msg.base.ModbusFileRecord;
 import com.invertor.modbus.utils.ModbusFunctionCode;
 
 import java.util.Map;
@@ -123,6 +124,24 @@ public class DataHolder {
         ModbusFile file = getFile(fileNumber);
         checkPointer(file, fileNumber);
         return file.read(recordNumber, recordLength);
+    }
+
+    public void readFileRecord(ModbusFileRecord fileRecord) throws IllegalDataAddressException, IllegalDataValueException {
+        ModbusFile file = getFile(fileRecord.getFileNumber());
+        checkPointer(file, fileRecord.getFileNumber());
+        fileRecord.setRegisters(file.read(fileRecord.getRecordNumber(), fileRecord.getRecordLength()));
+    }
+
+    public void writeFileRecord(int fileNumber, int recordNumber, int[] registers) throws IllegalDataAddressException, IllegalDataValueException {
+        ModbusFile file = getFile(fileNumber);
+        checkPointer(file, fileNumber);
+        file.write(recordNumber, registers);
+    }
+
+    public void writeFileRecord(ModbusFileRecord fileRecord) throws IllegalDataAddressException, IllegalDataValueException {
+        ModbusFile file = getFile(fileRecord.getFileNumber());
+        checkPointer(file, fileRecord.getFileNumber());
+        file.write(fileRecord.getRecordNumber(), fileRecord.getRegisters());
     }
 
     public Coils getCoils() {
