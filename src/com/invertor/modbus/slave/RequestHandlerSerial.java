@@ -2,6 +2,7 @@ package com.invertor.modbus.slave;
 
 import com.invertor.modbus.Modbus;
 import com.invertor.modbus.ModbusSlave;
+import com.invertor.modbus.data.CommStatus;
 import com.invertor.modbus.data.DataHolder;
 import com.invertor.modbus.exception.ModbusIOException;
 import com.invertor.modbus.msg.base.ModbusRequest;
@@ -41,15 +42,17 @@ public class RequestHandlerSerial extends RequestHandler {
     public void run() {
         setListening(true);
         do {
+            DataHolder dataHolder = getSlave().getDataHolder();
+            CommStatus commStatus = dataHolder.getCommStatus();
+            ModbusTransport transport = getConn().getTransport();
             try {
-                DataHolder dataHolder = getSlave().getDataHolder();
-                ModbusTransport transport = getConn().getTransport();
                 ModbusRequest request = (ModbusRequest) transport.readRequest();
-                getSlave().getDataHolder().getCommStatus().enter();
+                commStatus.enter();
                 if (request.getServerAddress() == getSlave().getServerAddress()) {
                     ModbusResponse response = request.getResponse(dataHolder);
+                    commStatus.incrementMessageCounter();
                     if (!response.isException())
-                        getSlave().getDataHolder().getCommStatus().incrementEventCount();
+                        commStatus.incrementEventCounter();
                     transport.send(response);
                 }
             } catch (ModbusIOException e) {
@@ -57,7 +60,7 @@ public class RequestHandlerSerial extends RequestHandler {
             } catch (Exception e) {
                 Modbus.log().warning(e.getLocalizedMessage());
             } finally {
-                getSlave().getDataHolder().getCommStatus().leave();
+                commStatus.leave();
             }
         } while (isListening());
         try {

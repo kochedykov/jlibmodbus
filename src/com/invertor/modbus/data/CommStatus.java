@@ -1,5 +1,11 @@
 package com.invertor.modbus.data;
 
+import com.invertor.modbus.Modbus;
+import com.invertor.modbus.data.events.ModbusEvent;
+
+import java.util.Queue;
+import java.util.concurrent.LinkedBlockingQueue;
+
 /**
  * Copyright (c) 2015-2016 JSC Invertor
  * [http://www.sbp-invertor.ru]
@@ -23,15 +29,20 @@ package com.invertor.modbus.data;
  * email: vladislav.kochedykov@gmail.com
  */
 public class CommStatus {
-    private int status;
-    private int eventCount;
+    public static final int EVENT_QUEUE_CAPACITY = Modbus.MAX_PDU_LENGTH - 8;
+    private int status = 0;
+    private int eventCount = 0;
+    private int messageCount = 0;
+    /**
+     * Comm event queue. Capacity = PDU length(254) - server_address - function_code - 3 x 2 Bytes,
+     * (Length of Status, Event Count and Message Count).
+     */
+    private Queue<ModbusEvent> eventQueue = new LinkedBlockingQueue<ModbusEvent>(EVENT_QUEUE_CAPACITY);
 
     public CommStatus() {
-        status = 0;
-        eventCount = 0;
     }
 
-    public void incrementEventCount() {
+    public void incrementEventCounter() {
         eventCount++;
     }
 
@@ -43,11 +54,29 @@ public class CommStatus {
         status = 0;
     }
 
+    public void incrementMessageCounter() {
+        messageCount++;
+    }
+
     public int getStatus() {
         return status;
     }
 
     public int getEventCount() {
         return eventCount;
+    }
+
+    public int getMessageCount() {
+        return messageCount;
+    }
+
+    public Queue<ModbusEvent> getEventQueue() {
+        return eventQueue;
+    }
+
+    public void addEvent(ModbusEvent event) {
+        if (eventQueue.size() >= EVENT_QUEUE_CAPACITY)
+            eventQueue.poll();
+        eventQueue.add(event);
     }
 }
