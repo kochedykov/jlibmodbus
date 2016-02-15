@@ -3,8 +3,8 @@ package com.invertor.modbus.data;
 import com.invertor.modbus.Modbus;
 import com.invertor.modbus.data.events.ModbusEvent;
 
-import java.util.Queue;
-import java.util.concurrent.LinkedBlockingQueue;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Copyright (c) 2015-2016 JSC Invertor
@@ -37,7 +37,7 @@ public class CommStatus {
      * Comm event queue. Capacity = PDU length(254) - server_address - function_code - 3 x 2 Bytes,
      * (Length of Status, Event Count and Message Count).
      */
-    private Queue<ModbusEvent> eventQueue = new LinkedBlockingQueue<ModbusEvent>(EVENT_QUEUE_CAPACITY);
+    private LinkedList<ModbusEvent> eventQueue = new LinkedList<ModbusEvent>();
 
     public CommStatus() {
     }
@@ -82,7 +82,7 @@ public class CommStatus {
         this.messageCount = messageCount;
     }
 
-    public Queue<ModbusEvent> getEventQueue() {
+    public List<ModbusEvent> getEventQueue() {
         return eventQueue;
     }
 

@@ -32,19 +32,7 @@ abstract public class ModbusEvent {
         this.event = type.getCode() | event;
     }
 
-    public Type getType() {
-        return type;
-    }
-
-    protected boolean isBitsSet(int bits) {
-        return (event & bits) == bits;
-    }
-
-    public int getEvent() {
-        return event;
-    }
-
-    ModbusEvent getEvent(int event) {
+    static public ModbusEvent getEvent(int event) {
         for (Type t : Type.values()) {
             if ((t.getCode() & event) == t.getCode()) {
                 switch (t) {
@@ -60,6 +48,18 @@ abstract public class ModbusEvent {
             }
         }
         throw new IllegalArgumentException();
+    }
+
+    public Type getType() {
+        return type;
+    }
+
+    protected boolean isBitsSet(int bits) {
+        return (event & bits) == bits;
+    }
+
+    public int getEvent() {
+        return event;
     }
 
     public enum Type {
