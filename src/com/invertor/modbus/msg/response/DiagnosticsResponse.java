@@ -1,12 +1,10 @@
-package com.invertor.modbus.msg.request;
+package com.invertor.modbus.msg.response;
 
-import com.invertor.modbus.data.DataHolder;
 import com.invertor.modbus.exception.ModbusNumberException;
-import com.invertor.modbus.msg.base.ModbusRequest;
 import com.invertor.modbus.msg.base.ModbusResponse;
-import com.invertor.modbus.msg.response.GetCommEventCounterResponse;
 import com.invertor.modbus.net.stream.base.ModbusInputStream;
 import com.invertor.modbus.net.stream.base.ModbusOutputStream;
+import com.invertor.modbus.utils.DiagnosticsSubFunctionCode;
 import com.invertor.modbus.utils.ModbusFunctionCode;
 
 import java.io.IOException;
@@ -33,42 +31,50 @@ import java.io.IOException;
  * Authors: Vladislav Y. Kochedykov, software engineer.
  * email: vladislav.kochedykov@gmail.com
  */
-final public class GetCommEventCounterRequest extends ModbusRequest {
+public class DiagnosticsResponse extends ModbusResponse {
 
-    public GetCommEventCounterRequest(int serverAddress) throws ModbusNumberException {
+    private DiagnosticsSubFunctionCode subFunctionCode;
+    private int subFunctionData = 0;
+
+    public DiagnosticsResponse(int serverAddress, DiagnosticsSubFunctionCode subFunctionCode) throws ModbusNumberException {
         super(serverAddress);
+        setSubFunctionCode(subFunctionCode);
     }
 
     @Override
-    public void writeRequest(ModbusOutputStream fifo) throws IOException {
-        //no op
+    protected void readResponse(ModbusInputStream fifo) throws IOException, ModbusNumberException {
+        setSubFunctionCode(DiagnosticsSubFunctionCode.getSubFunctionCode(fifo.readShortBE()));
+        setSubFunctionData(fifo.readShortBE());
     }
 
     @Override
-    public int requestSize() {
-        return 0;
+    protected void writeResponse(ModbusOutputStream fifo) throws IOException {
+
     }
 
     @Override
-    public ModbusResponse process(DataHolder dataHolder) throws ModbusNumberException {
-        GetCommEventCounterResponse response = new GetCommEventCounterResponse(getServerAddress());
-        response.setEventCount(dataHolder.getCommStatus().getEventCount());
-        response.setStatus(dataHolder.getCommStatus().getCommStatus());
-        return response;
-    }
-
-    @Override
-    public boolean validateResponseImpl(ModbusResponse response) {
-        return true;
-    }
-
-    @Override
-    public void readPDU(ModbusInputStream fifo) throws ModbusNumberException, IOException {
-        //no op
+    protected int responseSize() {
+        return 4;
     }
 
     @Override
     public int getFunction() {
-        return ModbusFunctionCode.GET_COMM_EVENT_COUNTER.toInt();
+        return ModbusFunctionCode.DIAGNOSTICS.toInt();
+    }
+
+    public DiagnosticsSubFunctionCode getSubFunctionCode() {
+        return subFunctionCode;
+    }
+
+    public void setSubFunctionCode(DiagnosticsSubFunctionCode subFunctionCode) {
+        this.subFunctionCode = subFunctionCode;
+    }
+
+    public int getSubFunctionData() {
+        return subFunctionData;
+    }
+
+    public void setSubFunctionData(int subFunctionData) {
+        this.subFunctionData = subFunctionData;
     }
 }

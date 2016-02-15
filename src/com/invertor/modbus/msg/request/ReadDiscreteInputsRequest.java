@@ -42,7 +42,7 @@ final public class ReadDiscreteInputsRequest extends ReadCoilsRequest {
     }
 
     @Override
-    public ModbusResponse getResponse(DataHolder dataHolder) throws ModbusNumberException {
+    public ModbusResponse process(DataHolder dataHolder) throws ModbusNumberException {
         ReadDiscreteInputsResponse response = new ReadDiscreteInputsResponse(getServerAddress());
         try {
             boolean[] range = dataHolder.readDiscreteInputRange(getStartAddress(), getQuantity());

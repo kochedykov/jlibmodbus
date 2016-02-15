@@ -83,7 +83,7 @@ final public class WriteFileRecordRequest extends ModbusRequest {
     }
 
     @Override
-    public ModbusResponse getResponse(DataHolder dataHolder) throws ModbusNumberException {
+    public ModbusResponse process(DataHolder dataHolder) throws ModbusNumberException {
         WriteFileRecordResponse response = new WriteFileRecordResponse(getServerAddress(), record);
         try {
             dataHolder.writeFileRecord(response.getFileRecord());

@@ -51,13 +51,13 @@ final public class GetCommEventLogRequest extends ModbusRequest {
     }
 
     @Override
-    public ModbusResponse getResponse(DataHolder dataHolder) throws ModbusNumberException {
+    public ModbusResponse process(DataHolder dataHolder) throws ModbusNumberException {
         GetCommEventLogResponse response = new GetCommEventLogResponse(getServerAddress());
         CommStatus commStatus = dataHolder.getCommStatus();
         response.setEventCount(commStatus.getEventCount());
-        response.setStatus(commStatus.getStatus());
+        response.setStatus(commStatus.getCommStatus());
         response.setMessageCount(commStatus.getMessageCount());
-        response.setEvents(commStatus.getEventQueue());
+        response.setEvents(commStatus.getEventLog());
         return response;
     }
 

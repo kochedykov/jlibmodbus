@@ -1,5 +1,6 @@
 package com.invertor.modbus.net;
 
+import com.invertor.modbus.exception.ModbusChecksumException;
 import com.invertor.modbus.exception.ModbusIOException;
 import com.invertor.modbus.exception.ModbusNumberException;
 import com.invertor.modbus.msg.ModbusMessageFactory;
@@ -48,7 +49,7 @@ public class ModbusTransportRTU extends ModbusTransport {
             // crc from the same crc equals zero
             int c_crc = is.getCrc();
             if (c_crc != 0 || r_crc == 0) {
-                throw new ModbusNumberException("control sum check failed.", r_crc);
+                throw new ModbusChecksumException(r_crc, c_crc);
             }
         } catch (IOException ioe) {
             throw new ModbusIOException(ioe);

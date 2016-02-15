@@ -56,7 +56,7 @@ abstract public class ModbusMasterSerial extends ModbusMaster {
     public CommStatus getCommEventCounter(int serverAddress) throws ModbusProtocolException, ModbusNumberException, ModbusIOException {
         ModbusRequest request = requestFactory.createGetCommEventCounter(serverAddress);
         GetCommEventCounterResponse response = (GetCommEventCounterResponse) processRequest(request);
-        commStatus.setStatus(response.getStatus());
+        commStatus.setCommStatus(response.getStatus());
         commStatus.setEventCount(response.getEventCount());
         return commStatus;
     }
@@ -65,9 +65,9 @@ abstract public class ModbusMasterSerial extends ModbusMaster {
     public CommStatus getCommEventLog(int serverAddress) throws ModbusProtocolException, ModbusNumberException, ModbusIOException {
         ModbusRequest request = requestFactory.createGetCommEventLog(serverAddress);
         GetCommEventLogResponse response = (GetCommEventLogResponse) processRequest(request);
-        commStatus.setStatus(response.getStatus());
+        commStatus.setCommStatus(response.getStatus());
         commStatus.setEventCount(response.getEventCount());
-        commStatus.setMessageCount(response.getMessageCount());
+        commStatus.setBusMessageCount(response.getMessageCount());
         commStatus.setEventQueue(response.getEventQueue());
         return commStatus;
     }

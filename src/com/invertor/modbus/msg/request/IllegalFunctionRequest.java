@@ -52,7 +52,7 @@ public class IllegalFunctionRequest extends ModbusRequest {
     }
 
     @Override
-    public ModbusResponse getResponse(DataHolder dataHolder) throws ModbusNumberException {
+    public ModbusResponse process(DataHolder dataHolder) throws ModbusNumberException {
         return new IllegalFunctionResponse(getServerAddress(), getFunction());
     }
 

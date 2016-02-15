@@ -52,7 +52,7 @@ final public class MaskWriteRegisterRequest extends AbstractDataRequest {
 
     /*result = ((reg & and) | (or & !and))*/
     @Override
-    public ModbusResponse getResponse(DataHolder dataHolder) throws ModbusNumberException {
+    public ModbusResponse process(DataHolder dataHolder) throws ModbusNumberException {
         MaskWriteRegisterResponse response = new MaskWriteRegisterResponse(getServerAddress(), getStartAddress(), getMaskAnd(), getMaskOr());
         try {
             int reg = dataHolder.readHoldingRegister(getStartAddress());

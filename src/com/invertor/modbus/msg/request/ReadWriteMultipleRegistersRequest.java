@@ -64,7 +64,7 @@ public class ReadWriteMultipleRegistersRequest extends ModbusRequest {
     }
 
     @Override
-    public ModbusResponse getResponse(DataHolder dataHolder) throws ModbusNumberException {
+    public ModbusResponse process(DataHolder dataHolder) throws ModbusNumberException {
         ReadWriteMultipleRegistersResponse response = new ReadWriteMultipleRegistersResponse(getServerAddress());
         try {
             dataHolder.writeHoldingRegisterRange(writer.getStartAddress(), writer.getRegisters());

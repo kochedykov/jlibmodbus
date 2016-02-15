@@ -5,6 +5,7 @@ import com.invertor.modbus.ModbusSlave;
 import com.invertor.modbus.data.CommStatus;
 import com.invertor.modbus.data.DataHolder;
 import com.invertor.modbus.data.events.ModbusEventSend;
+import com.invertor.modbus.exception.ModbusChecksumException;
 import com.invertor.modbus.exception.ModbusIOException;
 import com.invertor.modbus.msg.base.ModbusRequest;
 import com.invertor.modbus.msg.base.ModbusResponse;
@@ -50,22 +51,42 @@ public class RequestHandlerSerial extends RequestHandler {
             ModbusTransport transport = getConn().getTransport();
             try {
                 ModbusRequest request = (ModbusRequest) transport.readRequest();
-                commStatus.incrementMessageCounter();
+
+                commStatus.incBusMessageCounter();
                 if (!(request instanceof GetCommEventCounterRequest ||
                         request instanceof GetCommEventLogRequest)) {
                     commStatus.enter();
                 }
                 if (request.getServerAddress() == getSlave().getServerAddress()) {
-                    ModbusResponse response = request.getResponse(dataHolder);
-                    if (!response.isException()) {
-                        commStatus.incrementEventCounter();
-                    } else {
-                        commStatus.addEvent(ModbusEventSend.createExceptionSentRead());
+                    try {
+                        ModbusResponse response = request.process(dataHolder);
+                        commStatus.incSlaveMessageCounter();
+                        if (response.isException()) {
+                            commStatus.addEvent(ModbusEventSend.createExceptionSentRead());
+                            commStatus.incExErrorCounter();
+                        } else {
+                            if (!(request instanceof GetCommEventCounterRequest ||
+                                    request instanceof GetCommEventLogRequest)) {
+                                commStatus.incEventCounter();
+                            }
+                        }
+                        if (!commStatus.isListenOnlyMode())
+                            transport.send(response);
+                        if (commStatus.isRestartCommunicationsOption()) {
+                            commStatus.restartCommunicationsOption();
+                            getSlave().open();
+                        }
+                    } catch (Exception e) {
+                        /**
+                         * quantity of messages addressed to the remote device for
+                         * which it has returned no response (neither a normal response nor an exception response)
+                         */
+                        commStatus.incNoResponseCounter();
+                        throw e;
                     }
-                    transport.send(response);
                 }
-            } catch (ModbusIOException e) {
-                Modbus.log().fine("Request timeout(no clients connected)");
+            } catch (ModbusChecksumException e) {
+                commStatus.incCommErrorCounter();
             } catch (Exception e) {
                 Modbus.log().warning(e.getLocalizedMessage());
             } finally {

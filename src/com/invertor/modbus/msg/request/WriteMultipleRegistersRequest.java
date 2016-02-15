@@ -58,7 +58,7 @@ final public class WriteMultipleRegistersRequest extends AbstractWriteMultipleRe
     }
 
     @Override
-    public ModbusResponse getResponse(DataHolder dataHolder) throws ModbusNumberException {
+    public ModbusResponse process(DataHolder dataHolder) throws ModbusNumberException {
         WriteMultipleRegistersResponse response = new WriteMultipleRegistersResponse(getServerAddress(), getStartAddress(), getQuantity());
         try {
             dataHolder.writeHoldingRegisterRange(getStartAddress(), getRegisters());

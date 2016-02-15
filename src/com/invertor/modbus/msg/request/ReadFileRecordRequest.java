@@ -88,7 +88,7 @@ final public class ReadFileRecordRequest extends ModbusRequest {
     }
 
     @Override
-    public ModbusResponse getResponse(DataHolder dataHolder) throws ModbusNumberException {
+    public ModbusResponse process(DataHolder dataHolder) throws ModbusNumberException {
         ReadFileRecordResponse response = new ReadFileRecordResponse(getServerAddress());
         try {
             for (ModbusFileRecord r : records) {

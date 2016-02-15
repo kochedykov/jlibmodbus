@@ -1,6 +1,7 @@
 package com.invertor.modbus.net;
 
 import com.invertor.modbus.Modbus;
+import com.invertor.modbus.exception.ModbusChecksumException;
 import com.invertor.modbus.exception.ModbusIOException;
 import com.invertor.modbus.exception.ModbusNumberException;
 import com.invertor.modbus.msg.ModbusMessageFactory;
@@ -35,32 +36,40 @@ import java.io.IOException;
  */
 public class ModbusTransportASCII extends ModbusTransport {
 
+    /**
+     * the end of message delimiter, (LF character by default)
+     */
+    static private int asciiInputDelimiter = Modbus.ASCII_CODE_LF;
+
     public ModbusTransportASCII(SerialPort serial) {
         super(new InputStreamASCII(serial), new OutputStreamASCII(serial));
+    }
+
+    static public void setAsciiInputDelimiter(int asciiInputDelimiter) {
+        ModbusTransportASCII.asciiInputDelimiter = asciiInputDelimiter;
     }
 
     @Override
     protected ModbusMessage read(ModbusMessageFactory factory) throws ModbusNumberException, ModbusIOException {
         int cr;
         int lf;
-        boolean check;
-        int lrc;
+        int c_lrc, r_lrc;
         ModbusMessage msg;
         InputStreamASCII is = (InputStreamASCII) getInputStream();
         try {
             try {
                 msg = factory.createMessage(is);
-                lrc = is.getLrc();
-                check = lrc == is.read();
+                c_lrc = is.getLrc();
+                r_lrc = is.read();
                 cr = is.readRaw();
                 lf = is.readRaw();
             } catch (IOException e) {
                 throw new ModbusIOException(e);
             }
-            if (cr != Modbus.ASCII_CODE_CR || lf != Modbus.ASCII_CODE_LF)
+            if (cr != Modbus.ASCII_CODE_CR || lf != asciiInputDelimiter)
                 Modbus.log().warning("\\r\\n not received.");
-            if (!check) {
-                throw new ModbusNumberException("control sum check failed.", lrc);
+            if (c_lrc != r_lrc) {
+                throw new ModbusChecksumException(r_lrc, c_lrc);
             }
         } finally {
             /*clear fifo*/

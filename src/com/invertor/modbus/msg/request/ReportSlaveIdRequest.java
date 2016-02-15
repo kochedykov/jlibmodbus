@@ -51,7 +51,7 @@ final public class ReportSlaveIdRequest extends ModbusRequest {
     }
 
     @Override
-    public ModbusResponse getResponse(DataHolder dataHolder) throws ModbusNumberException {
+    public ModbusResponse process(DataHolder dataHolder) throws ModbusNumberException {
         ReportSlaveIdResponse response = new ReportSlaveIdResponse(getServerAddress());
         try {
             byte[] slaveId = dataHolder.readSlaveId();

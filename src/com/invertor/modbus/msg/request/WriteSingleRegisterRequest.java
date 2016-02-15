@@ -53,7 +53,7 @@ public class WriteSingleRegisterRequest extends AbstractDataRequest {
     }
 
     @Override
-    public ModbusResponse getResponse(DataHolder dataHolder) throws ModbusNumberException {
+    public ModbusResponse process(DataHolder dataHolder) throws ModbusNumberException {
         WriteSingleRegisterResponse response = new WriteSingleRegisterResponse(getServerAddress(), getStartAddress(), getValue());
         try {
             dataHolder.writeHoldingRegister(getStartAddress(), getValue());

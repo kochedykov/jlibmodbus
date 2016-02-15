@@ -55,7 +55,7 @@ public class ReadCoilsRequest extends AbstractMultipleRequest {
     }
 
     @Override
-    public ModbusResponse getResponse(DataHolder dataHolder) throws ModbusNumberException {
+    public ModbusResponse process(DataHolder dataHolder) throws ModbusNumberException {
         ReadCoilsResponse response = new ReadCoilsResponse(getServerAddress());
         try {
             boolean[] range = dataHolder.readCoilRange(getStartAddress(), getQuantity());

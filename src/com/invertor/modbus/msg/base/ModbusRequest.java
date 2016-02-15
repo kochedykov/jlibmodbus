@@ -49,7 +49,7 @@ abstract public class ModbusRequest extends ModbusMessage {
 
     abstract public int requestSize();
 
-    abstract public ModbusResponse getResponse(DataHolder dataHolder) throws ModbusNumberException;
+    abstract public ModbusResponse process(DataHolder dataHolder) throws ModbusNumberException;
 
     abstract protected boolean validateResponseImpl(ModbusResponse response);
 

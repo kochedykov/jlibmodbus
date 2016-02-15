@@ -51,7 +51,7 @@ final public class ReadExceptionStatusRequest extends ModbusRequest {
     }
 
     @Override
-    public ModbusResponse getResponse(DataHolder dataHolder) throws ModbusNumberException {
+    public ModbusResponse process(DataHolder dataHolder) throws ModbusNumberException {
         ReadExceptionStatusResponse response = new ReadExceptionStatusResponse(getServerAddress());
         try {
             int exceptionStatus = dataHolder.readExceptionStatus();
