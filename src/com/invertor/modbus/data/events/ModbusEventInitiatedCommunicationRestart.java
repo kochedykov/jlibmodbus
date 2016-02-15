@@ -23,6 +23,12 @@ package com.invertor.modbus.data.events;
  * email: vladislav.kochedykov@gmail.com
  */
 public class ModbusEventInitiatedCommunicationRestart extends ModbusEvent {
+
     public ModbusEventInitiatedCommunicationRestart() {
+        this(0);
+    }
+
+    protected ModbusEventInitiatedCommunicationRestart(int event) {
+        super(Type.INITIATED_COMMUNICATION_RESTART, event);
     }
 }

@@ -29,11 +29,9 @@ public class ModbusEventSend extends ModbusEvent {
     final static private int BIT_SLAVE_PROGRAM_NAK_EXCEPTION_SENT = 3;
     final static private int BIT_WRITE_TIMEOUT_ERROR_OCCURRED = 4;
     final static private int BIT_CURRENTLY_IN_LISTEN_ONLY_MODE = 5;
-    final static private int BIT_EVENT_TYPE = 6;
 
-    private ModbusEventSend(int bit) {
-        setBit(BIT_EVENT_TYPE);
-        setBit(bit);
+    protected ModbusEventSend(int event) {
+        super(Type.SEND, event);
     }
 
     static public ModbusEventSend createExceptionSentRead() {
@@ -41,46 +39,46 @@ public class ModbusEventSend extends ModbusEvent {
     }
 
     static public ModbusEventSend createExceptionSlaveSentAbort() {
-        return new ModbusEventSend(BIT_SLAVE_ABORT_EXCEPTION_SENT);
+        return new ModbusEventSend(1 << BIT_SLAVE_ABORT_EXCEPTION_SENT);
     }
 
     static public ModbusEventSend createExceptionSlaveSentBusy() {
-        return new ModbusEventSend(BIT_SLAVE_BUSY_EXCEPTION_SENT);
+        return new ModbusEventSend(1 << BIT_SLAVE_BUSY_EXCEPTION_SENT);
     }
 
     static public ModbusEventSend createExceptionSentSlaveProgramNAK() {
-        return new ModbusEventSend(BIT_SLAVE_PROGRAM_NAK_EXCEPTION_SENT);
+        return new ModbusEventSend(1 << BIT_SLAVE_PROGRAM_NAK_EXCEPTION_SENT);
     }
 
     static public ModbusEventSend createWriteTimeoutErrorOccurred() {
-        return new ModbusEventSend(BIT_WRITE_TIMEOUT_ERROR_OCCURRED);
+        return new ModbusEventSend(1 << BIT_WRITE_TIMEOUT_ERROR_OCCURRED);
     }
 
     static public ModbusEventSend createCurrentlyInListenOnlyMode() {
-        return new ModbusEventSend(BIT_CURRENTLY_IN_LISTEN_ONLY_MODE);
+        return new ModbusEventSend(1 << BIT_CURRENTLY_IN_LISTEN_ONLY_MODE);
     }
 
     public boolean isCurrentlyInListenOnlyMode() {
-        return isBitSet(BIT_CURRENTLY_IN_LISTEN_ONLY_MODE);
+        return isBitsSet(BIT_CURRENTLY_IN_LISTEN_ONLY_MODE);
     }
 
     public boolean isExceptionSentRead() {
-        return isBitSet(BIT_READ_EXCEPTION_SENT);
+        return isBitsSet(BIT_READ_EXCEPTION_SENT);
     }
 
     public boolean isExceptionSlaveSentAbort() {
-        return isBitSet(BIT_SLAVE_ABORT_EXCEPTION_SENT);
+        return isBitsSet(BIT_SLAVE_ABORT_EXCEPTION_SENT);
     }
 
     public boolean isExceptionSlaveSentBusy() {
-        return isBitSet(BIT_SLAVE_BUSY_EXCEPTION_SENT);
+        return isBitsSet(BIT_SLAVE_BUSY_EXCEPTION_SENT);
     }
 
     public boolean isExceptionSentSlaveProgramNAK() {
-        return isBitSet(BIT_SLAVE_PROGRAM_NAK_EXCEPTION_SENT);
+        return isBitsSet(BIT_SLAVE_PROGRAM_NAK_EXCEPTION_SENT);
     }
 
     public boolean isWriteTimeoutErrorOccurred() {
-        return isBitSet(BIT_WRITE_TIMEOUT_ERROR_OCCURRED);
+        return isBitsSet(BIT_WRITE_TIMEOUT_ERROR_OCCURRED);
     }
 }

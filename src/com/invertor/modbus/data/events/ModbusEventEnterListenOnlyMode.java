@@ -24,6 +24,10 @@ package com.invertor.modbus.data.events;
  */
 public class ModbusEventEnterListenOnlyMode extends ModbusEvent {
     public ModbusEventEnterListenOnlyMode() {
-        setBit(4);
+        super(Type.ENTER_LISTEN_ONLY_MODE, 0);
+    }
+
+    public ModbusEventEnterListenOnlyMode(int event) {
+        super(Type.ENTER_LISTEN_ONLY_MODE, event);
     }
 }

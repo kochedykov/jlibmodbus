@@ -23,15 +23,13 @@ package com.invertor.modbus.data.events;
  * email: vladislav.kochedykov@gmail.com
  */
 public class ModbusEventReceive extends ModbusEvent {
-    public static final int BIT_EVENT_TYPE = 7;
-    final static private int BIT_COMMUNICATION_ERROR = 1;
-    final static private int BIT_CHARACTER_OVERRUN = 4;
-    final static private int BIT_CURRENTLY_IN_LISTEN_ONLY_MODE = 5;
-    final static private int BIT_BROADCAST_RECEIVED = 5;
+    final static private int BIT_COMMUNICATION_ERROR = 0x1;
+    final static private int BIT_CHARACTER_OVERRUN = 0x10;
+    final static private int BIT_CURRENTLY_IN_LISTEN_ONLY_MODE = 0x20;
+    final static private int BIT_BROADCAST_RECEIVED = 0x40;
 
-    private ModbusEventReceive(int bit) {
-        setBit(BIT_EVENT_TYPE);
-        setBit(bit);
+    protected ModbusEventReceive(int event) {
+        super(Type.RECEIVE, event);
     }
 
     static public ModbusEventReceive createCommunicationError() {
@@ -51,18 +49,18 @@ public class ModbusEventReceive extends ModbusEvent {
     }
 
     public boolean isCurrentlyInListenOnlyMode() {
-        return isBitSet(BIT_CURRENTLY_IN_LISTEN_ONLY_MODE);
+        return isBitsSet(BIT_CURRENTLY_IN_LISTEN_ONLY_MODE);
     }
 
     public boolean isCharacterOverrun() {
-        return isBitSet(BIT_CHARACTER_OVERRUN);
+        return isBitsSet(BIT_CHARACTER_OVERRUN);
     }
 
     public boolean isCommunicationError() {
-        return isBitSet(BIT_COMMUNICATION_ERROR);
+        return isBitsSet(BIT_COMMUNICATION_ERROR);
     }
 
     public boolean isBroadcastReceived() {
-        return isBitSet(BIT_BROADCAST_RECEIVED);
+        return isBitsSet(BIT_BROADCAST_RECEIVED);
     }
 }

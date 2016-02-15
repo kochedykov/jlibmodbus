@@ -24,30 +24,58 @@ package com.invertor.modbus.data.events;
  */
 abstract public class ModbusEvent {
 
+    final private Type type;
     private int event = 0;
 
-    public ModbusEvent() {
+    public ModbusEvent(Type type, int event) {
+        this.type = type;
+        this.event = type.getCode() | event;
     }
 
-    protected void setBit(int bit) {
-        if (bit > 7 || bit < 0) {
-            throw new IllegalArgumentException(String.format("bit must be in range from 0 to 7, not %d.", bit));
-        }
-        event |= 1 << bit;
+    public Type getType() {
+        return type;
     }
 
-    protected void resetBit(int bit) {
-        if (bit > 7 || bit < 0) {
-            throw new IllegalArgumentException(String.format("bit must be in range from 0 to 7, not %d.", bit));
-        }
-        event &= ~(1 << bit);
-    }
-
-    protected boolean isBitSet(int bit) {
-        return (event & (1 << bit)) != 0;
+    protected boolean isBitsSet(int bits) {
+        return (event & bits) == bits;
     }
 
     public int getEvent() {
         return event;
+    }
+
+    ModbusEvent getEvent(int event) {
+        for (Type t : Type.values()) {
+            if ((t.getCode() & event) == t.getCode()) {
+                switch (t) {
+                    case SEND:
+                        return new ModbusEventSend(event);
+                    case RECEIVE:
+                        return new ModbusEventReceive(event);
+                    case INITIATED_COMMUNICATION_RESTART:
+                        return new ModbusEventInitiatedCommunicationRestart(event);
+                    case ENTER_LISTEN_ONLY_MODE:
+                        return new ModbusEventEnterListenOnlyMode(event);
+                }
+            }
+        }
+        throw new IllegalArgumentException();
+    }
+
+    public enum Type {
+        SEND(0x80),
+        RECEIVE(0x40),
+        INITIATED_COMMUNICATION_RESTART(0x0),
+        ENTER_LISTEN_ONLY_MODE(0x10);
+
+        final private int code;
+
+        Type(int code) {
+            this.code = code;
+        }
+
+        public int getCode() {
+            return code;
+        }
     }
 }
