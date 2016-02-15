@@ -110,4 +110,9 @@ final public class ModbusMasterTCP extends ModbusMaster {
     public CommStatus getCommEventCounter(int serverAddress) throws ModbusProtocolException, ModbusNumberException, ModbusIOException {
         throw new IllegalFunctionException(ModbusFunctionCode.GET_COMM_EVENT_COUNTER.toInt());
     }
+
+    @Override
+    public CommStatus getCommEventLog(int serverAddress) throws ModbusProtocolException, ModbusNumberException, ModbusIOException {
+        throw new IllegalFunctionException(ModbusFunctionCode.GET_COMM_EVENT_LOG.toInt());
+    }
 }

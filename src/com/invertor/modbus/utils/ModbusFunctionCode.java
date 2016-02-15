@@ -59,7 +59,7 @@ public enum ModbusFunctionCode {
     READ_EXCEPTION_STATUS(0x7),//serial line only
     DIAGNOSTICS(0x8),//TODO: not implemented, serial line only
     GET_COMM_EVENT_COUNTER(0x0B),//serial line only
-    GET_COMM_EVENT_LOG(0x0C),//TODO: not implemented, serial line only
+    GET_COMM_EVENT_LOG(0x0C),//serial line only
     WRITE_MULTIPLE_COILS(0x0F),
     WRITE_MULTIPLE_REGISTERS(0x10),
     REPORT_SLAVE_ID(0x11),//serial line only

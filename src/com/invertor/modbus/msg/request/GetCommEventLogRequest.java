@@ -34,9 +34,9 @@ import java.io.IOException;
  * Authors: Vladislav Y. Kochedykov, software engineer.
  * email: vladislav.kochedykov@gmail.com
  */
-final public class GetCommEventLog extends ModbusRequest {
+final public class GetCommEventLogRequest extends ModbusRequest {
 
-    public GetCommEventLog(int serverAddress) throws ModbusNumberException {
+    public GetCommEventLogRequest(int serverAddress) throws ModbusNumberException {
         super(serverAddress);
     }
 

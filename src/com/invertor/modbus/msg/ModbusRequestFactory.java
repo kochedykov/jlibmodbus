@@ -95,6 +95,10 @@ final public class ModbusRequestFactory implements ModbusMessageFactory {
         return new GetCommEventCounterRequest(serverAddress);
     }
 
+    public ModbusRequest createGetCommEventLog(int serverAddress) throws ModbusNumberException {
+        return new GetCommEventLogRequest(serverAddress);
+    }
+
     public ModbusRequest createReadFifoQueue(int serverAddress, int fifoPointerAddress) throws ModbusNumberException {
         return new ReadFifoQueueRequest(serverAddress, fifoPointerAddress);
     }
@@ -168,6 +172,8 @@ final public class ModbusRequestFactory implements ModbusMessageFactory {
                 msg = new GetCommEventCounterRequest(serverAddress);
                 break;
             case GET_COMM_EVENT_LOG:
+                msg = new GetCommEventLogRequest(serverAddress);
+                break;
             case DIAGNOSTICS:
             case ENCAPSULATED_INTERFACE_TRANSPORT:
             case CAN_OPEN_PDU:

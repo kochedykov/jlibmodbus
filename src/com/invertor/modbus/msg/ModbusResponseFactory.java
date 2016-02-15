@@ -105,6 +105,8 @@ final public class ModbusResponseFactory implements ModbusMessageFactory {
                 msg = new GetCommEventCounterResponse(serverAddress);
                 break;
             case GET_COMM_EVENT_LOG:
+                msg = new GetCommEventLogResponse(serverAddress);
+                break;
             case DIAGNOSTICS:
             case ENCAPSULATED_INTERFACE_TRANSPORT:
             case CAN_OPEN_PDU:

@@ -86,6 +86,11 @@ public class CommStatus {
         return eventQueue;
     }
 
+    public void setEventQueue(List<ModbusEvent> eventQueue) {
+        this.eventQueue.clear();
+        this.eventQueue.addAll(eventQueue);
+    }
+
     public void addEvent(ModbusEvent event) {
         if (eventQueue.size() >= EVENT_QUEUE_CAPACITY)
             eventQueue.poll();

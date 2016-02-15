@@ -4,9 +4,12 @@ import com.invertor.modbus.Modbus;
 import com.invertor.modbus.ModbusSlave;
 import com.invertor.modbus.data.CommStatus;
 import com.invertor.modbus.data.DataHolder;
+import com.invertor.modbus.data.events.ModbusEventSend;
 import com.invertor.modbus.exception.ModbusIOException;
 import com.invertor.modbus.msg.base.ModbusRequest;
 import com.invertor.modbus.msg.base.ModbusResponse;
+import com.invertor.modbus.msg.request.GetCommEventCounterRequest;
+import com.invertor.modbus.msg.request.GetCommEventLogRequest;
 import com.invertor.modbus.net.ModbusConnection;
 import com.invertor.modbus.net.ModbusTransport;
 
@@ -47,12 +50,18 @@ public class RequestHandlerSerial extends RequestHandler {
             ModbusTransport transport = getConn().getTransport();
             try {
                 ModbusRequest request = (ModbusRequest) transport.readRequest();
-                commStatus.enter();
+                commStatus.incrementMessageCounter();
+                if (!(request instanceof GetCommEventCounterRequest ||
+                        request instanceof GetCommEventLogRequest)) {
+                    commStatus.enter();
+                }
                 if (request.getServerAddress() == getSlave().getServerAddress()) {
                     ModbusResponse response = request.getResponse(dataHolder);
-                    commStatus.incrementMessageCounter();
-                    if (!response.isException())
+                    if (!response.isException()) {
                         commStatus.incrementEventCounter();
+                    } else {
+                        commStatus.addEvent(ModbusEventSend.createExceptionSentRead());
+                    }
                     transport.send(response);
                 }
             } catch (ModbusIOException e) {

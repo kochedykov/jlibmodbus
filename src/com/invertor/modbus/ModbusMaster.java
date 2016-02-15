@@ -192,4 +192,7 @@ abstract public class ModbusMaster {
 
     abstract public CommStatus getCommEventCounter(int serverAddress) throws
             ModbusProtocolException, ModbusNumberException, ModbusIOException;
+
+    abstract public CommStatus getCommEventLog(int serverAddress) throws
+            ModbusProtocolException, ModbusNumberException, ModbusIOException;
 }

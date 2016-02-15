@@ -64,9 +64,13 @@ final public class GetCommEventLogResponse extends ModbusResponse {
 
     @Override
     protected void writeResponse(ModbusOutputStream fifo) throws IOException {
+        fifo.write(EVENTS_OFFSET + events.size());
         fifo.writeShortBE(getStatus());
         fifo.writeShortBE(getEventCount());
         fifo.writeShortBE(getMessageCount());
+        for (ModbusEvent event : getEventQueue()) {
+            fifo.write(event.getEvent());
+        }
     }
 
     @Override
@@ -76,7 +80,7 @@ final public class GetCommEventLogResponse extends ModbusResponse {
 
     @Override
     public int getFunction() {
-        return ModbusFunctionCode.GET_COMM_EVENT_COUNTER.toInt();
+        return ModbusFunctionCode.GET_COMM_EVENT_LOG.toInt();
     }
 
     public int getStatus() {
@@ -95,7 +99,7 @@ final public class GetCommEventLogResponse extends ModbusResponse {
         this.eventCount = eventCount;
     }
 
-    public List<ModbusEvent> getEvents() {
+    public List<ModbusEvent> getEventQueue() {
         return events;
     }
 

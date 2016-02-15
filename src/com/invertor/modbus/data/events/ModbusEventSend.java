@@ -23,12 +23,12 @@ package com.invertor.modbus.data.events;
  * email: vladislav.kochedykov@gmail.com
  */
 public class ModbusEventSend extends ModbusEvent {
-    final static private int BIT_READ_EXCEPTION_SENT = 0;
-    final static private int BIT_SLAVE_ABORT_EXCEPTION_SENT = 1;
-    final static private int BIT_SLAVE_BUSY_EXCEPTION_SENT = 2;
-    final static private int BIT_SLAVE_PROGRAM_NAK_EXCEPTION_SENT = 3;
-    final static private int BIT_WRITE_TIMEOUT_ERROR_OCCURRED = 4;
-    final static private int BIT_CURRENTLY_IN_LISTEN_ONLY_MODE = 5;
+    final static private int BIT_READ_EXCEPTION_SENT = 0x1;
+    final static private int BIT_SLAVE_ABORT_EXCEPTION_SENT = 0x2;
+    final static private int BIT_SLAVE_BUSY_EXCEPTION_SENT = 0x4;
+    final static private int BIT_SLAVE_PROGRAM_NAK_EXCEPTION_SENT = 0x8;
+    final static private int BIT_WRITE_TIMEOUT_ERROR_OCCURRED = 0x10;
+    final static private int BIT_CURRENTLY_IN_LISTEN_ONLY_MODE = 0x20;
 
     protected ModbusEventSend(int event) {
         super(Type.SEND, event);
@@ -39,23 +39,23 @@ public class ModbusEventSend extends ModbusEvent {
     }
 
     static public ModbusEventSend createExceptionSlaveSentAbort() {
-        return new ModbusEventSend(1 << BIT_SLAVE_ABORT_EXCEPTION_SENT);
+        return new ModbusEventSend(BIT_SLAVE_ABORT_EXCEPTION_SENT);
     }
 
     static public ModbusEventSend createExceptionSlaveSentBusy() {
-        return new ModbusEventSend(1 << BIT_SLAVE_BUSY_EXCEPTION_SENT);
+        return new ModbusEventSend(BIT_SLAVE_BUSY_EXCEPTION_SENT);
     }
 
     static public ModbusEventSend createExceptionSentSlaveProgramNAK() {
-        return new ModbusEventSend(1 << BIT_SLAVE_PROGRAM_NAK_EXCEPTION_SENT);
+        return new ModbusEventSend(BIT_SLAVE_PROGRAM_NAK_EXCEPTION_SENT);
     }
 
     static public ModbusEventSend createWriteTimeoutErrorOccurred() {
-        return new ModbusEventSend(1 << BIT_WRITE_TIMEOUT_ERROR_OCCURRED);
+        return new ModbusEventSend(BIT_WRITE_TIMEOUT_ERROR_OCCURRED);
     }
 
     static public ModbusEventSend createCurrentlyInListenOnlyMode() {
-        return new ModbusEventSend(1 << BIT_CURRENTLY_IN_LISTEN_ONLY_MODE);
+        return new ModbusEventSend(BIT_CURRENTLY_IN_LISTEN_ONLY_MODE);
     }
 
     public boolean isCurrentlyInListenOnlyMode() {
