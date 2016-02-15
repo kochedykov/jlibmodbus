@@ -3,6 +3,7 @@ package com.invertor.modbus.data;
 import com.invertor.modbus.exception.IllegalDataAddressException;
 import com.invertor.modbus.exception.IllegalDataValueException;
 import com.invertor.modbus.msg.base.ModbusFileRecord;
+import com.invertor.modbus.utils.DataUtils;
 
 import java.util.Arrays;
 import java.util.Map;
@@ -51,9 +52,14 @@ public class SimpleModbusFile extends ModbusFile {
     @Override
     public void write(int recordNumber, int[] buffer) throws IllegalDataAddressException, IllegalDataValueException {
         if (records.containsKey(recordNumber)) {
-            records.get(recordNumber).setRegisters(buffer);
+            records.get(recordNumber).writeRegisters(buffer);
         } else {
             records.put(recordNumber, new ModbusFileRecord(getNumber(), recordNumber, buffer));
         }
+    }
+
+    @Override
+    void write(int recordNumber, byte[] buffer) throws IllegalDataAddressException, IllegalDataValueException {
+        write(recordNumber, DataUtils.toIntArray(buffer));
     }
 }

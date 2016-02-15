@@ -129,7 +129,7 @@ public class DataHolder {
     public void readFileRecord(ModbusFileRecord fileRecord) throws IllegalDataAddressException, IllegalDataValueException {
         ModbusFile file = getFile(fileRecord.getFileNumber());
         checkPointer(file, fileRecord.getFileNumber());
-        fileRecord.setRegisters(file.read(fileRecord.getRecordNumber(), fileRecord.getRecordLength()));
+        fileRecord.writeRegisters(file.read(fileRecord.getRecordNumber(), fileRecord.getRecordLength()));
     }
 
     public void writeFileRecord(int fileNumber, int recordNumber, int[] registers) throws IllegalDataAddressException, IllegalDataValueException {

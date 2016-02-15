@@ -56,6 +56,8 @@ abstract public class ModbusFile {
 
     abstract public void write(int recordNumber, int[] buffer) throws IllegalDataAddressException, IllegalDataValueException;
 
+    abstract void write(int recordNumber, byte[] buffer) throws IllegalDataAddressException, IllegalDataValueException;
+
     public int getNumber() {
         return number;
     }

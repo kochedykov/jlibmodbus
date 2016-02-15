@@ -92,7 +92,7 @@ final public class ReadFileRecordRequest extends ModbusRequest {
         ReadFileRecordResponse response = new ReadFileRecordResponse(getServerAddress());
         try {
             for (ModbusFileRecord r : records) {
-                r.setRegisters(dataHolder.readFileRecord(r.getFileNumber(), r.getRecordNumber(), r.getRecordLength()));
+                r.writeRegisters(dataHolder.readFileRecord(r.getFileNumber(), r.getRecordNumber(), r.getRecordLength()));
             }
             response.setFileRecords(records);
         } catch (ModbusProtocolException e) {
