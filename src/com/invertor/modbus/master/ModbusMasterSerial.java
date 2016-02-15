@@ -52,7 +52,7 @@ abstract public class ModbusMasterSerial extends ModbusMaster {
     }
 
     @Override
-    public CommStatus getCommEventCount(int serverAddress) throws ModbusProtocolException, ModbusNumberException, ModbusIOException {
+    public CommStatus getCommEventCounter(int serverAddress) throws ModbusProtocolException, ModbusNumberException, ModbusIOException {
         ModbusRequest request = requestFactory.createGetCommEventCounter(serverAddress);
         GetCommEventCounterResponse response = (GetCommEventCounterResponse) processRequest(request);
         commStatus.setStatus(response.getStatus());

@@ -285,7 +285,7 @@ public class ModbusTest implements Runnable {
                 printBits("Discrete inputs", master.readDiscreteInputs(1, 0, 16));
                 System.out.println(new String(master.reportSlaveId(1), Charset.defaultCharset()));
                 System.out.println(master.readExceptionStatus(1));
-                System.out.println(master.getCommEventCount(1).getEventCount());
+                System.out.println(master.getCommEventCounter(1).getEventCount());
                 master.maskWriteRegister(1, 0, 7, 10);
                 master.writeSingleCoil(1, 13, true);
                 master.writeMultipleRegisters(1, 5, new int[]{55, 66, 77, 88, 99});
