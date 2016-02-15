@@ -1,5 +1,6 @@
 package com.invertor.modbus;
 
+import com.invertor.modbus.data.CommStatus;
 import com.invertor.modbus.exception.ModbusIOException;
 import com.invertor.modbus.exception.ModbusNumberException;
 import com.invertor.modbus.exception.ModbusProtocolException;
@@ -189,6 +190,6 @@ abstract public class ModbusMaster {
     abstract public byte[] reportSlaveId(int serverAddress) throws
             ModbusProtocolException, ModbusNumberException, ModbusIOException;
 
-    abstract public int[] getCommEventCount(int serverAddress) throws
+    abstract public CommStatus getCommEventCount(int serverAddress) throws
             ModbusProtocolException, ModbusNumberException, ModbusIOException;
 }

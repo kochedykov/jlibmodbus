@@ -62,12 +62,24 @@ public class CommStatus {
         return status;
     }
 
+    public void setStatus(int status) {
+        this.status = status;
+    }
+
     public int getEventCount() {
         return eventCount;
     }
 
+    public void setEventCount(int eventCount) {
+        this.eventCount = eventCount;
+    }
+
     public int getMessageCount() {
         return messageCount;
+    }
+
+    public void setMessageCount(int messageCount) {
+        this.messageCount = messageCount;
     }
 
     public Queue<ModbusEvent> getEventQueue() {

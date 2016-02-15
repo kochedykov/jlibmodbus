@@ -2,6 +2,7 @@ package com.invertor.modbus.master;
 
 import com.invertor.modbus.Modbus;
 import com.invertor.modbus.ModbusMaster;
+import com.invertor.modbus.data.CommStatus;
 import com.invertor.modbus.exception.IllegalFunctionException;
 import com.invertor.modbus.exception.ModbusIOException;
 import com.invertor.modbus.exception.ModbusNumberException;
@@ -106,7 +107,7 @@ final public class ModbusMasterTCP extends ModbusMaster {
     }
 
     @Override
-    public int[] getCommEventCount(int serverAddress) throws ModbusProtocolException, ModbusNumberException, ModbusIOException {
+    public CommStatus getCommEventCount(int serverAddress) throws ModbusProtocolException, ModbusNumberException, ModbusIOException {
         throw new IllegalFunctionException(ModbusFunctionCode.GET_COMM_EVENT_COUNTER.toInt());
     }
 }

@@ -1,6 +1,7 @@
 package com.invertor.modbus.master;
 
 import com.invertor.modbus.ModbusMaster;
+import com.invertor.modbus.data.CommStatus;
 import com.invertor.modbus.exception.ModbusIOException;
 import com.invertor.modbus.exception.ModbusNumberException;
 import com.invertor.modbus.exception.ModbusProtocolException;
@@ -33,6 +34,8 @@ import com.invertor.modbus.msg.response.ReportSlaveIdResponse;
  */
 abstract public class ModbusMasterSerial extends ModbusMaster {
 
+    final private CommStatus commStatus = new CommStatus();
+
     @Override
     public int readExceptionStatus(int serverAddress) throws
             ModbusProtocolException, ModbusNumberException, ModbusIOException {
@@ -49,9 +52,11 @@ abstract public class ModbusMasterSerial extends ModbusMaster {
     }
 
     @Override
-    public int[] getCommEventCount(int serverAddress) throws ModbusProtocolException, ModbusNumberException, ModbusIOException {
+    public CommStatus getCommEventCount(int serverAddress) throws ModbusProtocolException, ModbusNumberException, ModbusIOException {
         ModbusRequest request = requestFactory.createGetCommEventCounter(serverAddress);
         GetCommEventCounterResponse response = (GetCommEventCounterResponse) processRequest(request);
-        return new int[]{response.getStatus(), response.getEventCount()};
+        commStatus.setStatus(response.getStatus());
+        commStatus.setEventCount(response.getEventCount());
+        return commStatus;
     }
 }
