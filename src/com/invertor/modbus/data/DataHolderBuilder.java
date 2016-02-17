@@ -51,6 +51,8 @@ abstract public class DataHolderBuilder {
 
     public abstract void buildFifoQueue();
 
+    public abstract void readDeviceIdentificationInterface();
+
     final public DataHolder build() {
         createNewDataHolder();
         buildCoils();
@@ -60,6 +62,7 @@ abstract public class DataHolderBuilder {
         buildSlaveId();
         buildExceptionStatus();
         buildFifoQueue();
+        readDeviceIdentificationInterface();
         return getDataHolder();
     }
 }

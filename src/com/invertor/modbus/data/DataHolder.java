@@ -1,5 +1,6 @@
 package com.invertor.modbus.data;
 
+import com.invertor.modbus.data.mei.ReadDeviceIdentificationInterface;
 import com.invertor.modbus.exception.IllegalDataAddressException;
 import com.invertor.modbus.exception.IllegalDataValueException;
 import com.invertor.modbus.exception.IllegalFunctionException;
@@ -46,15 +47,11 @@ public class DataHolder {
     private HoldingRegisters inputRegisters = null;
     private SlaveId slaveId = null;
     private ExceptionStatus exceptionStatus = null;
+    private ReadDeviceIdentificationInterface readDeviceIdentificationInterface = null;
 
     private void checkPointer(Object o, int offset) throws IllegalDataAddressException {
         if (o == null)
             throw new IllegalDataAddressException(offset);
-    }
-
-    private void checkPointer(Object o) throws IllegalDataValueException {
-        if (o == null)
-            throw new IllegalDataValueException();
     }
 
     public int readHoldingRegister(int offset) throws IllegalDataAddressException {
@@ -220,5 +217,13 @@ public class DataHolder {
         if (file == null)
             throw new IllegalDataAddressException(number);
         return file;
+    }
+
+    public ReadDeviceIdentificationInterface getReadDeviceIdentificationInterface() {
+        return readDeviceIdentificationInterface;
+    }
+
+    public void setReadDeviceIdentificationInterface(ReadDeviceIdentificationInterface readDeviceIdentificationInterface) {
+        this.readDeviceIdentificationInterface = readDeviceIdentificationInterface;
     }
 }

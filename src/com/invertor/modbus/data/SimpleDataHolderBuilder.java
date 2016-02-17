@@ -1,5 +1,6 @@
 package com.invertor.modbus.data;
 
+import com.invertor.modbus.data.mei.ReadDeviceIdentificationInterface;
 import com.invertor.modbus.exception.IllegalDataAddressException;
 
 /**
@@ -86,5 +87,10 @@ public class SimpleDataHolderBuilder extends DataHolderBuilder {
             //it newer be thrown
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void readDeviceIdentificationInterface() {
+        dataHolder.setReadDeviceIdentificationInterface(new ReadDeviceIdentificationInterface());
     }
 }
