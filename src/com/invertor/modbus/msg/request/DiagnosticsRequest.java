@@ -169,7 +169,7 @@ public class DiagnosticsRequest extends ModbusRequest {
 
     @Override
     public void readPDU(ModbusInputStream fifo) throws ModbusNumberException, IOException {
-        setSubFunctionCode(DiagnosticsSubFunctionCode.getSubFunctionCode(fifo.readShortBE()));
+        setSubFunctionCode(DiagnosticsSubFunctionCode.get(fifo.readShortBE()));
         setSubFunctionData(fifo.readShortBE());
     }
 

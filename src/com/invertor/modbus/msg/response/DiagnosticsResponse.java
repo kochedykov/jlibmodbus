@@ -42,7 +42,7 @@ public class DiagnosticsResponse extends ModbusResponse {
 
     @Override
     protected void readResponse(ModbusInputStream fifo) throws IOException, ModbusNumberException {
-        setSubFunctionCode(DiagnosticsSubFunctionCode.getSubFunctionCode(fifo.readShortBE()));
+        setSubFunctionCode(DiagnosticsSubFunctionCode.get(fifo.readShortBE()));
         setSubFunctionData(fifo.readShortBE());
     }
 

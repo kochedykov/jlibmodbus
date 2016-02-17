@@ -55,7 +55,7 @@ final public class ModbusResponseFactory implements ModbusMessageFactory {
             throw new ModbusIOException(e);
         }
 
-        switch (ModbusFunctionCode.getFunctionCode(functionCode)) {
+        switch (ModbusFunctionCode.get(functionCode)) {
             case READ_COILS:
                 msg = new ReadCoilsResponse(serverAddress);
                 break;

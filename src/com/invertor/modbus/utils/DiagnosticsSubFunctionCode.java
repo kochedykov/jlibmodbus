@@ -24,7 +24,7 @@ package com.invertor.modbus.utils;
  */
 
 /**
- * the list of sub-function codes supported by the serial line devices.
+ *  The list of sub-function codes supported by the serial line devices.
  * Hex  Dec
  * 00   00 Return Query Data
  * 01   01 Restart Communications Option
@@ -70,7 +70,7 @@ public enum DiagnosticsSubFunctionCode {
         this.value = value;
     }
 
-    static public DiagnosticsSubFunctionCode getSubFunctionCode(int value) {
+    static public DiagnosticsSubFunctionCode get(int value) {
         for (DiagnosticsSubFunctionCode func : DiagnosticsSubFunctionCode.values()) {
             if (func.value == value) {
                 return func;

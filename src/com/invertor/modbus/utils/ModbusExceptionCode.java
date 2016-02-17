@@ -42,17 +42,13 @@ public enum ModbusExceptionCode {
         this.value = value;
     }
 
-    static private ModbusExceptionCode get(int value) {
+    static public ModbusExceptionCode get(int value) {
         for (ModbusExceptionCode type : ModbusExceptionCode.values()) {
             if (type.value == value) {
                 return type;
             }
         }
         return UNKNOWN_EXCEPTION;
-    }
-
-    static public ModbusExceptionCode getExceptionCode(int value) {
-        return get(value);
     }
 
     public int getValue() {
