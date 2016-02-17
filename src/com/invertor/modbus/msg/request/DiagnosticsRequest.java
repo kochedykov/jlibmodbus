@@ -40,12 +40,12 @@ public class DiagnosticsRequest extends ModbusRequest {
      * Diagnostic uses a two–byte sub-function code field in the query to define the type of test to
      * be performed.
      */
-    final private DiagnosticsSubFunctionCode subFunctionCode;
+    final static public int CLEAR_LOG = 0xff00;
+    private DiagnosticsSubFunctionCode subFunctionCode = DiagnosticsSubFunctionCode.RESERVED;
     private int subFunctionData = 0;
 
-    public DiagnosticsRequest(int serverAddress, DiagnosticsSubFunctionCode subFunctionCode) throws ModbusNumberException {
+    public DiagnosticsRequest(int serverAddress) throws ModbusNumberException {
         super(serverAddress);
-        this.subFunctionCode = subFunctionCode;
     }
 
     @Override
@@ -61,9 +61,10 @@ public class DiagnosticsRequest extends ModbusRequest {
 
     @Override
     public ModbusResponse process(DataHolder dataHolder) throws ModbusNumberException {
-        DiagnosticsResponse response = new DiagnosticsResponse(getServerAddress(), getSubFunctionCode());
+        DiagnosticsResponse response = new DiagnosticsResponse(getServerAddress());
+        response.setSubFunctionCode(getSubFunctionCode());
         CommStatus commStatus = dataHolder.getCommStatus();
-        switch (subFunctionCode) {
+        switch (getSubFunctionCode()) {
             case RETURN_QUERY_DATA:
                 response.setSubFunctionData(getSubFunctionData());
                 break;
@@ -168,10 +169,7 @@ public class DiagnosticsRequest extends ModbusRequest {
 
     @Override
     public void readPDU(ModbusInputStream fifo) throws ModbusNumberException, IOException {
-        int sub_function = fifo.readShortBE();
-        if (sub_function != getSubFunctionCode().toInt()) {
-            throw new ModbusNumberException("invalid sub-function code", sub_function);
-        }
+        setSubFunctionCode(DiagnosticsSubFunctionCode.getSubFunctionCode(fifo.readShortBE()));
         setSubFunctionData(fifo.readShortBE());
     }
 
@@ -185,6 +183,10 @@ public class DiagnosticsRequest extends ModbusRequest {
 
     public DiagnosticsSubFunctionCode getSubFunctionCode() {
         return subFunctionCode;
+    }
+
+    public void setSubFunctionCode(DiagnosticsSubFunctionCode subFunctionCode) {
+        this.subFunctionCode = subFunctionCode;
     }
 
     @Override

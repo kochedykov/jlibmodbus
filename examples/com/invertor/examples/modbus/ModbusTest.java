@@ -289,6 +289,7 @@ public class ModbusTest implements Runnable {
                 System.out.println(master.readExceptionStatus(1));
                 System.out.println(master.getCommEventCounter(1).getEventCount());
                 System.out.println(master.getCommEventLog(1).getMessageCount());
+                System.out.println("Diagnostics " + master.diagnosticsReturnBusMessageCount(1));
                 master.maskWriteRegister(1, 0, 7, 10);
                 master.writeSingleCoil(1, 13, true);
                 master.writeMultipleRegisters(1, 5, new int[]{55, 66, 77, 88, 99});

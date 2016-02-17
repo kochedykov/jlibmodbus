@@ -195,4 +195,170 @@ abstract public class ModbusMaster {
 
     abstract public CommStatus getCommEventLog(int serverAddress) throws
             ModbusProtocolException, ModbusNumberException, ModbusIOException;
+
+    /**
+     * The data passed in the request data field is to be returned (looped back) in the response. The
+     * entire response message should be identical to the request.
+     *
+     * @param serverAddress a slave address
+     * @param queryData     request data field
+     * @throws ModbusNumberException if server address is in-valid
+     */
+    abstract public void diagnosticsReturnQueryData(int serverAddress, int queryData) throws ModbusNumberException, ModbusProtocolException, ModbusIOException;
+
+    /**
+     * The remote device serial line port must be initialized and restarted, and all of its
+     * communications event counters are cleared. If the port is currently in Listen Only Mode, no
+     * response is returned. This function is the only one that brings the port out of Listen Only
+     * Mode. If the port is not currently in Listen Only Mode, a normal response is returned. This
+     * occurs before the restart is executed.
+     * When the remote device receives the request, it attempts a restart and executes its power–up
+     * confidence tests. Successful completion of the tests will bring the port online.
+     * A request data field contents of FF 00 hex causes the port’s Communications Event Log to be
+     * cleared also. Contents of 00 00 leave the log as it was prior to the restart.
+     *
+     * @param serverAddress a slave address
+     * @param clearLog      causes the port’s Communications Event Log to be cleared
+     * @throws ModbusNumberException if server address is in-valid
+     */
+    abstract public void diagnosticsRestartCommunicationsOption(int serverAddress, boolean clearLog) throws ModbusNumberException, ModbusProtocolException, ModbusIOException;
+
+    /**
+     * Returns the contents of the remote device’s 16–bit diagnostic register are returned in the response.
+     *
+     * @param serverAddress a slave address
+     * @return 16–bit diagnostic register
+     * @throws ModbusNumberException if server address is in-valid
+     */
+    abstract public int diagnosticsReturnDiagnosticRegister(int serverAddress) throws ModbusNumberException, ModbusProtocolException, ModbusIOException;
+
+    /**
+     * The character passed in the request data field becomes the end of message delimiter
+     * for future messages (replacing the default LF character). This function is useful in cases of a
+     * Line Feed is not required at the end of ASCII messages.
+     *
+     * @param serverAddress a slave address
+     * @param delimiter     request data field
+     * @throws ModbusNumberException if server address is in-valid
+     */
+    abstract public void diagnosticsChangeAsciiInputDelimiter(int serverAddress, int delimiter) throws ModbusNumberException, ModbusProtocolException, ModbusIOException;
+
+    /**
+     * Forces the addressed remote device to its Listen Only Mode for MODBUS communications.
+     * This isolates it from the other devices on the network, allowing them to continue
+     * communicating without interruption from the addressed remote device. No response is
+     * returned.
+     * When the remote device enters its Listen Only Mode, all active communication controls are
+     * turned off. The Ready watchdog timer is allowed to expire, locking the controls off. While the
+     * device is in this mode, any MODBUS messages addressed to it or broadcast are monitored,
+     * but no actions will be taken and no responses will be sent.
+     * The only function that will be processed after the mode is entered will be the Restart
+     * Communications Option function (function code 8, sub-function 1).
+     *
+     * @param serverAddress a slave address
+     * @throws ModbusNumberException if server address is in-valid
+     */
+    abstract public void diagnosticsForceListenOnlyMode(int serverAddress) throws ModbusNumberException, ModbusProtocolException, ModbusIOException;
+
+    /**
+     * The goal is to clear all counters and the diagnostic register. Counters are also cleared upon power–up.
+     *
+     * @param serverAddress a slave address
+     * @throws ModbusNumberException if server address is in-valid
+     */
+    abstract public void diagnosticsClearCountersAndDiagnosticRegister(int serverAddress) throws ModbusNumberException, ModbusProtocolException, ModbusIOException;
+
+    /**
+     * The response data field returns the quantity of messages that the remote device has detected
+     * on the communications system since its last restart, clear counters operation, or power–up.
+     *
+     * @param serverAddress a slave address
+     * @return bus message count
+     * @throws ModbusNumberException if server address is in-valid
+     */
+    abstract public int diagnosticsReturnBusMessageCount(int serverAddress) throws ModbusNumberException, ModbusProtocolException, ModbusIOException;
+
+    /**
+     * The response data field returns the quantity of CRC errors encountered by the remote device
+     * since its last restart, clear counters operation, or power–up.
+     *
+     * @param serverAddress a slave address
+     * @return CRC error count
+     * @throws ModbusNumberException if server address is in-valid
+     */
+    abstract public int diagnosticsReturnBusCommunicationErrorCount(int serverAddress) throws ModbusNumberException, ModbusProtocolException, ModbusIOException;
+
+    /**
+     * The response data field returns the quantity of MODBUS exception responses returned by the
+     * remote device since its last restart, clear counters operation, or power–up.
+     *
+     * @param serverAddress a slave address
+     * @return MODBUS exception response count
+     * @throws ModbusNumberException if server address is in-valid
+     */
+    abstract public int diagnosticsReturnBusExceptionErrorCount(int serverAddress) throws ModbusNumberException, ModbusProtocolException, ModbusIOException;
+
+    /**
+     * The response data field returns the quantity of messages addressed to the remote device, or
+     * broadcast, that the remote device has processed since its last restart, clear counters
+     * operation, or power–up.
+     *
+     * @param serverAddress a slave address
+     * @return count of messages has been processed
+     * @throws ModbusNumberException if server address is in-valid
+     */
+    abstract public int diagnosticsReturnSlaveMessageCount(int serverAddress) throws ModbusNumberException, ModbusProtocolException, ModbusIOException;
+
+    /**
+     * The response data field returns the quantity of messages addressed to the remote device for
+     * which it has returned no response (neither a normal response nor an exception response),
+     * since its last restart, clear counters operation, or power–up.
+     *
+     * @param serverAddress a slave address
+     * @return no-response count
+     * @throws ModbusNumberException if server address is in-valid
+     */
+    abstract public int diagnosticsReturnSlaveNoResponseCount(int serverAddress) throws ModbusNumberException, ModbusProtocolException, ModbusIOException;
+
+    /**
+     * The response data field returns the quantity of messages addressed to the remote device for
+     * which it returned a Negative Acknowledge (NAK) exception response, since its last restart,
+     * clear counters operation, or power–up.
+     *
+     * @param serverAddress a slave address
+     * @return NAK count
+     * @throws ModbusNumberException if server address is in-valid
+     */
+    abstract public int diagnosticsReturnSlaveNAKCount(int serverAddress) throws ModbusNumberException, ModbusProtocolException, ModbusIOException;
+
+    /**
+     * The response data field returns the quantity of messages addressed to the remote device for
+     * which it returned a Slave Device Busy exception response, since its last restart, clear
+     * counters operation, or power–up.
+     *
+     * @param serverAddress a slave address
+     * @return Slave Device Busy exception response count
+     * @throws ModbusNumberException if server address is in-valid
+     */
+    abstract public int diagnosticsReturnSlaveBusyCount(int serverAddress) throws ModbusNumberException, ModbusProtocolException, ModbusIOException;
+
+    /**
+     * The response data field returns the quantity of messages addressed to the remote device that
+     * it could not handle due to a character overrun condition, since its last restart, clear counters
+     * operation, or power–up. A character overrun is caused by data characters arriving at the port
+     * faster than they can be stored, or by the loss of a character due to a hardware malfunction.
+     *
+     * @param serverAddress a slave address
+     * @return character overrun count
+     * @throws ModbusNumberException if server address is in-valid
+     */
+    abstract public int diagnosticsReturnBusCharacterOverrunCount(int serverAddress) throws ModbusNumberException, ModbusProtocolException, ModbusIOException;
+
+    /**
+     * Clears the overrun error counter and reset the error flag.
+     *
+     * @param serverAddress a slave address
+     * @throws ModbusNumberException if server address is in-valid
+     */
+    abstract public void diagnosticsClearOverrunCounterAndFlag(int serverAddress) throws ModbusNumberException, ModbusProtocolException, ModbusIOException;
 }

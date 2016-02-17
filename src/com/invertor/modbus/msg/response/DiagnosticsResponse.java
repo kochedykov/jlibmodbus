@@ -36,9 +36,8 @@ public class DiagnosticsResponse extends ModbusResponse {
     private DiagnosticsSubFunctionCode subFunctionCode;
     private int subFunctionData = 0;
 
-    public DiagnosticsResponse(int serverAddress, DiagnosticsSubFunctionCode subFunctionCode) throws ModbusNumberException {
+    public DiagnosticsResponse(int serverAddress) throws ModbusNumberException {
         super(serverAddress);
-        setSubFunctionCode(subFunctionCode);
     }
 
     @Override
@@ -49,7 +48,8 @@ public class DiagnosticsResponse extends ModbusResponse {
 
     @Override
     protected void writeResponse(ModbusOutputStream fifo) throws IOException {
-
+        fifo.writeShortBE(getSubFunctionCode().toInt());
+        fifo.writeShortBE(getSubFunctionData());
     }
 
     @Override

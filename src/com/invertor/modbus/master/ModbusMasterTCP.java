@@ -115,4 +115,81 @@ final public class ModbusMasterTCP extends ModbusMaster {
     public CommStatus getCommEventLog(int serverAddress) throws ModbusProtocolException, ModbusNumberException, ModbusIOException {
         throw new IllegalFunctionException(ModbusFunctionCode.GET_COMM_EVENT_LOG.toInt());
     }
+
+    @Override
+    public void diagnosticsReturnQueryData(int serverAddress, int queryData) throws ModbusNumberException, IllegalFunctionException {
+        throw new IllegalFunctionException(ModbusFunctionCode.DIAGNOSTICS.toInt());
+    }
+
+    @Override
+    public void diagnosticsRestartCommunicationsOption(int serverAddress, boolean clearLog) throws ModbusNumberException, IllegalFunctionException {
+        throw new IllegalFunctionException(ModbusFunctionCode.DIAGNOSTICS.toInt());
+    }
+
+    @Override
+    public int diagnosticsReturnDiagnosticRegister(int serverAddress) throws ModbusNumberException, IllegalFunctionException {
+        throw new IllegalFunctionException(ModbusFunctionCode.DIAGNOSTICS.toInt());
+    }
+
+    @Override
+    public void diagnosticsChangeAsciiInputDelimiter(int serverAddress, int delimiter) throws ModbusNumberException, IllegalFunctionException {
+        throw new IllegalFunctionException(ModbusFunctionCode.DIAGNOSTICS.toInt());
+    }
+
+    @Override
+    public void diagnosticsForceListenOnlyMode(int serverAddress) throws ModbusNumberException, IllegalFunctionException {
+        throw new IllegalFunctionException(ModbusFunctionCode.DIAGNOSTICS.toInt());
+    }
+
+    @Override
+    public void diagnosticsClearCountersAndDiagnosticRegister(int serverAddress) throws ModbusNumberException, IllegalFunctionException {
+        throw new IllegalFunctionException(ModbusFunctionCode.DIAGNOSTICS.toInt());
+    }
+
+    @Override
+    public int diagnosticsReturnBusMessageCount(int serverAddress) throws ModbusNumberException, IllegalFunctionException {
+        throw new IllegalFunctionException(ModbusFunctionCode.DIAGNOSTICS.toInt());
+    }
+
+    @Override
+    public int diagnosticsReturnBusCommunicationErrorCount(int serverAddress) throws ModbusNumberException, IllegalFunctionException {
+        throw new IllegalFunctionException(ModbusFunctionCode.DIAGNOSTICS.toInt());
+    }
+
+    @Override
+    public int diagnosticsReturnBusExceptionErrorCount(int serverAddress) throws ModbusNumberException, IllegalFunctionException {
+        throw new IllegalFunctionException(ModbusFunctionCode.DIAGNOSTICS.toInt());
+    }
+
+    @Override
+    public int diagnosticsReturnSlaveMessageCount(int serverAddress) throws ModbusNumberException, IllegalFunctionException {
+        throw new IllegalFunctionException(ModbusFunctionCode.DIAGNOSTICS.toInt());
+    }
+
+    @Override
+    public int diagnosticsReturnSlaveNoResponseCount(int serverAddress) throws ModbusNumberException, IllegalFunctionException {
+        throw new IllegalFunctionException(ModbusFunctionCode.DIAGNOSTICS.toInt());
+    }
+
+    @Override
+    public int diagnosticsReturnSlaveNAKCount(int serverAddress) throws ModbusNumberException, IllegalFunctionException {
+        throw new IllegalFunctionException(ModbusFunctionCode.DIAGNOSTICS.toInt());
+    }
+
+    @Override
+    public int diagnosticsReturnSlaveBusyCount(int serverAddress) throws ModbusNumberException, IllegalFunctionException {
+        throw new IllegalFunctionException(ModbusFunctionCode.DIAGNOSTICS.toInt());
+    }
+
+    @Override
+    public int diagnosticsReturnBusCharacterOverrunCount(int serverAddress) throws ModbusNumberException, IllegalFunctionException {
+        throw new IllegalFunctionException(ModbusFunctionCode.DIAGNOSTICS.toInt());
+    }
+
+    @Override
+    public void diagnosticsClearOverrunCounterAndFlag(int serverAddress) throws ModbusNumberException, IllegalFunctionException {
+        throw new IllegalFunctionException(ModbusFunctionCode.DIAGNOSTICS.toInt());
+    }
+
+
 }

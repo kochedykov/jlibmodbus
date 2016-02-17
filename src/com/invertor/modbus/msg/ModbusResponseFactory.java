@@ -108,9 +108,9 @@ final public class ModbusResponseFactory implements ModbusMessageFactory {
                 msg = new GetCommEventLogResponse(serverAddress);
                 break;
             case DIAGNOSTICS:
+                msg = new DiagnosticsResponse(serverAddress);
+                break;
             case ENCAPSULATED_INTERFACE_TRANSPORT:
-            case CAN_OPEN_PDU:
-            case READ_DEVICE_IDENTIFICATION:
             default:
                 throw new ModbusNumberException("Unknown function code", functionCode);
         }
