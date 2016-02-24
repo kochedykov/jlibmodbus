@@ -35,6 +35,27 @@ import java.io.IOException;
  * Authors: Vladislav Y. Kochedykov, software engineer.
  * email: vladislav.kochedykov@gmail.com
  */
+
+/**
+ * MODBUS function code 08 provides a series of tests for checking the communication system
+ * between a client ( Master) device and a server ( Slave), or for checking various internal error
+ * conditions within a server.
+ * The function uses a two–byte sub-function code field in the query to define the type of test to
+ * be performed. The server echoes both the function code and sub-function code in a normal
+ * response. Some of the diagnostics cause data to be returned from the remote device in the
+ * data field of a normal response.
+ * In general, issuing a diagnostic function to a remote device does not affect the running of the
+ * user program in the remote device. User logic, like discrete and registers, is not accessed by
+ * the diagnostics. Certain functions can optionally reset error counters in the remote device.
+ * A server device can, however, be forced into ‘Listen Only Mode’ in which it will monitor the
+ * messages on the communications system but not respond to them. This can affect the
+ * outcome of your application program if it depends upon any further exchange of data with the
+ * remote device. Generally, the mode is forced to remove a malfunctioning remote device from
+ * the communications system.
+ * The following diagnostic functions are dedicated to serial line devices.
+ * The normal response to the Return Query Data request is to loopback the same data. The
+ * function code and sub-function codes are also echoed.
+ */
 public class DiagnosticsRequest extends ModbusRequest {
     /**
      * Diagnostic uses a two–byte sub-function code field in the query to define the type of test to

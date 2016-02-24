@@ -24,7 +24,7 @@ package com.invertor.modbus.utils;
  */
 
 /**
- *  The list of sub-function codes supported by the serial line devices.
+ * The list of sub-function codes supported by the serial line devices.
  * Hex  Dec
  * 00   00 Return Query Data
  * 01   01 Restart Communications Option
