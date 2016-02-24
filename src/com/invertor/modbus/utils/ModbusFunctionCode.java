@@ -68,7 +68,7 @@ public enum ModbusFunctionCode {
     MASK_WRITE_REGISTER(0x16),
     READ_WRITE_MULTIPLE_REGISTERS(0x17),
     READ_FIFO_QUEUE(0x18),
-    ENCAPSULATED_INTERFACE_TRANSPORT(0x2B),//TODO: not implemented
+    ENCAPSULATED_INTERFACE_TRANSPORT(0x2B),//implemented Read Device Identification interface, (0x2B / 0x0E)
     UNKNOWN(0xff);
 
     final static private int MODBUS_EXCEPTION_FLAG = 0x80;

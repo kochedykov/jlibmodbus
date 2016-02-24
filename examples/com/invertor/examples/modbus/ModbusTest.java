@@ -198,7 +198,7 @@ public class ModbusTest implements Runnable {
 
         test.slave.setServerAddress(1);
         test.slave.setDataHolder(new SimpleDataHolderBuilder(1000));
-        Modbus.setLogLevel(Modbus.LogLevel.LEVEL_DEBUG);
+        Modbus.setLogLevel(Modbus.LogLevel.LEVEL_RELEASE);
 
         try {
             DataHolder dataHolder = test.slave.getDataHolder();
@@ -212,9 +212,9 @@ public class ModbusTest implements Runnable {
             dataHolder.getExceptionStatus().set(123);
             dataHolder.getCommStatus().addEvent(ModbusEventSend.createExceptionSentRead());
             ReadDeviceIdentificationInterface rii = dataHolder.getReadDeviceIdentificationInterface();
-            rii.setVendorName("JSC Invertor");
-            rii.setProductCode(" Product code 3245234658");
-            rii.setMajorMinorRevision("v1.0");
+            rii.setVendorName("Vendor name=\"JSC Invertor\"");
+            rii.setProductCode("Product code=\"3245234658\"");
+            rii.setMajorMinorRevision("Revision=\"v1.0\"");
             FifoQueue fifo = dataHolder.getFifoQueue(0);
             for (int i = 0; i < 35; i++) {
                 if (fifo.size() == Modbus.MAX_FIFO_COUNT)
@@ -293,19 +293,20 @@ public class ModbusTest implements Runnable {
                 printRegisters("Fifo queue registers", master.readFifoQueue(1, 0));
                 printBits("Coils", master.readCoils(1, 0, 16));
                 printBits("Discrete inputs", master.readDiscreteInputs(1, 0, 16));
-                System.out.println(new String(master.reportSlaveId(1), Charset.defaultCharset()));
-                System.out.println(master.readExceptionStatus(1));
-                System.out.println(master.getCommEventCounter(1).getEventCount());
-                System.out.println(master.getCommEventLog(1).getMessageCount());
-                System.out.println("Diagnostics " + master.diagnosticsReturnBusMessageCount(1));
+                System.out.format("%s\t\t%s\n", "Slave Id", new String(master.reportSlaveId(1), Charset.defaultCharset()));
+                System.out.format("%s\t\t%d\n", "Exception status", master.readExceptionStatus(1));
+                System.out.format("%s\t\t%d\n", "Comm event counter", master.getCommEventCounter(1).getEventCount());
+                System.out.format("%s\t\t%d\n", "Comm message count", master.getCommEventLog(1).getMessageCount());
+                System.out.format("%s\t\t\t\t%d\n", "Diagnostics", master.diagnosticsReturnBusMessageCount(1));
                 master.maskWriteRegister(1, 0, 7, 10);
                 master.writeSingleCoil(1, 13, true);
                 master.writeMultipleRegisters(1, 5, new int[]{55, 66, 77, 88, 99});
                 master.writeMultipleCoils(1, 0, new boolean[]{true, true, true});
                 MEIReadDeviceIdentification rdi = master.readDeviceIdentification(1, 0, ReadDeviceIdentificationCode.BASIC_STREAM_ACCESS);
                 DataObject[] objects = rdi.getObjects();
+                System.out.format("%s\t", "Device identification");
                 for (DataObject o : objects) {
-                    System.out.format("\t%s", new String(o.getValue()));
+                    System.out.format("%s ", new String(o.getValue(), Charset.defaultCharset()));
                 }
                 System.out.println();
             } catch (Exception e) {
