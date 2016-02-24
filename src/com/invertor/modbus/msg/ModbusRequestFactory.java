@@ -5,6 +5,7 @@ import com.invertor.modbus.exception.ModbusNumberException;
 import com.invertor.modbus.msg.base.ModbusFileRecord;
 import com.invertor.modbus.msg.base.ModbusMessage;
 import com.invertor.modbus.msg.base.ModbusRequest;
+import com.invertor.modbus.msg.base.mei.ReadDeviceIdentificationCode;
 import com.invertor.modbus.msg.request.*;
 import com.invertor.modbus.net.stream.base.ModbusInputStream;
 import com.invertor.modbus.utils.DiagnosticsSubFunctionCode;
@@ -335,6 +336,10 @@ final public class ModbusRequestFactory implements ModbusMessageFactory {
         return createDiagnostics(DiagnosticsSubFunctionCode.CLEAR_OVERRUN_COUNTER_AND_FLAG, serverAddress, 0);
     }
 
+    public ModbusRequest createReadDeviceIdentification(int serverAddress, int objectId, ReadDeviceIdentificationCode readDeviceId) throws ModbusNumberException {
+        return new ReadDeviceIdentificationRequest(serverAddress, objectId, readDeviceId);
+    }
+
     @Override
     public ModbusMessage createMessage(ModbusInputStream fifo) throws ModbusNumberException, ModbusIOException {
         ModbusMessage msg;
@@ -402,6 +407,8 @@ final public class ModbusRequestFactory implements ModbusMessageFactory {
                 msg = new DiagnosticsRequest(serverAddress);
                 break;
             case ENCAPSULATED_INTERFACE_TRANSPORT:
+                msg = new EncapsulatedInterfaceTransportRequest(serverAddress);
+                break;
             default:
                 msg = new IllegalFunctionRequest(serverAddress, functionCode);
         }

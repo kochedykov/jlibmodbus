@@ -44,16 +44,16 @@ public class EncapsulatedInterfaceTransportResponse extends ModbusResponse {
     @Override
     protected void readResponse(ModbusInputStream fifo) throws IOException, ModbusNumberException {
         int meiTypeCode = fifo.read();
-        if ((mei = MEIFactory.getMEI(MEITypeCode.get(meiTypeCode))) == null) {
+        setMei(MEIFactory.getMEI(MEITypeCode.get(meiTypeCode)));
+        if (getMei() == null)
             throw new ModbusNumberException("Unknown MEI type", meiTypeCode);
-        }
-        mei.readResponse(fifo);
+        getMei().readResponse(fifo);
     }
 
     @Override
     protected void writeResponse(ModbusOutputStream fifo) throws IOException {
-        fifo.write(mei.getTypeCode().toInt());
-        mei.writeResponse(fifo);
+        fifo.write(getMei().getTypeCode().toInt());
+        getMei().writeResponse(fifo);
     }
 
     public ModbusEncapsulatedInterface getMei() {

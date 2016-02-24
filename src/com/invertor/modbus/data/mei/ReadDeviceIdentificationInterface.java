@@ -3,7 +3,6 @@ package com.invertor.modbus.data.mei;
 import com.invertor.modbus.exception.IllegalDataAddressException;
 
 import java.util.Arrays;
-import java.util.Set;
 import java.util.TreeMap;
 
 /**
@@ -145,7 +144,7 @@ public class ReadDeviceIdentificationInterface {
 
         public DataObject(int id, byte[] value) {
             this.id = id;
-            this.value = value;
+            setValue(value);
         }
 
         public int getId() {

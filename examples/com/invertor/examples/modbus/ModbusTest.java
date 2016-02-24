@@ -5,14 +5,19 @@ import com.invertor.modbus.data.DataHolder;
 import com.invertor.modbus.data.FifoQueue;
 import com.invertor.modbus.data.SimpleDataHolderBuilder;
 import com.invertor.modbus.data.events.ModbusEventSend;
+import com.invertor.modbus.data.mei.ReadDeviceIdentificationInterface;
 import com.invertor.modbus.exception.IllegalDataAddressException;
 import com.invertor.modbus.exception.IllegalDataValueException;
 import com.invertor.modbus.exception.ModbusIOException;
+import com.invertor.modbus.msg.base.mei.MEIReadDeviceIdentification;
+import com.invertor.modbus.msg.base.mei.ReadDeviceIdentificationCode;
 import com.invertor.modbus.serial.SerialPort;
 import com.invertor.modbus.serial.SerialUtils;
 
 import java.net.InetAddress;
 import java.nio.charset.Charset;
+
+import static com.invertor.modbus.data.mei.ReadDeviceIdentificationInterface.DataObject;
 
 /**
  * Copyright (c) 2015-2016 JSC Invertor
@@ -206,6 +211,10 @@ public class ModbusTest implements Runnable {
             dataHolder.getSlaveId().set("slave implementation = jlibmodbus".getBytes());
             dataHolder.getExceptionStatus().set(123);
             dataHolder.getCommStatus().addEvent(ModbusEventSend.createExceptionSentRead());
+            ReadDeviceIdentificationInterface rii = dataHolder.getReadDeviceIdentificationInterface();
+            rii.setVendorName("JSC Invertor");
+            rii.setProductCode(" Product code 3245234658");
+            rii.setMajorMinorRevision("v1.0");
             FifoQueue fifo = dataHolder.getFifoQueue(0);
             for (int i = 0; i < 35; i++) {
                 if (fifo.size() == Modbus.MAX_FIFO_COUNT)
@@ -271,7 +280,6 @@ public class ModbusTest implements Runnable {
         while ((System.currentTimeMillis() - time) < timeout) {
             try {
                 Thread.sleep(1);
-                System.out.println();
                 System.out.println("Slave output");
                 printRegisters("Holding registers", slave.getDataHolder().getHoldingRegisters().getRange(0, 16));
                 printRegisters("Input registers", slave.getDataHolder().getInputRegisters().getRange(0, 16));
@@ -294,6 +302,12 @@ public class ModbusTest implements Runnable {
                 master.writeSingleCoil(1, 13, true);
                 master.writeMultipleRegisters(1, 5, new int[]{55, 66, 77, 88, 99});
                 master.writeMultipleCoils(1, 0, new boolean[]{true, true, true});
+                MEIReadDeviceIdentification rdi = master.readDeviceIdentification(1, 0, ReadDeviceIdentificationCode.BASIC_STREAM_ACCESS);
+                DataObject[] objects = rdi.getObjects();
+                for (DataObject o : objects) {
+                    System.out.format("\t%s", new String(o.getValue()));
+                }
+                System.out.println();
             } catch (Exception e) {
                 e.printStackTrace();
             }

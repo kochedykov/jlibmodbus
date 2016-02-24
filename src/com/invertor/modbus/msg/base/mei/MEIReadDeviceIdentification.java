@@ -46,6 +46,8 @@ public class MEIReadDeviceIdentification implements ModbusEncapsulatedInterface 
     private DataObject[] objects = new DataObject[0];
     private int responseSize = 0;
 
+    private int firstObjectIndex = 0;
+
     @Override
     public MEITypeCode getTypeCode() {
         return MEITypeCode.READ_DEVICE_IDENTIFICATION;
@@ -59,7 +61,7 @@ public class MEIReadDeviceIdentification implements ModbusEncapsulatedInterface 
 
     @Override
     public void readRequest(ModbusInputStream fifo) throws IOException {
-        setReadDeviceIdCode(ReadDeviceIdentificationCode.get(fifo.read()));
+        setReadDeviceId(ReadDeviceIdentificationCode.get(fifo.read()));
         setObjectId(fifo.read());
     }
 
@@ -75,7 +77,7 @@ public class MEIReadDeviceIdentification implements ModbusEncapsulatedInterface 
         fifo.write(isMoreFollows() ? 0xFF : 0x00);
         fifo.write(getNextObjectId());
         fifo.write(getNumberOfObjects());
-        for (int i = 0; i < getNumberOfObjects(); i++) {
+        for (int i = getFirstObjectIndex(); i < getFirstObjectIndex() + getNumberOfObjects(); i++) {
             DataObject o = getObjects()[i];
             fifo.write(o.getId());
             fifo.write(o.getValue().length);
@@ -85,7 +87,7 @@ public class MEIReadDeviceIdentification implements ModbusEncapsulatedInterface 
 
     @Override
     public void readResponse(ModbusInputStream fifo) throws IOException, ModbusNumberException {
-        setReadDeviceIdCode(ReadDeviceIdentificationCode.get(fifo.read()));
+        setReadDeviceId(ReadDeviceIdentificationCode.get(fifo.read()));
         setConformityLevel(ConformityLevel.get(fifo.read()));
         setMoreFollows(fifo.read() == 0xff);
         setNextObjectId(fifo.read());
@@ -102,6 +104,9 @@ public class MEIReadDeviceIdentification implements ModbusEncapsulatedInterface 
             if (size > Modbus.MAX_PDU_LENGTH)
                 throw new ModbusNumberException("Exceeded max pdu length", size);
             byte[] value = new byte[length];
+            int read;
+            if ((read = fifo.read(value)) != length)
+                Modbus.log().warning(length + " bytes expected, but " + read + " received.");
             getObjects()[i] = new DataObject(id, value);
         }
         setResponseSize(size);
@@ -140,20 +145,29 @@ public class MEIReadDeviceIdentification implements ModbusEncapsulatedInterface 
             default:
                 setObjects(new DataObject[]{deviceId.getValue(getObjectId())});
         }
-        int size = 0;
+        int size = SIZE_OF_HEADER;
         int number_of_objects = 0;
-        final int list_of_objects_max = (Modbus.MAX_PDU_LENGTH - SIZE_OF_HEADER);
-        for (DataObject object : getObjects()) {
-            size += object.getValue().length + 2;//object id + object length = 2
-            if (size < list_of_objects_max) {
-                ++number_of_objects;
+
+        if (getObjectId() != 0) {
+            for (int i = 0; i < getObjects().length && getFirstObjectIndex() == 0; i++) {
+                if (getObjects()[i].getId() == getObjectId()) {
+                    setFirstObjectIndex(i);
+                }
             }
         }
-        setResponseSize(size + SIZE_OF_HEADER);
-        if (getObjects().length == number_of_objects) {
-            setMoreFollows(false);
-        } else {
+
+        for (int i = getFirstObjectIndex(); i < getObjects().length; i++) {
+            size += getObjects()[i].getValue().length + 2;//object id + object length = 2
+            if (size >= Modbus.MAX_PDU_LENGTH) {
+                break;
+            }
+            number_of_objects++;
+        }
+        setResponseSize(size);
+        if ((getObjects().length - getFirstObjectIndex()) > number_of_objects) {
             setNextObjectId(number_of_objects + 1);
+        } else {
+            setMoreFollows(false);
         }
         setNumberOfObjects(number_of_objects);
     }
@@ -178,7 +192,7 @@ public class MEIReadDeviceIdentification implements ModbusEncapsulatedInterface 
         return readDeviceIdCode;
     }
 
-    public void setReadDeviceIdCode(ReadDeviceIdentificationCode readDeviceIdCode) {
+    public void setReadDeviceId(ReadDeviceIdentificationCode readDeviceIdCode) {
         this.readDeviceIdCode = readDeviceIdCode;
     }
 
@@ -212,5 +226,13 @@ public class MEIReadDeviceIdentification implements ModbusEncapsulatedInterface 
 
     public void setObjects(DataObject[] objects) {
         this.objects = objects;
+    }
+
+    public int getFirstObjectIndex() {
+        return firstObjectIndex;
+    }
+
+    public void setFirstObjectIndex(int firstObjectIndex) {
+        this.firstObjectIndex = firstObjectIndex;
     }
 }

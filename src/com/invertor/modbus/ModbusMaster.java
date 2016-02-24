@@ -9,6 +9,8 @@ import com.invertor.modbus.msg.base.ModbusFileRecord;
 import com.invertor.modbus.msg.base.ModbusMessage;
 import com.invertor.modbus.msg.base.ModbusRequest;
 import com.invertor.modbus.msg.base.ModbusResponse;
+import com.invertor.modbus.msg.base.mei.MEIReadDeviceIdentification;
+import com.invertor.modbus.msg.base.mei.ReadDeviceIdentificationCode;
 import com.invertor.modbus.msg.response.*;
 import com.invertor.modbus.net.ModbusConnection;
 import com.invertor.modbus.net.ModbusTransport;
@@ -65,7 +67,7 @@ abstract public class ModbusMaster {
         return getConnection().getTransport().readResponse();
     }
 
-    protected ModbusMessage processRequest(ModbusRequest request) throws ModbusProtocolException,
+    protected ModbusResponse processRequest(ModbusRequest request) throws ModbusProtocolException,
             ModbusNumberException, ModbusIOException {
         sendRequest(request);
         ModbusResponse msg;
@@ -361,4 +363,10 @@ abstract public class ModbusMaster {
      * @throws ModbusNumberException if server address is in-valid
      */
     abstract public void diagnosticsClearOverrunCounterAndFlag(int serverAddress) throws ModbusNumberException, ModbusProtocolException, ModbusIOException;
+
+    final public MEIReadDeviceIdentification readDeviceIdentification(int serverAddress, int objectId, ReadDeviceIdentificationCode readDeviceId) throws
+            ModbusProtocolException, ModbusNumberException, ModbusIOException {
+        EncapsulatedInterfaceTransportResponse response = (EncapsulatedInterfaceTransportResponse) processRequest(requestFactory.createReadDeviceIdentification(serverAddress, objectId, readDeviceId));
+        return (MEIReadDeviceIdentification) response.getMei();
+    }
 }

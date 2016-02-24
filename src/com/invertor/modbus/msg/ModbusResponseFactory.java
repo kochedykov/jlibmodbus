@@ -111,6 +111,8 @@ final public class ModbusResponseFactory implements ModbusMessageFactory {
                 msg = new DiagnosticsResponse(serverAddress);
                 break;
             case ENCAPSULATED_INTERFACE_TRANSPORT:
+                msg = new EncapsulatedInterfaceTransportResponse(serverAddress);
+                break;
             default:
                 throw new ModbusNumberException("Unknown function code", functionCode);
         }
