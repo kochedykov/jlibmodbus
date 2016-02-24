@@ -27,16 +27,12 @@ import com.invertor.modbus.exception.ModbusIOException;
  * email: vladislav.kochedykov@gmail.com
  */
 
-/**
- * facade
- */
 abstract public class ModbusSlave {
 
     private int serverAddress = 1;
     private DataHolder dataHolder = new DataHolder();
 
     protected ModbusSlave() {
-
     }
 
     /**
@@ -51,17 +47,16 @@ abstract public class ModbusSlave {
 
 
     /*Getters & Setters*/
-
     public DataHolder getDataHolder() {
         return dataHolder;
     }
 
-    public void setDataHolder(DataHolder dataHolder) {
-        this.dataHolder = dataHolder;
-    }
-
     public void setDataHolder(DataHolderBuilder builder) {
         setDataHolder(builder.build());
+    }
+
+    public void setDataHolder(DataHolder dataHolder) {
+        this.dataHolder = dataHolder;
     }
 
     public int getServerAddress() {
