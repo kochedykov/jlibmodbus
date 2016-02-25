@@ -1,11 +1,13 @@
 package com.invertor.modbus.net.stream;
 
+import com.invertor.modbus.Modbus;
 import com.invertor.modbus.exception.ModbusIOException;
 import com.invertor.modbus.net.stream.base.ModbusInputStream;
 
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.net.Socket;
+import java.net.SocketException;
 
 /**
  * Copyright (c) 2015-2016 JSC Invertor
@@ -32,9 +34,11 @@ import java.net.Socket;
 public class InputStreamTCP extends ModbusInputStream {
 
     final private BufferedInputStream is;
+    final private Socket s;
 
     public InputStreamTCP(Socket s) throws ModbusIOException {
         try {
+            this.s = s;
             this.is = new BufferedInputStream(s.getInputStream());
         } catch (IOException e) {
             throw new ModbusIOException(e);
@@ -44,8 +48,8 @@ public class InputStreamTCP extends ModbusInputStream {
     @Override
     public int read() throws IOException {
         int c = is.read();
-        if (c == -1) {
-            c = is.read();
+        if (-1 == c) {
+            throw new IOException();
         }
         return c;
     }
@@ -69,6 +73,10 @@ public class InputStreamTCP extends ModbusInputStream {
 
     @Override
     public void setReadTimeout(int readTimeout) {
-        //no op
+        try {
+            s.setSoTimeout(readTimeout);
+        } catch (SocketException e) {
+            Modbus.log().warning(e.getLocalizedMessage());
+        }
     }
 }
