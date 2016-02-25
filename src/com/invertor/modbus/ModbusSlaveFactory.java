@@ -45,9 +45,10 @@ final public class ModbusSlaveFactory {
      * @param stopBits - stop bit count(1,2)
      * @param parity   - parity bit(NONE, EVEN, ODD, MARK, SPACE)
      * @return ModbusSlave instance if there is no errors, else null
-     * @see SerialPort.Parity
-     * @see SerialPort.BaudRate
-     * @see ModbusSlave
+     * @see com.invertor.modbus.serial.SerialPort.Parity
+     * @see com.invertor.modbus.serial.SerialPort.BaudRate
+     * @see com.invertor.modbus.slave.ModbusSlaveRTU
+     * @see com.invertor.modbus.ModbusSlave
      */
     static public ModbusSlave createModbusSlaveRTU(String device, SerialPort.BaudRate baudRate, int dataBits, int stopBits, SerialPort.Parity parity) {
         return new ModbusSlaveRTU(device, baudRate, dataBits, stopBits, parity);
@@ -58,10 +59,9 @@ final public class ModbusSlaveFactory {
      *
      * @param sp - a SerialParameters instance.
      * @return ModbusSlave instance if there is no errors, else null
-     * @see SerialPort.Parity
-     * @see SerialPort.BaudRate
-     * @see ModbusSlave
-     * @see SerialParameters
+     * @see com.invertor.modbus.serial.SerialParameters
+     * @see com.invertor.modbus.slave.ModbusSlaveRTU
+     * @see com.invertor.modbus.ModbusSlave
      */
     static public ModbusSlave createModbusSlaveRTU(SerialParameters sp) {
         return new ModbusSlaveRTU(sp);
@@ -74,9 +74,9 @@ final public class ModbusSlaveFactory {
      * @param baudRate - baud rate
      * @param parity   - parity bit(NONE, EVEN, ODD, MARK, SPACE)
      * @return ModbusSlave instance if there is no errors, else null
-     * @see SerialPort.Parity
-     * @see SerialPort.BaudRate
-     * @see ModbusSlave
+     * @see com.invertor.modbus.serial.SerialParameters
+     * @see com.invertor.modbus.slave.ModbusSlaveASCII
+     * @see com.invertor.modbus.ModbusSlave
      */
     static public ModbusSlave createModbusSlaveASCII(String device, SerialPort.BaudRate baudRate, SerialPort.Parity parity) {
         return new ModbusSlaveASCII(device, baudRate, parity);
@@ -88,9 +88,9 @@ final public class ModbusSlaveFactory {
      * @param device   - serial port device name
      * @param baudRate - baud rate
      * @return ModbusSlave instance if there is no errors, else null
-     * @see SerialPort.Parity
-     * @see SerialPort.BaudRate
-     * @see ModbusSlave
+     * @see com.invertor.modbus.serial.SerialPort.BaudRate
+     * @see com.invertor.modbus.slave.ModbusSlaveASCII
+     * @see com.invertor.modbus.ModbusSlave
      */
     static public ModbusSlave createModbusSlaveASCII(String device, SerialPort.BaudRate baudRate) {
         return new ModbusSlaveASCII(device, baudRate);
@@ -101,7 +101,8 @@ final public class ModbusSlaveFactory {
      *
      * @param host - ip address of remote slave
      * @return ModbusSlave instance if there is no errors, else null
-     * @see ModbusSlave
+     * @see com.invertor.modbus.slave.ModbusSlaveTCP
+     * @see com.invertor.modbus.ModbusSlave
      */
     static public ModbusSlave createModbusSlaveTCP(String host) {
         return createModbusSlaveTCP(host, Modbus.TCP_PORT);
@@ -113,9 +114,23 @@ final public class ModbusSlaveFactory {
      * @param host - ip address of remote slave
      * @param port - tcp port
      * @return ModbusSlave instance if there is no errors, else null
-     * @see ModbusSlave
+     * @see com.invertor.modbus.slave.ModbusSlaveTCP
+     * @see com.invertor.modbus.ModbusSlave
      */
     static public ModbusSlave createModbusSlaveTCP(String host, int port) {
         return new ModbusSlaveTCP(new TcpParameters(host, port, false));
+    }
+
+    /**
+     * Creates ModbusSlaveTCP instance.
+     *
+     * @param tcpParameters - a TcpParameters instance
+     * @return ModbusSlave instance if there is no errors, else null
+     * @see com.invertor.modbus.slave.ModbusSlaveTCP
+     * @see com.invertor.modbus.ModbusSlave
+     * @see com.invertor.modbus.tcp.TcpParameters
+     */
+    static public ModbusSlave createModbusSlaveTCP(TcpParameters tcpParameters) {
+        return new ModbusSlaveTCP(tcpParameters);
     }
 }

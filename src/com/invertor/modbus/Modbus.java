@@ -63,7 +63,7 @@ final public class Modbus {
      * changes the log level for all loggers used
      *
      * @param level - LogLevel instance
-     * @see LogLevel
+     * @see com.invertor.modbus.Modbus.LogLevel
      */
     static public void setLogLevel(LogLevel level) {
         log.setLevel(level.value());

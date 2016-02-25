@@ -124,8 +124,8 @@ final public class ModbusRequestFactory implements ModbusMessageFactory {
      * @param data            request data field
      * @return DiagnosticsRequest instance
      * @throws ModbusNumberException if server address is in-valid
-     * @see DiagnosticsRequest
-     * @see DiagnosticsSubFunctionCode
+     * @see com.invertor.modbus.msg.request.DiagnosticsRequest
+     * @see com.invertor.modbus.utils.DiagnosticsSubFunctionCode
      */
     public ModbusRequest createDiagnostics(DiagnosticsSubFunctionCode subFunctionCode, int serverAddress, int data) throws ModbusNumberException {
         DiagnosticsRequest request = new DiagnosticsRequest(serverAddress);

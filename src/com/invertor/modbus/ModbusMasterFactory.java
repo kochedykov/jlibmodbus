@@ -45,10 +45,10 @@ final public class ModbusMasterFactory {
      * @param stopBits - stop bit count(1,2)
      * @param parity   - parity bit(NONE, EVEN, ODD, MARK, SPACE)
      * @return ModbusMaster instance if there is no errors, else null
-     * @see SerialPort.Parity
-     * @see SerialPort.BaudRate
-     * @see ModbusMaster
-     * @see ModbusMasterRTU
+     * @see com.invertor.modbus.serial.SerialPort.Parity
+     * @see com.invertor.modbus.serial.SerialPort.BaudRate
+     * @see com.invertor.modbus.ModbusMaster
+     * @see com.invertor.modbus.master.ModbusMasterRTU
      */
     static public ModbusMaster createModbusMasterRTU(String device, SerialPort.BaudRate baudRate, int dataBits, int stopBits, SerialPort.Parity parity) {
         return new ModbusMasterRTU(device, baudRate, dataBits, stopBits, parity);
@@ -59,11 +59,11 @@ final public class ModbusMasterFactory {
      *
      * @param sp - a SerialParameters instance.
      * @return ModbusMaster instance if there is no errors, else null
-     * @see SerialPort.Parity
-     * @see SerialPort.BaudRate
-     * @see ModbusMaster
-     * @see ModbusMasterRTU
-     * @see SerialParameters
+     * @see com.invertor.modbus.serial.SerialPort.Parity
+     * @see com.invertor.modbus.serial.SerialPort.BaudRate
+     * @see com.invertor.modbus.ModbusMaster
+     * @see com.invertor.modbus.master.ModbusMasterRTU
+     * @see com.invertor.modbus.serial.SerialParameters
      */
     static public ModbusMaster createModbusMasterRTU(SerialParameters sp) {
         return new ModbusMasterRTU(sp);
@@ -76,10 +76,10 @@ final public class ModbusMasterFactory {
      * @param baudRate - baud rate
      * @param parity   - parity bit(NONE, EVEN, ODD, MARK, SPACE)
      * @return ModbusMaster instance if there is no errors, else null
-     * @see SerialPort.Parity
-     * @see SerialPort.BaudRate
-     * @see ModbusMaster
-     * @see ModbusMasterASCII
+     * @see com.invertor.modbus.serial.SerialPort.Parity
+     * @see com.invertor.modbus.serial.SerialPort.BaudRate
+     * @see com.invertor.modbus.ModbusMaster
+     * @see com.invertor.modbus.master.ModbusMasterASCII
      */
     static public ModbusMaster createModbusMasterASCII(String device, SerialPort.BaudRate baudRate, SerialPort.Parity parity) {
         return new ModbusMasterASCII(device, baudRate, parity);
@@ -91,10 +91,10 @@ final public class ModbusMasterFactory {
      * @param device   - serial port device name
      * @param baudRate - baud rate
      * @return ModbusMaster instance if there is no errors, else null
-     * @see SerialPort.Parity
-     * @see SerialPort.BaudRate
-     * @see ModbusMaster
-     * @see ModbusMasterASCII
+     * @see com.invertor.modbus.serial.SerialPort.Parity
+     * @see com.invertor.modbus.serial.SerialPort.BaudRate
+     * @see com.invertor.modbus.ModbusMaster
+     * @see com.invertor.modbus.master.ModbusMasterASCII
      */
     static public ModbusMaster createModbusMasterASCII(String device, SerialPort.BaudRate baudRate) {
         return new ModbusMasterASCII(device, baudRate);
@@ -106,8 +106,8 @@ final public class ModbusMasterFactory {
      * @param host      - ip address of remote slave
      * @param keepAlive - whether or not to have socket keep alive turned on.
      * @return ModbusMaster instance if there is no errors, else null
-     * @see ModbusMaster
-     * @see ModbusMasterTCP
+     * @see com.invertor.modbus.ModbusMaster
+     * @see com.invertor.modbus.master.ModbusMasterTCP
      */
     static public ModbusMaster createModbusMasterTCP(String host, boolean keepAlive) {
         return createModbusMasterTCP(host, Modbus.TCP_PORT, keepAlive);
@@ -118,8 +118,8 @@ final public class ModbusMasterFactory {
      *
      * @param host - ip address of remote slave
      * @return ModbusMaster instance if there is no errors, else null
-     * @see ModbusMaster
-     * @see ModbusMasterTCP
+     * @see com.invertor.modbus.ModbusMaster
+     * @see com.invertor.modbus.master.ModbusMasterTCP
      */
     static public ModbusMaster createModbusMasterTCP(String host) {
         return createModbusMasterTCP(host, false);
@@ -132,10 +132,23 @@ final public class ModbusMasterFactory {
      * @param port      - tcp port
      * @param keepAlive - whether or not to have socket keep alive turned on.
      * @return ModbusMaster instance if there is no errors, else null
-     * @see ModbusMaster
-     * @see ModbusMasterTCP
+     * @see com.invertor.modbus.ModbusMaster
+     * @see com.invertor.modbus.master.ModbusMasterTCP
      */
     static public ModbusMaster createModbusMasterTCP(String host, int port, boolean keepAlive) {
         return new ModbusMasterTCP(new TcpParameters(host, port, keepAlive));
+    }
+
+    /**
+     * Creates ModbusMasterTCP instance.
+     *
+     * @param tcpParameters - a TcpParameters instance
+     * @return ModbusMaster instance if there is no errors, else null
+     * @see com.invertor.modbus.ModbusMaster
+     * @see com.invertor.modbus.master.ModbusMasterTCP
+     * @see com.invertor.modbus.tcp.TcpParameters
+     */
+    static public ModbusMaster createModbusMasterTCP(TcpParameters tcpParameters) {
+        return new ModbusMasterTCP(tcpParameters);
     }
 }
