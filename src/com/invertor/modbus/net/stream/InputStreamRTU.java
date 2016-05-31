@@ -43,7 +43,7 @@ public class InputStreamRTU extends InputStreamSerial {
 
     @Override
     public int read() throws IOException {
-        int b = (byte) super.read() & 0xff;
+        int b = super.read();
         crc = CRC16.calc(crc, (byte) b);
         return b;
     }

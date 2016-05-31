@@ -83,16 +83,12 @@ public class DataUtils {
         return dst;
     }
 
-    public static short toShort(byte[] bytes) {
-        return toShort(bytes[0], bytes[1]);
-    }
-
     public static byte[] toByteArray(short i16) {
         return new byte[]{byteHigh(i16), byteLow(i16)};
     }
 
-    public static short toShort(int h, int l) {
-        return (short) (((byte) h & 0xff) << 8 | ((byte) l & 0xff));
+    public static int toShort(int h, int l) {
+        return ((h & 0xff) << 8) | (l & 0xff);
     }
 
     public static byte[] toByteArray(int i32) {

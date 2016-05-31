@@ -49,7 +49,7 @@ final public class TcpAduHeader {
         buffer[offset] = DataUtils.byteLow(value);
     }
 
-    private short getPduSize() {
+    private int getPduSize() {
         return DataUtils.toShort(buffer[4], buffer[5]);
     }
 
@@ -57,7 +57,7 @@ final public class TcpAduHeader {
         setBufferValue(value, 4);
     }
 
-    public short getProtocolId() {
+    public int getProtocolId() {
         return DataUtils.toShort(buffer[2], buffer[3]);
     }
 
@@ -65,7 +65,7 @@ final public class TcpAduHeader {
         setBufferValue(value, 2);
     }
 
-    public short getTransactionId() {
+    public int getTransactionId() {
         return DataUtils.toShort(buffer[0], buffer[1]);
     }
 
