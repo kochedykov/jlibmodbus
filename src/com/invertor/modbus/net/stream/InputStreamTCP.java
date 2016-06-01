@@ -79,4 +79,10 @@ public class InputStreamTCP extends ModbusInputStream {
             Modbus.log().warning(e.getLocalizedMessage());
         }
     }
+
+    @Override
+    public void close() throws IOException {
+        is.close();
+        s.close();
+    }
 }

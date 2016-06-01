@@ -43,6 +43,11 @@ abstract public class ModbusTransport {
         this.os = os;
     }
 
+    public void close() throws IOException {
+        is.close();
+        os.close();
+    }
+
     public ModbusMessage readRequest() throws ModbusNumberException, ModbusIOException {
         return read(ModbusRequestFactory.getInstance());
     }

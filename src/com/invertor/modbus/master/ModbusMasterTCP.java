@@ -13,8 +13,6 @@ import com.invertor.modbus.net.ModbusMasterConnectionTCP;
 import com.invertor.modbus.tcp.TcpParameters;
 import com.invertor.modbus.utils.ModbusFunctionCode;
 
-import java.util.concurrent.atomic.AtomicBoolean;
-
 /**
  * Copyright (c) 2015-2016 JSC Invertor
  * [http://www.sbp-invertor.ru]
@@ -41,7 +39,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 final public class ModbusMasterTCP extends ModbusMaster {
     final private boolean keepAlive;
     final private ModbusConnection conn;
-    final private AtomicBoolean connected = new AtomicBoolean(false);
 
     public ModbusMasterTCP(TcpParameters parameters) {
         conn = new ModbusMasterConnectionTCP(parameters);

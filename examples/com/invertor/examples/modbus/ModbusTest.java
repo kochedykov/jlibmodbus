@@ -79,7 +79,7 @@ public class ModbusTest implements Runnable {
             case TCP:
                 String host = DEFAULT_HOST;
                 int port = Modbus.TCP_PORT;
-                boolean keepAlive = false;
+                boolean keepAlive = true;
                 try {
                     host = initParameter("host", host, argv[1], new ParameterInitializer<String>() {
                         @Override
@@ -284,7 +284,7 @@ public class ModbusTest implements Runnable {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        master.setResponseTimeout(100);
+        master.setResponseTimeout(500);
         while ((System.currentTimeMillis() - time) < timeout) {
             try {
                 Thread.sleep(1);
@@ -301,11 +301,11 @@ public class ModbusTest implements Runnable {
                 printRegisters("Fifo queue registers", master.readFifoQueue(1, 0));
                 printBits("Coils", master.readCoils(1, 0, 16));
                 printBits("Discrete inputs", master.readDiscreteInputs(1, 0, 16));
-                System.out.format("%s\t\t%s\n", "Slave Id", new String(master.reportSlaveId(1), Charset.defaultCharset()));
-                System.out.format("%s\t\t%d\n", "Exception status", master.readExceptionStatus(1));
-                System.out.format("%s\t\t%d\n", "Comm event counter", master.getCommEventCounter(1).getEventCount());
-                System.out.format("%s\t\t%d\n", "Comm message count", master.getCommEventLog(1).getMessageCount());
-                System.out.format("%s\t\t\t\t%d\n", "Diagnostics", master.diagnosticsReturnBusMessageCount(1));
+                //System.out.format("%s\t\t%s\n", "Slave Id", new String(master.reportSlaveId(1), Charset.defaultCharset()));
+                //System.out.format("%s\t\t%d\n", "Exception status", master.readExceptionStatus(1));
+                //System.out.format("%s\t\t%d\n", "Comm event counter", master.getCommEventCounter(1).getEventCount());
+                //System.out.format("%s\t\t%d\n", "Comm message count", master.getCommEventLog(1).getMessageCount());
+                //System.out.format("%s\t\t\t\t%d\n", "Diagnostics", master.diagnosticsReturnBusMessageCount(1));
                 master.maskWriteRegister(1, 0, 7, 10);
                 master.writeSingleCoil(1, 13, true);
                 master.writeMultipleRegisters(1, 5, new int[]{55, 66, 77, 88, 99});

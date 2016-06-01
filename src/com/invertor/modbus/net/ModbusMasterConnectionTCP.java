@@ -35,7 +35,6 @@ import java.net.Socket;
 public class ModbusMasterConnectionTCP extends ModbusConnection {
 
     final private TcpParameters parameters;
-    private Socket socket = null;
     private ModbusTransport transport = null;
     private int readTimeout = Modbus.MAX_RESPONSE_TIMEOUT;
 
@@ -67,29 +66,29 @@ public class ModbusMasterConnectionTCP extends ModbusConnection {
     public void open() throws ModbusIOException {
         if (parameters != null) {
             close();
-            socket = new Socket();
+            Socket socket = new Socket();
             InetSocketAddress isa = new InetSocketAddress(parameters.getHost(), parameters.getPort());
             try {
-                socket.setKeepAlive(parameters.isKeepAlive());
                 socket.connect(isa, Modbus.MAX_CONNECTION_TIMEOUT);
+                socket.setKeepAlive(parameters.isKeepAlive());
             } catch (Exception e) {
                 throw new ModbusIOException(e);
             }
+            transport = new ModbusTransportTCP(socket);
+            setReadTimeout(readTimeout);
         }
-        transport = new ModbusTransportTCP(socket);
-        setReadTimeout(readTimeout);
     }
 
     @Override
     public void close() throws ModbusIOException {
         try {
-            if (socket != null)
-                socket.close();
+            if (transport != null) {
+                transport.close();
+            }
         } catch (IOException e) {
             throw new ModbusIOException(e);
         } finally {
             transport = null;
-            socket = null;
         }
     }
 
