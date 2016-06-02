@@ -32,11 +32,9 @@ import java.net.Socket;
 public class OutputStreamTCP extends ModbusOutputStream {
 
     final private BufferedOutputStream os;
-    final private Socket s;
 
     public OutputStreamTCP(Socket s) throws ModbusIOException {
         try {
-            this.s = s;
             this.os = new BufferedOutputStream(s.getOutputStream());
         } catch (IOException e) {
             throw new ModbusIOException(e);
@@ -70,6 +68,5 @@ public class OutputStreamTCP extends ModbusOutputStream {
     @Override
     public void close() throws IOException {
         os.close();
-        s.close();
     }
 }

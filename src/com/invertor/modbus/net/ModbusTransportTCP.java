@@ -10,6 +10,7 @@ import com.invertor.modbus.net.stream.base.ModbusInputStream;
 import com.invertor.modbus.net.stream.base.ModbusOutputStream;
 import com.invertor.modbus.tcp.TcpAduHeader;
 
+import java.io.IOException;
 import java.net.Socket;
 
 /**
@@ -35,9 +36,11 @@ import java.net.Socket;
  * email: vladislav.kochedykov@gmail.com
  */
 public class ModbusTransportTCP extends ModbusTransport {
+    final private Socket socket;
 
     public ModbusTransportTCP(Socket socket) throws ModbusIOException {
         super(new InputStreamTCP(socket), new OutputStreamTCP(socket));
+        this.socket = socket;
     }
 
     @Override
@@ -60,5 +63,11 @@ public class ModbusTransportTCP extends ModbusTransport {
         header.setPduSize(msg.size());
         header.write(os);
         msg.write(os);
+    }
+
+    @Override
+    public void close() throws IOException {
+        super.close();
+        socket.close();
     }
 }

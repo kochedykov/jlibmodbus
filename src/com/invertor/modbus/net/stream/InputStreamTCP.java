@@ -83,6 +83,5 @@ public class InputStreamTCP extends ModbusInputStream {
     @Override
     public void close() throws IOException {
         is.close();
-        s.close();
     }
 }
