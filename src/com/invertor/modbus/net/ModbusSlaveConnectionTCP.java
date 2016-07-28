@@ -4,6 +4,8 @@ import com.invertor.modbus.Modbus;
 import com.invertor.modbus.exception.ModbusIOException;
 import com.invertor.modbus.net.stream.base.ModbusInputStream;
 import com.invertor.modbus.net.stream.base.ModbusOutputStream;
+import com.invertor.modbus.net.transport.ModbusTransport;
+import com.invertor.modbus.net.transport.ModbusTransportFactory;
 
 import java.io.IOException;
 import java.net.Socket;
@@ -31,14 +33,14 @@ import java.net.SocketException;
  * Authors: Vladislav Y. Kochedykov, software engineer.
  * email: vladislav.kochedykov@gmail.com
  */
-public class ModbusSlaveConnectionTCP extends ModbusConnection {
+class ModbusSlaveConnectionTCP extends ModbusConnection {
 
     private Socket socket;
     private ModbusTransport transport = null;
 
-    public ModbusSlaveConnectionTCP(Socket socket) throws ModbusIOException {
+    ModbusSlaveConnectionTCP(Socket socket) throws ModbusIOException {
         this.socket = socket;
-        transport = new ModbusTransportTCP(socket);
+        transport = ModbusTransportFactory.createTCP(socket);
     }
 
     @Override

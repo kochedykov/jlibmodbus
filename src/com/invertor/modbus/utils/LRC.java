@@ -1,7 +1,4 @@
-package com.invertor.modbus.net;
-
-import com.invertor.modbus.net.transport.ModbusTransportFactory;
-import com.invertor.modbus.serial.SerialPort;
+package com.invertor.modbus.utils;
 
 /**
  * Copyright (c) 2015-2016 JSC Invertor
@@ -17,7 +14,7 @@ import com.invertor.modbus.serial.SerialPort;
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Lesser General Public License for more details.
  * <p/>
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
@@ -25,9 +22,17 @@ import com.invertor.modbus.serial.SerialPort;
  * Authors: Vladislav Y. Kochedykov, software engineer.
  * email: vladislav.kochedykov@gmail.com
  */
-class ModbusConnectionASCII extends ModbusConnectionSerial {
 
-    ModbusConnectionASCII(SerialPort serial) {
-        super(serial, ModbusTransportFactory.createASCII(serial));
+/**
+ * following class implements longitudinal redundancy checkFrame.
+ */
+public class LRC {
+    static public int calc(byte [] b) {
+        int lrc = 0;
+        byte[] buffer = b;
+        for (int i = 0; i < b.length; i++) {
+            lrc += buffer[i];
+        }
+        return (byte) (-lrc) & 0xff;
     }
 }

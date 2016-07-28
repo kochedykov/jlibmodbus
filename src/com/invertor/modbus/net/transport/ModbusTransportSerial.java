@@ -1,13 +1,11 @@
-package com.invertor.modbus.net;
+package com.invertor.modbus.net.transport;
 
-import com.invertor.modbus.exception.ModbusChecksumException;
 import com.invertor.modbus.exception.ModbusIOException;
 import com.invertor.modbus.exception.ModbusNumberException;
 import com.invertor.modbus.msg.ModbusMessageFactory;
 import com.invertor.modbus.msg.base.ModbusMessage;
-import com.invertor.modbus.net.stream.InputStreamRTU;
-import com.invertor.modbus.net.stream.OutputStreamRTU;
-import com.invertor.modbus.serial.SerialPort;
+import com.invertor.modbus.net.stream.InputStreamSerial;
+import com.invertor.modbus.net.stream.OutputStreamSerial;
 
 import java.io.IOException;
 
@@ -33,28 +31,22 @@ import java.io.IOException;
  * Authors: Vladislav Y. Kochedykov, software engineer.
  * email: vladislav.kochedykov@gmail.com
  */
-public class ModbusTransportRTU extends ModbusTransport {
+class ModbusTransportSerial extends ModbusTransport {
 
-    public ModbusTransportRTU(SerialPort serial) {
-        super(new InputStreamRTU(serial), new OutputStreamRTU(serial));
+    ModbusTransportSerial(InputStreamSerial is, OutputStreamSerial os) {
+        super(is, os);
     }
 
     @Override
     protected ModbusMessage read(ModbusMessageFactory factory) throws ModbusIOException, ModbusNumberException {
         ModbusMessage msg;
-        InputStreamRTU is = (InputStreamRTU) getInputStream();
+        InputStreamSerial is = (InputStreamSerial) getInputStream();
         try {
+            is.frameInit();
             msg = factory.createMessage(is);
-            int r_crc = is.readShortLE();
-            // crc from the same crc equals zero
-            int c_crc = is.getCrc();
-            if (c_crc != 0 || r_crc == 0) {
-                throw new ModbusChecksumException(r_crc, c_crc);
-            }
+            is.frameCheck();
         } catch (IOException ioe) {
             throw new ModbusIOException(ioe);
-        } finally {
-            is.reset();
         }
         return msg;
     }

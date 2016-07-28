@@ -13,7 +13,7 @@ import com.invertor.modbus.msg.base.mei.MEIReadDeviceIdentification;
 import com.invertor.modbus.msg.base.mei.ReadDeviceIdentificationCode;
 import com.invertor.modbus.msg.response.*;
 import com.invertor.modbus.net.ModbusConnection;
-import com.invertor.modbus.net.ModbusTransport;
+import com.invertor.modbus.net.transport.ModbusTransport;
 import com.invertor.modbus.utils.ModbusExceptionCode;
 
 /**

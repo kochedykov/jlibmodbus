@@ -1,6 +1,7 @@
 package com.invertor.modbus.net.stream;
 
 import com.invertor.modbus.Modbus;
+import com.invertor.modbus.exception.ModbusChecksumException;
 import com.invertor.modbus.net.stream.base.ModbusInputStream;
 import com.invertor.modbus.serial.SerialPort;
 
@@ -32,9 +33,24 @@ abstract public class InputStreamSerial extends ModbusInputStream {
     final private SerialPort serial;
     private int timeout = Modbus.MAX_RESPONSE_TIMEOUT;
 
-    InputStreamSerial(SerialPort serial) {
+    public InputStreamSerial(SerialPort serial) {
         this.serial = serial;
     }
+
+    /**
+     * transport invokes it for validation of each frame
+     *
+     * @throws IOException             when there is any communication trouble
+     * @throws ModbusChecksumException when invalid frame has received
+     */
+    abstract public void frameCheck() throws IOException, ModbusChecksumException;
+
+    /**
+     * it should be invoked before reading of a frame.
+     *
+     * @throws IOException when there is any communication trouble
+     */
+    abstract public void frameInit() throws IOException;
 
     @Override
     public int read() throws IOException {
@@ -47,10 +63,11 @@ abstract public class InputStreamSerial extends ModbusInputStream {
     }
 
     @Override
-    abstract public void reset();
-
-    @Override
     public void setReadTimeout(int readTimeout) {
         timeout = readTimeout;
+    }
+
+    protected SerialPort getSerialPort() {
+        return serial;
     }
 }

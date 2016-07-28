@@ -1,7 +1,10 @@
-package com.invertor.modbus.net;
+package com.invertor.modbus.net.stream;
 
-import com.invertor.modbus.net.transport.ModbusTransportFactory;
+import com.invertor.modbus.net.stream.base.ModbusOutputStream;
 import com.invertor.modbus.serial.SerialPort;
+import com.invertor.modbus.utils.CRC16;
+
+import java.io.IOException;
 
 /**
  * Copyright (c) 2015-2016 JSC Invertor
@@ -25,9 +28,17 @@ import com.invertor.modbus.serial.SerialPort;
  * Authors: Vladislav Y. Kochedykov, software engineer.
  * email: vladislav.kochedykov@gmail.com
  */
-class ModbusConnectionASCII extends ModbusConnectionSerial {
+public class OutputStreamSerial extends ModbusOutputStream {
 
-    ModbusConnectionASCII(SerialPort serial) {
-        super(serial, ModbusTransportFactory.createASCII(serial));
+    final private SerialPort serial;
+
+    public OutputStreamSerial(SerialPort serial) {
+        this.serial = serial;
+    }
+
+    @Override
+    public void flush() throws IOException {
+        serial.write(toByteArray());
+        super.flush();
     }
 }

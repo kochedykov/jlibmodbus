@@ -9,7 +9,7 @@ import com.invertor.modbus.exception.ModbusNumberException;
 import com.invertor.modbus.exception.ModbusProtocolException;
 import com.invertor.modbus.msg.base.ModbusMessage;
 import com.invertor.modbus.net.ModbusConnection;
-import com.invertor.modbus.net.ModbusMasterConnectionTCP;
+import com.invertor.modbus.net.ModbusConnectionFactory;
 import com.invertor.modbus.tcp.TcpParameters;
 import com.invertor.modbus.utils.ModbusFunctionCode;
 
@@ -41,7 +41,7 @@ final public class ModbusMasterTCP extends ModbusMaster {
     final private ModbusConnection conn;
 
     public ModbusMasterTCP(TcpParameters parameters) {
-        conn = new ModbusMasterConnectionTCP(parameters);
+        conn = ModbusConnectionFactory.getTcpMaster(parameters);
         keepAlive = parameters.isKeepAlive();
         try {
             if (keepAlive) {

@@ -1,17 +1,15 @@
-package com.invertor.modbus.net;
+package com.invertor.modbus.net.transport;
 
 import com.invertor.modbus.exception.ModbusIOException;
 import com.invertor.modbus.exception.ModbusNumberException;
 import com.invertor.modbus.msg.ModbusMessageFactory;
+import com.invertor.modbus.msg.ModbusRequestFactory;
+import com.invertor.modbus.msg.ModbusResponseFactory;
 import com.invertor.modbus.msg.base.ModbusMessage;
-import com.invertor.modbus.net.stream.InputStreamTCP;
-import com.invertor.modbus.net.stream.OutputStreamTCP;
 import com.invertor.modbus.net.stream.base.ModbusInputStream;
 import com.invertor.modbus.net.stream.base.ModbusOutputStream;
-import com.invertor.modbus.tcp.TcpAduHeader;
 
 import java.io.IOException;
-import java.net.Socket;
 
 /**
  * Copyright (c) 2015-2016 JSC Invertor
@@ -35,39 +33,48 @@ import java.net.Socket;
  * Authors: Vladislav Y. Kochedykov, software engineer.
  * email: vladislav.kochedykov@gmail.com
  */
-public class ModbusTransportTCP extends ModbusTransport {
-    final private Socket socket;
+public abstract class ModbusTransport {
 
-    public ModbusTransportTCP(Socket socket) throws ModbusIOException {
-        super(new InputStreamTCP(socket), new OutputStreamTCP(socket));
-        this.socket = socket;
+    final private ModbusInputStream is;
+    final private ModbusOutputStream os;
+
+    ModbusTransport(ModbusInputStream is, ModbusOutputStream os) {
+        this.is = is;
+        this.os = os;
     }
 
-    @Override
-    protected ModbusMessage read(ModbusMessageFactory factory) throws ModbusNumberException, ModbusIOException {
-        ModbusInputStream is = getInputStream();
-        TcpAduHeader header = new TcpAduHeader();
-        header.read(is);
-        ModbusMessage msg = factory.createMessage(is);
-        msg.setTransactionId(header.getTransactionId());
-        msg.setProtocolId(header.getProtocolId());
-        return msg;
-    }
-
-    @Override
-    public void sendImpl(ModbusMessage msg) throws ModbusIOException {
-        ModbusOutputStream os = getOutputStream();
-        TcpAduHeader header = new TcpAduHeader();
-        header.setProtocolId(msg.getProtocolId());
-        header.setTransactionId(msg.getTransactionId());
-        header.setPduSize(msg.size());
-        header.write(os);
-        msg.write(os);
-    }
-
-    @Override
     public void close() throws IOException {
-        super.close();
-        socket.close();
+        is.close();
+        os.close();
     }
+
+    public ModbusMessage readRequest() throws ModbusNumberException, ModbusIOException {
+        return read(ModbusRequestFactory.getInstance());
+    }
+
+    public ModbusMessage readResponse() throws ModbusNumberException, ModbusIOException {
+        return read(ModbusResponseFactory.getInstance());
+    }
+
+    public void send(ModbusMessage msg) throws ModbusIOException {
+        ModbusOutputStream os = getOutputStream();
+        sendImpl(msg);
+        try {
+            getOutputStream().flush();
+        } catch (IOException e) {
+            throw new ModbusIOException(e);
+        }
+    }
+
+    public ModbusInputStream getInputStream() {
+        return is;
+    }
+
+    public ModbusOutputStream getOutputStream() {
+        return os;
+    }
+
+    abstract protected ModbusMessage read(ModbusMessageFactory factory) throws ModbusNumberException, ModbusIOException;
+
+    abstract protected void sendImpl(ModbusMessage msg) throws ModbusIOException;
 }

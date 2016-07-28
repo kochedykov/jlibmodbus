@@ -1,6 +1,6 @@
 package com.invertor.modbus.slave;
 
-import com.invertor.modbus.net.ModbusConnectionRTU;
+import com.invertor.modbus.net.ModbusConnectionFactory;
 import com.invertor.modbus.serial.SerialParameters;
 import com.invertor.modbus.serial.SerialPort;
 import com.invertor.modbus.serial.SerialUtils;
@@ -30,7 +30,7 @@ import com.invertor.modbus.serial.SerialUtils;
 public class ModbusSlaveRTU extends ModbusSlaveSerial {
 
     public ModbusSlaveRTU(SerialParameters sp) {
-        super(new ModbusConnectionRTU(SerialUtils.createSerial(sp)));
+        super(ModbusConnectionFactory.getRTU(SerialUtils.createSerial(sp)));
         final int baud_len = 1 + sp.getDataBits() + sp.getStopBits() + (sp.getParity() != SerialPort.Parity.NONE ? 1 : 0);
         final double frame_break_len = 3.5;
         int timeout = (int) Math.ceil(((double) 1000 * frame_break_len * baud_len) / sp.getBaudRate());

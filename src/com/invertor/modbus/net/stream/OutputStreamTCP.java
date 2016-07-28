@@ -43,26 +43,19 @@ public class OutputStreamTCP extends ModbusOutputStream {
 
     @Override
     public void write(byte[] b) throws IOException {
-        os.write(b);
+        super.write(b);
     }
 
     @Override
     public void write(int b) throws IOException {
-        os.write(b);
+        super.write(b);
     }
 
     @Override
     public void flush() throws IOException {
+        os.write(toByteArray());
         os.flush();
-    }
-
-    @Override
-    public void reset() {
-        try {
-            os.flush();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        super.flush();
     }
 
     @Override

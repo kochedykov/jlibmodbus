@@ -8,7 +8,6 @@ import com.invertor.modbus.data.events.ModbusEventSend;
 import com.invertor.modbus.data.mei.ReadDeviceIdentificationInterface;
 import com.invertor.modbus.exception.IllegalDataAddressException;
 import com.invertor.modbus.exception.IllegalDataValueException;
-import com.invertor.modbus.exception.ModbusIOException;
 import com.invertor.modbus.msg.base.mei.MEIReadDeviceIdentification;
 import com.invertor.modbus.msg.base.mei.ReadDeviceIdentificationCode;
 import com.invertor.modbus.serial.SerialPort;
@@ -51,7 +50,7 @@ import static com.invertor.modbus.data.mei.ReadDeviceIdentificationInterface.Dat
  */
 public class ModbusTest implements Runnable {
 
-    public static final String DEFAULT_HOST = "localhost";
+    private static final String DEFAULT_HOST = "localhost";
     private ModbusMaster master;
     private ModbusSlave slave;
     private long timeout = 0;
@@ -160,8 +159,8 @@ public class ModbusTest implements Runnable {
                 test.slave = ModbusSlaveFactory.createModbusSlaveRTU(device_name_slave, baud_rate, data_bits, stop_bits, parity);
                 break;
             case ASCII:
-                device_name_slave = SerialUtils.getPortList()[1];
-                device_name_master = SerialUtils.getPortList()[2];
+                device_name_slave = SerialUtils.getPortList()[0];
+                device_name_master = SerialUtils.getPortList()[1];
                 baud_rate = SerialPort.BaudRate.BAUD_RATE_115200;
                 parity = SerialPort.Parity.ODD;
                 try {
@@ -284,15 +283,19 @@ public class ModbusTest implements Runnable {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        master.setResponseTimeout(500);
-        while ((System.currentTimeMillis() - time) < timeout) {
+        master.setResponseTimeout(1000);
+        while (/*(System.currentTimeMillis() - time) < timeout*/true) {
             try {
-                Thread.sleep(1);
+                //Thread.sleep(100);
                 System.out.println("Slave output");
                 printRegisters("Holding registers", slave.getDataHolder().getHoldingRegisters().getRange(0, 16));
+                //Thread.sleep(1);
                 printRegisters("Input registers", slave.getDataHolder().getInputRegisters().getRange(0, 16));
+                //Thread.sleep(1);
                 printBits("Coils", slave.getDataHolder().getCoils().getRange(0, 16));
+                //Thread.sleep(1);
                 printBits("Discrete inputs", slave.getDataHolder().getDiscreteInputs().getRange(0, 16));
+                //Thread.sleep(1);
                 System.out.println();
                 System.out.println("Master output");
                 printRegisters("Holding registers", master.readHoldingRegisters(1, 0, 16));
@@ -322,12 +325,12 @@ public class ModbusTest implements Runnable {
             }
         }
 
-        try {
+        /*try {
             slave.close();
             master.close();
         } catch (ModbusIOException e) {
             e.printStackTrace();
-        }
+        }*/
     }
 
     private enum TransportType {

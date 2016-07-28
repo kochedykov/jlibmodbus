@@ -3,6 +3,7 @@ package com.invertor.modbus.net;
 import com.invertor.modbus.exception.ModbusIOException;
 import com.invertor.modbus.net.stream.base.ModbusInputStream;
 import com.invertor.modbus.net.stream.base.ModbusOutputStream;
+import com.invertor.modbus.net.transport.ModbusTransport;
 
 /**
  * Copyright (c) 2015-2016 JSC Invertor

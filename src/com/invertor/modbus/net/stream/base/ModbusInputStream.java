@@ -40,9 +40,6 @@ abstract public class ModbusInputStream extends InputStream {
         return read(b, 0, b.length);
     }
 
-    @Override
-    abstract public void reset();
-
     abstract public void setReadTimeout(int readTimeout);
 
     public int readShortBE() throws IOException {

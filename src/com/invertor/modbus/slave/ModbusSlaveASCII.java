@@ -1,6 +1,6 @@
 package com.invertor.modbus.slave;
 
-import com.invertor.modbus.net.ModbusConnectionASCII;
+import com.invertor.modbus.net.ModbusConnectionFactory;
 import com.invertor.modbus.serial.SerialParameters;
 import com.invertor.modbus.serial.SerialPort;
 import com.invertor.modbus.serial.SerialUtils;
@@ -30,7 +30,7 @@ import com.invertor.modbus.serial.SerialUtils;
 public class ModbusSlaveASCII extends ModbusSlaveSerial {
 
     public ModbusSlaveASCII(SerialParameters parameters) {
-        super(new ModbusConnectionASCII(SerialUtils.createSerial(parameters)));
+        super(ModbusConnectionFactory.getASCII(SerialUtils.createSerial(parameters)));
     }
 
     public ModbusSlaveASCII(String device, SerialPort.BaudRate baudRate, SerialPort.Parity parity) {

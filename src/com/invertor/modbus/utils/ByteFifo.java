@@ -35,10 +35,10 @@ final public class ByteFifo {
         baos = new ByteArrayOutputStream(size);
         bais = new ByteArrayInputStream(baos.getByteBuffer());
         capacity = size;
-        clear();
+        reset();
     }
 
-    public void clear() {
+    public void reset() {
         baos.reset();
         bais.reset();
     }
@@ -87,11 +87,11 @@ final public class ByteFifo {
 
     private class ByteArrayOutputStream extends java.io.ByteArrayOutputStream {
 
-        public ByteArrayOutputStream(int size) {
+        ByteArrayOutputStream(int size) {
             super(size);
         }
 
-        public byte[] getByteBuffer() {
+        byte[] getByteBuffer() {
             return buf;
         }
     }

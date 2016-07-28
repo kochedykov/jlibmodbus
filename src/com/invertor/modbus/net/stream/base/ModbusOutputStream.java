@@ -1,5 +1,7 @@
 package com.invertor.modbus.net.stream.base;
 
+import com.invertor.modbus.Modbus;
+import com.invertor.modbus.utils.ByteFifo;
 import com.invertor.modbus.utils.DataUtils;
 
 import java.io.IOException;
@@ -29,16 +31,29 @@ import java.io.OutputStream;
  */
 abstract public class ModbusOutputStream extends OutputStream {
 
-    @Override
-    abstract public void write(byte[] b) throws IOException;
+    private final ByteFifo fifo = new ByteFifo(Modbus.MAX_RTU_ADU_LENGTH);
 
     @Override
-    abstract public void write(int b) throws IOException;
+    public void write(byte[] b) throws IOException {
+        fifo.write(b);
+    }
 
     @Override
-    abstract public void flush() throws IOException;
+    public void write(int b) throws IOException {
+        fifo.write(b);
+    }
 
-    abstract public void reset();
+    /**
+     * it should have invoked last
+     */
+    @Override
+    public void flush() throws IOException {
+        fifo.reset();
+    }
+
+    public void reset() {
+
+    }
 
     public void writeShortBE(int s) throws IOException {
         write(DataUtils.byteHigh(s));
@@ -48,5 +63,9 @@ abstract public class ModbusOutputStream extends OutputStream {
     public void writeShortLE(int s) throws IOException {
         write(DataUtils.byteLow(s));
         write(DataUtils.byteHigh(s));
+    }
+
+    public byte[] toByteArray() {
+        return fifo.toByteArray();
     }
 }

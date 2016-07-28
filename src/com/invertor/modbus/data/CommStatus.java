@@ -2,7 +2,6 @@ package com.invertor.modbus.data;
 
 import com.invertor.modbus.Modbus;
 import com.invertor.modbus.data.events.ModbusEvent;
-import com.invertor.modbus.net.ModbusTransportASCII;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -241,7 +240,7 @@ public class CommStatus {
     }
 
     public void setAsciiInputDelimiter(int asciiInputDelimiter) {
-        ModbusTransportASCII.setAsciiInputDelimiter(asciiInputDelimiter);
+        Modbus.setAsciiInputDelimiter(asciiInputDelimiter);
     }
 
     public boolean isListenOnlyMode() {

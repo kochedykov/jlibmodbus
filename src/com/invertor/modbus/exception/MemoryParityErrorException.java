@@ -31,7 +31,7 @@ import com.invertor.modbus.utils.ModbusExceptionCode;
  * "Specialized use in conjunction with function codes
  * 20 and 21 and reference type 6, to indicate that
  * the extended file area failed to pass a consistency
- * check.
+ * checkFrame.
  * The server (or slave) attempted to read record
  * file, but detected a parity error in the memory.
  * The client (or master) can retry the request, but

@@ -4,6 +4,8 @@ import com.invertor.modbus.Modbus;
 import com.invertor.modbus.exception.ModbusIOException;
 import com.invertor.modbus.net.stream.base.ModbusInputStream;
 import com.invertor.modbus.net.stream.base.ModbusOutputStream;
+import com.invertor.modbus.net.transport.ModbusTransport;
+import com.invertor.modbus.net.transport.ModbusTransportFactory;
 import com.invertor.modbus.tcp.TcpParameters;
 
 import java.io.IOException;
@@ -32,13 +34,13 @@ import java.net.Socket;
  * Authors: Vladislav Y. Kochedykov, software engineer.
  * email: vladislav.kochedykov@gmail.com
  */
-public class ModbusMasterConnectionTCP extends ModbusConnection {
+class ModbusMasterConnectionTCP extends ModbusConnection {
 
     final private TcpParameters parameters;
     private ModbusTransport transport = null;
     private int readTimeout = Modbus.MAX_RESPONSE_TIMEOUT;
 
-    public ModbusMasterConnectionTCP(TcpParameters parameters) {
+    ModbusMasterConnectionTCP(TcpParameters parameters) {
         this.parameters = parameters;
     }
 
@@ -74,7 +76,7 @@ public class ModbusMasterConnectionTCP extends ModbusConnection {
             } catch (Exception e) {
                 throw new ModbusIOException(e);
             }
-            transport = new ModbusTransportTCP(socket);
+            transport = ModbusTransportFactory.createTCP(socket);
             setReadTimeout(readTimeout);
         }
     }

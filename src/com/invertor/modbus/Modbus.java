@@ -52,11 +52,24 @@ final public class Modbus {
     final static public int COIL_VALUE_OFF = 0x0000;
     final static private Logger log = Logger.getLogger(Modbus.class.getName());
 
+    /**
+     * the end of message delimiter, (LF character by default)
+     */
+    static private int asciiMsgDelimiter = Modbus.ASCII_CODE_LF;
+
     static {
         setLogLevel(LogLevel.LEVEL_RELEASE);
     }
 
     private Modbus() {
+    }
+
+    static public void setAsciiInputDelimiter(int asciiMsgDelimiter) {
+        Modbus.asciiMsgDelimiter = asciiMsgDelimiter;
+    }
+
+    static public int getAsciiMsgDelimiter() {
+        return asciiMsgDelimiter;
     }
 
     /**
@@ -122,7 +135,7 @@ final public class Modbus {
     /**
      * validates is the value in the range from min to max.
      *
-     * @param value - the value for check
+     * @param value - the value for checkFrame
      * @param min   - minimum
      * @param max   - maximum
      * @return "true" if value in the range from min to max, else "false".
@@ -134,7 +147,7 @@ final public class Modbus {
     /**
      * validates the value in the range from 1 to max.
      *
-     * @param value - the value for check
+     * @param value - the value for checkFrame
      * @param max   - maximum
      * @return "true" if value in the range from 1 to max, else "false".
      */
@@ -145,7 +158,7 @@ final public class Modbus {
     /**
      * validates data offset in the range from Modbus.MIN_START_ADDRESS to max.
      *
-     * @param value - the offset for check
+     * @param value - the offset for checkFrame
      * @param max   - maximum
      * @return "true" if offset in the range from Modbus.MIN_START_ADDRESS to max, else "false".
      */

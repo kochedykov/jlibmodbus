@@ -12,7 +12,7 @@ import com.invertor.modbus.msg.base.ModbusResponse;
 import com.invertor.modbus.msg.request.GetCommEventCounterRequest;
 import com.invertor.modbus.msg.request.GetCommEventLogRequest;
 import com.invertor.modbus.net.ModbusConnection;
-import com.invertor.modbus.net.ModbusTransport;
+import com.invertor.modbus.net.transport.ModbusTransport;
 
 /**
  * Copyright (c) 2015-2016 JSC Invertor
@@ -36,9 +36,9 @@ import com.invertor.modbus.net.ModbusTransport;
  * Authors: Vladislav Y. Kochedykov, software engineer.
  * email: vladislav.kochedykov@gmail.com
  */
-public class RequestHandlerSerial extends RequestHandler {
+class RequestHandlerSerial extends RequestHandler {
 
-    public RequestHandlerSerial(ModbusSlave slave, ModbusConnection conn) {
+    RequestHandlerSerial(ModbusSlave slave, ModbusConnection conn) {
         super(slave, conn);
     }
 
@@ -77,7 +77,7 @@ public class RequestHandlerSerial extends RequestHandler {
                             getSlave().open();
                         }
                     } catch (Exception e) {
-                        /**
+                        /*
                          * quantity of messages addressed to the remote device for
                          * which it has returned no response (neither a normal response nor an exception response)
                          */

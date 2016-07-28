@@ -3,8 +3,11 @@ package com.invertor.modbus.net;
 import com.invertor.modbus.exception.ModbusIOException;
 import com.invertor.modbus.net.stream.base.ModbusInputStream;
 import com.invertor.modbus.net.stream.base.ModbusOutputStream;
+import com.invertor.modbus.net.transport.ModbusTransport;
 import com.invertor.modbus.serial.SerialPort;
 import com.invertor.modbus.serial.SerialPortException;
+
+import java.io.IOException;
 
 /**
  * Copyright (c) 2015-2016 JSC Invertor
@@ -28,12 +31,12 @@ import com.invertor.modbus.serial.SerialPortException;
  * Authors: Vladislav Y. Kochedykov, software engineer.
  * email: vladislav.kochedykov@gmail.com
  */
-abstract public class ModbusConnectionSerial extends ModbusConnection {
+abstract class ModbusConnectionSerial extends ModbusConnection {
 
     final private SerialPort serial;
     final private ModbusTransport transport;
 
-    public ModbusConnectionSerial(SerialPort serial, ModbusTransport transport) {
+    ModbusConnectionSerial(SerialPort serial, ModbusTransport transport) {
         this.serial = serial;
         this.transport = transport;
     }
@@ -55,10 +58,13 @@ abstract public class ModbusConnectionSerial extends ModbusConnection {
     }
 
     @Override
-    public void reset() {
+    public void reset() throws ModbusIOException {
         serial.clear();
-        getInputStream().reset();
-        getOutputStream().reset();
+        try {
+            getOutputStream().flush();
+        } catch (IOException e) {
+            throw new ModbusIOException(e);
+        }
     }
 
     @Override

@@ -1,9 +1,6 @@
 package com.invertor.modbus.net.stream;
 
-import com.invertor.modbus.Modbus;
-import com.invertor.modbus.net.stream.base.ModbusOutputStream;
 import com.invertor.modbus.serial.SerialPort;
-import com.invertor.modbus.utils.ByteFifo;
 import com.invertor.modbus.utils.CRC16;
 
 import java.io.IOException;
@@ -30,39 +27,15 @@ import java.io.IOException;
  * Authors: Vladislav Y. Kochedykov, software engineer.
  * email: vladislav.kochedykov@gmail.com
  */
-public class OutputStreamRTU extends ModbusOutputStream {
-
-    final private SerialPort serial;
-    private final ByteFifo fifo = new ByteFifo(Modbus.MAX_RTU_ADU_LENGTH);
-    private int crc;
+public class OutputStreamRTU extends OutputStreamSerial {
 
     public OutputStreamRTU(SerialPort serial) {
-        this.serial = serial;
-        reset();
-    }
-
-    @Override
-    public void write(byte[] b) throws IOException {
-        fifo.write(b);
-        crc = CRC16.calc(crc, b);
-    }
-
-    @Override
-    public void write(int b) throws IOException {
-        fifo.write(b);
-        crc = CRC16.calc(crc, (byte) (b & 0xff));
+        super(serial);
     }
 
     @Override
     public void flush() throws IOException {
-        writeShortLE(crc);
-        serial.write(fifo.toByteArray());
-        reset();
-    }
-
-    @Override
-    public void reset() {
-        fifo.clear();
-        crc = CRC16.INITIAL_VALUE;
+        writeShortLE(CRC16.calc(toByteArray()));
+        super.flush();
     }
 }

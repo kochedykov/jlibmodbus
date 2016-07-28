@@ -1,9 +1,7 @@
 package com.invertor.modbus.net.stream;
 
 import com.invertor.modbus.Modbus;
-import com.invertor.modbus.net.stream.base.ModbusOutputStream;
 import com.invertor.modbus.serial.SerialPort;
-import com.invertor.modbus.utils.ByteFifo;
 import com.invertor.modbus.utils.DataUtils;
 
 import java.io.IOException;
@@ -30,13 +28,12 @@ import java.io.IOException;
  * Authors: Vladislav Y. Kochedykov, software engineer.
  * email: vladislav.kochedykov@gmail.com
  */
-public class OutputStreamASCII extends ModbusOutputStream {
-    final private SerialPort serial;
-    final private ByteFifo fifo = new ByteFifo(Modbus.MAX_RTU_ADU_LENGTH);
+public class OutputStreamASCII extends OutputStreamSerial {
+
     private int lrc = 0;
 
     public OutputStreamASCII(SerialPort serial) {
-        this.serial = serial;
+        super(serial);
         reset();
     }
 
@@ -46,29 +43,41 @@ public class OutputStreamASCII extends ModbusOutputStream {
             lrc += b;
         }
         byte[] ascii = DataUtils.toAscii(bytes);
-        fifo.write(ascii);
+        super.write(ascii);
     }
 
     @Override
     public void write(int b) throws IOException {
         lrc += (byte) b;
         byte[] bytes = DataUtils.toAscii((byte) b);
-        fifo.write(bytes);
+        super.write(bytes);
+    }
+
+    private void writeChecksum() throws IOException {
+        byte[] bytes = DataUtils.toAscii((byte) -lrc);
+        super.write(bytes);
+    }
+
+    public void writeRaw(int b) throws IOException {
+        super.write(b);
     }
 
     @Override
     public void flush() throws IOException {
-        fifo.write(DataUtils.toAscii((byte) (lrc = -lrc)));
-        fifo.write(Modbus.ASCII_CODE_CR);
-        fifo.write(Modbus.ASCII_CODE_LF);
-        serial.write(fifo.toByteArray());
+        writeChecksum();
+        writeRaw(Modbus.ASCII_CODE_CR);
+        writeRaw(Modbus.ASCII_CODE_LF);
+        super.flush();
         reset();
     }
 
     @Override
     public void reset() {
-        fifo.clear();
-        fifo.write(Modbus.ASCII_CODE_COLON);
-        lrc = 0;
+        try {
+            lrc = 0;
+            writeRaw(Modbus.ASCII_CODE_COLON);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

@@ -1,10 +1,10 @@
-package com.invertor.modbus.master;
+package com.invertor.modbus.net;
 
-import com.invertor.modbus.net.ModbusConnection;
-import com.invertor.modbus.net.ModbusConnectionFactory;
-import com.invertor.modbus.serial.SerialParameters;
+import com.invertor.modbus.exception.ModbusIOException;
 import com.invertor.modbus.serial.SerialPort;
-import com.invertor.modbus.serial.SerialUtils;
+import com.invertor.modbus.tcp.TcpParameters;
+
+import java.net.Socket;
 
 /**
  * Copyright (c) 2015-2016 JSC Invertor
@@ -29,24 +29,20 @@ import com.invertor.modbus.serial.SerialUtils;
  * email: vladislav.kochedykov@gmail.com
  */
 
-final public class ModbusMasterASCII extends ModbusMasterSerial {
-
-    final private ModbusConnection conn;
-
-    public ModbusMasterASCII(SerialParameters parameters) {
-        conn = ModbusConnectionFactory.getASCII(SerialUtils.createSerial(parameters));
+public class ModbusConnectionFactory {
+    static public ModbusConnection getASCII(SerialPort serial) {
+        return new ModbusConnectionASCII(serial);
     }
 
-    public ModbusMasterASCII(String device, SerialPort.BaudRate baudRate, SerialPort.Parity parity) {
-        this(new SerialParameters(device, baudRate, 7, parity == SerialPort.Parity.NONE ? 2 : 1, parity));
+    static public ModbusConnection getRTU(SerialPort serial) {
+        return new ModbusConnectionRTU(serial);
     }
 
-    public ModbusMasterASCII(String device, SerialPort.BaudRate baudRate) {
-        this(device, baudRate, SerialPort.Parity.EVEN);
+    static public ModbusConnection getTcpMaster(TcpParameters tcpParameters) {
+        return new ModbusMasterConnectionTCP(tcpParameters);
     }
 
-    @Override
-    protected ModbusConnection getConnection() {
-        return conn;
+    static public ModbusConnection getTcpSlave(Socket socket) throws ModbusIOException {
+        return new ModbusSlaveConnectionTCP(socket);
     }
 }

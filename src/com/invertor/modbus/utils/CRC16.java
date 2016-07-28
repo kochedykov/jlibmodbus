@@ -61,6 +61,10 @@ public class CRC16 {
             0x8201, 0x42C0, 0x4380, 0x8341, 0x4100, 0x81C1, 0x8081, 0x4040,
     };
 
+    static public int calc(byte[] bytes) {
+        return calc(INITIAL_VALUE, bytes, bytes.length);
+    }
+
     static public int calc(int crc, byte[] bytes) {
         return calc(crc, bytes, bytes.length);
     }

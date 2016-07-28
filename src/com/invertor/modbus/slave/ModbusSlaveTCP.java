@@ -4,7 +4,7 @@ import com.invertor.modbus.Modbus;
 import com.invertor.modbus.ModbusSlave;
 import com.invertor.modbus.exception.ModbusIOException;
 import com.invertor.modbus.net.ModbusConnection;
-import com.invertor.modbus.net.ModbusSlaveConnectionTCP;
+import com.invertor.modbus.net.ModbusConnectionFactory;
 import com.invertor.modbus.tcp.TcpParameters;
 
 import java.io.IOException;
@@ -39,7 +39,7 @@ import java.util.concurrent.TimeUnit;
  */
 public class ModbusSlaveTCP extends ModbusSlave implements Runnable {
 
-    final static public int DEFAULT_POOLS_SIZE = 10;
+    final private static int DEFAULT_POOLS_SIZE = 10;
     final private ExecutorService threadPool;
     final private TcpParameters tcp;
     private Thread mainThread = null;
@@ -100,14 +100,19 @@ public class ModbusSlaveTCP extends ModbusSlave implements Runnable {
 
     @Override
     public void run() {
-        Socket client;
+        Socket s;
         ModbusConnection conn;
         try {
             while (listening) {
-                client = server.accept();
-                conn = new ModbusSlaveConnectionTCP(client);
-                conn.setReadTimeout(10000);
-                threadPool.execute(new RequestHandlerTCP(this, conn));
+                s = server.accept();
+                try {
+                    conn = ModbusConnectionFactory.getTcpSlave(s);
+                    conn.setReadTimeout(10000);
+                    threadPool.execute(new RequestHandlerTCP(this, conn));
+                } catch (ModbusIOException ioe) {
+                    Modbus.log().warning(ioe.getLocalizedMessage());
+                    s.close();
+                }
             }
         } catch (SocketException se) {
             if (server != null) {

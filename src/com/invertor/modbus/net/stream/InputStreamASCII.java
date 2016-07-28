@@ -1,8 +1,8 @@
 package com.invertor.modbus.net.stream;
 
 import com.invertor.modbus.Modbus;
+import com.invertor.modbus.exception.ModbusChecksumException;
 import com.invertor.modbus.serial.SerialPort;
-import com.invertor.modbus.utils.ByteFifo;
 import com.invertor.modbus.utils.DataUtils;
 
 import java.io.IOException;
@@ -30,10 +30,46 @@ import java.io.IOException;
  * email: vladislav.kochedykov@gmail.com
  */
 public class InputStreamASCII extends InputStreamSerial {
-    final private ByteFifo fifo = new ByteFifo(Modbus.MAX_RTU_ADU_LENGTH);
+
+    private int lrc = 0;
 
     public InputStreamASCII(SerialPort serial) {
         super(serial);
+    }
+
+    private void lrcAdd(byte b) {
+        lrc += b;
+    }
+
+    private int lrcGet() {
+        return (byte) -lrc;
+    }
+
+    @Override
+    public void frameCheck() throws IOException, ModbusChecksumException {
+        int cr;
+        int lf;
+        int r_lrc;
+        int c_lrc = (byte) lrcGet();
+        r_lrc = (byte) read();
+        cr = readRaw();
+        lf = readRaw();
+        // following checks delimiter has read (LF character by default)
+        if (cr != Modbus.ASCII_CODE_CR || lf != Modbus.getAsciiMsgDelimiter())
+            Modbus.log().warning("\\r\\n not received.");
+        if (c_lrc != r_lrc) {
+            throw new ModbusChecksumException(r_lrc, c_lrc);
+        }
+    }
+
+    @Override
+    public void frameInit() throws IOException {
+        lrc = 0;
+        char c = (char) readRaw();
+        if (c != Modbus.ASCII_CODE_COLON) {
+            getSerialPort().purgeRx();
+            throw new IOException("no bytes read");
+        }
     }
 
     public int readRaw() throws IOException {
@@ -44,12 +80,8 @@ public class InputStreamASCII extends InputStreamSerial {
     public int read() throws IOException {
         int b;
         char c = (char) readRaw();
-        if (c == Modbus.ASCII_CODE_COLON) {
-            fifo.clear();
-            c = (char) readRaw();
-        }
         b = DataUtils.fromAscii(c, (char) readRaw());
-        fifo.write(b);
+        lrcAdd((byte) b);
         return b;
     }
 
@@ -59,19 +91,5 @@ public class InputStreamASCII extends InputStreamSerial {
             b[i] = (byte) read();
         }
         return len;
-    }
-
-    public int getLrc() {
-        int lrc = 0;
-        byte[] buffer = fifo.getByteBuffer();
-        for (int i = 0; i < fifo.size(); i++) {
-            lrc += buffer[i];
-        }
-        return (byte) (-lrc) & 0xff;
-    }
-
-    @Override
-    public void reset() {
-        fifo.clear();
     }
 }

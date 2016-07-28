@@ -1,7 +1,7 @@
 package com.invertor.modbus.master;
 
 import com.invertor.modbus.net.ModbusConnection;
-import com.invertor.modbus.net.ModbusConnectionRTU;
+import com.invertor.modbus.net.ModbusConnectionFactory;
 import com.invertor.modbus.serial.SerialParameters;
 import com.invertor.modbus.serial.SerialPort;
 import com.invertor.modbus.serial.SerialUtils;
@@ -34,7 +34,7 @@ final public class ModbusMasterRTU extends ModbusMasterSerial {
     final private ModbusConnection conn;
 
     public ModbusMasterRTU(SerialParameters parameters) {
-        conn = new ModbusConnectionRTU(SerialUtils.createSerial(parameters));
+        conn = ModbusConnectionFactory.getRTU(SerialUtils.createSerial(parameters));
     }
 
     public ModbusMasterRTU(String device, SerialPort.BaudRate baudRate, int dataBits, int stopBits, SerialPort.Parity parity) {

@@ -1,5 +1,6 @@
 package com.invertor.modbus.net.stream;
 
+import com.invertor.modbus.exception.ModbusChecksumException;
 import com.invertor.modbus.serial.SerialPort;
 import com.invertor.modbus.utils.CRC16;
 
@@ -29,15 +30,24 @@ import java.io.IOException;
  */
 public class InputStreamRTU extends InputStreamSerial {
 
-    private int crc;
+    private int crc = CRC16.INITIAL_VALUE;
 
     public InputStreamRTU(SerialPort serial) {
         super(serial);
-        crc = CRC16.INITIAL_VALUE;
     }
 
     @Override
-    public void reset() {
+    public void frameCheck() throws IOException, ModbusChecksumException {
+        int r_crc = readShortLE();
+        // crc from the same crc equals zero
+        int c_crc = getCrc();
+        if (c_crc != 0 || r_crc == 0) {
+            throw new ModbusChecksumException(r_crc, c_crc);
+        }
+    }
+
+    @Override
+    public void frameInit() {
         crc = CRC16.INITIAL_VALUE;
     }
 
@@ -55,7 +65,7 @@ public class InputStreamRTU extends InputStreamSerial {
         return c;
     }
 
-    public int getCrc() {
+    private int getCrc() {
         return crc;
     }
 }

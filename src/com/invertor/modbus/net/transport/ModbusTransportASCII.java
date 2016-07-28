@@ -1,6 +1,7 @@
-package com.invertor.modbus.net;
+package com.invertor.modbus.net.transport;
 
-import com.invertor.modbus.net.transport.ModbusTransportFactory;
+import com.invertor.modbus.net.stream.InputStreamASCII;
+import com.invertor.modbus.net.stream.OutputStreamASCII;
 import com.invertor.modbus.serial.SerialPort;
 
 /**
@@ -25,9 +26,10 @@ import com.invertor.modbus.serial.SerialPort;
  * Authors: Vladislav Y. Kochedykov, software engineer.
  * email: vladislav.kochedykov@gmail.com
  */
-class ModbusConnectionASCII extends ModbusConnectionSerial {
+class ModbusTransportASCII extends ModbusTransportSerial {
 
-    ModbusConnectionASCII(SerialPort serial) {
-        super(serial, ModbusTransportFactory.createASCII(serial));
+    ModbusTransportASCII(SerialPort serial) {
+        super(new InputStreamASCII(serial), new OutputStreamASCII(serial));
     }
+
 }

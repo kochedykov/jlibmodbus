@@ -6,7 +6,7 @@ import com.invertor.modbus.data.DataHolder;
 import com.invertor.modbus.exception.ModbusIOException;
 import com.invertor.modbus.msg.base.ModbusRequest;
 import com.invertor.modbus.net.ModbusConnection;
-import com.invertor.modbus.net.ModbusTransport;
+import com.invertor.modbus.net.transport.ModbusTransport;
 
 /**
  * Copyright (c) 2015-2016 JSC Invertor
@@ -30,9 +30,9 @@ import com.invertor.modbus.net.ModbusTransport;
  * Authors: Vladislav Y. Kochedykov, software engineer.
  * email: vladislav.kochedykov@gmail.com
  */
-public class RequestHandlerTCP extends RequestHandler {
+class RequestHandlerTCP extends RequestHandler {
 
-    public RequestHandlerTCP(ModbusSlave slave, ModbusConnection conn) {
+    RequestHandlerTCP(ModbusSlave slave, ModbusConnection conn) {
         super(slave, conn);
     }
 
