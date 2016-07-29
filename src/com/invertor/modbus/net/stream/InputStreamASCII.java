@@ -50,14 +50,14 @@ public class InputStreamASCII extends InputStreamSerial {
         int cr;
         int lf;
         int r_lrc;
-        int c_lrc = (byte) lrcGet();
         r_lrc = (byte) read();
+        int c_lrc = (byte) lrcGet();
         cr = readRaw();
         lf = readRaw();
         // following checks delimiter has read (LF character by default)
         if (cr != Modbus.ASCII_CODE_CR || lf != Modbus.getAsciiMsgDelimiter())
             Modbus.log().warning("\\r\\n not received.");
-        if (c_lrc != r_lrc) {
+        if (c_lrc != 0 || r_lrc == 0) {
             throw new ModbusChecksumException(r_lrc, c_lrc);
         }
     }
