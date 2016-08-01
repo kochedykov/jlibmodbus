@@ -50,7 +50,9 @@ final public class Modbus {
     final static public int ASCII_CODE_COLON = 0x3a;
     final static public int COIL_VALUE_ON = 0xff00;
     final static public int COIL_VALUE_OFF = 0x0000;
+
     final static private Logger log = Logger.getLogger(Modbus.class.getName());
+    static private LogLevel logLevel = LogLevel.LEVEL_RELEASE;
 
     /**
      * the end of message delimiter, (LF character by default)
@@ -58,7 +60,7 @@ final public class Modbus {
     static private int asciiMsgDelimiter = Modbus.ASCII_CODE_LF;
 
     static {
-        setLogLevel(LogLevel.LEVEL_RELEASE);
+        setLogLevel(logLevel);
     }
 
     private Modbus() {
@@ -73,12 +75,21 @@ final public class Modbus {
     }
 
     /**
+     * getter for log level
+     * @return
+     */
+    static public LogLevel getLogLevel() {
+        return logLevel;
+    }
+
+    /**
      * changes the log level for all loggers used
      *
      * @param level - LogLevel instance
      * @see com.invertor.modbus.Modbus.LogLevel
      */
     static public void setLogLevel(LogLevel level) {
+        logLevel = level;
         log.setLevel(level.value());
         for (Handler handler : log.getHandlers()) {
             handler.setLevel(level.value());

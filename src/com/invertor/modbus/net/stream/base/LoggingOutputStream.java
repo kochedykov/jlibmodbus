@@ -5,7 +5,6 @@ import com.invertor.modbus.utils.ByteFifo;
 import com.invertor.modbus.utils.DataUtils;
 
 import java.io.IOException;
-import java.io.OutputStream;
 
 /**
  * Copyright (c) 2015-2016 JSC Invertor
@@ -29,39 +28,43 @@ import java.io.OutputStream;
  * Authors: Vladislav Y. Kochedykov, software engineer.
  * email: vladislav.kochedykov@gmail.com
  */
-abstract public class ModbusOutputStream extends OutputStream {
 
-    private final ByteFifo fifo = new ByteFifo(Modbus.MAX_RTU_ADU_LENGTH);
+public class LoggingOutputStream extends ModbusOutputStream {
+
+    /**
+     * The output stream to be logged
+     */
+    final private ModbusOutputStream out;
+    final private ByteFifo fifo = new ByteFifo(Modbus.MAX_PDU_LENGTH);
+
+    public LoggingOutputStream(ModbusOutputStream out) {
+        this.out = out;
+    }
+
 
     @Override
     public void write(byte[] b) throws IOException {
-        fifo.write(b);
+        out.write(b);
+        if (Modbus.getLogLevel() == Modbus.LogLevel.LEVEL_DEBUG)
+            fifo.write(b);
     }
 
     @Override
     public void write(int b) throws IOException {
-        fifo.write(b);
+        out.write(b);
+        if (Modbus.getLogLevel() == Modbus.LogLevel.LEVEL_DEBUG)
+            fifo.write(b);
     }
 
-    /**
-     * it should have invoked last
-     */
     @Override
     public void flush() throws IOException {
-        fifo.reset();
+        out.flush();
     }
 
-    public void writeShortBE(int s) throws IOException {
-        write(DataUtils.byteHigh(s));
-        write(DataUtils.byteLow(s));
-    }
-
-    public void writeShortLE(int s) throws IOException {
-        write(DataUtils.byteLow(s));
-        write(DataUtils.byteHigh(s));
-    }
-
-    public byte[] toByteArray() {
-        return fifo.toByteArray();
+    public void log() {
+        if (Modbus.getLogLevel() == Modbus.LogLevel.LEVEL_DEBUG) {
+            Modbus.log().info("Frame sent: " + DataUtils.toAscii(fifo.toByteArray()));
+            fifo.reset();
+        }
     }
 }

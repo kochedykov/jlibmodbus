@@ -28,16 +28,16 @@ public class DataUtils {
         return Integer.parseInt("" + h + l, 16);
     }
 
-    static public byte[] toAscii(byte b) {
-        return toHexString(b).getBytes();
+    static public String toAscii(byte b) {
+        return toHexString(b);
     }
 
-    static public byte[] toAscii(byte[] bytes) {
+    static public String toAscii(byte[] bytes) {
         StringBuilder sb = new StringBuilder();
         for (byte b : bytes) {
             sb.append(toHexString(b));
         }
-        return sb.toString().getBytes();
+        return sb.toString();
     }
 
     static public String toHexString(byte b) {

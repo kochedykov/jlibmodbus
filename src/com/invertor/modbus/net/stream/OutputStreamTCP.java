@@ -1,6 +1,6 @@
 package com.invertor.modbus.net.stream;
 
-import com.invertor.modbus.exception.ModbusIOException;
+import com.invertor.modbus.net.stream.base.LoggingOutputStream;
 import com.invertor.modbus.net.stream.base.ModbusOutputStream;
 
 import java.io.BufferedOutputStream;
@@ -29,37 +29,34 @@ import java.net.Socket;
  * Authors: Vladislav Y. Kochedykov, software engineer.
  * email: vladislav.kochedykov@gmail.com
  */
-public class OutputStreamTCP extends ModbusOutputStream {
+public class OutputStreamTCP extends LoggingOutputStream {
 
-    final private BufferedOutputStream os;
+    public OutputStreamTCP(final Socket s) throws IOException {
+        super(new ModbusOutputStream() {
+            final Socket socket = s;
+            final private BufferedOutputStream os = new BufferedOutputStream(socket.getOutputStream());
 
-    public OutputStreamTCP(Socket s) throws ModbusIOException {
-        try {
-            this.os = new BufferedOutputStream(s.getOutputStream());
-        } catch (IOException e) {
-            throw new ModbusIOException(e);
-        }
-    }
+            @Override
+            public void write(byte[] b) throws IOException {
+                super.write(b);
+            }
 
-    @Override
-    public void write(byte[] b) throws IOException {
-        super.write(b);
-    }
+            @Override
+            public void write(int b) throws IOException {
+                super.write(b);
+            }
 
-    @Override
-    public void write(int b) throws IOException {
-        super.write(b);
-    }
+            @Override
+            public void flush() throws IOException {
+                os.write(toByteArray());
+                os.flush();
+                super.flush();
+            }
 
-    @Override
-    public void flush() throws IOException {
-        os.write(toByteArray());
-        os.flush();
-        super.flush();
-    }
-
-    @Override
-    public void close() throws IOException {
-        os.close();
+            @Override
+            public void close() throws IOException {
+                os.close();
+            }
+        });
     }
 }

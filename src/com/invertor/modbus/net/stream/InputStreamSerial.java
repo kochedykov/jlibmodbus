@@ -1,8 +1,7 @@
 package com.invertor.modbus.net.stream;
 
-import com.invertor.modbus.Modbus;
 import com.invertor.modbus.exception.ModbusChecksumException;
-import com.invertor.modbus.net.stream.base.ModbusInputStream;
+import com.invertor.modbus.net.stream.base.LoggingInputStream;
 import com.invertor.modbus.serial.SerialPort;
 
 import java.io.IOException;
@@ -29,12 +28,10 @@ import java.io.IOException;
  * Authors: Vladislav Y. Kochedykov, software engineer.
  * email: vladislav.kochedykov@gmail.com
  */
-abstract public class InputStreamSerial extends ModbusInputStream {
-    final private SerialPort serial;
-    private int timeout = Modbus.MAX_RESPONSE_TIMEOUT;
+public abstract class InputStreamSerial extends LoggingInputStream {
 
-    public InputStreamSerial(SerialPort serial) {
-        this.serial = serial;
+    InputStreamSerial(SerialPort serial) {
+        super(serial.getInputStream());
     }
 
     /**
@@ -51,23 +48,4 @@ abstract public class InputStreamSerial extends ModbusInputStream {
      * @throws IOException when there is any communication trouble
      */
     abstract public void frameInit() throws IOException;
-
-    @Override
-    public int read() throws IOException {
-        return serial.readByte(timeout) & 0xff;
-    }
-
-    @Override
-    public int read(byte[] b, int off, int len) throws IOException {
-        return serial.read(b, off, len);
-    }
-
-    @Override
-    public void setReadTimeout(int readTimeout) {
-        timeout = readTimeout;
-    }
-
-    protected SerialPort getSerialPort() {
-        return serial;
-    }
 }

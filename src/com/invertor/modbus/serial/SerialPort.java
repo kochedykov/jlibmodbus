@@ -1,5 +1,9 @@
 package com.invertor.modbus.serial;
 
+import com.invertor.modbus.Modbus;
+import com.invertor.modbus.net.stream.base.ModbusInputStream;
+import com.invertor.modbus.net.stream.base.ModbusOutputStream;
+
 import java.io.IOException;
 
 /**
@@ -33,6 +37,41 @@ public class SerialPort {
     SerialPort(SerialParameters sp) {
         this.sp = sp;
         this.port = new jssc.SerialPort(sp.getDevice());
+    }
+
+    public ModbusOutputStream getOutputStream() {
+        return new ModbusOutputStream() {
+            final private SerialPort serial = SerialPort.this;
+
+            @Override
+            public void flush() throws IOException {
+                serial.write(toByteArray());
+                super.flush();
+            }
+        };
+    }
+
+    public ModbusInputStream getInputStream() {
+        return new ModbusInputStream() {
+
+            final private SerialPort serial = SerialPort.this;
+            private int timeout = Modbus.MAX_RESPONSE_TIMEOUT;
+
+            @Override
+            public int read() throws IOException {
+                return serial.readByte(timeout) & 0xff;
+            }
+
+            @Override
+            public int read(byte[] b, int off, int len) throws IOException {
+                return serial.read(b, off, len);
+            }
+
+            @Override
+            public void setReadTimeout(int readTimeout) {
+                timeout = readTimeout;
+            }
+        };
     }
 
     public void clear() {

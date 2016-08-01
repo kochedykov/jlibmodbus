@@ -42,19 +42,19 @@ public class OutputStreamASCII extends OutputStreamSerial {
         for (byte b : bytes) {
             lrc += b;
         }
-        byte[] ascii = DataUtils.toAscii(bytes);
+        byte[] ascii = DataUtils.toAscii(bytes).getBytes();
         super.write(ascii);
     }
 
     @Override
     public void write(int b) throws IOException {
         lrc += (byte) b;
-        byte[] bytes = DataUtils.toAscii((byte) b);
+        byte[] bytes = DataUtils.toAscii((byte) b).getBytes();
         super.write(bytes);
     }
 
     private void writeChecksum() throws IOException {
-        byte[] bytes = DataUtils.toAscii((byte) -lrc);
+        byte[] bytes = DataUtils.toAscii((byte) -lrc).getBytes();
         super.write(bytes);
     }
 
@@ -71,7 +71,6 @@ public class OutputStreamASCII extends OutputStreamSerial {
         reset();
     }
 
-    @Override
     public void reset() {
         try {
             lrc = 0;

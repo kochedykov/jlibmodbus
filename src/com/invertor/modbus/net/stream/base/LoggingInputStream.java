@@ -5,7 +5,6 @@ import com.invertor.modbus.utils.ByteFifo;
 import com.invertor.modbus.utils.DataUtils;
 
 import java.io.IOException;
-import java.io.OutputStream;
 
 /**
  * Copyright (c) 2015-2016 JSC Invertor
@@ -29,39 +28,44 @@ import java.io.OutputStream;
  * Authors: Vladislav Y. Kochedykov, software engineer.
  * email: vladislav.kochedykov@gmail.com
  */
-abstract public class ModbusOutputStream extends OutputStream {
 
-    private final ByteFifo fifo = new ByteFifo(Modbus.MAX_RTU_ADU_LENGTH);
-
-    @Override
-    public void write(byte[] b) throws IOException {
-        fifo.write(b);
-    }
-
-    @Override
-    public void write(int b) throws IOException {
-        fifo.write(b);
-    }
+public class LoggingInputStream extends ModbusInputStream {
 
     /**
-     * it should have invoked last
+     * The input stream to be logged
      */
+    final private ModbusInputStream in;
+    final private ByteFifo fifo = new ByteFifo(Modbus.MAX_PDU_LENGTH);
+
+    public LoggingInputStream(ModbusInputStream in) {
+        this.in = in;
+    }
+
     @Override
-    public void flush() throws IOException {
-        fifo.reset();
+    public int read() throws IOException {
+        int b = in.read();
+        if (Modbus.getLogLevel() == Modbus.LogLevel.LEVEL_DEBUG)
+            fifo.write(b);
+        return b;
     }
 
-    public void writeShortBE(int s) throws IOException {
-        write(DataUtils.byteHigh(s));
-        write(DataUtils.byteLow(s));
+    @Override
+    public int read(byte[] b, int off, int len) throws IOException {
+        int read = in.read(b, off, len);
+        if (Modbus.getLogLevel() == Modbus.LogLevel.LEVEL_DEBUG)
+            fifo.write(b, off, read);
+        return read;
     }
 
-    public void writeShortLE(int s) throws IOException {
-        write(DataUtils.byteLow(s));
-        write(DataUtils.byteHigh(s));
+    @Override
+    public void setReadTimeout(int readTimeout) {
+        in.setReadTimeout(readTimeout);
     }
 
-    public byte[] toByteArray() {
-        return fifo.toByteArray();
+    public void log() {
+        if (Modbus.getLogLevel() == Modbus.LogLevel.LEVEL_DEBUG) {
+            Modbus.log().info("Frame received: " + DataUtils.toAscii(fifo.toByteArray()));
+            fifo.reset();
+        }
     }
 }

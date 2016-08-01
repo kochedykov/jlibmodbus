@@ -1,7 +1,7 @@
 package com.invertor.modbus.net.stream;
 
 import com.invertor.modbus.Modbus;
-import com.invertor.modbus.exception.ModbusIOException;
+import com.invertor.modbus.net.stream.base.LoggingInputStream;
 import com.invertor.modbus.net.stream.base.ModbusInputStream;
 
 import java.io.BufferedInputStream;
@@ -31,57 +31,50 @@ import java.net.SocketException;
  * Authors: Vladislav Y. Kochedykov, software engineer.
  * email: vladislav.kochedykov@gmail.com
  */
-public class InputStreamTCP extends ModbusInputStream {
+public class InputStreamTCP extends LoggingInputStream {
 
-    final private BufferedInputStream is;
-    final private Socket s;
+    public InputStreamTCP(final Socket s) throws IOException {
+        super(new ModbusInputStream() {
 
-    public InputStreamTCP(Socket s) throws ModbusIOException {
-        try {
-            this.s = s;
-            this.is = new BufferedInputStream(s.getInputStream());
-        } catch (IOException e) {
-            throw new ModbusIOException(e);
-        }
+            final private Socket socket = s;
+            final private BufferedInputStream in = new BufferedInputStream(s.getInputStream());
+
+            @Override
+            public int read() throws IOException {
+                int c = in.read();
+                if (-1 == c) {
+                    throw new IOException();
+                }
+                return c;
+            }
+
+            @Override
+            public int read(byte[] b, int off, int len) throws IOException {
+                int count = 0;
+                int k = 0;
+                while (count < len && k != -1) {
+                    k = in.read(b, off + count, len - count);
+                    if (-1 != k)
+                        count += k;
+                }
+                return count;
+            }
+
+            @Override
+            public void setReadTimeout(int readTimeout) {
+                try {
+                    socket.setSoTimeout(readTimeout);
+                } catch (SocketException e) {
+                    Modbus.log().warning(e.getLocalizedMessage());
+                }
+            }
+
+            @Override
+            public void close() throws IOException {
+                in.close();
+            }
+        });
     }
 
-    @Override
-    public int read() throws IOException {
-        int c = is.read();
-        if (-1 == c) {
-            throw new IOException();
-        }
-        return c;
-    }
 
-    @Override
-    public int read(byte[] b, int off, int len) throws IOException {
-        int count = 0;
-        int k = 0;
-        while (count < len && k != -1) {
-            k = is.read(b, off + count, len - count);
-            if (-1 != k)
-                count += k;
-        }
-        return count;
-    }
-
-    @Override
-    public void reset() {
-        //dummy
-    }
-
-    @Override
-    public void setReadTimeout(int readTimeout) {
-        try {
-            s.setSoTimeout(readTimeout);
-        } catch (SocketException e) {
-            Modbus.log().warning(e.getLocalizedMessage());
-        }
-    }
-
-    @Override
-    public void close() throws IOException {
-        is.close();
-    }
 }

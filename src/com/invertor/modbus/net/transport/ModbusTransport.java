@@ -6,8 +6,8 @@ import com.invertor.modbus.msg.ModbusMessageFactory;
 import com.invertor.modbus.msg.ModbusRequestFactory;
 import com.invertor.modbus.msg.ModbusResponseFactory;
 import com.invertor.modbus.msg.base.ModbusMessage;
-import com.invertor.modbus.net.stream.base.ModbusInputStream;
-import com.invertor.modbus.net.stream.base.ModbusOutputStream;
+import com.invertor.modbus.net.stream.base.LoggingInputStream;
+import com.invertor.modbus.net.stream.base.LoggingOutputStream;
 
 import java.io.IOException;
 
@@ -35,10 +35,10 @@ import java.io.IOException;
  */
 public abstract class ModbusTransport {
 
-    final private ModbusInputStream is;
-    final private ModbusOutputStream os;
+    final private LoggingInputStream is;
+    final private LoggingOutputStream os;
 
-    ModbusTransport(ModbusInputStream is, ModbusOutputStream os) {
+    ModbusTransport(LoggingInputStream is, LoggingOutputStream os) {
         this.is = is;
         this.os = os;
     }
@@ -49,28 +49,40 @@ public abstract class ModbusTransport {
     }
 
     public ModbusMessage readRequest() throws ModbusNumberException, ModbusIOException {
-        return read(ModbusRequestFactory.getInstance());
+        return readMessage(ModbusRequestFactory.getInstance());
     }
 
     public ModbusMessage readResponse() throws ModbusNumberException, ModbusIOException {
-        return read(ModbusResponseFactory.getInstance());
+        return readMessage(ModbusResponseFactory.getInstance());
+    }
+
+    final public ModbusMessage readMessage(ModbusMessageFactory factory) throws ModbusNumberException, ModbusIOException {
+        try {
+            return read(factory);
+        } finally {
+            getInputStream().log();
+        }
     }
 
     public void send(ModbusMessage msg) throws ModbusIOException {
-        ModbusOutputStream os = getOutputStream();
-        sendImpl(msg);
+        try {
+            sendImpl(msg);
+        } finally {
+            getOutputStream().log();
+        }
         try {
             getOutputStream().flush();
         } catch (IOException e) {
             throw new ModbusIOException(e);
         }
+
     }
 
-    public ModbusInputStream getInputStream() {
+    public LoggingInputStream getInputStream() {
         return is;
     }
 
-    public ModbusOutputStream getOutputStream() {
+    public LoggingOutputStream getOutputStream() {
         return os;
     }
 

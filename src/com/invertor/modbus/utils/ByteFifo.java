@@ -35,6 +35,7 @@ final public class ByteFifo {
         baos = new ByteArrayOutputStream(size);
         bais = new ByteArrayInputStream(baos.getByteBuffer());
         capacity = size;
+        bais.mark(0);
         reset();
     }
 
@@ -78,6 +79,14 @@ final public class ByteFifo {
         if (available > 0) {
             int count = b.length < available ? b.length : available;
             baos.write(b, 0, count);
+        }
+    }
+
+    public void write(byte[] b, int off, int len) {
+        int available = (capacity - size());
+        if (available > 0) {
+            int count = len < available ? len : available;
+            baos.write(b, off, count);
         }
     }
 

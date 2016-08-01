@@ -1,7 +1,6 @@
 package com.invertor.modbus.net.transport;
 
 import com.invertor.modbus.Modbus;
-import com.invertor.modbus.exception.ModbusIOException;
 import com.invertor.modbus.serial.SerialPort;
 
 import java.net.Socket;
@@ -41,7 +40,7 @@ public class ModbusTransportFactory {
     static public ModbusTransport createTCP(Socket socket) {
         try {
             return new ModbusTransportTCP(socket);
-        } catch (ModbusIOException e) {
+        } catch (Exception e) {
             Modbus.log().severe(e.getLocalizedMessage());
             return null;
         }

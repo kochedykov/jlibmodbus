@@ -67,7 +67,6 @@ public class InputStreamASCII extends InputStreamSerial {
         lrc = 0;
         char c = (char) readRaw();
         if (c != Modbus.ASCII_CODE_COLON) {
-            getSerialPort().purgeRx();
             throw new IOException("no bytes read");
         }
     }

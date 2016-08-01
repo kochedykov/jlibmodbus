@@ -1,10 +1,7 @@
 package com.invertor.modbus.net.stream;
 
-import com.invertor.modbus.net.stream.base.ModbusOutputStream;
+import com.invertor.modbus.net.stream.base.LoggingOutputStream;
 import com.invertor.modbus.serial.SerialPort;
-import com.invertor.modbus.utils.CRC16;
-
-import java.io.IOException;
 
 /**
  * Copyright (c) 2015-2016 JSC Invertor
@@ -28,17 +25,9 @@ import java.io.IOException;
  * Authors: Vladislav Y. Kochedykov, software engineer.
  * email: vladislav.kochedykov@gmail.com
  */
-public class OutputStreamSerial extends ModbusOutputStream {
+public class OutputStreamSerial extends LoggingOutputStream {
 
-    final private SerialPort serial;
-
-    public OutputStreamSerial(SerialPort serial) {
-        this.serial = serial;
-    }
-
-    @Override
-    public void flush() throws IOException {
-        serial.write(toByteArray());
-        super.flush();
+    OutputStreamSerial(SerialPort serial) {
+        super(serial.getOutputStream());
     }
 }
