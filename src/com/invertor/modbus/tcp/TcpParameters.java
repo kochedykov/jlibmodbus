@@ -1,5 +1,10 @@
 package com.invertor.modbus.tcp;
 
+import com.invertor.modbus.Modbus;
+
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+
 /**
  * Copyright (c) 2015-2016 JSC Invertor
  * [http://www.sbp-invertor.ru]
@@ -23,31 +28,61 @@ package com.invertor.modbus.tcp;
  * email: vladislav.kochedykov@gmail.com
  */
 public class TcpParameters {
-    final private String host;
-    final private int port;
-    final private boolean keepAlive;
+    private InetAddress host = null;
+    private int port;
+    private boolean keepAlive;
+
+    public TcpParameters() {
+        try {
+            setHost(InetAddress.getLocalHost());
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        }
+        setPort(Modbus.TCP_PORT);
+        setKeepAlive(true);
+    }
 
     public TcpParameters(TcpParameters p) {
-        this.host = p.host;
-        this.port = p.port;
-        this.keepAlive = p.keepAlive;
+        this(p.getHost(), p.getPort(), p.isKeepAlive());
+    }
+
+    public TcpParameters(InetAddress host, int port, boolean keepAlive) {
+        setHost(host);
+        setPort(port);
+        setKeepAlive(keepAlive);
     }
 
     public TcpParameters(String host, int port, boolean keepAlive) {
-        this.host = host;
-        this.port = port;
-        this.keepAlive = keepAlive;
+        try {
+            setHost(InetAddress.getByName(host));
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        }
+        setPort(port);
+        setKeepAlive(keepAlive);
     }
 
-    public String getHost() {
+    public InetAddress getHost() {
         return host;
+    }
+
+    public void setHost(InetAddress host) {
+        this.host = host;
     }
 
     public int getPort() {
         return port;
     }
 
+    public void setPort(int port) {
+        this.port = port;
+    }
+
     public boolean isKeepAlive() {
         return keepAlive;
+    }
+
+    public void setKeepAlive(boolean keepAlive) {
+        this.keepAlive = keepAlive;
     }
 }
