@@ -23,37 +23,68 @@ package com.invertor.modbus.serial;
  * email: vladislav.kochedykov@gmail.com
  */
 public class SerialParameters {
-    final private String device;
-    final private SerialPort.BaudRate baudRate;
-    final private int dataBits;
-    final private int stopBits;
-    final private SerialPort.Parity parity;
+    private String device = null;
+    private SerialPort.BaudRate baudRate;
+    private int dataBits;
+    private int stopBits;
+    private SerialPort.Parity parity;
+
+    public SerialParameters() {
+        String[] devices = SerialUtils.getPortList();
+        if (devices.length > 0) {
+            setDevice(devices[0]);
+        }
+        setBaudRate(SerialPort.BaudRate.BAUD_RATE_115200);
+        setDataBits(8);
+        setStopBits(1);
+        setParity(SerialPort.Parity.NONE);
+    }
 
     public SerialParameters(String device, SerialPort.BaudRate baudRate, int dataBits, int stopBits, SerialPort.Parity parity) {
-        this.device = device;
-        this.baudRate = baudRate;
-        this.dataBits = dataBits;
-        this.stopBits = stopBits;
-        this.parity = parity;
+        setDevice(device);
+        setBaudRate(baudRate);
+        setDataBits(dataBits);
+        setStopBits(stopBits);
+        setParity(parity);
     }
 
     public String getDevice() {
         return device;
     }
 
+    public void setDevice(String device) {
+        this.device = device;
+    }
+
     public int getBaudRate() {
         return baudRate.getValue();
+    }
+
+    public void setBaudRate(SerialPort.BaudRate baudRate) {
+        this.baudRate = baudRate;
     }
 
     public int getDataBits() {
         return dataBits;
     }
 
+    public void setDataBits(int dataBits) {
+        this.dataBits = dataBits;
+    }
+
     public int getStopBits() {
         return stopBits;
     }
 
+    public void setStopBits(int stopBits) {
+        this.stopBits = stopBits;
+    }
+
     public SerialPort.Parity getParity() {
         return parity;
+    }
+
+    public void setParity(SerialPort.Parity parity) {
+        this.parity = parity;
     }
 }
