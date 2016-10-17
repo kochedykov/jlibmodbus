@@ -59,6 +59,7 @@ public class LoggingOutputStream extends ModbusOutputStream {
     @Override
     public void flush() throws IOException {
         out.flush();
+        log();
     }
 
     public void log() {
@@ -66,5 +67,9 @@ public class LoggingOutputStream extends ModbusOutputStream {
             Modbus.log().info("Frame sent: " + DataUtils.toAscii(fifo.toByteArray()));
             fifo.reset();
         }
+    }
+
+    public byte[] toByteArray() {
+        return out.toByteArray();
     }
 }

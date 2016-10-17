@@ -67,10 +67,6 @@ public abstract class ModbusTransport {
     public void send(ModbusMessage msg) throws ModbusIOException {
         try {
             sendImpl(msg);
-        } finally {
-            getOutputStream().log();
-        }
-        try {
             getOutputStream().flush();
         } catch (IOException e) {
             throw new ModbusIOException(e);
