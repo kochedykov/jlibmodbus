@@ -39,12 +39,13 @@ import com.invertor.modbus.utils.ModbusFunctionCode;
 final public class ModbusMasterTCP extends ModbusMaster {
     final private boolean keepAlive;
     final private ModbusConnection conn;
+    private volatile short transactionId = 0;
 
     public ModbusMasterTCP(TcpParameters parameters) {
         conn = ModbusConnectionFactory.getTcpMaster(parameters);
         keepAlive = parameters.isKeepAlive();
         try {
-            if (keepAlive) {
+            if (isKeepAlive()) {
                 open();
             }
         } catch (ModbusIOException e) {
@@ -52,14 +53,37 @@ final public class ModbusMasterTCP extends ModbusMaster {
         }
     }
 
+    public short getTransactionId() {
+        return transactionId;
+    }
+
+    public void setTransactionId(short transactionId) {
+        this.transactionId = transactionId;
+    }
+
+    private short nextTransactionId() {
+        return ++this.transactionId;
+    }
+
+    public boolean isKeepAlive() {
+        return keepAlive;
+    }
+
+    public ModbusConnection getConn() {
+        return conn;
+    }
+
     @Override
     protected void sendRequest(ModbusMessage msg) throws ModbusIOException {
-        if (!keepAlive)
+        if (!isKeepAlive())
             open();
         try {
+            if (Modbus.isTransactionIdEnabled()) {
+                msg.setTransactionId(nextTransactionId());
+            }
             super.sendRequest(msg);
         } catch (ModbusIOException e) {
-            if (keepAlive) {
+            if (isKeepAlive()) {
                 open();
                 super.sendRequest(msg);
             } else {
@@ -71,7 +95,12 @@ final public class ModbusMasterTCP extends ModbusMaster {
     @Override
     protected ModbusMessage readResponse() throws ModbusNumberException, ModbusIOException, ModbusProtocolException {
         ModbusMessage msg = super.readResponse();
-        if (!keepAlive) {
+        if (Modbus.isTransactionIdEnabled()) {
+            if (msg.getTransactionId() != getTransactionId()) {
+                throw new ModbusNumberException("Invalid transaction id", msg.getTransactionId());
+            }
+        }
+        if (!isKeepAlive()) {
             close();
         }
         return msg;

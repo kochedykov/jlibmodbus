@@ -53,6 +53,7 @@ final public class Modbus {
 
     final static private Logger log = Logger.getLogger(Modbus.class.getName());
     static private LogLevel logLevel = LogLevel.LEVEL_RELEASE;
+    static private boolean transactionIdEnabled = false;
 
     /**
      * the end of message delimiter, (LF character by default)
@@ -246,6 +247,24 @@ final public class Modbus {
      */
     static public boolean checkRegisterValue(int value) {
         return checkRange(value, 0, Modbus.MAX_REGISTER_VALUE);
+    }
+
+    /**
+     * returns transactionIdEnabled variable
+     *
+     * @return "true" if autoincrement of TransactionId field is enabled, else "false".
+     */
+    public static boolean isTransactionIdEnabled() {
+        return transactionIdEnabled;
+    }
+
+    /**
+     * activates auto increment of TransactionId field. if you do not use ModbusTCP, invocation has no effect.
+     *
+     * @param transactionIdEnabled - new value of the transactionIdEnabled variable
+     */
+    public static void setTransactionIdEnabled(boolean transactionIdEnabled) {
+        Modbus.transactionIdEnabled = transactionIdEnabled;
     }
 
     /**

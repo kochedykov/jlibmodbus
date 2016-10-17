@@ -36,9 +36,9 @@ final public class TcpAduHeader {
 
     public TcpAduHeader() {
         /*
-        * 2 bytes for the transaction id (often not used)
-        * 2 bytes for the protocol id (should be set to 0)
-        * 2 bytes for the pdu length (from 3 to 260)
+        * 2 bytes for transaction id (often not used)
+        * 2 bytes for protocol id (should be set to 0)
+        * 2 bytes for pdu length (from 3 to 260)
         */
         buffer = new byte[6];
         setProtocolId(Modbus.PROTOCOL_ID);
