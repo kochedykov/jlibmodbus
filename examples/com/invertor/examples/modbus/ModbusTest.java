@@ -280,13 +280,14 @@ public class ModbusTest implements Runnable {
             slave.open();
             master.open();
             master.writeSingleRegister(1, 0, 69);
+            Modbus.setTransactionIdEnabled(true);
         } catch (Exception e) {
             e.printStackTrace();
         }
         master.setResponseTimeout(1000);
         while (/*(System.currentTimeMillis() - time) < timeout*/true) {
             try {
-                //Thread.sleep(100);
+                Thread.sleep(200);
                 System.out.println("Slave output");
                 printRegisters("Holding registers", slave.getDataHolder().getHoldingRegisters().getRange(0, 16));
                 //Thread.sleep(1);
