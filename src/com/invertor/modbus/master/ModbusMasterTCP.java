@@ -39,7 +39,6 @@ import com.invertor.modbus.utils.ModbusFunctionCode;
 final public class ModbusMasterTCP extends ModbusMaster {
     final private boolean keepAlive;
     final private ModbusConnection conn;
-    private volatile short transactionId = 0;
 
     public ModbusMasterTCP(TcpParameters parameters) {
         conn = ModbusConnectionFactory.getTcpMaster(parameters);
@@ -53,24 +52,12 @@ final public class ModbusMasterTCP extends ModbusMaster {
         }
     }
 
-    public short getTransactionId() {
-        return transactionId;
-    }
-
-    public void setTransactionId(short transactionId) {
-        this.transactionId = transactionId;
-    }
-
-    private short nextTransactionId() {
-        return ++this.transactionId;
+    private int nextTransactionId() {
+        return getTransactionId() + 1;
     }
 
     public boolean isKeepAlive() {
         return keepAlive;
-    }
-
-    public ModbusConnection getConn() {
-        return conn;
     }
 
     @Override
@@ -79,8 +66,9 @@ final public class ModbusMasterTCP extends ModbusMaster {
             open();
         try {
             if (Modbus.isTransactionIdEnabled()) {
-                msg.setTransactionId(nextTransactionId());
+                setTransactionId(nextTransactionId());
             }
+            msg.setTransactionId(getTransactionId());
             super.sendRequest(msg);
         } catch (ModbusIOException e) {
             if (isKeepAlive()) {
