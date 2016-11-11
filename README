@@ -20,6 +20,14 @@ https://code.google.com/p/java-simple-serial-connector
 https://github.com/scream3r/java-simple-serial-connector
 
 -------------------------------------------------------------------------------------------------------------
+----Release version 1.2 -------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------------------------
+This version contains some improvements.
+	Fixes:
+		* Added extended logging.
+		* Auto increment of transaction id is currently supported. see Modbus.setAutoIncrementTransactionId.
+		* Refactoring.
+-------------------------------------------------------------------------------------------------------------
 ----Release version 1.1 -------------------------------------------------------------------------------------
 -------------------------------------------------------------------------------------------------------------
 This version contains important fixes. Also, debugging information such as names of variables has been added.
