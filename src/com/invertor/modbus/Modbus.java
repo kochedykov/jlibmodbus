@@ -50,10 +50,11 @@ final public class Modbus {
     final static public int ASCII_CODE_COLON = 0x3a;
     final static public int COIL_VALUE_ON = 0xff00;
     final static public int COIL_VALUE_OFF = 0x0000;
+    final static public int TRANSACTION_ID_MAX_VALUE = 0xFFFF;
 
     final static private Logger log = Logger.getLogger(Modbus.class.getName());
     static private LogLevel logLevel = LogLevel.LEVEL_RELEASE;
-    static private boolean transactionIdEnabled = false;
+    static private boolean autoIncrementTransactionId = false;
 
     /**
      * the end of message delimiter, (LF character by default)
@@ -250,21 +251,21 @@ final public class Modbus {
     }
 
     /**
-     * returns transactionIdEnabled variable
+     * returns autoIncrementTransactionId variable
      *
      * @return "true" if autoincrement of TransactionId field is enabled, else "false".
      */
-    public static boolean isTransactionIdEnabled() {
-        return transactionIdEnabled;
+    public static boolean isAutoIncrementTransactionId() {
+        return Modbus.autoIncrementTransactionId;
     }
 
     /**
      * activates auto increment of TransactionId field. if you do not use ModbusTCP, invocation has no effect.
      *
-     * @param transactionIdEnabled - new value of the transactionIdEnabled variable
+     * @param autoIncrementTransactionId - new value of the autoIncrementTransactionId variable
      */
-    public static void setTransactionIdEnabled(boolean transactionIdEnabled) {
-        Modbus.transactionIdEnabled = transactionIdEnabled;
+    public static void setAutoIncrementTransactionId(boolean autoIncrementTransactionId) {
+        Modbus.autoIncrementTransactionId = autoIncrementTransactionId;
     }
 
     /**

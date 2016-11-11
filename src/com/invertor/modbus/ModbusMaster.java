@@ -41,18 +41,18 @@ import com.invertor.modbus.utils.ModbusExceptionCode;
 abstract public class ModbusMaster {
 
     final protected ModbusRequestFactory requestFactory = ModbusRequestFactory.getInstance();
-    private short transactionId = 0;
+    private int transactionId = 0;
 
     protected ModbusMaster() {
 
     }
 
-    public short getTransactionId() {
+    public int getTransactionId() {
         return transactionId;
     }
 
     public void setTransactionId(int transactionId) {
-        this.transactionId = (short) transactionId;
+        this.transactionId = Math.min(Math.abs(transactionId), Modbus.TRANSACTION_ID_MAX_VALUE);
     }
 
     abstract protected ModbusConnection getConnection();

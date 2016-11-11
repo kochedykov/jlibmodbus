@@ -53,7 +53,8 @@ final public class ModbusMasterTCP extends ModbusMaster {
     }
 
     private int nextTransactionId() {
-        return getTransactionId() + 1;
+        int nextId = getTransactionId() + 1;
+        return nextId > Modbus.TRANSACTION_ID_MAX_VALUE ? 0 : nextId;
     }
 
     public boolean isKeepAlive() {
@@ -65,7 +66,7 @@ final public class ModbusMasterTCP extends ModbusMaster {
         if (!isKeepAlive())
             open();
         try {
-            if (Modbus.isTransactionIdEnabled()) {
+            if (Modbus.isAutoIncrementTransactionId()) {
                 setTransactionId(nextTransactionId());
             }
             msg.setTransactionId(getTransactionId());
@@ -83,11 +84,6 @@ final public class ModbusMasterTCP extends ModbusMaster {
     @Override
     protected ModbusMessage readResponse() throws ModbusNumberException, ModbusIOException, ModbusProtocolException {
         ModbusMessage msg = super.readResponse();
-        if (Modbus.isTransactionIdEnabled()) {
-            if (msg.getTransactionId() != getTransactionId()) {
-                throw new ModbusNumberException("Invalid transaction id", msg.getTransactionId());
-            }
-        }
         if (!isKeepAlive()) {
             close();
         }

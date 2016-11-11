@@ -42,7 +42,7 @@ import java.net.InetAddress;
  */
 public class SimpleMasterTCP {
 
-    static public void main() {
+    static public void main(String [] args) {
         try {
             TcpParameters tcpParameters = new TcpParameters();
 
@@ -54,6 +54,8 @@ public class SimpleMasterTCP {
             //if you would like to set connection parameters separately,
             // you should use another method: createModbusMasterTCP(String host, int port, boolean keepAlive);
             ModbusMaster m = ModbusMasterFactory.createModbusMasterTCP(tcpParameters);
+            Modbus.setAutoIncrementTransactionId(true);
+
             int slaveId = 1;
             int offset = 0;
             int quantity = 10;

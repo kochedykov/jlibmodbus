@@ -8,6 +8,8 @@ import com.invertor.modbus.data.events.ModbusEventSend;
 import com.invertor.modbus.data.mei.ReadDeviceIdentificationInterface;
 import com.invertor.modbus.exception.IllegalDataAddressException;
 import com.invertor.modbus.exception.IllegalDataValueException;
+import com.invertor.modbus.exception.ModbusIOException;
+import com.invertor.modbus.master.ModbusMasterTCP;
 import com.invertor.modbus.msg.base.mei.MEIReadDeviceIdentification;
 import com.invertor.modbus.msg.base.mei.ReadDeviceIdentificationCode;
 import com.invertor.modbus.serial.SerialPort;
@@ -280,23 +282,19 @@ public class ModbusTest implements Runnable {
             slave.open();
             master.open();
             master.writeSingleRegister(1, 0, 69);
-            Modbus.setTransactionIdEnabled(true);
+            Modbus.setAutoIncrementTransactionId(true);
         } catch (Exception e) {
             e.printStackTrace();
         }
         master.setResponseTimeout(1000);
-        while (/*(System.currentTimeMillis() - time) < timeout*/true) {
+        while ((System.currentTimeMillis() - time) < timeout) {
             try {
                 Thread.sleep(200);
                 System.out.println("Slave output");
                 printRegisters("Holding registers", slave.getDataHolder().getHoldingRegisters().getRange(0, 16));
-                //Thread.sleep(1);
                 printRegisters("Input registers", slave.getDataHolder().getInputRegisters().getRange(0, 16));
-                //Thread.sleep(1);
                 printBits("Coils", slave.getDataHolder().getCoils().getRange(0, 16));
-                //Thread.sleep(1);
                 printBits("Discrete inputs", slave.getDataHolder().getDiscreteInputs().getRange(0, 16));
-                //Thread.sleep(1);
                 System.out.println();
                 System.out.println("Master output");
                 printRegisters("Holding registers", master.readHoldingRegisters(1, 0, 16));
@@ -305,11 +303,13 @@ public class ModbusTest implements Runnable {
                 printRegisters("Fifo queue registers", master.readFifoQueue(1, 0));
                 printBits("Coils", master.readCoils(1, 0, 16));
                 printBits("Discrete inputs", master.readDiscreteInputs(1, 0, 16));
-                //System.out.format("%s\t\t%s\n", "Slave Id", new String(master.reportSlaveId(1), Charset.defaultCharset()));
-                //System.out.format("%s\t\t%d\n", "Exception status", master.readExceptionStatus(1));
-                //System.out.format("%s\t\t%d\n", "Comm event counter", master.getCommEventCounter(1).getEventCount());
-                //System.out.format("%s\t\t%d\n", "Comm message count", master.getCommEventLog(1).getMessageCount());
-                //System.out.format("%s\t\t\t\t%d\n", "Diagnostics", master.diagnosticsReturnBusMessageCount(1));
+                if (!(master instanceof ModbusMasterTCP)) {
+                    System.out.format("%s\t\t%s\n", "Slave Id", new String(master.reportSlaveId(1), Charset.defaultCharset()));
+                    System.out.format("%s\t\t%d\n", "Exception status", master.readExceptionStatus(1));
+                    System.out.format("%s\t\t%d\n", "Comm event counter", master.getCommEventCounter(1).getEventCount());
+                    System.out.format("%s\t\t%d\n", "Comm message count", master.getCommEventLog(1).getMessageCount());
+                    System.out.format("%s\t\t\t\t%d\n", "Diagnostics", master.diagnosticsReturnBusMessageCount(1));
+                }
                 master.maskWriteRegister(1, 0, 7, 10);
                 master.writeSingleCoil(1, 13, true);
                 master.writeMultipleRegisters(1, 5, new int[]{55, 66, 77, 88, 99});
@@ -326,12 +326,12 @@ public class ModbusTest implements Runnable {
             }
         }
 
-        /*try {
+        try {
             slave.close();
             master.close();
         } catch (ModbusIOException e) {
             e.printStackTrace();
-        }*/
+        }
     }
 
     private enum TransportType {
