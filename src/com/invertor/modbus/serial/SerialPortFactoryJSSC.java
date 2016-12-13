@@ -1,10 +1,9 @@
 package com.invertor.modbus.serial;
 
-import jssc.SerialPortList;
-
 /**
- * Copyright (c) 2015-2016 JSC Invertor
- * [http://www.sbp-invertor.ru]
+ * Copyright (c) 2015-2017 JLibModbus developers team
+ * <p/>
+ * [http://jlibmodbus.sourceforge.net]
  * <p/>
  * This file is part of JLibModbus.
  * <p/>
@@ -24,19 +23,8 @@ import jssc.SerialPortList;
  * Authors: Vladislav Y. Kochedykov, software engineer.
  * email: vladislav.kochedykov@gmail.com
  */
-public class SerialUtils {
-
-    static private SerialPortAbstractFactory factory;
-
-    static {
-        factory = new SerialPortFactoryJSSC();
-    }
-
-    /*static public String[] getPortList() {
-        return SerialPortList.getPortNames();
-    }*/
-
-    static public SerialPort createSerial(SerialParameters sp) {
-        return factory.createSerial(sp);
+public class SerialPortFactoryJSSC implements SerialPortAbstractFactory {
+    public SerialPort createSerial(SerialParameters sp) {
+        return new SerialPortJSSC(sp);
     }
 }

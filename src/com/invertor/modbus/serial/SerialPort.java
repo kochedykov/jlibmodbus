@@ -29,14 +29,16 @@ import java.io.IOException;
  * email: vladislav.kochedykov@gmail.com
  */
 
-public class SerialPort {
+public abstract class SerialPort {
 
-    final private jssc.SerialPort port;
-    final private SerialParameters sp;
+    final private SerialParameters serialParameters;
 
-    SerialPort(SerialParameters sp) {
-        this.sp = sp;
-        this.port = new jssc.SerialPort(sp.getDevice());
+    public SerialParameters getSerialParameters() {
+        return serialParameters;
+    }
+
+    public SerialPort(SerialParameters sp) {
+        this.serialParameters = sp;
     }
 
     public ModbusOutputStream getOutputStream() {
@@ -79,79 +81,23 @@ public class SerialPort {
         purgeTx();
     }
 
-    public void purgeRx() {
-        try {
-            port.purgePort(jssc.SerialPort.PURGE_RXCLEAR);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+    abstract public void purgeRx();
 
-    public void purgeTx() {
-        try {
-            port.purgePort(jssc.SerialPort.PURGE_TXCLEAR);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+    abstract public void purgeTx();
 
-    public void write(int b) {
-        try {
-            port.writeByte((byte) b);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+    abstract public void write(int b);
 
-    public void write(byte[] bytes) {
-        try {
-            port.writeBytes(bytes);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+    abstract public void write(byte[] bytes);
 
-    public void open() throws SerialPortException {
-        try {
-            port.openPort();
-            port.setParams(sp.getBaudRate(), sp.getDataBits(), sp.getStopBits(), sp.getParity().getValue());
-            port.setFlowControlMode(jssc.SerialPort.FLOWCONTROL_NONE);
-        } catch (Exception ex) {
-            throw new SerialPortException(ex);
-        }
-    }
+    abstract public void open() throws SerialPortException;
 
-    public int readByte(int timeout) throws IOException {
-        try {
-            if (timeout > 0)
-                return port.readBytes(1, timeout)[0];
-            return port.readBytes(1)[0];
-        } catch (Exception e) {
-            throw new IOException(e);
-        }
-    }
+    abstract public int readByte(int timeout) throws IOException;
 
-    public int read(byte[] b, int off, int len) {
-        int c = -1;
-        try {
-            byte[] rb = port.readBytes(b.length);
-            System.arraycopy(rb, 0, b, off, len);
-            c = rb.length;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return c;
-    }
+    abstract public int read(byte[] b, int off, int len);
 
-    public void close() {
-        if (port.isOpened()) {
-            try {
-                port.closePort();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-    }
+    abstract public void close();
+
+    abstract public boolean isOpened();
 
     public enum Parity {
         NONE(0),

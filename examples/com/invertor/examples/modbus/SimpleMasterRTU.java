@@ -8,6 +8,7 @@ import com.invertor.modbus.exception.ModbusProtocolException;
 import com.invertor.modbus.serial.SerialParameters;
 import com.invertor.modbus.serial.SerialPort;
 import com.invertor.modbus.serial.SerialUtils;
+import jssc.SerialPortList;
 
 /**
  * Copyright (c) 2016, JSC Invertor
@@ -46,7 +47,7 @@ public class SimpleMasterRTU {
         try {
             // you can use just string to get connection with remote slave,
             // but you can also get a list of all serial ports available at your system.
-            String[] dev_list = SerialUtils.getPortList();
+            String[] dev_list = SerialPortList.getPortNames();
             // if there is at least one serial port at your system
             if (dev_list.length > 0) {
                 // you can choose the one of those you need

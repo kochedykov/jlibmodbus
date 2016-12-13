@@ -6,6 +6,7 @@ import com.invertor.modbus.ModbusMasterFactory;
 import com.invertor.modbus.exception.ModbusIOException;
 import com.invertor.modbus.serial.SerialPort;
 import com.invertor.modbus.serial.SerialUtils;
+import jssc.SerialPortList;
 
 import java.net.InetAddress;
 
@@ -84,7 +85,7 @@ public class ModbusMasterTest {
                 master = ModbusMasterFactory.createModbusMasterTCP(host, port, keepAlive);
                 break;
             case RTU:
-                String device_name = SerialUtils.getPortList()[0];
+                String device_name = SerialPortList.getPortNames()[0];
                 SerialPort.BaudRate baud_rate = SerialPort.BaudRate.BAUD_RATE_115200;
                 int data_bits = 8;
                 int stop_bits = 1;
@@ -129,7 +130,7 @@ public class ModbusMasterTest {
                 master = ModbusMasterFactory.createModbusMasterRTU(device_name, baud_rate, data_bits, stop_bits, parity);
                 break;
             case ASCII:
-                device_name = SerialUtils.getPortList()[0];
+                device_name = SerialPortList.getPortNames()[0];
                 baud_rate = SerialPort.BaudRate.BAUD_RATE_115200;
                 parity = SerialPort.Parity.NONE;
                 try {

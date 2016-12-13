@@ -14,6 +14,7 @@ import com.invertor.modbus.msg.base.mei.MEIReadDeviceIdentification;
 import com.invertor.modbus.msg.base.mei.ReadDeviceIdentificationCode;
 import com.invertor.modbus.serial.SerialPort;
 import com.invertor.modbus.serial.SerialUtils;
+import jssc.SerialPortList;
 
 import java.net.InetAddress;
 import java.nio.charset.Charset;
@@ -108,8 +109,8 @@ public class ModbusTest implements Runnable {
                 test.slave = ModbusSlaveFactory.createModbusSlaveTCP(host, port);
                 break;
             case RTU:
-                String device_name_slave = SerialUtils.getPortList()[0];
-                String device_name_master = SerialUtils.getPortList()[1];
+                String device_name_slave = SerialPortList.getPortNames()[0];
+                String device_name_master = SerialPortList.getPortNames()[1];
                 SerialPort.BaudRate baud_rate = SerialPort.BaudRate.BAUD_RATE_115200;
                 int data_bits = 8;
                 int stop_bits = 1;
@@ -161,8 +162,8 @@ public class ModbusTest implements Runnable {
                 test.slave = ModbusSlaveFactory.createModbusSlaveRTU(device_name_slave, baud_rate, data_bits, stop_bits, parity);
                 break;
             case ASCII:
-                device_name_slave = SerialUtils.getPortList()[0];
-                device_name_master = SerialUtils.getPortList()[1];
+                device_name_slave = SerialPortList.getPortNames()[0];
+                device_name_master = SerialPortList.getPortNames()[1];
                 baud_rate = SerialPort.BaudRate.BAUD_RATE_115200;
                 parity = SerialPort.Parity.ODD;
                 try {

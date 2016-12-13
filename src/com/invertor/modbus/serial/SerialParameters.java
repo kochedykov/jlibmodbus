@@ -30,10 +30,6 @@ public class SerialParameters {
     private SerialPort.Parity parity;
 
     public SerialParameters() {
-        String[] devices = SerialUtils.getPortList();
-        if (devices.length > 0) {
-            setDevice(devices[0]);
-        }
         setBaudRate(SerialPort.BaudRate.BAUD_RATE_115200);
         setDataBits(8);
         setStopBits(1);
