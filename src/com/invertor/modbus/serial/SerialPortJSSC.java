@@ -54,20 +54,20 @@ public class SerialPortJSSC extends SerialPort{
     }
 
     @Override
-    public void write(int b) {
+    public void write(int b) throws IOException {
         try {
             port.writeByte((byte) b);
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new IOException(e);
         }
     }
 
     @Override
-    public void write(byte[] bytes) {
+    public void write(byte[] bytes) throws IOException {
         try {
             port.writeBytes(bytes);
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new IOException(e);
         }
     }
 
@@ -84,10 +84,10 @@ public class SerialPortJSSC extends SerialPort{
     }
 
     @Override
-    public int readByte(int timeout) throws IOException {
+    public int read() throws IOException {
         try {
-            if (timeout > 0)
-                return port.readBytes(1, timeout)[0];
+            if (getReadTimeout() > 0)
+                return port.readBytes(1, getReadTimeout())[0];
             return port.readBytes(1)[0];
         } catch (Exception e) {
             throw new IOException(e);
@@ -95,14 +95,14 @@ public class SerialPortJSSC extends SerialPort{
     }
 
     @Override
-    public int read(byte[] b, int off, int len) {
+    public int read(byte[] b, int off, int len) throws IOException {
         int c = -1;
         try {
             byte[] rb = port.readBytes(b.length);
             System.arraycopy(rb, 0, b, off, len);
             c = rb.length;
         } catch (Exception e) {
-            e.printStackTrace();
+            new IOException(e);
         }
         return c;
     }

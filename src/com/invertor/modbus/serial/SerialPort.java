@@ -32,13 +32,22 @@ import java.io.IOException;
 public abstract class SerialPort {
 
     final private SerialParameters serialParameters;
+    private int readTimeout = Modbus.MAX_RESPONSE_TIMEOUT;
+
+    public SerialPort(SerialParameters sp) {
+        this.serialParameters = sp;
+    }
 
     public SerialParameters getSerialParameters() {
         return serialParameters;
     }
 
-    public SerialPort(SerialParameters sp) {
-        this.serialParameters = sp;
+    public int getReadTimeout() {
+        return readTimeout;
+    }
+
+    public void setReadTimeout(int readTimeout) {
+        this.readTimeout = readTimeout;
     }
 
     public ModbusOutputStream getOutputStream() {
@@ -57,11 +66,10 @@ public abstract class SerialPort {
         return new ModbusInputStream() {
 
             final private SerialPort serial = SerialPort.this;
-            private int timeout = Modbus.MAX_RESPONSE_TIMEOUT;
 
             @Override
             public int read() throws IOException {
-                return serial.readByte(timeout) & 0xff;
+                return serial.read() & 0xff;
             }
 
             @Override
@@ -71,7 +79,7 @@ public abstract class SerialPort {
 
             @Override
             public void setReadTimeout(int readTimeout) {
-                timeout = readTimeout;
+                serial.setReadTimeout(readTimeout);
             }
         };
     }
@@ -85,15 +93,15 @@ public abstract class SerialPort {
 
     abstract public void purgeTx();
 
-    abstract public void write(int b);
+    abstract public void write(int b) throws IOException;
 
-    abstract public void write(byte[] bytes);
+    abstract public void write(byte[] bytes) throws IOException;
 
     abstract public void open() throws SerialPortException;
 
-    abstract public int readByte(int timeout) throws IOException;
+    abstract public int read() throws IOException;
 
-    abstract public int read(byte[] b, int off, int len);
+    abstract public int read(byte[] b, int off, int len) throws IOException;
 
     abstract public void close();
 

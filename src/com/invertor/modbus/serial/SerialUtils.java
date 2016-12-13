@@ -1,7 +1,5 @@
 package com.invertor.modbus.serial;
 
-import jssc.SerialPortList;
-
 /**
  * Copyright (c) 2015-2016 JSC Invertor
  * [http://www.sbp-invertor.ru]
@@ -36,6 +34,10 @@ public class SerialUtils {
         return SerialPortList.getPortNames();
     }*/
 
+
+    static public void setSerialPortFactory(SerialPortAbstractFactory factory) {
+        SerialUtils.factory = factory;
+    }
     static public SerialPort createSerial(SerialParameters sp) {
         return factory.createSerial(sp);
     }
