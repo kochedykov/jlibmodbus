@@ -56,8 +56,13 @@ public abstract class SerialPort {
 
             @Override
             public void flush() throws IOException {
-                serial.write(toByteArray());
-                super.flush();
+                try {
+                    serial.write(toByteArray());
+                } catch (Exception e) {
+                    throw new IOException(e);
+                } finally {
+                    super.flush();
+                }
             }
         };
     }

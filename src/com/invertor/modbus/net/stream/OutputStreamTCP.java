@@ -48,9 +48,14 @@ public class OutputStreamTCP extends LoggingOutputStream {
 
             @Override
             public void flush() throws IOException {
-                os.write(toByteArray());
-                os.flush();
-                super.flush();
+                try {
+                    os.write(toByteArray());
+                    os.flush();
+                } catch (Exception e) {
+                    throw new IOException(e);
+                } finally {
+                    super.flush();
+                }
             }
 
             @Override
