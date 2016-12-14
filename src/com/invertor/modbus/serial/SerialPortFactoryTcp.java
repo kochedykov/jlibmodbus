@@ -96,55 +96,39 @@ public class SerialPortFactoryTcp implements SerialPortAbstractFactory {
 
         @Override
         public void write(byte[] b) throws IOException {
-            try {
-                if (isOpened()) {
-                    os.write(b);
-                    os.flush();
-                } else {
-                    throw new IOException("Port not opened");
-                }
-            } catch (Exception e) {
-                throw new IOException(e);
+            if (isOpened()) {
+                os.write(b);
+                os.flush();
+            } else {
+                throw new IOException("Port not opened");
             }
         }
 
         @Override
         public void write(int b) throws IOException {
-            try {
-                if (isOpened()) {
-                    os.write(b);
-                    os.flush();
-                } else {
-                    throw new IOException("Port not opened");
-                }
-            } catch (Exception e) {
-                throw new IOException(e);
+            if (isOpened()) {
+                os.write(b);
+                os.flush();
+            } else {
+                throw new IOException("Port not opened");
             }
         }
 
         @Override
         public int read() throws IOException {
-            try {
-                if (isOpened()) {
-                    return in.read();
-                } else {
-                    throw new IOException("Port not opened");
-                }
-            } catch (Exception e) {
-                throw new IOException(e);
+            if (isOpened()) {
+                return in.read();
+            } else {
+                throw new IOException("Port not opened");
             }
         }
 
         @Override
         public int read(byte[] b, int off, int len) throws IOException {
-            try {
-                if (isOpened()) {
-                    return in.read(b, off, len);
-                } else {
-                    throw new IOException("Port not opened");
-                }
-            } catch (Exception e) {
-                throw new IOException(e);
+            if (isOpened()) {
+                return in.read(b, off, len);
+            } else {
+                throw new IOException("Port not opened");
             }
         }
 
@@ -180,7 +164,7 @@ public class SerialPortFactoryTcp implements SerialPortAbstractFactory {
 
         @Override
         public boolean isOpened() {
-            return socket.isConnected();
+            return socket != null && socket.isConnected();
         }
     }
 }
