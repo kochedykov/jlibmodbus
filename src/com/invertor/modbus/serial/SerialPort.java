@@ -34,7 +34,7 @@ public abstract class SerialPort {
     final private SerialParameters serialParameters;
     private int readTimeout = Modbus.MAX_RESPONSE_TIMEOUT;
 
-    public SerialPort(SerialParameters sp) {
+    public SerialPort(SerialParameters sp) throws SerialPortException {
         this.serialParameters = sp;
     }
 
@@ -79,7 +79,11 @@ public abstract class SerialPort {
 
             @Override
             public int read(byte[] b, int off, int len) throws IOException {
-                return serial.read(b, off, len);
+                int size = 0;
+                while (size < len) {
+                    size += serial.read(b, size, len - size);
+                }
+                return size;
             }
 
             @Override
