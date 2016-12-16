@@ -1,13 +1,11 @@
 package com.invertor.examples.modbus;
 
+import com.invertor.modbus.Modbus;
 import com.invertor.modbus.ModbusMaster;
 import com.invertor.modbus.ModbusMasterFactory;
 import com.invertor.modbus.exception.ModbusIOException;
-import com.invertor.modbus.exception.ModbusNumberException;
-import com.invertor.modbus.exception.ModbusProtocolException;
 import com.invertor.modbus.serial.SerialParameters;
 import com.invertor.modbus.serial.SerialPort;
-import com.invertor.modbus.serial.SerialUtils;
 import jssc.SerialPortList;
 
 /**
@@ -42,7 +40,7 @@ import jssc.SerialPortList;
  */
 public class SimpleMasterRTU {
 
-    static public void main() {
+    static public void main(String[] arg) {
         SerialParameters sp = new SerialParameters();
         try {
             // you can use just string to get connection with remote slave,
@@ -57,14 +55,23 @@ public class SimpleMasterRTU {
                 sp.setDataBits(8);
                 sp.setParity(SerialPort.Parity.NONE);
                 sp.setStopBits(1);
-
+                Modbus.setLogLevel(Modbus.LogLevel.LEVEL_DEBUG);
+                //you can use jssc, rxtx to communicate via serial port.
+                //by default the jssc library is used.
+                //SerialUtils.setSerialPortFactory(new SerialPortFactoryRXTX());
+                //SerialUtils.setSerialPortFactory(new SerialPortFactoryJSSC());
+                //in case of using serial-to-wifi adapter
+                //String ip = "192.168.0.180";//for instance
+                //int port  = 777;
+                //SerialUtils.setSerialPortFactory(new SerialPortFactoryTcp(new TcpParameters(InetAddress.getByName(ip), port, true)));
                 //if you would like to set connection parameters separately,
                 // you should use another method:
                 // createModbusMasterRTU(String device, SerialPort.BaudRate baudRate, int dataBits, int stopBits, SerialPort.Parity parity)
                 ModbusMaster m = ModbusMasterFactory.createModbusMasterRTU(sp);
                 int slaveId = 1;
                 int offset = 0;
-                int quantity = 10;
+                int quantity = 1;
+
                 try {
                     // at next string we receive ten registers from a slave with id of 1 at offset of 0.
                     int[] registerValues = m.readHoldingRegisters(slaveId, offset, quantity);
@@ -72,17 +79,13 @@ public class SimpleMasterRTU {
                     for (int value : registerValues) {
                         System.out.println("Address: " + offset++ + ", Value: " + value);
                     }
-                } catch (ModbusProtocolException e) {
+                } catch (Exception e) {
                     e.printStackTrace();
-                } catch (ModbusNumberException e) {
-                    e.printStackTrace();
-                } catch (ModbusIOException e) {
-                    e.printStackTrace();
-                } finally {
                     try {
                         m.close();
-                    } catch (ModbusIOException e) {
-                        e.printStackTrace();
+                        m.open();
+                    } catch (ModbusIOException e1) {
+                        e1.printStackTrace();
                     }
                 }
             }
