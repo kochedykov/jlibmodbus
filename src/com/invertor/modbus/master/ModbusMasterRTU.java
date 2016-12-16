@@ -4,6 +4,7 @@ import com.invertor.modbus.net.ModbusConnection;
 import com.invertor.modbus.net.ModbusConnectionFactory;
 import com.invertor.modbus.serial.SerialParameters;
 import com.invertor.modbus.serial.SerialPort;
+import com.invertor.modbus.serial.SerialPortException;
 import com.invertor.modbus.serial.SerialUtils;
 
 /**
@@ -33,11 +34,11 @@ final public class ModbusMasterRTU extends ModbusMasterSerial {
 
     final private ModbusConnection conn;
 
-    public ModbusMasterRTU(SerialParameters parameters) {
+    public ModbusMasterRTU(SerialParameters parameters) throws SerialPortException {
         conn = ModbusConnectionFactory.getRTU(SerialUtils.createSerial(parameters));
     }
 
-    public ModbusMasterRTU(String device, SerialPort.BaudRate baudRate, int dataBits, int stopBits, SerialPort.Parity parity) {
+    public ModbusMasterRTU(String device, SerialPort.BaudRate baudRate, int dataBits, int stopBits, SerialPort.Parity parity) throws SerialPortException {
         this(new SerialParameters(device, baudRate, dataBits, stopBits, parity));
     }
 

@@ -30,7 +30,7 @@ public class SerialPortJSSC extends SerialPort{
 
     final private jssc.SerialPort port;
 
-    public SerialPortJSSC(SerialParameters sp) {
+    public SerialPortJSSC(SerialParameters sp) throws SerialPortException {
         super(sp);
         this.port = new jssc.SerialPort(sp.getDevice());
     }
@@ -96,15 +96,13 @@ public class SerialPortJSSC extends SerialPort{
 
     @Override
     public int read(byte[] b, int off, int len) throws IOException {
-        int c = -1;
         try {
             byte[] rb = port.readBytes(b.length);
             System.arraycopy(rb, 0, b, off, len);
-            c = rb.length;
+            return rb.length;
         } catch (Exception e) {
-            new IOException(e);
+            throw new IOException(e);
         }
-        return c;
     }
 
     @Override

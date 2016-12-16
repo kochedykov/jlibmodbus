@@ -5,6 +5,7 @@ import com.invertor.modbus.master.ModbusMasterRTU;
 import com.invertor.modbus.master.ModbusMasterTCP;
 import com.invertor.modbus.serial.SerialParameters;
 import com.invertor.modbus.serial.SerialPort;
+import com.invertor.modbus.serial.SerialPortException;
 import com.invertor.modbus.tcp.TcpParameters;
 
 /**
@@ -50,7 +51,7 @@ final public class ModbusMasterFactory {
      * @see com.invertor.modbus.ModbusMaster
      * @see com.invertor.modbus.master.ModbusMasterRTU
      */
-    static public ModbusMaster createModbusMasterRTU(String device, SerialPort.BaudRate baudRate, int dataBits, int stopBits, SerialPort.Parity parity) {
+    static public ModbusMaster createModbusMasterRTU(String device, SerialPort.BaudRate baudRate, int dataBits, int stopBits, SerialPort.Parity parity) throws SerialPortException {
         return new ModbusMasterRTU(device, baudRate, dataBits, stopBits, parity);
     }
 
@@ -65,7 +66,7 @@ final public class ModbusMasterFactory {
      * @see com.invertor.modbus.master.ModbusMasterRTU
      * @see com.invertor.modbus.serial.SerialParameters
      */
-    static public ModbusMaster createModbusMasterRTU(SerialParameters sp) {
+    static public ModbusMaster createModbusMasterRTU(SerialParameters sp) throws SerialPortException {
         return new ModbusMasterRTU(sp);
     }
 
@@ -81,7 +82,7 @@ final public class ModbusMasterFactory {
      * @see com.invertor.modbus.ModbusMaster
      * @see com.invertor.modbus.master.ModbusMasterASCII
      */
-    static public ModbusMaster createModbusMasterASCII(String device, SerialPort.BaudRate baudRate, SerialPort.Parity parity) {
+    static public ModbusMaster createModbusMasterASCII(String device, SerialPort.BaudRate baudRate, SerialPort.Parity parity) throws SerialPortException {
         return new ModbusMasterASCII(device, baudRate, parity);
     }
 
@@ -96,7 +97,7 @@ final public class ModbusMasterFactory {
      * @see com.invertor.modbus.ModbusMaster
      * @see com.invertor.modbus.master.ModbusMasterASCII
      */
-    static public ModbusMaster createModbusMasterASCII(String device, SerialPort.BaudRate baudRate) {
+    static public ModbusMaster createModbusMasterASCII(String device, SerialPort.BaudRate baudRate) throws SerialPortException {
         return new ModbusMasterASCII(device, baudRate);
     }
 

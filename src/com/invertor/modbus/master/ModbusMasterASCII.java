@@ -4,6 +4,7 @@ import com.invertor.modbus.net.ModbusConnection;
 import com.invertor.modbus.net.ModbusConnectionFactory;
 import com.invertor.modbus.serial.SerialParameters;
 import com.invertor.modbus.serial.SerialPort;
+import com.invertor.modbus.serial.SerialPortException;
 import com.invertor.modbus.serial.SerialUtils;
 
 /**
@@ -33,15 +34,15 @@ final public class ModbusMasterASCII extends ModbusMasterSerial {
 
     final private ModbusConnection conn;
 
-    public ModbusMasterASCII(SerialParameters parameters) {
+    public ModbusMasterASCII(SerialParameters parameters) throws SerialPortException {
         conn = ModbusConnectionFactory.getASCII(SerialUtils.createSerial(parameters));
     }
 
-    public ModbusMasterASCII(String device, SerialPort.BaudRate baudRate, SerialPort.Parity parity) {
+    public ModbusMasterASCII(String device, SerialPort.BaudRate baudRate, SerialPort.Parity parity) throws SerialPortException {
         this(new SerialParameters(device, baudRate, 7, parity == SerialPort.Parity.NONE ? 2 : 1, parity));
     }
 
-    public ModbusMasterASCII(String device, SerialPort.BaudRate baudRate) {
+    public ModbusMasterASCII(String device, SerialPort.BaudRate baudRate) throws SerialPortException {
         this(device, baudRate, SerialPort.Parity.EVEN);
     }
 

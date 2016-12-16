@@ -49,7 +49,7 @@ public class SerialPortFactoryTcp implements SerialPortAbstractFactory {
         this.tcpParameters = tcpParameters;
     }
 
-    public SerialPort createSerial(SerialParameters sp) {
+    public SerialPort createSerial(SerialParameters sp) throws SerialPortException {
         return new SerialPortViaTCP(sp);
     }
 
@@ -59,7 +59,7 @@ public class SerialPortFactoryTcp implements SerialPortAbstractFactory {
         private InputStreamTCP in;
         private OutputStreamTCP os;
 
-        public SerialPortViaTCP(SerialParameters sp) {
+        public SerialPortViaTCP(SerialParameters sp) throws SerialPortException {
             super(sp);
         }
 

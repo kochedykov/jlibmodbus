@@ -2,6 +2,7 @@ package com.invertor.modbus;
 
 import com.invertor.modbus.serial.SerialParameters;
 import com.invertor.modbus.serial.SerialPort;
+import com.invertor.modbus.serial.SerialPortException;
 import com.invertor.modbus.slave.ModbusSlaveASCII;
 import com.invertor.modbus.slave.ModbusSlaveRTU;
 import com.invertor.modbus.slave.ModbusSlaveTCP;
@@ -50,7 +51,7 @@ final public class ModbusSlaveFactory {
      * @see com.invertor.modbus.slave.ModbusSlaveRTU
      * @see com.invertor.modbus.ModbusSlave
      */
-    static public ModbusSlave createModbusSlaveRTU(String device, SerialPort.BaudRate baudRate, int dataBits, int stopBits, SerialPort.Parity parity) {
+    static public ModbusSlave createModbusSlaveRTU(String device, SerialPort.BaudRate baudRate, int dataBits, int stopBits, SerialPort.Parity parity) throws SerialPortException {
         return new ModbusSlaveRTU(device, baudRate, dataBits, stopBits, parity);
     }
 
@@ -63,7 +64,7 @@ final public class ModbusSlaveFactory {
      * @see com.invertor.modbus.slave.ModbusSlaveRTU
      * @see com.invertor.modbus.ModbusSlave
      */
-    static public ModbusSlave createModbusSlaveRTU(SerialParameters sp) {
+    static public ModbusSlave createModbusSlaveRTU(SerialParameters sp) throws SerialPortException {
         return new ModbusSlaveRTU(sp);
     }
 
@@ -78,7 +79,7 @@ final public class ModbusSlaveFactory {
      * @see com.invertor.modbus.slave.ModbusSlaveASCII
      * @see com.invertor.modbus.ModbusSlave
      */
-    static public ModbusSlave createModbusSlaveASCII(String device, SerialPort.BaudRate baudRate, SerialPort.Parity parity) {
+    static public ModbusSlave createModbusSlaveASCII(String device, SerialPort.BaudRate baudRate, SerialPort.Parity parity) throws SerialPortException {
         return new ModbusSlaveASCII(device, baudRate, parity);
     }
 
@@ -92,7 +93,7 @@ final public class ModbusSlaveFactory {
      * @see com.invertor.modbus.slave.ModbusSlaveASCII
      * @see com.invertor.modbus.ModbusSlave
      */
-    static public ModbusSlave createModbusSlaveASCII(String device, SerialPort.BaudRate baudRate) {
+    static public ModbusSlave createModbusSlaveASCII(String device, SerialPort.BaudRate baudRate) throws SerialPortException {
         return new ModbusSlaveASCII(device, baudRate);
     }
 

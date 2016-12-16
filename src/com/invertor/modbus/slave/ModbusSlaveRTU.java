@@ -3,6 +3,7 @@ package com.invertor.modbus.slave;
 import com.invertor.modbus.net.ModbusConnectionFactory;
 import com.invertor.modbus.serial.SerialParameters;
 import com.invertor.modbus.serial.SerialPort;
+import com.invertor.modbus.serial.SerialPortException;
 import com.invertor.modbus.serial.SerialUtils;
 
 /**
@@ -29,7 +30,7 @@ import com.invertor.modbus.serial.SerialUtils;
  */
 public class ModbusSlaveRTU extends ModbusSlaveSerial {
 
-    public ModbusSlaveRTU(SerialParameters sp) {
+    public ModbusSlaveRTU(SerialParameters sp) throws SerialPortException {
         super(ModbusConnectionFactory.getRTU(SerialUtils.createSerial(sp)));
         final int baud_len = 1 + sp.getDataBits() + sp.getStopBits() + (sp.getParity() != SerialPort.Parity.NONE ? 1 : 0);
         final double frame_break_len = 3.5;
@@ -38,7 +39,7 @@ public class ModbusSlaveRTU extends ModbusSlaveSerial {
         getConn().setReadTimeout(timeout * 10);
     }
 
-    public ModbusSlaveRTU(String device, SerialPort.BaudRate baudRate, int dataBits, int stopBits, SerialPort.Parity parity) {
+    public ModbusSlaveRTU(String device, SerialPort.BaudRate baudRate, int dataBits, int stopBits, SerialPort.Parity parity) throws SerialPortException {
         this(new SerialParameters(device, baudRate, dataBits, stopBits, parity));
     }
 }

@@ -24,7 +24,12 @@ package com.invertor.modbus.serial;
  * email: vladislav.kochedykov@gmail.com
  */
 public class SerialPortFactoryJSSC implements SerialPortAbstractFactory {
-    public SerialPort createSerial(SerialParameters sp) {
+    public SerialPort createSerial(SerialParameters sp) throws SerialPortException {
+        try {
+            Class.forName("jssc.SerialPort");
+        } catch (ClassNotFoundException e) {
+            throw new SerialPortException(e);
+        }
         return new SerialPortJSSC(sp);
     }
 }

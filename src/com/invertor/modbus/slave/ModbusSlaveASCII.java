@@ -3,6 +3,7 @@ package com.invertor.modbus.slave;
 import com.invertor.modbus.net.ModbusConnectionFactory;
 import com.invertor.modbus.serial.SerialParameters;
 import com.invertor.modbus.serial.SerialPort;
+import com.invertor.modbus.serial.SerialPortException;
 import com.invertor.modbus.serial.SerialUtils;
 
 /**
@@ -29,15 +30,15 @@ import com.invertor.modbus.serial.SerialUtils;
  */
 public class ModbusSlaveASCII extends ModbusSlaveSerial {
 
-    public ModbusSlaveASCII(SerialParameters parameters) {
+    public ModbusSlaveASCII(SerialParameters parameters) throws SerialPortException {
         super(ModbusConnectionFactory.getASCII(SerialUtils.createSerial(parameters)));
     }
 
-    public ModbusSlaveASCII(String device, SerialPort.BaudRate baudRate, SerialPort.Parity parity) {
+    public ModbusSlaveASCII(String device, SerialPort.BaudRate baudRate, SerialPort.Parity parity) throws SerialPortException {
         this(new SerialParameters(device, baudRate, 7, parity == SerialPort.Parity.NONE ? 2 : 1, parity));
     }
 
-    public ModbusSlaveASCII(String device, SerialPort.BaudRate baudRate) {
+    public ModbusSlaveASCII(String device, SerialPort.BaudRate baudRate) throws SerialPortException {
         this(device, baudRate, SerialPort.Parity.EVEN);
     }
 

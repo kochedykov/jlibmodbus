@@ -38,7 +38,8 @@ public class SerialUtils {
     static public void setSerialPortFactory(SerialPortAbstractFactory factory) {
         SerialUtils.factory = factory;
     }
-    static public SerialPort createSerial(SerialParameters sp) {
+
+    static public SerialPort createSerial(SerialParameters sp) throws SerialPortException {
         return factory.createSerial(sp);
     }
 }

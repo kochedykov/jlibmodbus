@@ -26,4 +26,8 @@ public class SerialPortException extends Exception {
     public SerialPortException(Exception cause) {
         super(cause);
     }
+
+    public SerialPortException(String msg) {
+        super(msg);
+    }
 }

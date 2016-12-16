@@ -25,5 +25,5 @@ package com.invertor.modbus.serial;
  */
 
 public interface SerialPortAbstractFactory {
-    SerialPort createSerial(SerialParameters sp);
+    SerialPort createSerial(SerialParameters sp) throws SerialPortException;
 }
