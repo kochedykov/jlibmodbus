@@ -13,39 +13,43 @@ If you have problems, questions or suggestions, please contact me at email addre
 WEB SITE
 
 project homepage:
-https://sourceforge.net/projects/jlibmodbus
+http://jlibmodbus.sourceforge.net
 
-jssc homepage:
+jssc home page:
 https://code.google.com/p/java-simple-serial-connector
 https://github.com/scream3r/java-simple-serial-connector
+
+rxtx home page:
+http://users.frii.com/jarvi/rxtx/index.html
+
 
 -------------------------------------------------------------------------------------------------------------
 ----Release version 1.2.1 -------------------------------------------------------------------------------------
 -------------------------------------------------------------------------------------------------------------
-This version contains some improvements.
-	Fixes:
-		* IMPORTANT! the RXTX library is now supported! You should invoke SerialUtils.setSerialPortFactory(new SerialPortFactoryRXTX()); before you'll have created a master or a slave.
-		* added checking if jssc library is available
-		* fixed potential bug with reading of byte array.
-		* avoiding some NullPointerException exceptions.
-		* IMPORTANT! fixed bug with flushing of output buffers.
-		* modbus rtu master is now able to connect via tcp socket(in case of rs232/rs485 to wifi adapters).
-		* added abstraction of concrete serial port implementation.
+This version contains some improvements and some bug fixes. Also, the RXTX library is currently supported.
+	NEWS:
+	* IMPORTANT! the RXTX library is now supported! You should invoke SerialUtils.setSerialPortFactory(new SerialPortFactoryRXTX()); before you'll have created a master or a slave.
+	* added checking if jssc library is available
+	* fixed potential bug with reading of byte array.
+	* avoiding some NullPointerException exceptions.
+	* IMPORTANT! fixed bug with flushing of output buffers.
+	* modbus rtu master is now able to connect via tcp socket(in case of rs232/rs485 to wifi adapters).
+	* added abstraction of concrete serial port implementation.
 -------------------------------------------------------------------------------------------------------------
 ----Release version 1.2 -------------------------------------------------------------------------------------
 -------------------------------------------------------------------------------------------------------------
 This version contains some improvements.
-	Fixes:
-		* Added extended logging.
-		* Auto increment of transaction id is currently supported. see Modbus.setAutoIncrementTransactionId.
-		* Refactoring.
+	NEWS:
+	* Added extended logging.
+	* Auto increment of transaction id is currently supported. see Modbus.setAutoIncrementTransactionId.
+	* Refactoring.
 -------------------------------------------------------------------------------------------------------------
 ----Release version 1.1 -------------------------------------------------------------------------------------
 -------------------------------------------------------------------------------------------------------------
 This version contains important fixes. Also, debugging information such as names of variables has been added.
-	Fixes:
-		* Important! fixed bug with read of starting address.
-		* Important! fixed data conversion issues.
+	NEWS:
+	* Important! fixed bug with read of starting address.
+	* Important! fixed data conversion issues.
 
 -------------------------------------------------------------------------------------------------------------
 ----Release version 1.0 -------------------------------------------------------------------------------------
