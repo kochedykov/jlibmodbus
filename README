@@ -20,6 +20,18 @@ https://code.google.com/p/java-simple-serial-connector
 https://github.com/scream3r/java-simple-serial-connector
 
 -------------------------------------------------------------------------------------------------------------
+----Release version 1.2.1 -------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------------------------
+This version contains some improvements.
+	Fixes:
+		* IMPORTANT! the RXTX library is now supported! You should invoke SerialUtils.setSerialPortFactory(new SerialPortFactoryRXTX()); before you'll have created a master or a slave.
+		* added checking if jssc library is available
+		* fixed potential bug with reading of byte array.
+		* avoiding some NullPointerException exceptions.
+		* IMPORTANT! fixed bug with flushing of output buffers.
+		* modbus rtu master is now able to connect via tcp socket(in case of rs232/rs485 to wifi adapters).
+		* added abstraction of concrete serial port implementation.
+-------------------------------------------------------------------------------------------------------------
 ----Release version 1.2 -------------------------------------------------------------------------------------
 -------------------------------------------------------------------------------------------------------------
 This version contains some improvements.
