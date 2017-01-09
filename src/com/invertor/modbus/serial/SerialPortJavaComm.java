@@ -107,7 +107,7 @@ public class SerialPortJavaComm extends com.invertor.modbus.serial.SerialPort im
                     if (commPort instanceof javax.comm.SerialPort) {
                         port = (javax.comm.SerialPort) commPort;
                         port.setSerialPortParams(sp.getBaudRate(), sp.getDataBits(), sp.getStopBits(), sp.getParity().getValue());
-                        port.setFlowControlMode(gnu.io.SerialPort.FLOWCONTROL_NONE);
+                        port.setFlowControlMode(javax.comm.SerialPort.FLOWCONTROL_NONE);
 
                         in = port.getInputStream();
                         out = port.getOutputStream();
