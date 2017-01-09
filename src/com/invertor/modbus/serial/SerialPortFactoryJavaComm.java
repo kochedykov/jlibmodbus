@@ -1,8 +1,9 @@
 package com.invertor.modbus.serial;
 
 /**
- * Copyright (c) 2015-2016 JSC Invertor
- * [http://www.sbp-invertor.ru]
+ * Copyright (c) 2015-2017 JLibModbus developers team
+ * <p/>
+ * [http://jlibmodbus.sourceforge.net]
  * <p/>
  * This file is part of JLibModbus.
  * <p/>
@@ -22,27 +23,13 @@ package com.invertor.modbus.serial;
  * Authors: Vladislav Y. Kochedykov, software engineer.
  * email: vladislav.kochedykov@gmail.com
  */
-public class SerialUtils {
-
-    static private SerialPortAbstractFactory factory;
-
-    static {
-        factory = new SerialPortFactoryJSSC();
-    }
-
-    /*static public String[] getPortList() {
-        return SerialPortList.getPortNames();
-    }*/
-
-    /**
-     * @param factory - a concrete serial port factory instance
-     * @since 1.2.1
-     */
-    static public void setSerialPortFactory(SerialPortAbstractFactory factory) {
-        SerialUtils.factory = factory;
-    }
-
-    static public SerialPort createSerial(SerialParameters sp) throws SerialPortException {
-        return factory.createSerial(sp);
+public class SerialPortFactoryJavaComm implements SerialPortAbstractFactory {
+    public SerialPort createSerial(SerialParameters sp) throws SerialPortException {
+        try {
+            Class.forName("javax.comm.SerialPort");
+        } catch (ClassNotFoundException e) {
+            throw new SerialPortException(e);
+        }
+        return new SerialPortJSSC(sp);
     }
 }

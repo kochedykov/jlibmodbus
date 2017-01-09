@@ -26,7 +26,7 @@ import java.io.IOException;
  * email: vladislav.kochedykov@gmail.com
  */
 
-public class SerialPortJSSC extends SerialPort{
+public class SerialPortJSSC extends SerialPort {
 
     final private jssc.SerialPort port;
 

@@ -1,8 +1,8 @@
 package com.invertor.modbus.serial;
 
 import com.invertor.modbus.Modbus;
-import gnu.io.*;
 
+import javax.comm.*;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -31,15 +31,15 @@ import java.io.OutputStream;
  * email: vladislav.kochedykov@gmail.com
  */
 
-public class SerialPortRXTX extends com.invertor.modbus.serial.SerialPort implements SerialPortEventListener {
+public class SerialPortJavaComm extends com.invertor.modbus.serial.SerialPort implements SerialPortEventListener {
 
-    private gnu.io.SerialPort port;
+    private javax.comm.SerialPort port;
     private boolean opened = false;
     private InputStream in;
     private OutputStream out;
 
 
-    public SerialPortRXTX(SerialParameters sp) throws SerialPortException {
+    public SerialPortJavaComm(SerialParameters sp) throws SerialPortException {
         super(sp);
     }
 
@@ -104,8 +104,8 @@ public class SerialPortRXTX extends com.invertor.modbus.serial.SerialPort implem
                 } else {
                     CommPort commPort = portIdentifier.open(this.getClass().getName(), Modbus.MAX_CONNECTION_TIMEOUT);
 
-                    if (commPort instanceof gnu.io.SerialPort) {
-                        port = (gnu.io.SerialPort) commPort;
+                    if (commPort instanceof javax.comm.SerialPort) {
+                        port = (javax.comm.SerialPort) commPort;
                         port.setSerialPortParams(sp.getBaudRate(), sp.getDataBits(), sp.getStopBits(), sp.getParity().getValue());
                         port.setFlowControlMode(gnu.io.SerialPort.FLOWCONTROL_NONE);
 
