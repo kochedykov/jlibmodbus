@@ -30,6 +30,6 @@ public class SerialPortFactoryJavaComm implements SerialPortAbstractFactory {
         } catch (ClassNotFoundException e) {
             throw new SerialPortException(e);
         }
-        return new SerialPortJSSC(sp);
+        return new SerialPortJavaComm(sp);
     }
 }
