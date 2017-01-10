@@ -6,6 +6,7 @@ import javax.comm.*;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Copyright (c) 2015-2017 JLibModbus developers team
@@ -34,7 +35,7 @@ import java.io.OutputStream;
 public class SerialPortJavaComm extends com.invertor.modbus.serial.SerialPort implements SerialPortEventListener {
 
     private javax.comm.SerialPort port;
-    private boolean opened = false;
+    private AtomicBoolean opened = new AtomicBoolean(false);
     private InputStream in;
     private OutputStream out;
 
@@ -95,32 +96,31 @@ public class SerialPortJavaComm extends com.invertor.modbus.serial.SerialPort im
             SerialParameters sp = getSerialParameters();
 
             CommPortIdentifier portIdentifier;
-            try {
-                portIdentifier = CommPortIdentifier.getPortIdentifier(sp.getDevice());
-                if (portIdentifier.isCurrentlyOwned()) {
-                    String msg = "Cannot open serial port " + sp.getDevice();
-                    Modbus.log().warning(msg);
-                    throw new SerialPortException(msg);
+
+            portIdentifier = CommPortIdentifier.getPortIdentifier(sp.getDevice());
+            if (portIdentifier.isCurrentlyOwned()) {
+                String msg = "Cannot open serial port " + sp.getDevice();
+                Modbus.log().warning(msg);
+                throw new SerialPortException(msg);
+            } else {
+                CommPort commPort = portIdentifier.open(this.getClass().getName(), Modbus.MAX_CONNECTION_TIMEOUT);
+
+                if (commPort instanceof javax.comm.SerialPort) {
+                    port = (javax.comm.SerialPort) commPort;
+                    port.setSerialPortParams(sp.getBaudRate(), sp.getDataBits(), sp.getStopBits(), sp.getParity().getValue());
+                    port.setFlowControlMode(javax.comm.SerialPort.FLOWCONTROL_NONE);
+
+                    in = port.getInputStream();
+                    out = port.getOutputStream();
+
+                    port.enableReceiveTimeout(Modbus.MAX_RESPONSE_TIMEOUT);
+                    setOpened(true);
                 } else {
-                    CommPort commPort = portIdentifier.open(this.getClass().getName(), Modbus.MAX_CONNECTION_TIMEOUT);
-
-                    if (commPort instanceof javax.comm.SerialPort) {
-                        port = (javax.comm.SerialPort) commPort;
-                        port.setSerialPortParams(sp.getBaudRate(), sp.getDataBits(), sp.getStopBits(), sp.getParity().getValue());
-                        port.setFlowControlMode(javax.comm.SerialPort.FLOWCONTROL_NONE);
-
-                        in = port.getInputStream();
-                        out = port.getOutputStream();
-
-                        port.enableReceiveTimeout(Modbus.MAX_RESPONSE_TIMEOUT);
-                        setOpened(true);
-                    } else {
-                        Modbus.log().severe(sp.getDevice() + " is not a serial port.");
-                    }
+                    Modbus.log().severe(sp.getDevice() + " is not a serial port.");
                 }
-            } catch (NoSuchPortException e) {
-                throw new SerialPortException(e);
             }
+        } catch (NoSuchPortException e) {
+            throw new SerialPortException(e);
         } catch (Exception ex) {
             throw new SerialPortException(ex);
         }
@@ -173,11 +173,13 @@ public class SerialPortJavaComm extends com.invertor.modbus.serial.SerialPort im
     @Override
     public void close() {
         try {
-            setOpened(false);
+            if (isOpened()) {
+                setOpened(false);
 
-            in.close();
-            out.close();
-            port.close();
+                in.close();
+                out.close();
+                port.close();
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -185,11 +187,11 @@ public class SerialPortJavaComm extends com.invertor.modbus.serial.SerialPort im
 
     @Override
     public boolean isOpened() {
-        return opened;
+        return opened.get();
     }
 
     public void setOpened(boolean opened) {
-        this.opened = opened;
+        this.opened.set(opened);
     }
 
     @Override
