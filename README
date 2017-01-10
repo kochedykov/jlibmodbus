@@ -1,6 +1,6 @@
 README
 
-The MODBUS protocol implementation in pure java. It uses jssc library for communication via serial port.
+The MODBUS protocol implementation in pure java. The goals of the library are: 1 - support of the most popular serial communication libraries(jssc, rxtx, java comm api); 2 - complete implementation of the modbus protocol v1.1b.
 
 AUTHORS
 
