@@ -119,7 +119,7 @@ abstract public class ModbusMaster {
      * @throws ModbusNumberException   if response is invalid
      * @throws ModbusIOException       if remote slave unavailable
      */
-    final public int[] readHoldingRegisters(int serverAddress, int startAddress, int quantity) throws
+    final synchronized public int[] readHoldingRegisters(int serverAddress, int startAddress, int quantity) throws
             ModbusProtocolException, ModbusNumberException, ModbusIOException {
         ModbusRequest request = requestFactory.createReadHoldingRegisters(serverAddress, startAddress, quantity);
         ReadHoldingRegistersResponse response = (ReadHoldingRegistersResponse) processRequest(request);
@@ -140,7 +140,7 @@ abstract public class ModbusMaster {
      * @throws ModbusNumberException   if response is invalid
      * @throws ModbusIOException       if remote slave unavailable
      */
-    final public int[] readInputRegisters(int serverAddress, int startAddress, int quantity) throws
+    final synchronized public int[] readInputRegisters(int serverAddress, int startAddress, int quantity) throws
             ModbusProtocolException, ModbusNumberException, ModbusIOException {
         ModbusRequest request = requestFactory.createReadInputRegisters(serverAddress, startAddress, quantity);
         ReadHoldingRegistersResponse response = (ReadInputRegistersResponse) processRequest(request);
@@ -163,7 +163,7 @@ abstract public class ModbusMaster {
      * @throws ModbusNumberException   if response is invalid
      * @throws ModbusIOException       if remote slave unavailable
      */
-    final public boolean[] readCoils(int serverAddress, int startAddress, int quantity) throws
+    final synchronized public boolean[] readCoils(int serverAddress, int startAddress, int quantity) throws
             ModbusProtocolException, ModbusNumberException, ModbusIOException {
         ModbusRequest request = requestFactory.createReadCoils(serverAddress, startAddress, quantity);
         ReadCoilsResponse response = (ReadCoilsResponse) processRequest(request);
@@ -186,7 +186,7 @@ abstract public class ModbusMaster {
      * @throws ModbusNumberException   if response is invalid
      * @throws ModbusIOException       if remote slave unavailable
      */
-    final public boolean[] readDiscreteInputs(int serverAddress, int startAddress, int quantity) throws
+    final synchronized public boolean[] readDiscreteInputs(int serverAddress, int startAddress, int quantity) throws
             ModbusProtocolException, ModbusNumberException, ModbusIOException {
         ModbusRequest request = requestFactory.createReadDiscreteInputs(serverAddress, startAddress, quantity);
         ReadDiscreteInputsResponse response = (ReadDiscreteInputsResponse) processRequest(request);
@@ -207,7 +207,7 @@ abstract public class ModbusMaster {
      * @throws ModbusNumberException   if response is invalid
      * @throws ModbusIOException       if remote slave unavailable
      */
-    final public void writeSingleCoil(int serverAddress, int startAddress, boolean flag) throws
+    final synchronized public void writeSingleCoil(int serverAddress, int startAddress, boolean flag) throws
             ModbusProtocolException, ModbusNumberException, ModbusIOException {
         processRequest(requestFactory.createWriteSingleCoil(serverAddress, startAddress, flag));
     }
@@ -224,7 +224,7 @@ abstract public class ModbusMaster {
      * @throws ModbusNumberException   if response is invalid
      * @throws ModbusIOException       if remote slave unavailable
      */
-    final public void writeSingleRegister(int serverAddress, int startAddress, int register) throws
+    final synchronized public void writeSingleRegister(int serverAddress, int startAddress, int register) throws
             ModbusProtocolException, ModbusNumberException, ModbusIOException {
         processRequest(requestFactory.createWriteSingleRegister(serverAddress, startAddress, register));
     }
@@ -244,7 +244,7 @@ abstract public class ModbusMaster {
      * @throws ModbusNumberException   if response is invalid
      * @throws ModbusIOException       if remote slave unavailable
      */
-    final public void writeMultipleCoils(int serverAddress, int startAddress, boolean[] coils) throws
+    final synchronized public void writeMultipleCoils(int serverAddress, int startAddress, boolean[] coils) throws
             ModbusProtocolException, ModbusNumberException, ModbusIOException {
         processRequest(requestFactory.createWriteMultipleCoils(serverAddress, startAddress, coils));
     }
@@ -262,7 +262,7 @@ abstract public class ModbusMaster {
      * @throws ModbusNumberException   if response is invalid
      * @throws ModbusIOException       if remote slave unavailable
      */
-    final public void writeMultipleRegisters(int serverAddress, int startAddress, int[] registers) throws
+    final synchronized public void writeMultipleRegisters(int serverAddress, int startAddress, int[] registers) throws
             ModbusProtocolException, ModbusNumberException, ModbusIOException {
         processRequest(requestFactory.createWriteMultipleRegisters(serverAddress, startAddress, registers));
     }
@@ -285,7 +285,7 @@ abstract public class ModbusMaster {
      * @throws ModbusNumberException   if response is invalid
      * @throws ModbusIOException       if remote slave unavailable
      */
-    public int[] readWriteMultipleRegisters(int serverAddress, int readAddress, int readQuantity, int writeAddress, int[] registers) throws
+    final synchronized public int[] readWriteMultipleRegisters(int serverAddress, int readAddress, int readQuantity, int writeAddress, int[] registers) throws
             ModbusProtocolException, ModbusNumberException, ModbusIOException {
         ModbusRequest request = requestFactory.createReadWriteMultipleRegisters(serverAddress, readAddress, readQuantity, writeAddress, registers);
         ReadWriteMultipleRegistersResponse response = (ReadWriteMultipleRegistersResponse) processRequest(request);
@@ -307,7 +307,7 @@ abstract public class ModbusMaster {
      * @throws ModbusNumberException   if response is invalid
      * @throws ModbusIOException       if remote slave unavailable
      */
-    final public int[] readFifoQueue(int serverAddress, int fifoPointerAddress) throws
+    final synchronized public int[] readFifoQueue(int serverAddress, int fifoPointerAddress) throws
             ModbusProtocolException, ModbusNumberException, ModbusIOException {
         ModbusRequest request = requestFactory.createReadFifoQueue(serverAddress, fifoPointerAddress);
         ReadFifoQueueResponse response = (ReadFifoQueueResponse) processRequest(request);
@@ -327,7 +327,7 @@ abstract public class ModbusMaster {
      * @throws ModbusNumberException   if response is invalid
      * @throws ModbusIOException       if remote slave unavailable
      */
-    final public ModbusFileRecord[] readFileRecord(int serverAddress, ModbusFileRecord[] records) throws
+    final synchronized public ModbusFileRecord[] readFileRecord(int serverAddress, ModbusFileRecord[] records) throws
             ModbusProtocolException, ModbusNumberException, ModbusIOException {
         ModbusRequest request = requestFactory.createReadFileRecord(serverAddress, records);
         ReadFileRecordResponse response = (ReadFileRecordResponse) processRequest(request);
@@ -348,7 +348,7 @@ abstract public class ModbusMaster {
      * @throws ModbusNumberException   if response is invalid
      * @throws ModbusIOException       if remote slave unavailable
      */
-    final public void writeFileRecord(int serverAddress, ModbusFileRecord record) throws
+    final synchronized public void writeFileRecord(int serverAddress, ModbusFileRecord record) throws
             ModbusProtocolException, ModbusNumberException, ModbusIOException {
         processRequest(requestFactory.createWriteFileRecord(serverAddress, record));
     }
@@ -386,7 +386,7 @@ abstract public class ModbusMaster {
      * @throws ModbusNumberException   if response is invalid
      * @throws ModbusIOException       if remote slave unavailable
      */
-    final public void maskWriteRegister(int serverAddress, int startAddress, int and, int or) throws
+    final synchronized public void maskWriteRegister(int serverAddress, int startAddress, int and, int or) throws
             ModbusProtocolException, ModbusNumberException, ModbusIOException {
         processRequest(requestFactory.createMaskWriteRegister(serverAddress, startAddress, and, or));
     }
