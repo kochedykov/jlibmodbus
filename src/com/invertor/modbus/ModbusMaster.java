@@ -41,6 +41,7 @@ abstract public class ModbusMaster {
 
     final protected ModbusRequestFactory requestFactory = ModbusRequestFactory.getInstance();
     private int transactionId = 0;
+    private long requestTime = 0;
 
     protected ModbusMaster() {
 
@@ -69,6 +70,7 @@ abstract public class ModbusMaster {
         if (transport == null)
             throw new ModbusIOException("transport is null");
         transport.send(msg);
+        requestTime = System.currentTimeMillis();
     }
 
     protected ModbusMessage readResponse() throws ModbusProtocolException, ModbusNumberException, ModbusIOException {
@@ -83,6 +85,10 @@ abstract public class ModbusMaster {
             try {
                 msg = (ModbusResponse) readResponse();
                 request.validateResponse(msg);
+                /**
+                 * if you have received an ACKNOWLEDGE,
+                 * it means that operation is in processing and you should be waiting for the answer
+                 */
                 if (msg.getModbusExceptionCode() != ModbusExceptionCode.ACKNOWLEDGE) {
                     if (msg.isException())
                         throw new ModbusProtocolException(msg.getModbusExceptionCode());
@@ -91,7 +97,11 @@ abstract public class ModbusMaster {
             } catch (ModbusNumberException mne) {
                 Modbus.log().warning(mne.getLocalizedMessage());
             }
-        } while (true);
+        } while (System.currentTimeMillis() - requestTime < getConnection().getReadTimeout());
+        /**
+         * throw an exception if there is a response timeout
+         */
+        throw new ModbusIOException("Response timeout.");
     }
 
     /**
@@ -101,7 +111,11 @@ abstract public class ModbusMaster {
      * @param timeout the specified timeout, in milliseconds.
      */
     public void setResponseTimeout(int timeout) {
-        getConnection().setReadTimeout(timeout);
+        try {
+            getConnection().setReadTimeout(timeout);
+        } catch (Exception e) {
+            Modbus.log().warning(e.getLocalizedMessage());
+        }
     }
 
     /**
