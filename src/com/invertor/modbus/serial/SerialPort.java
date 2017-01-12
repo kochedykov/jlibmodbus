@@ -57,8 +57,6 @@ public abstract class SerialPort {
             public void flush() throws IOException {
                 try {
                     serial.write(toByteArray());
-                } catch (Exception e) {
-                    throw new IOException(e);
                 } finally {
                     super.flush();
                 }
