@@ -1,6 +1,8 @@
 README
 
-The MODBUS protocol implementation in pure java. The goals of the library are: 1 - support of the most popular serial communication libraries(jssc, rxtx, java comm api); 2 - complete implementation of the modbus protocol v1.1b.
+The MODBUS protocol implementation in pure java. The goals of the library are:
+1 - support of the most popular serial communication libraries(jssc, rxtx, java comm api); 
+2 - complete implementation of the modbus protocol v1.1b.
 
 AUTHORS
 
@@ -23,9 +25,9 @@ rxtx home page:
 http://users.frii.com/jarvi/rxtx/index.html
 
 
--------------------------------------------------------------------------------------------------------------
-----Release version 1.2.1 -------------------------------------------------------------------------------------
--------------------------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------
+----Release version 1.2.1 ---------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------
 This version contains some improvements and some bug fixes. Also, the RXTX library is currently supported.
 	NEWS:
 	* IMPORTANT! the RXTX library is now supported! You should invoke SerialUtils.setSerialPortFactory(new SerialPortFactoryRXTX()); before you'll have created a master or a slave.
@@ -35,25 +37,25 @@ This version contains some improvements and some bug fixes. Also, the RXTX libra
 	* IMPORTANT! fixed bug with flushing of output buffers.
 	* modbus rtu master is now able to connect via tcp socket(in case of rs232/rs485 to wifi adapters).
 	* added abstraction of concrete serial port implementation.
--------------------------------------------------------------------------------------------------------------
-----Release version 1.2 -------------------------------------------------------------------------------------
--------------------------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------
+----Release version 1.2 -----------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------
 This version contains some improvements.
 	NEWS:
 	* Added extended logging.
 	* Auto increment of transaction id is currently supported. see Modbus.setAutoIncrementTransactionId.
 	* Refactoring.
--------------------------------------------------------------------------------------------------------------
-----Release version 1.1 -------------------------------------------------------------------------------------
--------------------------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------
+----Release version 1.1 -----------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------
 This version contains important fixes. Also, debugging information such as names of variables has been added.
 	NEWS:
 	* Important! fixed bug with read of starting address.
 	* Important! fixed data conversion issues.
 
--------------------------------------------------------------------------------------------------------------
-----Release version 1.0 -------------------------------------------------------------------------------------
--------------------------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------
+----Release version 1.0 -----------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------
 Implemented:
 
 1.  Read Coils(0x1)
