@@ -67,11 +67,6 @@ abstract class ModbusConnectionSerial extends ModbusConnection {
     }
 
     @Override
-    public void setReadTimeout(int timeout) {
-        getInputStream().setReadTimeout(timeout);
-    }
-
-    @Override
     public ModbusOutputStream getOutputStream() {
         return transport.getOutputStream();
     }

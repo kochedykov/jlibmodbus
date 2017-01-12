@@ -1,5 +1,6 @@
 package com.invertor.modbus.net;
 
+import com.invertor.modbus.Modbus;
 import com.invertor.modbus.exception.ModbusIOException;
 import com.invertor.modbus.net.stream.base.ModbusInputStream;
 import com.invertor.modbus.net.stream.base.ModbusOutputStream;
@@ -28,6 +29,8 @@ import com.invertor.modbus.net.transport.ModbusTransport;
  */
 abstract public class ModbusConnection {
 
+    private int readTimeout = Modbus.MAX_RESPONSE_TIMEOUT;
+
     abstract public ModbusOutputStream getOutputStream();
 
     abstract public ModbusInputStream getInputStream();
@@ -40,7 +43,19 @@ abstract public class ModbusConnection {
 
     abstract public void reset() throws ModbusIOException;
 
-    abstract public void setReadTimeout(int timeout);
+    public int getReadTimeout() {
+        return readTimeout;
+    }
+
+    public void setReadTimeout(int timeout) {
+        readTimeout = timeout;
+        if (getTransport() != null) {
+            ModbusInputStream is = getInputStream();
+            if (is != null) {
+                is.setReadTimeout(timeout);
+            }
+        }
+    }
 
     @Override
     protected void finalize()

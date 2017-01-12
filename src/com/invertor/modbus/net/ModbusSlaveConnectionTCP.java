@@ -1,6 +1,5 @@
 package com.invertor.modbus.net;
 
-import com.invertor.modbus.Modbus;
 import com.invertor.modbus.exception.ModbusIOException;
 import com.invertor.modbus.net.stream.base.ModbusInputStream;
 import com.invertor.modbus.net.stream.base.ModbusOutputStream;
@@ -9,7 +8,6 @@ import com.invertor.modbus.net.transport.ModbusTransportFactory;
 
 import java.io.IOException;
 import java.net.Socket;
-import java.net.SocketException;
 
 /*
  * Copyright (C) 2016 "Invertor" Factory", JSC
@@ -77,19 +75,6 @@ class ModbusSlaveConnectionTCP extends ModbusConnection {
         } finally {
             transport = null;
             socket = null;
-        }
-    }
-
-    @Override
-    public void setReadTimeout(int timeout) {
-        if (transport != null)
-            transport.getInputStream().setReadTimeout(timeout);
-        if (socket != null) {
-            try {
-                socket.setSoTimeout(timeout);
-            } catch (SocketException e) {
-                Modbus.log().warning("can't set so timeout.");
-            }
         }
     }
 }

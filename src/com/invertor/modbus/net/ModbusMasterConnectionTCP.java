@@ -37,7 +37,6 @@ class ModbusMasterConnectionTCP extends ModbusConnection {
 
     final private TcpParameters parameters;
     private ModbusTransport transport = null;
-    private int readTimeout = Modbus.MAX_RESPONSE_TIMEOUT;
 
     ModbusMasterConnectionTCP(TcpParameters parameters) {
         this.parameters = parameters;
@@ -76,7 +75,7 @@ class ModbusMasterConnectionTCP extends ModbusConnection {
                 throw new ModbusIOException(e);
             }
             transport = ModbusTransportFactory.createTCP(socket);
-            setReadTimeout(readTimeout);
+            setReadTimeout(getReadTimeout());
         }
     }
 
@@ -91,12 +90,5 @@ class ModbusMasterConnectionTCP extends ModbusConnection {
         } finally {
             transport = null;
         }
-    }
-
-    @Override
-    public void setReadTimeout(int timeout) {
-        readTimeout = timeout;
-        if (transport != null)
-            transport.getInputStream().setReadTimeout(timeout);
     }
 }

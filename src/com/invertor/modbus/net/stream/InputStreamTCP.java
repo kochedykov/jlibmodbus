@@ -74,6 +74,4 @@ public class InputStreamTCP extends LoggingInputStream {
             }
         });
     }
-
-
 }
