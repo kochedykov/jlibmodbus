@@ -58,29 +58,27 @@ class ModbusMasterConnectionTCP extends ModbusConnection {
     }
 
     @Override
-    public void reset() throws ModbusIOException {
-        open();
-    }
-
-    @Override
     public void open() throws ModbusIOException {
-        if (parameters != null) {
-            close();
-            Socket socket = new Socket();
-            InetSocketAddress isa = new InetSocketAddress(parameters.getHost(), parameters.getPort());
-            try {
-                socket.connect(isa, Modbus.MAX_CONNECTION_TIMEOUT);
-                socket.setKeepAlive(parameters.isKeepAlive());
-            } catch (Exception e) {
-                throw new ModbusIOException(e);
+        if (!isOpened()) {
+            if (parameters != null) {
+                Socket socket = new Socket();
+                InetSocketAddress isa = new InetSocketAddress(parameters.getHost(), parameters.getPort());
+                try {
+                    socket.connect(isa, Modbus.MAX_CONNECTION_TIMEOUT);
+                    socket.setKeepAlive(parameters.isKeepAlive());
+                } catch (Exception e) {
+                    throw new ModbusIOException(e);
+                }
+                transport = ModbusTransportFactory.createTCP(socket);
+                setReadTimeout(getReadTimeout());
+                setOpened(true);
             }
-            transport = ModbusTransportFactory.createTCP(socket);
-            setReadTimeout(getReadTimeout());
         }
     }
 
     @Override
     public void close() throws ModbusIOException {
+        setOpened(false);
         try {
             if (transport != null) {
                 transport.close();

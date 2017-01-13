@@ -6,6 +6,8 @@ import com.invertor.modbus.net.stream.base.ModbusInputStream;
 import com.invertor.modbus.net.stream.base.ModbusOutputStream;
 import com.invertor.modbus.net.transport.ModbusTransport;
 
+import java.util.concurrent.atomic.AtomicBoolean;
+
 /*
  * Copyright (C) 2016 "Invertor" Factory", JSC
  * [http://www.sbp-invertor.ru]
@@ -30,6 +32,7 @@ import com.invertor.modbus.net.transport.ModbusTransport;
 abstract public class ModbusConnection {
 
     private int readTimeout = Modbus.MAX_RESPONSE_TIMEOUT;
+    private AtomicBoolean opened = new AtomicBoolean(false);
 
     abstract public ModbusOutputStream getOutputStream();
 
@@ -41,7 +44,7 @@ abstract public class ModbusConnection {
 
     abstract public void close() throws ModbusIOException;
 
-    abstract public void reset() throws ModbusIOException;
+    //abstract public void reset() throws ModbusIOException;
 
     public int getReadTimeout() {
         return readTimeout;
@@ -62,5 +65,13 @@ abstract public class ModbusConnection {
             throws Throwable {
         super.finalize();
         close();
+    }
+
+    public boolean isOpened() {
+        return opened.get();
+    }
+
+    public void setOpened(boolean opened) {
+        this.opened.set(opened);
     }
 }

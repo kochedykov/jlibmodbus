@@ -38,6 +38,7 @@ class ModbusSlaveConnectionTCP extends ModbusConnection {
     ModbusSlaveConnectionTCP(Socket socket) throws ModbusIOException {
         this.socket = socket;
         transport = ModbusTransportFactory.createTCP(socket);
+        open();
     }
 
     @Override
@@ -56,17 +57,13 @@ class ModbusSlaveConnectionTCP extends ModbusConnection {
     }
 
     @Override
-    public void reset() throws ModbusIOException {
-        open();
-    }
-
-    @Override
     public void open() throws ModbusIOException {
-        //no operation
+        setOpened(true);
     }
 
     @Override
     public void close() throws ModbusIOException {
+        setOpened(false);
         try {
             if (socket != null)
                 socket.close();

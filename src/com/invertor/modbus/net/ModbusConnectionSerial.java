@@ -7,8 +7,6 @@ import com.invertor.modbus.net.transport.ModbusTransport;
 import com.invertor.modbus.serial.SerialPort;
 import com.invertor.modbus.serial.SerialPortException;
 
-import java.io.IOException;
-
 /*
  * Copyright (C) 2016 "Invertor" Factory", JSC
  * [http://www.sbp-invertor.ru]
@@ -30,8 +28,23 @@ import java.io.IOException;
  * Authors: Vladislav Y. Kochedykov, software engineer.
  * email: vladislav.kochedykov@gmail.com
  */
+
+/**
+ * this class is an extension of the ModbusConnection class
+ * to implement features for all serial port based connections.
+ *
+ * @see ModbusConnectionRTU
+ * @see ModbusConnectionASCII
+ * @see ModbusConnection
+ */
 abstract class ModbusConnectionSerial extends ModbusConnection {
 
+    /**
+     * instance of com.invertor.modbus.serial.SerialPort class,
+     * which is a wrapper for concrete serial API implementation.
+     *
+     * @see SerialPort
+     */
     final private SerialPort serial;
     final private ModbusTransport transport;
 
@@ -42,28 +55,20 @@ abstract class ModbusConnectionSerial extends ModbusConnection {
 
     @Override
     public void open() throws ModbusIOException {
-        try {
-            this.serial.close();
-            this.serial.open();
-            this.serial.clear();
-        } catch (SerialPortException e) {
-            throw new ModbusIOException(e);
+        if (!isOpened()) {
+            try {
+                this.serial.open();
+                setOpened(true);
+            } catch (SerialPortException e) {
+                throw new ModbusIOException(e);
+            }
         }
     }
 
     @Override
     public void close() {
+        setOpened(false);
         this.serial.close();
-    }
-
-    @Override
-    public void reset() throws ModbusIOException {
-        serial.clear();
-        try {
-            getOutputStream().flush();
-        } catch (IOException e) {
-            throw new ModbusIOException(e);
-        }
     }
 
     @Override
