@@ -1,5 +1,7 @@
 package com.invertor.modbus.serial;
 
+import java.util.List;
+
 /*
  * Copyright (C) 2016 "Invertor" Factory", JSC
  * [http://www.sbp-invertor.ru]
@@ -29,10 +31,6 @@ public class SerialUtils {
         factory = new SerialPortFactoryJSSC();
     }
 
-    /*static public String[] getPortList() {
-        return SerialPortList.getPortNames();
-    }*/
-
     /**
      * @param factory - a concrete serial port factory instance
      * @since 1.2.1
@@ -43,5 +41,9 @@ public class SerialUtils {
 
     static public SerialPort createSerial(SerialParameters sp) throws SerialPortException {
         return factory.createSerial(sp);
+    }
+
+    static public List<String> getPortIdentifiers() {
+        return factory.getPortIdentifiers();
     }
 }

@@ -1,5 +1,10 @@
 package com.invertor.modbus.serial;
 
+import javax.comm.CommPortIdentifier;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.List;
+
 /*
  * Copyright (C) 2017 Vladislav Y. Kochedykov
  *
@@ -30,5 +35,18 @@ public class SerialPortFactoryJavaComm implements SerialPortAbstractFactory {
             throw new SerialPortException(e);
         }
         return new SerialPortJavaComm(sp);
+    }
+
+    @Override
+    public List<String> getPortIdentifiers() {
+        Enumeration ports = CommPortIdentifier.getPortIdentifiers();
+        List<String> list = new ArrayList<String>();
+        while (ports.hasMoreElements()) {
+            CommPortIdentifier id = (CommPortIdentifier) ports.nextElement();
+            if (id.getPortType() == CommPortIdentifier.PORT_SERIAL) {
+                list.add(id.getName());
+            }
+        }
+        return list;
     }
 }

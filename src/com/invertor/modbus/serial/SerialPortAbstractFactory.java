@@ -23,6 +23,10 @@ package com.invertor.modbus.serial;
  * email: vladislav.kochedykov@gmail.com
  */
 
+import java.util.List;
+
 public interface SerialPortAbstractFactory {
     SerialPort createSerial(SerialParameters sp) throws SerialPortException;
+
+    List<String> getPortIdentifiers();
 }
