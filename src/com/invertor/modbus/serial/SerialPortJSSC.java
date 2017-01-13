@@ -35,24 +35,6 @@ public class SerialPortJSSC extends SerialPort {
     }
 
     @Override
-    public void purgeRx() {
-        try {
-            port.purgePort(jssc.SerialPort.PURGE_RXCLEAR);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    @Override
-    public void purgeTx() {
-        try {
-            port.purgePort(jssc.SerialPort.PURGE_TXCLEAR);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    @Override
     public void write(int b) throws IOException {
         try {
             port.writeByte((byte) b);
@@ -109,6 +91,7 @@ public class SerialPortJSSC extends SerialPort {
         if (port.isOpened()) {
             try {
                 port.closePort();
+
             } catch (Exception e) {
                 e.printStackTrace();
             }

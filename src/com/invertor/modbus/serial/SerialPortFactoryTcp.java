@@ -63,16 +63,6 @@ public class SerialPortFactoryTcp implements SerialPortAbstractFactory {
         }
 
         @Override
-        public void purgeRx() {
-            //do nothing
-        }
-
-        @Override
-        public void purgeTx() {
-            //do nothing
-        }
-
-        @Override
         public void open() throws SerialPortException {
             TcpParameters parameters = getTcpParameters();
             if (parameters != null) {

@@ -44,28 +44,6 @@ public class SerialPortRXTX extends com.invertor.modbus.serial.SerialPort implem
     }
 
     @Override
-    public void purgeRx() {
-        if (isOpened()) {
-            try {
-                in.skip(in.available());
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    @Override
-    public void purgeTx() {
-        if (isOpened()) {
-            try {
-                out.flush();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    @Override
     public void write(int b) throws IOException {
         if (!isOpened()) {
             throw new IOException("Port not opened");

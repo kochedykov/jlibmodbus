@@ -56,7 +56,9 @@ public abstract class SerialPort {
             @Override
             public void flush() throws IOException {
                 try {
-                    serial.write(toByteArray());
+                    if (serial.isOpened()) {
+                        serial.write(toByteArray());
+                    }
                 } finally {
                     super.flush();
                 }
@@ -89,15 +91,6 @@ public abstract class SerialPort {
             }
         };
     }
-
-    public void clear() {
-        purgeRx();
-        purgeTx();
-    }
-
-    abstract public void purgeRx();
-
-    abstract public void purgeTx();
 
     abstract public void write(int b) throws IOException;
 
