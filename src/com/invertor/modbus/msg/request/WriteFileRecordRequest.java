@@ -64,7 +64,7 @@ final public class WriteFileRecordRequest extends ModbusRequest {
     public void readPDU(ModbusInputStream fifo) throws ModbusNumberException, IOException {
         int byteCount = fifo.read();
         if (byteCount > (Modbus.MAX_PDU_LENGTH - 2))
-            throw new ModbusNumberException("Byte count greater then max allowable");
+            throw new ModbusNumberException("Byte count greater than max allowable");
         if (fifo.read() != ModbusFileRecord.REF_TYPE)
             throw new ModbusNumberException("Reference type mismatch.");
         int file_number = fifo.readShortBE();

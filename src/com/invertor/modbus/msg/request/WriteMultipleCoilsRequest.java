@@ -80,7 +80,7 @@ final public class WriteMultipleCoilsRequest extends AbstractWriteMultipleReques
             throw new ModbusNumberException("Byte count not matches quantity/8", getByteCount());
         }
         if (!checkAddressRange(getStartAddress(), getQuantity()))
-            throw new ModbusNumberException("Coil count greater then max coil count", getQuantity());
+            throw new ModbusNumberException("Coil count greater than max coil count", getQuantity());
         setCoils(DataUtils.toBitsArray(getValues(), getQuantity()));
     }
 

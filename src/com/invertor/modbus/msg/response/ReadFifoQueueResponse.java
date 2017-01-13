@@ -41,7 +41,7 @@ public class ReadFifoQueueResponse extends ModbusResponse {
 
     private void checkFifoCount(int fifoCount) throws ModbusNumberException {
         if (fifoCount > Modbus.MAX_FIFO_COUNT)
-            throw new ModbusNumberException("Fifo count greater then max fifo count", fifoCount);
+            throw new ModbusNumberException("Fifo count greater than max fifo count", fifoCount);
     }
 
     @Override

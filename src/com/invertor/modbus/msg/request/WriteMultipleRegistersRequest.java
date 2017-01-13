@@ -81,7 +81,7 @@ final public class WriteMultipleRegistersRequest extends AbstractWriteMultipleRe
             throw new ModbusNumberException("Byte count not matches quantity*2", getByteCount());
         }
         if (!checkAddressRange(getStartAddress(), getQuantity()))
-            throw new ModbusNumberException("Register count greater then max register count", getQuantity());
+            throw new ModbusNumberException("Register count greater than max register count", getQuantity());
         setRegisters(DataUtils.toIntArray(getValues()));
     }
 

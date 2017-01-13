@@ -44,7 +44,7 @@ final public class ReportSlaveIdResponse extends AbstractReadResponse {
 
     public void setSlaveId(byte[] slaveId) throws ModbusNumberException {
         if ((slaveId.length + 2) > Modbus.MAX_PDU_LENGTH)
-            throw new ModbusNumberException("Slave Id greater then max pdu length: ", getByteCount());
+            throw new ModbusNumberException("Slave Id greater than max pdu length: ", getByteCount());
         setByteCount(slaveId.length);
         this.slaveId = slaveId;
     }
@@ -52,7 +52,7 @@ final public class ReportSlaveIdResponse extends AbstractReadResponse {
     @Override
     protected void readData(ModbusInputStream fifo) throws IOException {
         if (Modbus.MAX_PDU_LENGTH < responseSize()) {
-            throw new IOException("Slave Id greater then max pdu length: " + getByteCount());
+            throw new IOException("Slave Id greater than max pdu length: " + getByteCount());
         }
         slaveId = new byte[getByteCount()];
         int size;

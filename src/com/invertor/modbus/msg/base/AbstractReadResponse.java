@@ -48,7 +48,7 @@ abstract public class AbstractReadResponse extends ModbusResponse {
 
     protected void setByteCount(int byteCount) throws ModbusNumberException {
         if (byteCount > (Modbus.MAX_PDU_LENGTH - 2))
-            throw new ModbusNumberException("Byte count greater then max allowable");
+            throw new ModbusNumberException("Byte count greater than max allowable");
         this.byteCount = byteCount;
     }
 

@@ -67,7 +67,7 @@ final public class ReadFileRecordRequest extends ModbusRequest {
         List<ModbusFileRecord> records = new LinkedList<ModbusFileRecord>();
         int byteCount = fifo.read();
         if (byteCount > (Modbus.MAX_PDU_LENGTH - 2))
-            throw new ModbusNumberException("Byte count greater then max allowable");
+            throw new ModbusNumberException("Byte count greater than max allowable");
         int read = 0;
         while (read < byteCount) {
             if (fifo.read() != ModbusFileRecord.REF_TYPE)
