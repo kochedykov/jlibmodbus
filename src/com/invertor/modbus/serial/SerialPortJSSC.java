@@ -78,7 +78,7 @@ public class SerialPortJSSC extends SerialPort {
     @Override
     public int read(byte[] b, int off, int len) throws IOException {
         try {
-            byte[] rb = port.readBytes(b.length);
+            byte[] rb = port.readBytes(len, getReadTimeout());
             System.arraycopy(rb, 0, b, off, len);
             return rb.length;
         } catch (Exception e) {
