@@ -1,5 +1,11 @@
 package com.invertor.modbus.serial;
 
+import gnu.io.CommPortIdentifier;
+
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.List;
+
 /*
  * Copyright (C) 2017 Vladislav Y. Kochedykov
  *
@@ -30,5 +36,19 @@ public class SerialPortFactoryRXTX implements SerialPortAbstractFactory {
             throw new SerialPortException(e);
         }
         return new SerialPortRXTX(sp);
+    }
+
+    @Override
+    public List<String> getPortIdentifiers() {
+        Enumeration ports = gnu.io.CommPortIdentifier.getPortIdentifiers();
+        List<String> list = new ArrayList<String>();
+        while (ports.hasMoreElements()) {
+            CommPortIdentifier id = (CommPortIdentifier) ports.nextElement();
+            if (id.getPortType() == CommPortIdentifier.PORT_RS485 ||
+                    id.getPortType() == CommPortIdentifier.PORT_SERIAL) {
+                list.add(id.getName());
+            }
+        }
+        return list;
     }
 }

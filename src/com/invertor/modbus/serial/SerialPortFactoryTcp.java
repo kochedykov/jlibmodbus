@@ -8,6 +8,8 @@ import com.invertor.modbus.tcp.TcpParameters;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Socket;
+import java.util.LinkedList;
+import java.util.List;
 
 /*
  * Copyright (C) 2017 Vladislav Y. Kochedykov
@@ -50,6 +52,11 @@ public class SerialPortFactoryTcp implements SerialPortAbstractFactory {
 
     public SerialPort createSerial(SerialParameters sp) throws SerialPortException {
         return new SerialPortViaTCP(sp);
+    }
+
+    @Override
+    public List<String> getPortIdentifiers() {
+        return new LinkedList<String>();
     }
 
     private class SerialPortViaTCP extends SerialPort {

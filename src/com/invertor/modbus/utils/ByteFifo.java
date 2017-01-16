@@ -43,10 +43,6 @@ final public class ByteFifo {
         bais.reset();
     }
 
-    public byte[] getByteBuffer() {
-        return baos.getByteBuffer();
-    }
-
     public byte[] toByteArray() {
         return baos.toByteArray();
     }

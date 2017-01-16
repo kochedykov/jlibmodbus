@@ -86,6 +86,26 @@
 			System:       ${build.sysinfo}    ${line.separator}
 			"
 		/>
+		<echo file="${build.src}${file.separator}com${file.separator}invertor${file.separator}modbus${file.separator}Version.java" append="false">
+package com.invertor.modbus;
+/**
+ * A class to keep the current version in
+ *
+ * @since 1.2.3
+ */
+class Version {
+	
+	private static final String version = "${version}";
+	/**
+	 * returns the current version of the JLibModbus library
+	 *
+	 * @return a string representing the version
+	 */
+	public static String getVersion() {
+		return version;
+	}
+}
+		</echo>
         <mkdir dir="${build.classes}"/>
         <javac includeantruntime="false"
 			encoding="UTF-8" 

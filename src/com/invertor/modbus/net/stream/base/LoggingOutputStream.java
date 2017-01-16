@@ -28,6 +28,12 @@ import java.io.IOException;
  * email: vladislav.kochedykov@gmail.com
  */
 
+/**
+ * this class allows to log a content of the output stream before it'll be flushed.
+ *
+ * @author kochedykov
+ * @since 1.2
+ */
 public class LoggingOutputStream extends ModbusOutputStream {
 
     /**
@@ -35,6 +41,7 @@ public class LoggingOutputStream extends ModbusOutputStream {
      */
     final private ModbusOutputStream out;
     final private ByteFifo fifo = new ByteFifo(Modbus.MAX_PDU_LENGTH);
+    final private String LOG_MESSAGE_TITLE = "Frame sent: ";
 
     public LoggingOutputStream(ModbusOutputStream out) {
         this.out = out;
@@ -44,15 +51,17 @@ public class LoggingOutputStream extends ModbusOutputStream {
     @Override
     public void write(byte[] b) throws IOException {
         out.write(b);
-        if (Modbus.getLogLevel() == Modbus.LogLevel.LEVEL_DEBUG)
+        if (Modbus.isLoggingEnabled()) {
             fifo.write(b);
+        }
     }
 
     @Override
     public void write(int b) throws IOException {
         out.write(b);
-        if (Modbus.getLogLevel() == Modbus.LogLevel.LEVEL_DEBUG)
+        if (Modbus.isLoggingEnabled()) {
             fifo.write(b);
+        }
     }
 
     @Override
@@ -62,8 +71,8 @@ public class LoggingOutputStream extends ModbusOutputStream {
     }
 
     public void log() {
-        if (Modbus.getLogLevel() == Modbus.LogLevel.LEVEL_DEBUG) {
-            Modbus.log().info("Frame sent: " + DataUtils.toAscii(fifo.toByteArray()));
+        if (Modbus.isLoggingEnabled()) {
+            Modbus.log().info(new StringBuilder().append(LOG_MESSAGE_TITLE).append(DataUtils.toAscii(fifo.toByteArray())).toString());
             fifo.reset();
         }
     }

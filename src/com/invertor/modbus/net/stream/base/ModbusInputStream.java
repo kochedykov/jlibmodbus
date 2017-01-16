@@ -26,21 +26,46 @@ import java.io.InputStream;
  * Authors: Vladislav Y. Kochedykov, software engineer.
  * email: vladislav.kochedykov@gmail.com
  */
+
+/**
+ * extends the <code>InputStream</code> class with <code>ModbusInputStream#readShortLE()</code>
+ * and <code>ModbusInputStream#readShortBE()</code> methods. Also it allows to set max read
+ * operation time with <code>ModbusInputStream#setReadTimeout()</code> method.
+ *
+ * @since 1.0
+ * @author kochedykov
+ */
 abstract public class ModbusInputStream extends InputStream {
 
-    @Override
-    abstract public int read() throws IOException;
+    /**
+     * default implementation of reading of a byte array.
+     *
+     * @param b a byte array to fill by values from the input stream.
+     * @return total number of values read from the input stream into the byte array
 
-    @Override
-    abstract public int read(byte[] b, int off, int len) throws IOException;
-
+     * @exception  IOException if there is a read operation timeout
+     * @exception  NullPointerException  if <code>b</code> is <code>null</code>.
+     */
     @Override
     public int read(byte[] b) throws IOException {
         return read(b, 0, b.length);
     }
 
+    /**
+     * sets a timeout value. if there is a timeout of read operation a stream must throw new IO exception.
+     *
+     * @param readTimeout is a timeout value in milliseconds
+     */
     abstract public void setReadTimeout(int readTimeout);
 
+    /**
+     * read two bytes in Big Endian Byte Order
+     *
+     * @return 16-bit value placed in first two bytes of integer value, second two bytes is equal zero.
+     * @throws IOException
+     *
+     * @see ModbusInputStream#readShortLE()
+     */
     public int readShortBE() throws IOException {
         int h = read();
         int l = read();
@@ -49,6 +74,14 @@ abstract public class ModbusInputStream extends InputStream {
         return DataUtils.toShort(h, l);
     }
 
+    /**
+     * read two bytes in Little Endian Byte Order
+     *
+     * @return 16-bit value placed in first two bytes of integer value, second two bytes is equal zero.
+     * @throws IOException
+     *
+     * @see ModbusInputStream#readShortBE()
+     */
     public int readShortLE() throws IOException {
         int l = read();
         int h = read();

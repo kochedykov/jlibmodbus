@@ -1,5 +1,8 @@
 package com.invertor.modbus.serial;
 
+import java.util.Arrays;
+import java.util.List;
+
 /*
  * Copyright (C) 2017 Vladislav Y. Kochedykov
  *
@@ -30,5 +33,10 @@ public class SerialPortFactoryJSSC implements SerialPortAbstractFactory {
             throw new SerialPortException(e);
         }
         return new SerialPortJSSC(sp);
+    }
+
+    @Override
+    public List<String> getPortIdentifiers() {
+        return Arrays.asList(jssc.SerialPortList.getPortNames());
     }
 }

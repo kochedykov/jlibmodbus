@@ -28,6 +28,12 @@ import java.io.IOException;
  * email: vladislav.kochedykov@gmail.com
  */
 
+/**
+ * this class allows to log a content of the input stream stream.
+ *
+ * @since 1.2
+ * @author kochedykov
+ */
 public class LoggingInputStream extends ModbusInputStream {
 
     /**
@@ -35,6 +41,7 @@ public class LoggingInputStream extends ModbusInputStream {
      */
     final private ModbusInputStream in;
     final private ByteFifo fifo = new ByteFifo(Modbus.MAX_PDU_LENGTH);
+    final private String LOG_MESSAGE_TITLE = "Frame recv: ";
 
     public LoggingInputStream(ModbusInputStream in) {
         this.in = in;
@@ -43,16 +50,18 @@ public class LoggingInputStream extends ModbusInputStream {
     @Override
     public int read() throws IOException {
         int b = in.read();
-        if (Modbus.getLogLevel() == Modbus.LogLevel.LEVEL_DEBUG)
+        if (Modbus.isLoggingEnabled()) {
             fifo.write(b);
+        }
         return b;
     }
 
     @Override
     public int read(byte[] b, int off, int len) throws IOException {
         int read = in.read(b, off, len);
-        if (Modbus.getLogLevel() == Modbus.LogLevel.LEVEL_DEBUG)
+        if (Modbus.isLoggingEnabled()) {
             fifo.write(b, off, read);
+        }
         return read;
     }
 
@@ -62,8 +71,8 @@ public class LoggingInputStream extends ModbusInputStream {
     }
 
     public void log() {
-        if (Modbus.getLogLevel() == Modbus.LogLevel.LEVEL_DEBUG) {
-            Modbus.log().info("Frame received: " + DataUtils.toAscii(fifo.toByteArray()));
+        if (Modbus.isLoggingEnabled()) {
+            Modbus.log().info(new StringBuilder().append(LOG_MESSAGE_TITLE).append(DataUtils.toAscii(fifo.toByteArray())).toString());
             fifo.reset();
         }
     }
