@@ -80,7 +80,7 @@ public class SerialPortFactoryTcp implements SerialPortAbstractFactory {
                     socket.connect(isa, Modbus.MAX_CONNECTION_TIMEOUT);
                     socket.setKeepAlive(parameters.isKeepAlive());
 
-                    socket.setSoTimeout(Modbus.MAX_RESPONSE_TIMEOUT);
+                    socket.setSoTimeout(getReadTimeout());
 
                     in = new InputStreamTCP(socket);
                     os = new OutputStreamTCP(socket);
@@ -141,7 +141,7 @@ public class SerialPortFactoryTcp implements SerialPortAbstractFactory {
                     os.close();
                 }
             } catch (Exception e) {
-                //do nothing
+                Modbus.log().warning("Unable to close port: " + e.getLocalizedMessage());
             } finally {
                 socket = null;
                 os = null;
@@ -151,10 +151,12 @@ public class SerialPortFactoryTcp implements SerialPortAbstractFactory {
 
         public void setReadTimeout(int readTimeout) {
             super.setReadTimeout(readTimeout);
-            try {
-                socket.setSoTimeout(readTimeout);
-            } catch (Exception e) {
-                //do nothing
+            if (isOpened()) {
+                try {
+                    socket.setSoTimeout(readTimeout);
+                } catch (Exception e) {
+                    Modbus.log().warning("Unable to set readTimeout: " + e.getLocalizedMessage());
+                }
             }
         }
 

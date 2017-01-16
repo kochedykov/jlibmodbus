@@ -90,7 +90,7 @@ public class SerialPortRXTX extends com.invertor.modbus.serial.SerialPort implem
                     in = port.getInputStream();
                     out = port.getOutputStream();
 
-                    port.enableReceiveTimeout(Modbus.MAX_RESPONSE_TIMEOUT);
+                    port.enableReceiveTimeout(getReadTimeout());
                     setOpened(true);
                 } else {
                     Modbus.log().severe(sp.getDevice() + " is not a serial port.");
