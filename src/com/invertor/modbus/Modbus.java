@@ -2,6 +2,7 @@ package com.invertor.modbus;
 
 import java.util.logging.Handler;
 import java.util.logging.Level;
+import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 
 /*
@@ -62,6 +63,23 @@ final public class Modbus {
 
     static {
         setLogLevel(logLevel);
+        log().setUseParentHandlers(false);
+        log().addHandler(new Handler() {
+            @Override
+            public void publish(LogRecord record) {
+                System.out.println(record.getLevel().getName() + ": " + record.getMessage());
+            }
+
+            @Override
+            public void flush() {
+                //do nothing
+            }
+
+            @Override
+            public void close() throws SecurityException {
+                //do nothing
+            }
+        });
     }
 
     private Modbus() {
@@ -95,6 +113,10 @@ final public class Modbus {
         for (Handler handler : log.getHandlers()) {
             handler.setLevel(level.value());
         }
+    }
+
+    static public boolean isLoggingEnabled() {
+        return getLogLevel() != LogLevel.LEVEL_RELEASE;
     }
 
     /**
