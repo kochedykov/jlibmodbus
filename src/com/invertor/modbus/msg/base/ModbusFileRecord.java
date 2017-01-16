@@ -2,6 +2,8 @@ package com.invertor.modbus.msg.base;
 
 import com.invertor.modbus.exception.IllegalDataValueException;
 
+import java.util.Arrays;
+
 /*
  * Copyright (C) 2016 "Invertor" Factory", JSC
  * [http://www.sbp-invertor.ru]
@@ -43,7 +45,7 @@ public class ModbusFileRecord {
     }
 
     public int[] getRegisters() {
-        return registers;
+        return Arrays.copyOf(registers, registers.length);
     }
 
     /**
@@ -52,7 +54,7 @@ public class ModbusFileRecord {
      * @param registers modbus register values
      */
     protected void setRegisters(int[] registers) {
-        this.registers = registers;
+        this.registers = Arrays.copyOf(registers, registers.length);
         this.length = registers.length;
     }
 

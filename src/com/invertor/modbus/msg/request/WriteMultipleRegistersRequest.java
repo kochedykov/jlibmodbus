@@ -37,8 +37,6 @@ import java.io.IOException;
 
 final public class WriteMultipleRegistersRequest extends AbstractWriteMultipleRequest {
 
-    private int[] registers = null;
-
     public WriteMultipleRegistersRequest(int serverAddress) throws ModbusNumberException {
         super(serverAddress);
     }
@@ -70,6 +68,9 @@ final public class WriteMultipleRegistersRequest extends AbstractWriteMultipleRe
 
     @Override
     public boolean validateResponseImpl(ModbusResponse response) {
+        if (!(response instanceof WriteMultipleRegistersResponse)) {
+            return false;
+        }
         WriteMultipleRegistersResponse r = (WriteMultipleRegistersResponse) response;
         return r.getStartAddress() == getStartAddress() && r.getValue() == getQuantity();
     }
@@ -82,15 +83,14 @@ final public class WriteMultipleRegistersRequest extends AbstractWriteMultipleRe
         }
         if (!checkAddressRange(getStartAddress(), getQuantity()))
             throw new ModbusNumberException("Register count greater than max register count", getQuantity());
-        setRegisters(DataUtils.toIntArray(getValues()));
     }
 
     public int[] getRegisters() {
-        return registers;
+        return DataUtils.toIntArray(getValues());
     }
 
     private void setRegisters(int[] registers) {
-        this.registers = registers;
+        setValues(DataUtils.toByteArray(registers));
     }
 
     @Override

@@ -36,12 +36,12 @@ import java.io.IOException;
  */
 public class LoggingInputStream extends ModbusInputStream {
 
+    final static private String LOG_MESSAGE_TITLE = "Frame recv: ";
     /**
      * The input stream to be logged
      */
     final private ModbusInputStream in;
     final private ByteFifo fifo = new ByteFifo(Modbus.MAX_PDU_LENGTH);
-    final private String LOG_MESSAGE_TITLE = "Frame recv: ";
 
     public LoggingInputStream(ModbusInputStream in) {
         this.in = in;

@@ -9,6 +9,7 @@ import com.invertor.modbus.utils.DataUtils;
 import com.invertor.modbus.utils.ModbusFunctionCode;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -81,11 +82,11 @@ final public class ReadFileRecordResponse extends AbstractReadResponse {
     }
 
     public ModbusFileRecord[] getFileRecords() {
-        return fileRecords;
+        return Arrays.copyOf(fileRecords, fileRecords.length);
     }
 
     public void setFileRecords(ModbusFileRecord[] fileRecords) throws ModbusNumberException {
-        this.fileRecords = fileRecords;
+        this.fileRecords = Arrays.copyOf(fileRecords, fileRecords.length);
         int byteCount = 0;
         for (ModbusFileRecord r : getFileRecords()) {
             byteCount += 2 + r.getRecordLength() * 2;

@@ -65,6 +65,9 @@ public class WriteSingleRegisterRequest extends AbstractDataRequest {
 
     @Override
     public boolean validateResponseImpl(ModbusResponse response) {
+        if (!(response instanceof WriteSingleRegisterResponse)) {
+            return false;
+        }
         WriteSingleRegisterResponse r = (WriteSingleRegisterResponse) response;
         return r.getStartAddress() == getStartAddress() && r.getValue() == getValue();
     }

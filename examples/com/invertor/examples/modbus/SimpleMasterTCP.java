@@ -79,6 +79,8 @@ public class SimpleMasterTCP {
                     e.printStackTrace();
                 }
             }
+        } catch (RuntimeException e) {
+            throw e;
         } catch (Exception e) {
             e.printStackTrace();
         }

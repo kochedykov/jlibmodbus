@@ -25,23 +25,19 @@ import java.util.Arrays;
  */
 public class SimpleSlaveId implements SlaveId {
 
-    private byte[] buffer = null;
+    private byte[] bytes = null;
 
     public SimpleSlaveId(int size) {
-        buffer = new byte[size];
-    }
-
-    public SimpleSlaveId(byte[] buffer) {
-        this.buffer = Arrays.copyOf(buffer, buffer.length);
+        bytes = new byte[size];
     }
 
     @Override
     public byte[] get() {
-        return buffer;
+        return Arrays.copyOf(bytes, bytes.length);
     }
 
     @Override
     public void set(byte[] data) {
-        buffer = Arrays.copyOf(data, data.length);
+        bytes = Arrays.copyOf(data, data.length);
     }
 }

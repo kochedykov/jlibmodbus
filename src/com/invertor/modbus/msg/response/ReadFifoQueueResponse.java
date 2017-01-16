@@ -33,7 +33,7 @@ import java.io.IOException;
  */
 public class ReadFifoQueueResponse extends ModbusResponse {
 
-    private int[] fifoValueRegister;
+    private byte[] bytes;
 
     public ReadFifoQueueResponse(int serverAddress) throws ModbusNumberException {
         super(serverAddress);
@@ -51,11 +51,10 @@ public class ReadFifoQueueResponse extends ModbusResponse {
         if ((fifoCount * 2) != byteCount)
             throw new ModbusNumberException("Fifo count not matches bytes*2", fifoCount);
         checkFifoCount(fifoCount);
-        byte[] bytes = new byte[byteCount];
+        bytes = new byte[byteCount];
         if (fifo.read(bytes) != byteCount) {
             throw new IOException("Can't read fifo value register");
         }
-        setFifoValueRegister(DataUtils.toIntArray(bytes));
     }
 
     @Override
@@ -68,7 +67,7 @@ public class ReadFifoQueueResponse extends ModbusResponse {
 
     @Override
     protected int responseSize() {
-        return 2 + 2 + fifoValueRegister.length * 2;
+        return 2 + 2 + (bytes != null ? bytes.length : 0);
     }
 
     @Override
@@ -77,11 +76,11 @@ public class ReadFifoQueueResponse extends ModbusResponse {
     }
 
     public int[] getFifoValueRegister() {
-        return fifoValueRegister;
+        return DataUtils.toIntArray(bytes);
     }
 
     public void setFifoValueRegister(int[] fifoValueRegister) throws ModbusNumberException {
         checkFifoCount(fifoValueRegister.length);
-        this.fifoValueRegister = fifoValueRegister;
+        this.bytes = DataUtils.toByteArray(fifoValueRegister);
     }
 }

@@ -8,6 +8,7 @@ import com.invertor.modbus.net.stream.base.ModbusOutputStream;
 import com.invertor.modbus.utils.ModbusFunctionCode;
 
 import java.io.IOException;
+import java.util.Arrays;
 
 /*
  * Copyright (C) 2016 "Invertor" Factory", JSC
@@ -39,14 +40,14 @@ final public class ReportSlaveIdResponse extends AbstractReadResponse {
     }
 
     public byte[] getSlaveId() {
-        return slaveId;
+        return slaveId != null ? Arrays.copyOf(slaveId, slaveId.length) : new byte[0];
     }
 
     public void setSlaveId(byte[] slaveId) throws ModbusNumberException {
         if ((slaveId.length + 2) > Modbus.MAX_PDU_LENGTH)
             throw new ModbusNumberException("Slave Id greater than max pdu length: ", getByteCount());
         setByteCount(slaveId.length);
-        this.slaveId = slaveId;
+        this.slaveId = Arrays.copyOf(slaveId, slaveId.length);
     }
 
     @Override

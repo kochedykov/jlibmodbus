@@ -177,6 +177,9 @@ public class SerialPortRXTX extends com.invertor.modbus.serial.SerialPort implem
             case SerialPortEvent.PE:
             case SerialPortEvent.FE:
                 Modbus.log().warning(port.getName() + ": framing error.");
+                break;
+            default:
+                break;
         }
 
     }

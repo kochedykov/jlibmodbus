@@ -152,17 +152,15 @@ public class DiagnosticsRequest extends ModbusRequest {
 
         switch (subFunctionCode) {
             case RETURN_QUERY_DATA:
-                return getSubFunctionData() == r.getSubFunctionData();
             case RESTART_COMMUNICATIONS_OPTION:
-                return getSubFunctionData() == r.getSubFunctionData();
-            case RETURN_DIAGNOSTIC_REGISTER:
-                break;
             case CHANGE_ASCII_INPUT_DELIMITER:
+            case CLEAR_COUNTERS_AND_DIAGNOSTIC_REGISTER:
+            case CLEAR_OVERRUN_COUNTER_AND_FLAG:
                 return getSubFunctionData() == r.getSubFunctionData();
             case FORCE_LISTEN_ONLY_MODE:
                 break;
-            case CLEAR_COUNTERS_AND_DIAGNOSTIC_REGISTER:
-                return getSubFunctionData() == r.getSubFunctionData();
+            case RETURN_DIAGNOSTIC_REGISTER:
+                break;
             case RETURN_BUS_MESSAGE_COUNT:
                 break;
             case RETURN_BUS_COMMUNICATION_ERROR_COUNT:
@@ -179,8 +177,6 @@ public class DiagnosticsRequest extends ModbusRequest {
                 break;
             case RETURN_BUS_CHARACTER_OVERRUN_COUNT:
                 break;
-            case CLEAR_OVERRUN_COUNTER_AND_FLAG:
-                return getSubFunctionData() == r.getSubFunctionData();
             case RESERVED:
                 break;
         }

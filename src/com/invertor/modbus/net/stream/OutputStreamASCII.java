@@ -5,6 +5,7 @@ import com.invertor.modbus.serial.SerialPort;
 import com.invertor.modbus.utils.DataUtils;
 
 import java.io.IOException;
+import java.nio.charset.Charset;
 
 /*
  * Copyright (C) 2016 "Invertor" Factory", JSC
@@ -41,19 +42,19 @@ public class OutputStreamASCII extends OutputStreamSerial {
         for (byte b : bytes) {
             lrc += b;
         }
-        byte[] ascii = DataUtils.toAscii(bytes).getBytes();
+        byte[] ascii = DataUtils.toAscii(bytes).getBytes(Charset.forName("ASCII"));
         super.write(ascii);
     }
 
     @Override
     public void write(int b) throws IOException {
         lrc += (byte) b;
-        byte[] bytes = DataUtils.toAscii((byte) b).getBytes();
+        byte[] bytes = DataUtils.toAscii((byte) b).getBytes(Charset.forName("ASCII"));
         super.write(bytes);
     }
 
     private void writeChecksum() throws IOException {
-        byte[] bytes = DataUtils.toAscii((byte) -lrc).getBytes();
+        byte[] bytes = DataUtils.toAscii((byte) -lrc).getBytes(Charset.forName("ASCII"));
         super.write(bytes);
     }
 

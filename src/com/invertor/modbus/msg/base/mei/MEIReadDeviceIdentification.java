@@ -11,6 +11,7 @@ import com.invertor.modbus.net.stream.base.ModbusOutputStream;
 import com.invertor.modbus.utils.MEITypeCode;
 
 import java.io.IOException;
+import java.util.Arrays;
 
 /*
  * Copyright (C) 2016 "Invertor" Factory", JSC
@@ -77,7 +78,7 @@ public class MEIReadDeviceIdentification implements ModbusEncapsulatedInterface 
         fifo.write(getNextObjectId());
         fifo.write(getNumberOfObjects());
         for (int i = getFirstObjectIndex(); i < getFirstObjectIndex() + getNumberOfObjects(); i++) {
-            DataObject o = getObjects()[i];
+            DataObject o = objects[i];
             fifo.write(o.getId());
             fifo.write(o.getValue().length);
             fifo.write(o.getValue());
@@ -106,7 +107,7 @@ public class MEIReadDeviceIdentification implements ModbusEncapsulatedInterface 
             int read;
             if ((read = fifo.read(value)) != length)
                 Modbus.log().warning(length + " bytes expected, but " + read + " received.");
-            getObjects()[i] = new DataObject(id, value);
+            objects[i] = new DataObject(id, value);
         }
         setResponseSize(size);
     }
@@ -148,22 +149,22 @@ public class MEIReadDeviceIdentification implements ModbusEncapsulatedInterface 
         int number_of_objects = 0;
 
         if (getObjectId() != 0) {
-            for (int i = 0; i < getObjects().length && getFirstObjectIndex() == 0; i++) {
-                if (getObjects()[i].getId() == getObjectId()) {
+            for (int i = 0; i < objects.length && getFirstObjectIndex() == 0; i++) {
+                if (objects[i].getId() == getObjectId()) {
                     setFirstObjectIndex(i);
                 }
             }
         }
 
-        for (int i = getFirstObjectIndex(); i < getObjects().length; i++) {
-            size += getObjects()[i].getValue().length + 2;//object id + object length = 2
+        for (int i = getFirstObjectIndex(); i < objects.length; i++) {
+            size += objects[i].getValue().length + 2;//object id + object length = 2
             if (size >= Modbus.MAX_PDU_LENGTH) {
                 break;
             }
             number_of_objects++;
         }
         setResponseSize(size);
-        if ((getObjects().length - getFirstObjectIndex()) > number_of_objects) {
+        if ((objects.length - getFirstObjectIndex()) > number_of_objects) {
             setNextObjectId(number_of_objects + 1);
         } else {
             setMoreFollows(false);
@@ -220,11 +221,11 @@ public class MEIReadDeviceIdentification implements ModbusEncapsulatedInterface 
     }
 
     public DataObject[] getObjects() {
-        return objects;
+        return Arrays.copyOf(objects, objects.length);
     }
 
     public void setObjects(DataObject[] objects) {
-        this.objects = objects;
+        this.objects = Arrays.copyOf(objects, objects.length);
     }
 
     public int getFirstObjectIndex() {

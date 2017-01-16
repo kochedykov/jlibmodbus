@@ -95,6 +95,9 @@ final public class WriteFileRecordRequest extends ModbusRequest {
 
     @Override
     protected boolean validateResponseImpl(ModbusResponse response) {
+        if (!(response instanceof WriteFileRecordResponse)) {
+            return false;
+        }
         ModbusFileRecord respRecord = ((WriteFileRecordResponse) response).getFileRecord();
         return !(respRecord.getFileNumber() != record.getFileNumber() ||
                 respRecord.getRecordNumber() != record.getRecordNumber() ||

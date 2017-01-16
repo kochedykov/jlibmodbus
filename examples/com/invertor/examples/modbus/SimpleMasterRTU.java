@@ -79,6 +79,8 @@ public class SimpleMasterRTU {
                     for (int value : registerValues) {
                         System.out.println("Address: " + offset++ + ", Value: " + value);
                     }
+                } catch (RuntimeException e) {
+                    throw e;
                 } catch (Exception e) {
                     e.printStackTrace();
                     try {
@@ -89,6 +91,8 @@ public class SimpleMasterRTU {
                     }
                 }
             }
+        } catch (RuntimeException e) {
+            throw e;
         } catch (Exception e) {
             e.printStackTrace();
         }

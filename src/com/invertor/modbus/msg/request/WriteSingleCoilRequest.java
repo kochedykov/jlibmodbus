@@ -53,6 +53,9 @@ final public class WriteSingleCoilRequest extends WriteSingleRegisterRequest {
 
     @Override
     public boolean validateResponseImpl(ModbusResponse response) {
+        if (!(response instanceof WriteSingleCoilResponse)) {
+            return false;
+        }
         WriteSingleCoilResponse r = (WriteSingleCoilResponse) response;
         return r.getStartAddress() == getStartAddress() && r.getValue() == getValue();
     }

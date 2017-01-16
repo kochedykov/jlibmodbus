@@ -60,6 +60,9 @@ final public class ReadDiscreteInputsRequest extends ReadCoilsRequest {
 
     @Override
     public boolean validateResponseImpl(ModbusResponse response) {
+        if (!(response instanceof ReadDiscreteInputsResponse)) {
+            return false;
+        }
         ReadDiscreteInputsResponse r = (ReadDiscreteInputsResponse) response;
         return (r.getByteCount() == ReadCoilsResponse.calcByteCount(getQuantity()));
     }

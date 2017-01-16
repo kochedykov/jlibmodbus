@@ -60,8 +60,10 @@ public class ModbusTest implements Runnable {
     static private <T> T initParameter(String title, T parameter, String arg, ParameterInitializer<T> pi) {
         try {
             parameter = pi.init(arg);
+        } catch (RuntimeException e) {
+            throw e;
         } catch (Exception e) {
-            System.out.format("Invalid %s value:%s\n", title, arg);
+            System.out.format("Invalid %s value:%s%n", title, arg);
         }
         return parameter;
     }
@@ -104,7 +106,7 @@ public class ModbusTest implements Runnable {
                     } catch (IndexOutOfBoundsException ie) {
                         //it's ok
                     }
-                    System.out.format("Starting Modbus TCP with settings:\n\t%s, %s, %s\n", host, port, keepAlive);
+                    System.out.format("Starting Modbus TCP with settings:%n\t%s, %s, %s%n", host, port, keepAlive);
                     test.master = ModbusMasterFactory.createModbusMasterTCP(host, port, keepAlive);
                     test.slave = ModbusSlaveFactory.createModbusSlaveTCP(host, port);
                     break;
@@ -156,7 +158,7 @@ public class ModbusTest implements Runnable {
                     } catch (IndexOutOfBoundsException ie) {
                         //it's ok
                     }
-                    System.out.format("Starting Modbus RTU with settings:\n\t%s, %s, %d, %d, %s\n",
+                    System.out.format("Starting Modbus RTU with settings:%n\t%s, %s, %d, %d, %s%n",
                             device_name_slave, baud_rate.toString(), data_bits, stop_bits, parity.toString());
                     test.master = ModbusMasterFactory.createModbusMasterRTU(device_name_master, baud_rate, data_bits, stop_bits, parity);
                     test.slave = ModbusSlaveFactory.createModbusSlaveRTU(device_name_slave, baud_rate, data_bits, stop_bits, parity);
@@ -194,7 +196,7 @@ public class ModbusTest implements Runnable {
                     } catch (IndexOutOfBoundsException ie) {
                         //it's ok
                     }
-                    System.out.format("Starting Modbus ASCII with settings:\n\t%s, %s, %s\n",
+                    System.out.format("Starting Modbus ASCII with settings:%n\t%s, %s, %s%n",
                             device_name_slave, baud_rate.toString(), parity.toString());
                     test.master = ModbusMasterFactory.createModbusMasterASCII(device_name_master, baud_rate, parity);
                     test.slave = ModbusSlaveFactory.createModbusSlaveASCII(device_name_slave, baud_rate, parity);
@@ -218,7 +220,7 @@ public class ModbusTest implements Runnable {
                 dataHolder.getInputRegisters().setRange(0, new int[]{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10});
                 dataHolder.getInputRegisters().set(11, 69);
                 dataHolder.getHoldingRegisters().setRange(0, new int[]{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10});
-                dataHolder.getSlaveId().set("slave implementation = jlibmodbus".getBytes());
+                dataHolder.getSlaveId().set("slave implementation = jlibmodbus".getBytes(Charset.forName("UTF-8")));
                 dataHolder.getExceptionStatus().set(123);
                 dataHolder.getCommStatus().addEvent(ModbusEventSend.createExceptionSentRead());
                 ReadDeviceIdentificationInterface rii = dataHolder.getReadDeviceIdentificationInterface();
@@ -238,20 +240,22 @@ public class ModbusTest implements Runnable {
             }
 
             test.start(10000);
+        } catch (RuntimeException e) {
+            throw e;
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     private static void printUsage() {
-        System.out.format("Usage: %s [%s, %s, %s]\n", ModbusTest.class.getCanonicalName(), "tcp", "rtu", "ascii");
-        System.out.format("\t%s additional parameters:%s %s %s\n\t\t%s\n", "tcp",
+        System.out.format("Usage: %s [%s, %s, %s]%n", ModbusTest.class.getCanonicalName(), "tcp", "rtu", "ascii");
+        System.out.format("\t%s additional parameters:%s %s %s%n\t\t%s%n", "tcp",
                 "ip address", "port", "keep_alive(true, false)",
                 "Example: 127.0.0.1 502 true");
-        System.out.format("\t%s additional parameters:%s %s %s %s %s %s\n\t\t%s\n", "rtu",
+        System.out.format("\t%s additional parameters:%s %s %s %s %s %s%n\t\t%s%n", "rtu",
                 "device_name_slave", "device_name_master", "baud_rate", "data_bits", "stop_bits", "parity(none, odd, even, mark, space)",
                 "Example: COM1 115200 8 1 none");
-        System.out.format("\t%s additional parameters:%s %s %s %s\n\t\t%s\n", "ascii",
+        System.out.format("\t%s additional parameters:%s %s %s %s%n\t\t%s%n", "ascii",
                 "device_name_slave", "device_name_master", "baud_rate", "parity(none, odd, even, mark, space)",
                 "Example: COM1 115200 odd");
     }
@@ -259,13 +263,13 @@ public class ModbusTest implements Runnable {
     private static void printRegisters(String title, int[] ir) {
         for (int i : ir)
             System.out.format("%6d", i);
-        System.out.format("\t%s\n", title);
+        System.out.format("\t%s%n", title);
     }
 
     private static void printBits(String title, boolean[] ir) {
         for (boolean i : ir)
             System.out.format("%6s", i);
-        System.out.format("\t%s\n", title);
+        System.out.format("\t%s%n", title);
     }
 
     private void start(long timeout) {
@@ -287,6 +291,8 @@ public class ModbusTest implements Runnable {
             master.open();
             master.writeSingleRegister(1, 0, 69);
             Modbus.setAutoIncrementTransactionId(true);
+        } catch (RuntimeException e) {
+            throw e;
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -308,11 +314,11 @@ public class ModbusTest implements Runnable {
                 printBits("Coils", master.readCoils(1, 0, 16));
                 printBits("Discrete inputs", master.readDiscreteInputs(1, 0, 16));
                 if (!(master instanceof ModbusMasterTCP)) {
-                    System.out.format("%s\t\t%s\n", "Slave Id", new String(master.reportSlaveId(1), Charset.defaultCharset()));
-                    System.out.format("%s\t\t%d\n", "Exception status", master.readExceptionStatus(1));
-                    System.out.format("%s\t\t%d\n", "Comm event counter", master.getCommEventCounter(1).getEventCount());
-                    System.out.format("%s\t\t%d\n", "Comm message count", master.getCommEventLog(1).getMessageCount());
-                    System.out.format("%s\t\t\t\t%d\n", "Diagnostics", master.diagnosticsReturnBusMessageCount(1));
+                    System.out.format("%s\t\t%s%n", "Slave Id", new String(master.reportSlaveId(1), Charset.defaultCharset()));
+                    System.out.format("%s\t\t%d%n", "Exception status", master.readExceptionStatus(1));
+                    System.out.format("%s\t\t%d%n", "Comm event counter", master.getCommEventCounter(1).getEventCount());
+                    System.out.format("%s\t\t%d%n", "Comm message count", master.getCommEventLog(1).getMessageCount());
+                    System.out.format("%s\t\t\t\t%d%n", "Diagnostics", master.diagnosticsReturnBusMessageCount(1));
                 }
                 master.maskWriteRegister(1, 0, 7, 10);
                 master.writeSingleCoil(1, 13, true);
@@ -325,6 +331,8 @@ public class ModbusTest implements Runnable {
                     System.out.format("%s ", new String(o.getValue(), Charset.defaultCharset()));
                 }
                 System.out.println();
+            } catch (RuntimeException e) {
+                throw e;
             } catch (Exception e) {
                 e.printStackTrace();
             }

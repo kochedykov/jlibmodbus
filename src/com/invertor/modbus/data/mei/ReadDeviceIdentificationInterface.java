@@ -2,6 +2,7 @@ package com.invertor.modbus.data.mei;
 
 import com.invertor.modbus.exception.IllegalDataAddressException;
 
+import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.TreeMap;
 
@@ -50,15 +51,15 @@ public class ReadDeviceIdentificationInterface {
     DataObjectsHolder getDataObjectsHolder(int id) {
         if (id < 0)
             throw new IllegalArgumentException();
-        if (id >= BASIC_OBJECT_COUNT)
-            return dataObjectsRegular;
         if (id >= REGULAR_OBJECT_COUNT)
             return dataObjectsExtended;
+        if (id >= BASIC_OBJECT_COUNT)
+            return dataObjectsRegular;
         return dataObjectsBasic;
     }
 
     public void setValue(int id, String value) {
-        setValue(new DataObject(id, value.getBytes()));
+        setValue(new DataObject(id, value.getBytes(Charset.forName("UTF-8"))));
     }
 
     public void setValue(DataObject dataObject) {
@@ -151,7 +152,7 @@ public class ReadDeviceIdentificationInterface {
         }
 
         public byte[] getValue() {
-            return value;
+            return Arrays.copyOf(value, value.length);
         }
 
         public void setValue(byte[] value) {
@@ -159,7 +160,7 @@ public class ReadDeviceIdentificationInterface {
         }
     }
 
-    private class DataObjectsHolder {
+    static private class DataObjectsHolder {
         final private int capacity;
         TreeMap<Integer, DataObject> map;
 

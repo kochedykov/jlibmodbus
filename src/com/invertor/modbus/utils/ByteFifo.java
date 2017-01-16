@@ -89,7 +89,7 @@ final public class ByteFifo {
         return size() - (capacity - bais.available());
     }
 
-    private class ByteArrayOutputStream extends java.io.ByteArrayOutputStream {
+    static private class ByteArrayOutputStream extends java.io.ByteArrayOutputStream {
 
         ByteArrayOutputStream(int size) {
             super(size);

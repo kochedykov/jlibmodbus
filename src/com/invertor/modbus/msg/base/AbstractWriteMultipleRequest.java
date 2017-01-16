@@ -6,6 +6,7 @@ import com.invertor.modbus.net.stream.base.ModbusInputStream;
 import com.invertor.modbus.net.stream.base.ModbusOutputStream;
 
 import java.io.IOException;
+import java.util.Arrays;
 
 /*
  * Copyright (C) 2016 "Invertor" Factory", JSC
@@ -70,11 +71,11 @@ abstract public class AbstractWriteMultipleRequest extends AbstractMultipleReque
     }
 
     public byte[] getValues() {
-        return values;
+        return Arrays.copyOf(values, values.length);
     }
 
     public void setValues(byte[] values) {
-        this.values = values;
+        this.values = Arrays.copyOf(values, values.length);
     }
 
     @Override

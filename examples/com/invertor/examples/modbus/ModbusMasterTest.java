@@ -45,7 +45,7 @@ public class ModbusMasterTest {
         try {
             parameter = pi.init(arg);
         } catch (Exception e) {
-            System.out.format("Invalid %s value:%s\n", title, arg);
+            System.out.format("Invalid %s value:%s%n", title, arg);
         }
         return parameter;
     }
@@ -80,7 +80,7 @@ public class ModbusMasterTest {
                     } catch (IndexOutOfBoundsException ie) {
                         //it's ok
                     }
-                    System.out.format("Starting Modbus Master TCP with settings:\n\t%s\n, %s", host, keepAlive);
+                    System.out.format("Starting Modbus Master TCP with settings:%n\t%s%n, %s", host, keepAlive);
                     master = ModbusMasterFactory.createModbusMasterTCP(host, port, keepAlive);
                     break;
                 case RTU:
@@ -124,7 +124,7 @@ public class ModbusMasterTest {
                     } catch (IndexOutOfBoundsException ie) {
                         //it's ok
                     }
-                    System.out.format("Starting ModbusMaster RTU with settings:\n\t%s\n, %s, %d, %d, %s\n",
+                    System.out.format("Starting ModbusMaster RTU with settings:%n\t%s%n, %s, %d, %d, %s%n",
                             device_name, baud_rate.toString(), data_bits, stop_bits, parity.toString());
                     master = ModbusMasterFactory.createModbusMasterRTU(device_name, baud_rate, data_bits, stop_bits, parity);
                     break;
@@ -154,7 +154,7 @@ public class ModbusMasterTest {
                     } catch (IndexOutOfBoundsException ie) {
                         //it's ok
                     }
-                    System.out.format("Starting ModbusMaster ASCII with settings:\n\t%s\n, %s, %s\n",
+                    System.out.format("Starting ModbusMaster ASCII with settings:%n\t%s%n, %s, %s%n",
                             device_name, baud_rate.toString(), parity.toString());
                     master = ModbusMasterFactory.createModbusMasterASCII(device_name, baud_rate, parity);
                     break;
@@ -167,7 +167,7 @@ public class ModbusMasterTest {
             try {
                 master.open();
             } catch (ModbusIOException e) {
-                System.out.format("%s %s\n", "Can't open connection:", e.getLocalizedMessage());
+                System.out.format("%s %s%n", "Can't open connection:", e.getLocalizedMessage());
             }
 
             for (int r = 0; r < 5; r++) {
@@ -183,6 +183,8 @@ public class ModbusMasterTest {
                     master.writeSingleCoil(1, 5, true);
                     master.writeMultipleRegisters(1, 1, new int[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 77});
                     master.writeMultipleCoils(1, 0, new boolean[]{true, false, true});
+                } catch (RuntimeException e) {
+                    throw e;
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -190,22 +192,26 @@ public class ModbusMasterTest {
             try {
                 master.close();
             } catch (ModbusIOException e) {
-                System.out.format("%s %s\n", "Can't close connection:", e.getLocalizedMessage());
+                System.out.format("%s %s%n", "Can't close connection:", e.getLocalizedMessage());
+            } catch (RuntimeException e) {
+                throw e;
             }
+        } catch (RuntimeException e) {
+            throw e;
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     private static void printUsage() {
-        System.out.format("Usage: %s [%s, %s, %s]\n", ModbusMasterTest.class.getCanonicalName(), "tcp", "rtu", "ascii");
-        System.out.format("\t%s additional parameters:%s %s %s\n\t\t%s\n", "tcp",
+        System.out.format("Usage: %s [%s, %s, %s]%n", ModbusMasterTest.class.getCanonicalName(), "tcp", "rtu", "ascii");
+        System.out.format("\t%s additional parameters:%s %s %s%n\t\t%s%n", "tcp",
                 "ip address", "port", "keep_alive(true, false)",
                 "Example: 127.0.0.1 502 true");
-        System.out.format("\t%s additional parameters:%s %s %s %s %s\n\t\t%s\n", "rtu",
+        System.out.format("\t%s additional parameters:%s %s %s %s %s%n\t\t%s%n", "rtu",
                 "device_name", "baud_rate", "data_bits", "stop_bits", "parity(none, odd, even, mark, space)",
                 "Example: COM1 115200 8 1 none");
-        System.out.format("\t%s additional parameters:%s %s %s\n\t\t%s\n", "ascii",
+        System.out.format("\t%s additional parameters:%s %s %s%n\t\t%s%n", "ascii",
                 "device_name", "baud_rate", "parity(none, odd, even, mark, space)",
                 "Example: COM1 115200 odd");
     }
@@ -213,13 +219,13 @@ public class ModbusMasterTest {
     private static void printRegisters(String title, int[] ir) {
         for (int i : ir)
             System.out.format("%6d", i);
-        System.out.format("  %s\n", title);
+        System.out.format("  %s%n", title);
     }
 
     private static void printBits(String title, boolean[] ir) {
         for (boolean i : ir)
             System.out.format("%6s", i);
-        System.out.format("  %s\n", title);
+        System.out.format("  %s%n", title);
     }
 
     private enum TransportType {

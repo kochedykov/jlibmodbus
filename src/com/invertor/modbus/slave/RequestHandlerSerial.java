@@ -75,6 +75,8 @@ class RequestHandlerSerial extends RequestHandler {
                             commStatus.restartCommunicationsOption();
                             getSlave().open();
                         }
+                    } catch (RuntimeException re) {
+                        throw re;
                     } catch (Exception e) {
                         /*
                          * quantity of messages addressed to the remote device for

@@ -44,7 +44,7 @@ final public class ReadInputRegistersRequest extends ReadHoldingRegistersRequest
         ReadInputRegistersResponse response = new ReadInputRegistersResponse(getServerAddress());
         try {
             int[] range = dataHolder.readInputRegisterRange(getStartAddress(), getQuantity());
-            response.setRegisters(range);
+            response.setBuffer(range);
         } catch (ModbusProtocolException e) {
             response.setException();
             response.setModbusExceptionCode(e.getException().getValue());
@@ -54,6 +54,9 @@ final public class ReadInputRegistersRequest extends ReadHoldingRegistersRequest
 
     @Override
     public boolean validateResponseImpl(ModbusResponse response) {
+        if (!(response instanceof ReadInputRegistersResponse)) {
+            return false;
+        }
         ReadInputRegistersResponse r = (ReadInputRegistersResponse) response;
         return r.getByteCount() == getQuantity() * 2;
     }

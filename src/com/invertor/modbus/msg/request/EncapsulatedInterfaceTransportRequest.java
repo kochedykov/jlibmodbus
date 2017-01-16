@@ -91,6 +91,9 @@ public class EncapsulatedInterfaceTransportRequest extends ModbusRequest {
 
     @Override
     protected boolean validateResponseImpl(ModbusResponse response) {
+        if (!(response instanceof EncapsulatedInterfaceTransportResponse)) {
+            return false;
+        }
         return mei.getTypeCode() == ((EncapsulatedInterfaceTransportResponse) response).getMei().getTypeCode();
     }
 

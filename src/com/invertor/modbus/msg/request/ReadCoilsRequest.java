@@ -68,6 +68,9 @@ public class ReadCoilsRequest extends AbstractMultipleRequest {
 
     @Override
     public boolean validateResponseImpl(ModbusResponse response) {
+        if (!(response instanceof ReadCoilsResponse)) {
+            return false;
+        }
         ReadCoilsResponse r = (ReadCoilsResponse) response;
         return (r.getByteCount() == ReadCoilsResponse.calcByteCount(getQuantity()));
     }

@@ -4,6 +4,7 @@ import com.invertor.modbus.Modbus;
 import com.invertor.modbus.ModbusSlave;
 import com.invertor.modbus.data.DataHolder;
 import com.invertor.modbus.exception.ModbusIOException;
+import com.invertor.modbus.exception.ModbusNumberException;
 import com.invertor.modbus.msg.base.ModbusMessage;
 import com.invertor.modbus.msg.base.ModbusRequest;
 import com.invertor.modbus.net.ModbusConnection;
@@ -50,8 +51,11 @@ class RequestHandlerTCP extends RequestHandler {
                     transport.send(response);
                 }
             } while (isListening());
-        } catch (Exception e) {
-            //
+
+        } catch (ModbusNumberException e) {
+            Modbus.log().warning(e.getLocalizedMessage());
+        } catch (ModbusIOException e) {
+            Modbus.log().warning(e.getLocalizedMessage());
         } finally {
             setListening(false);
             try {

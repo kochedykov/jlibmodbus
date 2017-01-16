@@ -69,6 +69,9 @@ final public class WriteMultipleCoilsRequest extends AbstractWriteMultipleReques
 
     @Override
     public boolean validateResponseImpl(ModbusResponse response) {
+        if (!(response instanceof WriteMultipleCoilsResponse)) {
+            return false;
+        }
         WriteMultipleCoilsResponse r = (WriteMultipleCoilsResponse) response;
         return r.getStartAddress() == getStartAddress() && r.getValue() == getQuantity();
     }
@@ -76,7 +79,7 @@ final public class WriteMultipleCoilsRequest extends AbstractWriteMultipleReques
     @Override
     public void readData(ModbusInputStream fifo) throws IOException, ModbusNumberException {
         super.readData(fifo);
-        if (Math.ceil((double) getQuantity() / 8) != getByteCount()) {
+        if ((int) Math.ceil((double) getQuantity() / 8) != getByteCount()) {
             throw new ModbusNumberException("Byte count not matches quantity/8", getByteCount());
         }
         if (!checkAddressRange(getStartAddress(), getQuantity()))

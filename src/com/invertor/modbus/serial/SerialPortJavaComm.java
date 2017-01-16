@@ -178,6 +178,9 @@ public class SerialPortJavaComm extends com.invertor.modbus.serial.SerialPort im
             case SerialPortEvent.PE:
             case SerialPortEvent.FE:
                 Modbus.log().warning(port.getName() + ": framing error.");
+                break;
+            default:
+                break;
         }
 
     }

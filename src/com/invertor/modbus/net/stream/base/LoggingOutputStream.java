@@ -36,12 +36,12 @@ import java.io.IOException;
  */
 public class LoggingOutputStream extends ModbusOutputStream {
 
+    final static private String LOG_MESSAGE_TITLE = "Frame sent: ";
     /**
      * The output stream to be logged
      */
     final private ModbusOutputStream out;
     final private ByteFifo fifo = new ByteFifo(Modbus.MAX_PDU_LENGTH);
-    final private String LOG_MESSAGE_TITLE = "Frame sent: ";
 
     public LoggingOutputStream(ModbusOutputStream out) {
         this.out = out;

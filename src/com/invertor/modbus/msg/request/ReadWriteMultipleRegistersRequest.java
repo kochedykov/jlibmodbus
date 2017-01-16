@@ -68,7 +68,7 @@ public class ReadWriteMultipleRegistersRequest extends ModbusRequest {
         try {
             dataHolder.writeHoldingRegisterRange(writer.getStartAddress(), writer.getRegisters());
             int[] range = dataHolder.readHoldingRegisterRange(reader.getStartAddress(), reader.getQuantity());
-            response.setRegisters(range);
+            response.setBuffer(range);
         } catch (ModbusProtocolException e) {
             response.setException();
             response.setModbusExceptionCode(e.getException().getValue());
@@ -78,6 +78,9 @@ public class ReadWriteMultipleRegistersRequest extends ModbusRequest {
 
     @Override
     public boolean validateResponseImpl(ModbusResponse response) {
+        if (!(response instanceof ReadWriteMultipleRegistersResponse)) {
+            return false;
+        }
         ReadWriteMultipleRegistersResponse r = (ReadWriteMultipleRegistersResponse) response;
         return r.getByteCount() == reader.getQuantity() * 2;
     }

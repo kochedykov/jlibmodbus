@@ -8,6 +8,7 @@ import com.invertor.modbus.net.stream.InputStreamSerial;
 import com.invertor.modbus.net.stream.OutputStreamSerial;
 
 import java.io.IOException;
+import java.io.InputStream;
 
 /*
  * Copyright (C) 2016 "Invertor" Factory", JSC
@@ -39,11 +40,14 @@ class ModbusTransportSerial extends ModbusTransport {
     @Override
     protected ModbusMessage read(ModbusMessageFactory factory) throws ModbusIOException, ModbusNumberException {
         ModbusMessage msg;
-        InputStreamSerial is = (InputStreamSerial) getInputStream();
+        InputStream is = getInputStream();
+        if (!(is instanceof InputStreamSerial))
+            throw new ModbusIOException("Can't cast getInputStream() to InputStreamSerial");
+        InputStreamSerial iss = (InputStreamSerial) is;
         try {
-            is.frameInit();
-            msg = factory.createMessage(is);
-            is.frameCheck();
+            iss.frameInit();
+            msg = factory.createMessage(iss);
+            iss.frameCheck();
         } catch (IOException ioe) {
             throw new ModbusIOException(ioe);
         }

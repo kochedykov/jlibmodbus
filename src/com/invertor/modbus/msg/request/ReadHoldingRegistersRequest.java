@@ -46,7 +46,7 @@ public class ReadHoldingRegistersRequest extends AbstractMultipleRequest {
         ReadHoldingRegistersResponse response = new ReadHoldingRegistersResponse(getServerAddress());
         try {
             int[] range = dataHolder.readHoldingRegisterRange(getStartAddress(), getQuantity());
-            response.setRegisters(range);
+            response.setBuffer(range);
         } catch (ModbusProtocolException e) {
             response.setException();
             response.setModbusExceptionCode(e.getException().getValue());
@@ -56,6 +56,9 @@ public class ReadHoldingRegistersRequest extends AbstractMultipleRequest {
 
     @Override
     public boolean validateResponseImpl(ModbusResponse response) {
+        if (!(response instanceof ReadHoldingRegistersResponse)) {
+            return false;
+        }
         ReadHoldingRegistersResponse r = (ReadHoldingRegistersResponse) response;
         return (r.getByteCount() == getQuantity() * 2);
     }

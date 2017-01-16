@@ -33,16 +33,10 @@ import java.io.IOException;
  */
 public class ReadCoilsResponse extends AbstractReadResponse {
 
-    private boolean[] coils;
+    private byte[] buffer = null;
 
     public ReadCoilsResponse(int serverAddress) throws ModbusNumberException {
         super(serverAddress);
-    }
-
-    public ReadCoilsResponse(int serverAddress, boolean[] coils) throws ModbusNumberException {
-        super(serverAddress, calcByteCount(coils));
-
-        this.coils = coils;
     }
 
     static public int calcByteCount(boolean[] coils) {
@@ -54,26 +48,25 @@ public class ReadCoilsResponse extends AbstractReadResponse {
     }
 
     final public boolean[] getCoils() {
-        return coils;
+        return buffer != null ? DataUtils.toBitsArray(buffer, buffer.length * 8) : new boolean[0];
     }
 
     final public void setCoils(boolean[] coils) throws ModbusNumberException {
-        this.coils = coils;
+        this.buffer = DataUtils.toByteArray(coils);
         setByteCount(calcByteCount(coils));
     }
 
     @Override
     final protected void readData(ModbusInputStream fifo) throws IOException {
-        byte[] coils = new byte[getByteCount()];
+        buffer = new byte[getByteCount()];
         int size;
-        if ((size = fifo.read(coils)) < coils.length)
-            Modbus.log().warning(coils.length + " bytes expected, but " + size + " received.");
-        this.coils = DataUtils.toBitsArray(coils, coils.length * 8);
+        if ((size = fifo.read(buffer)) < buffer.length)
+            Modbus.log().warning(buffer.length + " bytes expected, but " + size + " received.");
     }
 
     @Override
     final protected void writeData(ModbusOutputStream fifo) throws IOException {
-        fifo.write(DataUtils.toByteArray(coils));
+        fifo.write(buffer);
     }
 
     @Override

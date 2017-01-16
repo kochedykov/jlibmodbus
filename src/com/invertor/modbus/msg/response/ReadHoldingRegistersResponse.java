@@ -33,33 +33,32 @@ import java.io.IOException;
  */
 public class ReadHoldingRegistersResponse extends AbstractReadResponse {
 
-    private int[] registers;
+    private byte[] buffer;
 
     public ReadHoldingRegistersResponse(int serverAddress) throws ModbusNumberException {
         super(serverAddress);
     }
 
     final public int[] getRegisters() {
-        return registers;
+        return DataUtils.toIntArray(buffer);
     }
 
-    final public void setRegisters(int[] registers) throws ModbusNumberException {
-        this.registers = registers;
-        setByteCount(registers.length * 2);
+    final public void setBuffer(int[] registers) throws ModbusNumberException {
+        this.buffer = DataUtils.toByteArray(registers);
+        setByteCount(this.buffer.length);
     }
 
     @Override
     final protected void readData(ModbusInputStream fifo) throws IOException {
-        byte[] buffer = new byte[getByteCount()];
+        buffer = new byte[getByteCount()];
         int size;
         if ((size = fifo.read(buffer)) < buffer.length)
             Modbus.log().warning(buffer.length + " bytes expected, but " + size + " received.");
-        registers = DataUtils.toIntArray(buffer);
     }
 
     @Override
     final protected void writeData(ModbusOutputStream fifo) throws IOException {
-        fifo.write(DataUtils.toByteArray(registers));
+        fifo.write(buffer);
     }
 
     @Override

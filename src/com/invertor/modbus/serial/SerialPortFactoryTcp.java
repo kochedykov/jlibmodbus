@@ -8,6 +8,7 @@ import com.invertor.modbus.tcp.TcpParameters;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Socket;
+import java.net.SocketException;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -62,7 +63,7 @@ public class SerialPortFactoryTcp implements SerialPortAbstractFactory {
     private class SerialPortViaTCP extends SerialPort {
 
         private Socket socket;
-        private InputStreamTCP in;
+        private InputStreamTCP is;
         private OutputStreamTCP os;
 
         public SerialPortViaTCP(SerialParameters sp) throws SerialPortException {
@@ -79,12 +80,14 @@ public class SerialPortFactoryTcp implements SerialPortAbstractFactory {
                 try {
                     socket.connect(isa, Modbus.MAX_CONNECTION_TIMEOUT);
                     socket.setKeepAlive(parameters.isKeepAlive());
-
                     socket.setSoTimeout(getReadTimeout());
 
-                    in = new InputStreamTCP(socket);
+                    is = new InputStreamTCP(socket);
                     os = new OutputStreamTCP(socket);
-                } catch (Exception e) {
+
+                } catch (SocketException e) {
+                    throw new SerialPortException(e);
+                } catch (IOException e) {
                     throw new SerialPortException(e);
                 }
             }
@@ -113,7 +116,7 @@ public class SerialPortFactoryTcp implements SerialPortAbstractFactory {
         @Override
         public int read() throws IOException {
             if (isOpened()) {
-                return in.read();
+                return is.read();
             } else {
                 throw new IOException("Port not opened");
             }
@@ -122,7 +125,7 @@ public class SerialPortFactoryTcp implements SerialPortAbstractFactory {
         @Override
         public int read(byte[] b, int off, int len) throws IOException {
             if (isOpened()) {
-                return in.read(b, off, len);
+                return is.read(b, off, len);
             } else {
                 throw new IOException("Port not opened");
             }
@@ -131,21 +134,17 @@ public class SerialPortFactoryTcp implements SerialPortAbstractFactory {
         @Override
         public void close() {
             try {
-                if (socket != null) {
+                if (isOpened()) {
+                    is.close();
+                    os.close();
                     socket.close();
                 }
-                if (in != null) {
-                    in.close();
-                }
-                if (os != null) {
-                    os.close();
-                }
-            } catch (Exception e) {
+            } catch (IOException e) {
                 Modbus.log().warning("Unable to close port: " + e.getLocalizedMessage());
             } finally {
-                socket = null;
+                is = null;
                 os = null;
-                in = null;
+                socket = null;
             }
         }
 
@@ -154,7 +153,8 @@ public class SerialPortFactoryTcp implements SerialPortAbstractFactory {
             if (isOpened()) {
                 try {
                     socket.setSoTimeout(readTimeout);
-                } catch (Exception e) {
+                } catch (SocketException e) {
+                    e.printStackTrace();
                     Modbus.log().warning("Unable to set readTimeout: " + e.getLocalizedMessage());
                 }
             }
@@ -162,7 +162,7 @@ public class SerialPortFactoryTcp implements SerialPortAbstractFactory {
 
         @Override
         public boolean isOpened() {
-            return socket != null && socket.isConnected();
+            return socket != null && socket.isConnected() && os != null && is != null;
         }
     }
 }

@@ -13,6 +13,7 @@ import com.invertor.modbus.net.stream.base.ModbusOutputStream;
 import com.invertor.modbus.utils.ModbusFunctionCode;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -48,7 +49,7 @@ final public class ReadFileRecordRequest extends ModbusRequest {
 
     public ReadFileRecordRequest(int serverAddress, ModbusFileRecord[] records) throws ModbusNumberException {
         super(serverAddress);
-        this.records = records;
+        this.records = Arrays.copyOf(records, records.length);
     }
 
     @Override
@@ -103,6 +104,9 @@ final public class ReadFileRecordRequest extends ModbusRequest {
 
     @Override
     protected boolean validateResponseImpl(ModbusResponse response) {
+        if (!(response instanceof ReadFileRecordResponse)) {
+            return false;
+        }
         ModbusFileRecord[] respRecords = ((ReadFileRecordResponse) response).getFileRecords();
         if (records.length != respRecords.length)
             return false;

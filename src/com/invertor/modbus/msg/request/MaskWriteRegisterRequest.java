@@ -65,6 +65,9 @@ final public class MaskWriteRegisterRequest extends AbstractDataRequest {
 
     @Override
     public boolean validateResponseImpl(ModbusResponse response) {
+        if (!(response instanceof MaskWriteRegisterResponse)) {
+            return false;
+        }
         MaskWriteRegisterResponse r = (MaskWriteRegisterResponse) response;
         return (r.getStartAddress() == getStartAddress()) &&
                 (r.getMaskAnd() == getMaskAnd()) &&

@@ -1,5 +1,7 @@
 package com.invertor.modbus.utils;
 
+import java.util.Locale;
+
 /*
  * Copyright (C) 2016 "Invertor" Factory", JSC
  * [http://www.sbp-invertor.ru]
@@ -36,11 +38,11 @@ public class DataUtils {
         for (byte b : bytes) {
             sb.append(toHexString(b));
         }
-        return sb.toString();
+        return sb.toString().toUpperCase(Locale.ENGLISH);
     }
 
     static public String toHexString(byte b) {
-        return (((b & 0xff) < 0x10) ? "0" : "") + Integer.toString(b & 0xff, 16).toUpperCase();
+        return (((b & 0xff) < 0x10) ? "0" : "") + Integer.toString(b & 0xff, 16).toUpperCase(Locale.ENGLISH);
     }
 
     static public byte[] toByteArray(boolean[] bits) {

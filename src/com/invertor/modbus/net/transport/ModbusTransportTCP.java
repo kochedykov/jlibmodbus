@@ -35,11 +35,9 @@ import java.net.Socket;
  * email: vladislav.kochedykov@gmail.com
  */
 class ModbusTransportTCP extends ModbusTransport {
-    final private Socket socket;
 
     ModbusTransportTCP(Socket socket) throws ModbusIOException, IOException {
         super(new InputStreamTCP(socket), new OutputStreamTCP(socket));
-        this.socket = socket;
     }
 
     @Override
