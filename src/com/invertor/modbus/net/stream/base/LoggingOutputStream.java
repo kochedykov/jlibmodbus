@@ -28,6 +28,12 @@ import java.io.IOException;
  * email: vladislav.kochedykov@gmail.com
  */
 
+/**
+ * this class allows to log a content of the output stream before it'll be flushed.
+ *
+ * @author kochedykov
+ * @since 1.2
+ */
 public class LoggingOutputStream extends ModbusOutputStream {
 
     /**

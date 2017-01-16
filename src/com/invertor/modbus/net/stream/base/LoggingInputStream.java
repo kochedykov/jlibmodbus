@@ -28,6 +28,12 @@ import java.io.IOException;
  * email: vladislav.kochedykov@gmail.com
  */
 
+/**
+ * this class allows to log a content of the input stream stream.
+ *
+ * @since 1.2
+ * @author kochedykov
+ */
 public class LoggingInputStream extends ModbusInputStream {
 
     /**
