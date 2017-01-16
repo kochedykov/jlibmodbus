@@ -24,7 +24,18 @@ https://github.com/scream3r/java-simple-serial-connector
 rxtx home page:
 http://users.frii.com/jarvi/rxtx/index.html
 
-
+-----------------------------------------------------------------------------------------------------------
+----Release version 1.2.2 ---------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------
+Since this version the library is destributed under Apache license version 2.0. Also, added support of the java communication api 3.0.
+	NEWS
+	* IMPORTANT! added support for java communication api 3.0.
+	* IMPORTANT! migration to the apache license version 2.0.
+	* purgeRx, purgeTx, clear methods have been removed from SerialPort class.
+	* "reset" method has been removed from ModbusConnection.
+	* fixed potential bug with infinite loop in ModbusMaster.readResponse.
+	* added method ModbusConnection.getReadTimeout.
+	* prevents a NullPointerException if master is used before it has been opened.
 -----------------------------------------------------------------------------------------------------------
 ----Release version 1.2.1 ---------------------------------------------------------------------------------
 -----------------------------------------------------------------------------------------------------------
