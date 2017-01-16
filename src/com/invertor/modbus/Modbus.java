@@ -85,6 +85,15 @@ final public class Modbus {
     private Modbus() {
     }
 
+    /**
+     * getter for the version of the library.
+     *
+     * @return a string representing the version
+     */
+    static public String getVersion() {
+        return Version.getVersion();
+    }
+
     static public void setAsciiInputDelimiter(int asciiMsgDelimiter) {
         Modbus.asciiMsgDelimiter = asciiMsgDelimiter;
     }

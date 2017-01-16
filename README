@@ -25,6 +25,14 @@ rxtx home page:
 http://users.frii.com/jarvi/rxtx/index.html
 
 -----------------------------------------------------------------------------------------------------------
+----Release version 1.2.3 ---------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------
+This version contains some improvements.
+	NEWS
+	* added an echo generating a class to obtain the version of the library.
+	* improved logger output.
+	* added method getPortIdentifiers to get a list of available port identifiers.
+-----------------------------------------------------------------------------------------------------------
 ----Release version 1.2.2 ---------------------------------------------------------------------------------
 -----------------------------------------------------------------------------------------------------------
 Since this version the library is destributed under Apache license version 2.0. Also, added support of the java communication api 3.0.
