@@ -25,6 +25,16 @@ rxtx home page:
 http://users.frii.com/jarvi/rxtx/index.html
 
 -----------------------------------------------------------------------------------------------------------
+----Release version 1.2.4 ---------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------
+This version contains bug fixes and performance improovments.
+	NEWS
+	* fixed bug with address and quantity checking in ReadCoilsRequest#checkAddressRange.
+	* improved search of a ModbusFunctionCode instance by value.
+	* fixed issues found by FindBug utility(http://findbugs.sourceforge.net).
+	* fixed bug with SerialPortJSSC#read(byte[] b, int off, int len) method.
+	* fixed bug: setting readTimeout before opening of a connection had no effect.
+-----------------------------------------------------------------------------------------------------------
 ----Release version 1.2.3 ---------------------------------------------------------------------------------
 -----------------------------------------------------------------------------------------------------------
 This version contains some improvements.
