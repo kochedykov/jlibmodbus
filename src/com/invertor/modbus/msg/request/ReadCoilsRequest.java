@@ -48,7 +48,7 @@ public class ReadCoilsRequest extends AbstractMultipleRequest {
                 /*
                  * registers quantity equals to rounded value of coils quantity/16
                  */
-                Modbus.checkEndAddress(startAddress + (int) Math.ceil(quantity / 16));
+                Modbus.checkEndAddress(startAddress + (int) Math.ceil((double) quantity / 16));
     }
 
     @Override
