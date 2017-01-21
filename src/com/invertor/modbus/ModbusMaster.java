@@ -57,11 +57,11 @@ abstract public class ModbusMaster {
 
     abstract protected ModbusConnection getConnection();
 
-    public void open() throws ModbusIOException {
+    public void connect() throws ModbusIOException {
         getConnection().open();
     }
 
-    public void close() throws ModbusIOException {
+    public void disconnect() throws ModbusIOException {
         getConnection().close();
     }
 

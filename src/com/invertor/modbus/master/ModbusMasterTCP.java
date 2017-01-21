@@ -44,7 +44,7 @@ final public class ModbusMasterTCP extends ModbusMaster {
         keepAlive = parameters.isKeepAlive();
         try {
             if (isKeepAlive()) {
-                open();
+                connect();
             }
         } catch (ModbusIOException e) {
             Modbus.log().warning("keepAlive is set, connection failed at creation time.");
@@ -63,7 +63,7 @@ final public class ModbusMasterTCP extends ModbusMaster {
     @Override
     protected void sendRequest(ModbusMessage msg) throws ModbusIOException {
         if (!isKeepAlive())
-            open();
+            connect();
         try {
             if (Modbus.isAutoIncrementTransactionId()) {
                 setTransactionId(nextTransactionId());
@@ -72,7 +72,7 @@ final public class ModbusMasterTCP extends ModbusMaster {
             super.sendRequest(msg);
         } catch (ModbusIOException e) {
             if (isKeepAlive()) {
-                open();
+                connect();
                 super.sendRequest(msg);
             } else {
                 throw e;
@@ -84,19 +84,19 @@ final public class ModbusMasterTCP extends ModbusMaster {
     protected ModbusMessage readResponse() throws ModbusNumberException, ModbusIOException, ModbusProtocolException {
         ModbusMessage msg = super.readResponse();
         if (!isKeepAlive()) {
-            close();
+            disconnect();
         }
         return msg;
     }
 
     @Override
-    public void open() throws ModbusIOException {
-        close();
+    public void connect() throws ModbusIOException {
+        disconnect();
         conn.open();
     }
 
     @Override
-    public void close() throws ModbusIOException {
+    public void disconnect() throws ModbusIOException {
         conn.close();
     }
 

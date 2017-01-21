@@ -74,7 +74,7 @@ public class SimpleMasterTCP {
                 e.printStackTrace();
             } finally {
                 try {
-                    m.close();
+                    m.disconnect();
                 } catch (ModbusIOException e) {
                     e.printStackTrace();
                 }

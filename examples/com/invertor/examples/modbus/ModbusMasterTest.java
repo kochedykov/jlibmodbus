@@ -165,7 +165,7 @@ public class ModbusMasterTest {
             master.setResponseTimeout(1000);
 
             try {
-                master.open();
+                master.connect();
             } catch (ModbusIOException e) {
                 System.out.format("%s %s%n", "Can't open connection:", e.getLocalizedMessage());
             }
@@ -190,7 +190,7 @@ public class ModbusMasterTest {
                 }
             }
             try {
-                master.close();
+                master.disconnect();
             } catch (ModbusIOException e) {
                 System.out.format("%s %s%n", "Can't close connection:", e.getLocalizedMessage());
             } catch (RuntimeException e) {

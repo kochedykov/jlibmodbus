@@ -84,8 +84,8 @@ public class SimpleMasterRTU {
                 } catch (Exception e) {
                     e.printStackTrace();
                     try {
-                        m.close();
-                        m.open();
+                        m.disconnect();
+                        m.connect();
                     } catch (ModbusIOException e1) {
                         e1.printStackTrace();
                     }
