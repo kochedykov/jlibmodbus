@@ -55,7 +55,7 @@ public class ModbusSlaveTCP extends ModbusSlave implements Runnable {
     }
 
     @Override
-    synchronized public void open() throws ModbusIOException {
+    synchronized public void listen() throws ModbusIOException {
         try {
             server = new ServerSocket(tcp.getPort());
             listening = true;
@@ -67,7 +67,7 @@ public class ModbusSlaveTCP extends ModbusSlave implements Runnable {
     }
 
     @Override
-    synchronized public void close() {
+    synchronized public void shutdown() {
         listening = false;
 
         try {
@@ -124,7 +124,7 @@ public class ModbusSlaveTCP extends ModbusSlave implements Runnable {
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            close();
+            shutdown();
         }
     }
 }

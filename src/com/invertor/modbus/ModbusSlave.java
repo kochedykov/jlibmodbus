@@ -37,12 +37,12 @@ abstract public class ModbusSlave {
     /**
      * starts the ModbusSlave thread.
      */
-    abstract public void open() throws ModbusIOException;
+    abstract public void listen() throws ModbusIOException;
 
     /**
      * should have stop the thread of the ModbusSlave.
      */
-    abstract public void close() throws ModbusIOException;
+    abstract public void shutdown() throws ModbusIOException;
 
 
     /*Getters & Setters*/
@@ -50,12 +50,12 @@ abstract public class ModbusSlave {
         return dataHolder;
     }
 
-    public void setDataHolder(DataHolderBuilder builder) {
-        setDataHolder(builder.build());
-    }
-
     public void setDataHolder(DataHolder dataHolder) {
         this.dataHolder = dataHolder;
+    }
+
+    public void setDataHolder(DataHolderBuilder builder) {
+        setDataHolder(builder.build());
     }
 
     public int getServerAddress() {

@@ -185,7 +185,7 @@ public class ModbusSlaveTest {
             }
 
             try {
-                slave.open();
+                slave.listen();
                 while (true) {
                     Thread.sleep(1000);
                     System.out.println();
@@ -205,7 +205,7 @@ public class ModbusSlaveTest {
                 e.printStackTrace();
             } finally {
                 try {
-                    slave.close();
+                    slave.shutdown();
                 } catch (ModbusIOException e) {
                     e.printStackTrace();
                 }

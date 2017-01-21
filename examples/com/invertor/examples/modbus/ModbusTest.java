@@ -287,7 +287,7 @@ public class ModbusTest implements Runnable {
     public void run() {
         long time = System.currentTimeMillis();
         try {
-            slave.open();
+            slave.listen();
             master.connect();
             master.writeSingleRegister(1, 0, 69);
             Modbus.setAutoIncrementTransactionId(true);
@@ -339,7 +339,7 @@ public class ModbusTest implements Runnable {
         }
 
         try {
-            slave.close();
+            slave.shutdown();
             master.disconnect();
         } catch (ModbusIOException e) {
             e.printStackTrace();
