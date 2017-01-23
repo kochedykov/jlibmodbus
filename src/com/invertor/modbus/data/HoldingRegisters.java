@@ -25,6 +25,9 @@ import com.invertor.modbus.exception.IllegalDataValueException;
  * email: vladislav.kochedykov@gmail.com
  */
 public interface HoldingRegisters {
+
+    int quantity();
+
     int get(int offset) throws IllegalDataAddressException;
 
     int[] getRange(int offset, int quantity) throws IllegalDataAddressException, IllegalDataValueException;

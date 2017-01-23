@@ -25,6 +25,9 @@ import com.invertor.modbus.exception.IllegalDataValueException;
  * email: vladislav.kochedykov@gmail.com
  */
 public interface Coils {
+
+    int quantity();
+
     boolean get(int offset) throws IllegalDataAddressException;
 
     boolean[] getRange(int offset, int quantity) throws IllegalDataAddressException, IllegalDataValueException;

@@ -29,10 +29,10 @@ import java.util.Arrays;
  */
 public class SimpleCoils implements Coils {
 
-    private boolean[] coils;
+    private boolean[] coils = new boolean[0];
 
     public SimpleCoils(int size) {
-        this.coils = new boolean[Modbus.checkStartAddress(size) ? size : Modbus.MAX_START_ADDRESS];
+        this.coils = new boolean[Modbus.checkEndAddress(size) ? size : Modbus.MAX_START_ADDRESS];
     }
 
     void setSize(int size) {
@@ -53,6 +53,11 @@ public class SimpleCoils implements Coils {
             throw new IllegalDataValueException();
         for (int i = 0; i < range.length; i++)
             set(offset + i, range[i]);
+    }
+
+    @Override
+    public int quantity() {
+        return coils.length;
     }
 
     @Override

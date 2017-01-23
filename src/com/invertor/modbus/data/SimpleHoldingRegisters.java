@@ -29,10 +29,10 @@ import java.util.Arrays;
  */
 public class SimpleHoldingRegisters implements HoldingRegisters {
 
-    private int[] registers;
+    private int[] registers = new int[0];
 
     public SimpleHoldingRegisters(int size) {
-        this.registers = new int[Modbus.checkStartAddress(size) ? size : Modbus.MAX_START_ADDRESS];
+        this.registers = new int[Modbus.checkEndAddress(size) ? size : Modbus.MAX_START_ADDRESS];
     }
 
     void setSize(int size) {
@@ -52,6 +52,11 @@ public class SimpleHoldingRegisters implements HoldingRegisters {
     public void setRange(int offset, int[] range) throws IllegalDataAddressException, IllegalDataValueException {
         for (int i = 0; i < range.length; i++)
             set(offset + i, range[i]);
+    }
+
+    @Override
+    public int quantity() {
+        return registers.length;
     }
 
     @Override
