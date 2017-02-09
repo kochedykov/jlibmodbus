@@ -81,4 +81,34 @@ public class SimpleHoldingRegisters implements HoldingRegisters {
         if (!Modbus.checkRegisterValue(value))
             throw new IllegalDataValueException();
     }
+    /*
+    @Override
+    public Iterator<Integer> iterator() {
+        return new Iterator<Integer>() {
+
+            int index = 0;
+
+            @Override
+            public boolean hasNext() {
+                if (index >= registers.length)
+                    throw new ConcurrentModificationException();
+                return (index+1) < registers.length;
+            }
+
+            @Override
+            public Integer next() {
+                if (hasNext()) {
+                    return registers[++index];
+                } else {
+                    throw new NoSuchElementException();
+                }
+            }
+
+            @Override
+            public void remove() {
+
+            }
+        };
+    }
+    */
 }

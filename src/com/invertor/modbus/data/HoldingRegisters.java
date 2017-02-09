@@ -24,7 +24,7 @@ import com.invertor.modbus.exception.IllegalDataValueException;
  * Authors: Vladislav Y. Kochedykov, software engineer.
  * email: vladislav.kochedykov@gmail.com
  */
-public interface HoldingRegisters {
+public interface HoldingRegisters /*extends Iterable<Integer>*/ {
 
     int quantity();
 
