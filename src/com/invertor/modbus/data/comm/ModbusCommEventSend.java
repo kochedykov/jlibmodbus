@@ -1,4 +1,4 @@
-package com.invertor.modbus.data.events;
+package com.invertor.modbus.data.comm;
 
 /*
  * Copyright (C) 2016 "Invertor" Factory", JSC
@@ -21,7 +21,7 @@ package com.invertor.modbus.data.events;
  * Authors: Vladislav Y. Kochedykov, software engineer.
  * email: vladislav.kochedykov@gmail.com
  */
-public class ModbusEventSend extends ModbusEvent {
+public class ModbusCommEventSend extends ModbusCommEvent {
     final static private int BIT_READ_EXCEPTION_SENT = 0x1;
     final static private int BIT_SLAVE_ABORT_EXCEPTION_SENT = 0x2;
     final static private int BIT_SLAVE_BUSY_EXCEPTION_SENT = 0x4;
@@ -29,32 +29,32 @@ public class ModbusEventSend extends ModbusEvent {
     final static private int BIT_WRITE_TIMEOUT_ERROR_OCCURRED = 0x10;
     final static private int BIT_CURRENTLY_IN_LISTEN_ONLY_MODE = 0x20;
 
-    protected ModbusEventSend(int event) {
+    protected ModbusCommEventSend(int event) {
         super(Type.SEND, event);
     }
 
-    static public ModbusEventSend createExceptionSentRead() {
-        return new ModbusEventSend(BIT_READ_EXCEPTION_SENT);
+    static public ModbusCommEventSend createExceptionSentRead() {
+        return new ModbusCommEventSend(BIT_READ_EXCEPTION_SENT);
     }
 
-    static public ModbusEventSend createExceptionSlaveSentAbort() {
-        return new ModbusEventSend(BIT_SLAVE_ABORT_EXCEPTION_SENT);
+    static public ModbusCommEventSend createExceptionSlaveSentAbort() {
+        return new ModbusCommEventSend(BIT_SLAVE_ABORT_EXCEPTION_SENT);
     }
 
-    static public ModbusEventSend createExceptionSlaveSentBusy() {
-        return new ModbusEventSend(BIT_SLAVE_BUSY_EXCEPTION_SENT);
+    static public ModbusCommEventSend createExceptionSlaveSentBusy() {
+        return new ModbusCommEventSend(BIT_SLAVE_BUSY_EXCEPTION_SENT);
     }
 
-    static public ModbusEventSend createExceptionSentSlaveProgramNAK() {
-        return new ModbusEventSend(BIT_SLAVE_PROGRAM_NAK_EXCEPTION_SENT);
+    static public ModbusCommEventSend createExceptionSentSlaveProgramNAK() {
+        return new ModbusCommEventSend(BIT_SLAVE_PROGRAM_NAK_EXCEPTION_SENT);
     }
 
-    static public ModbusEventSend createWriteTimeoutErrorOccurred() {
-        return new ModbusEventSend(BIT_WRITE_TIMEOUT_ERROR_OCCURRED);
+    static public ModbusCommEventSend createWriteTimeoutErrorOccurred() {
+        return new ModbusCommEventSend(BIT_WRITE_TIMEOUT_ERROR_OCCURRED);
     }
 
-    static public ModbusEventSend createCurrentlyInListenOnlyMode() {
-        return new ModbusEventSend(BIT_CURRENTLY_IN_LISTEN_ONLY_MODE);
+    static public ModbusCommEventSend createCurrentlyInListenOnlyMode() {
+        return new ModbusCommEventSend(BIT_CURRENTLY_IN_LISTEN_ONLY_MODE);
     }
 
     public boolean isCurrentlyInListenOnlyMode() {

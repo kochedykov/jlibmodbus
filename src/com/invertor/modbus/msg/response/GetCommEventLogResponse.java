@@ -1,7 +1,7 @@
 package com.invertor.modbus.msg.response;
 
 import com.invertor.modbus.Modbus;
-import com.invertor.modbus.data.events.ModbusEvent;
+import com.invertor.modbus.data.comm.ModbusCommEvent;
 import com.invertor.modbus.exception.ModbusNumberException;
 import com.invertor.modbus.msg.base.ModbusResponse;
 import com.invertor.modbus.net.stream.base.ModbusInputStream;
@@ -39,7 +39,7 @@ final public class GetCommEventLogResponse extends ModbusResponse {
     private int status;
     private int eventCount;
     private int messageCount;
-    private List<ModbusEvent> events = new LinkedList<ModbusEvent>();
+    private List<ModbusCommEvent> events = new LinkedList<ModbusCommEvent>();
 
     public GetCommEventLogResponse(int serverAddress) throws ModbusNumberException {
         super(serverAddress);
@@ -56,7 +56,7 @@ final public class GetCommEventLogResponse extends ModbusResponse {
         int eventsCount = byteCount - EVENTS_OFFSET;
         if (eventsCount > 0) {
             for (int i = 0; i < eventsCount; i++) {
-                events.add(ModbusEvent.getEvent(fifo.read()));
+                events.add(ModbusCommEvent.getEvent(fifo.read()));
             }
         }
     }
@@ -67,7 +67,7 @@ final public class GetCommEventLogResponse extends ModbusResponse {
         fifo.writeShortBE(getStatus());
         fifo.writeShortBE(getEventCount());
         fifo.writeShortBE(getMessageCount());
-        for (ModbusEvent event : getEventQueue()) {
+        for (ModbusCommEvent event : getEventQueue()) {
             fifo.write(event.getEvent());
         }
     }
@@ -98,11 +98,11 @@ final public class GetCommEventLogResponse extends ModbusResponse {
         this.eventCount = eventCount;
     }
 
-    public List<ModbusEvent> getEventQueue() {
+    public List<ModbusCommEvent> getEventQueue() {
         return events;
     }
 
-    public void setEvents(List<ModbusEvent> events) {
+    public void setEvents(List<ModbusCommEvent> events) {
         this.events = events;
     }
 

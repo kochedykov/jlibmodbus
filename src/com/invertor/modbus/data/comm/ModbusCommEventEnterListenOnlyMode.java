@@ -1,4 +1,4 @@
-package com.invertor.modbus.data.events;
+package com.invertor.modbus.data.comm;
 
 /*
  * Copyright (C) 2016 "Invertor" Factory", JSC
@@ -21,12 +21,12 @@ package com.invertor.modbus.data.events;
  * Authors: Vladislav Y. Kochedykov, software engineer.
  * email: vladislav.kochedykov@gmail.com
  */
-public class ModbusEventEnterListenOnlyMode extends ModbusEvent {
-    public ModbusEventEnterListenOnlyMode() {
+public class ModbusCommEventEnterListenOnlyMode extends ModbusCommEvent {
+    public ModbusCommEventEnterListenOnlyMode() {
         super(Type.ENTER_LISTEN_ONLY_MODE, 0);
     }
 
-    public ModbusEventEnterListenOnlyMode(int event) {
+    public ModbusCommEventEnterListenOnlyMode(int event) {
         super(Type.ENTER_LISTEN_ONLY_MODE, event);
     }
 }

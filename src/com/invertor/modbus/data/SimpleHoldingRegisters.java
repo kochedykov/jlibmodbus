@@ -35,12 +35,6 @@ public class SimpleHoldingRegisters implements HoldingRegisters {
         this.registers = new int[Modbus.checkEndAddress(size) ? size : Modbus.MAX_START_ADDRESS];
     }
 
-    void setSize(int size) {
-        if (registers.length != size) {
-            registers = Arrays.copyOf(registers, size);
-        }
-    }
-
     @Override
     public void set(int offset, int value) throws IllegalDataAddressException, IllegalDataValueException {
         checkAddress(offset);

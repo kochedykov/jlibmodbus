@@ -1,7 +1,7 @@
 package com.invertor.modbus.data;
 
 import com.invertor.modbus.Modbus;
-import com.invertor.modbus.data.events.ModbusEvent;
+import com.invertor.modbus.data.comm.ModbusCommEvent;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -101,7 +101,7 @@ public class CommStatus {
      * Comm event queue. Capacity = PDU length(254) - server_address - function_code - 3 x 2 Bytes,
      * (Length of Status, Event Count and Message Count).
      */
-    private LinkedList<ModbusEvent> eventQueue = new LinkedList<ModbusEvent>();
+    private LinkedList<ModbusCommEvent> eventQueue = new LinkedList<ModbusCommEvent>();
 
     public CommStatus() {
     }
@@ -287,16 +287,16 @@ public class CommStatus {
         }
     }
 
-    public List<ModbusEvent> getEventLog() {
+    public List<ModbusCommEvent> getEventLog() {
         return eventQueue;
     }
 
-    public void setEventQueue(List<ModbusEvent> eventQueue) {
+    public void setEventQueue(List<ModbusCommEvent> eventQueue) {
         this.eventQueue.clear();
         this.eventQueue.addAll(eventQueue);
     }
 
-    public void addEvent(ModbusEvent event) {
+    public void addEvent(ModbusCommEvent event) {
         if (eventQueue.size() >= EVENT_QUEUE_CAPACITY)
             eventQueue.poll();
         eventQueue.add(event);

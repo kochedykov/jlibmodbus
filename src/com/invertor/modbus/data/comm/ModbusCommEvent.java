@@ -1,4 +1,4 @@
-package com.invertor.modbus.data.events;
+package com.invertor.modbus.data.comm;
 
 /*
  * Copyright (C) 2016 "Invertor" Factory", JSC
@@ -21,28 +21,28 @@ package com.invertor.modbus.data.events;
  * Authors: Vladislav Y. Kochedykov, software engineer.
  * email: vladislav.kochedykov@gmail.com
  */
-abstract public class ModbusEvent {
+abstract public class ModbusCommEvent {
 
     final private Type type;
     private int event = 0;
 
-    public ModbusEvent(Type type, int event) {
+    public ModbusCommEvent(Type type, int event) {
         this.type = type;
         this.event = type.getCode() | event;
     }
 
-    static public ModbusEvent getEvent(int event) {
+    static public ModbusCommEvent getEvent(int event) {
         for (Type t : Type.values()) {
             if ((t.getCode() & event) == t.getCode()) {
                 switch (t) {
                     case SEND:
-                        return new ModbusEventSend(event);
+                        return new ModbusCommEventSend(event);
                     case RECEIVE:
-                        return new ModbusEventReceive(event);
+                        return new ModbusCommEventReceive(event);
                     case INITIATED_COMMUNICATION_RESTART:
-                        return new ModbusEventInitiatedCommunicationRestart(event);
+                        return new ModbusCommEventInitiatedCommunicationRestart(event);
                     case ENTER_LISTEN_ONLY_MODE:
-                        return new ModbusEventEnterListenOnlyMode(event);
+                        return new ModbusCommEventEnterListenOnlyMode(event);
                 }
             }
         }

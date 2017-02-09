@@ -4,7 +4,7 @@ import com.invertor.modbus.Modbus;
 import com.invertor.modbus.ModbusSlave;
 import com.invertor.modbus.data.CommStatus;
 import com.invertor.modbus.data.DataHolder;
-import com.invertor.modbus.data.events.ModbusEventSend;
+import com.invertor.modbus.data.comm.ModbusCommEventSend;
 import com.invertor.modbus.exception.ModbusChecksumException;
 import com.invertor.modbus.exception.ModbusIOException;
 import com.invertor.modbus.msg.base.ModbusRequest;
@@ -61,7 +61,7 @@ class RequestHandlerSerial extends RequestHandler {
                         ModbusResponse response = request.process(dataHolder);
                         commStatus.incSlaveMessageCounter();
                         if (response.isException()) {
-                            commStatus.addEvent(ModbusEventSend.createExceptionSentRead());
+                            commStatus.addEvent(ModbusCommEventSend.createExceptionSentRead());
                             commStatus.incExErrorCounter();
                         } else {
                             if (!(request instanceof GetCommEventCounterRequest ||

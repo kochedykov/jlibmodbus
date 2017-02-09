@@ -1,4 +1,4 @@
-package com.invertor.modbus.data.events;
+package com.invertor.modbus.data.comm;
 
 /*
  * Copyright (C) 2016 "Invertor" Factory", JSC
@@ -21,30 +21,30 @@ package com.invertor.modbus.data.events;
  * Authors: Vladislav Y. Kochedykov, software engineer.
  * email: vladislav.kochedykov@gmail.com
  */
-public class ModbusEventReceive extends ModbusEvent {
+public class ModbusCommEventReceive extends ModbusCommEvent {
     final static private int BIT_COMMUNICATION_ERROR = 0x1;
     final static private int BIT_CHARACTER_OVERRUN = 0x10;
     final static private int BIT_CURRENTLY_IN_LISTEN_ONLY_MODE = 0x20;
     final static private int BIT_BROADCAST_RECEIVED = 0x40;
 
-    protected ModbusEventReceive(int event) {
+    protected ModbusCommEventReceive(int event) {
         super(Type.RECEIVE, event);
     }
 
-    static public ModbusEventReceive createCommunicationError() {
-        return new ModbusEventReceive(BIT_COMMUNICATION_ERROR);
+    static public ModbusCommEventReceive createCommunicationError() {
+        return new ModbusCommEventReceive(BIT_COMMUNICATION_ERROR);
     }
 
-    static public ModbusEventReceive createCharacterOverrun() {
-        return new ModbusEventReceive(BIT_CHARACTER_OVERRUN);
+    static public ModbusCommEventReceive createCharacterOverrun() {
+        return new ModbusCommEventReceive(BIT_CHARACTER_OVERRUN);
     }
 
-    static public ModbusEventReceive createCurrentlyInListenOnlyMode() {
-        return new ModbusEventReceive(BIT_CURRENTLY_IN_LISTEN_ONLY_MODE);
+    static public ModbusCommEventReceive createCurrentlyInListenOnlyMode() {
+        return new ModbusCommEventReceive(BIT_CURRENTLY_IN_LISTEN_ONLY_MODE);
     }
 
-    static public ModbusEventReceive createBroadcastReceived() {
-        return new ModbusEventReceive(BIT_BROADCAST_RECEIVED);
+    static public ModbusCommEventReceive createBroadcastReceived() {
+        return new ModbusCommEventReceive(BIT_BROADCAST_RECEIVED);
     }
 
     public boolean isCurrentlyInListenOnlyMode() {

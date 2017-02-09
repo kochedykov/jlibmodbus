@@ -1,4 +1,4 @@
-package com.invertor.modbus.data.events;
+package com.invertor.modbus.data.comm;
 
 /*
  * Copyright (C) 2016 "Invertor" Factory", JSC
@@ -21,13 +21,13 @@ package com.invertor.modbus.data.events;
  * Authors: Vladislav Y. Kochedykov, software engineer.
  * email: vladislav.kochedykov@gmail.com
  */
-public class ModbusEventInitiatedCommunicationRestart extends ModbusEvent {
+public class ModbusCommEventInitiatedCommunicationRestart extends ModbusCommEvent {
 
-    public ModbusEventInitiatedCommunicationRestart() {
+    public ModbusCommEventInitiatedCommunicationRestart() {
         this(0);
     }
 
-    protected ModbusEventInitiatedCommunicationRestart(int event) {
+    protected ModbusCommEventInitiatedCommunicationRestart(int event) {
         super(Type.INITIATED_COMMUNICATION_RESTART, event);
     }
 }
