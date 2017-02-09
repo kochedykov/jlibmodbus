@@ -191,33 +191,33 @@ public class ModbusMasterTest {
 
             Random rand = new Random(System.currentTimeMillis() & 0xffff);
             Modbus.setLogLevel(Modbus.LogLevel.LEVEL_DEBUG);
-            for (; ; ) {
+            for (int i = 0; i < 5; i++) {
                 try {
                     Thread.sleep(200);
                     System.out.println();
                     System.out.println("Master output");
                     printRegisters("Holding registers", master.readHoldingRegisters(1, 0, 2));
-                    /*printRegisters("Input registers", master.readInputRegisters(1, 0, 10));
+                    printRegisters("Input registers", master.readInputRegisters(1, 0, 10));
                     printBits("Coils", master.readCoils(1, 0, 10));
                     printBits("Discrete inputs", master.readDiscreteInputs(1, 0, 10));
                     master.writeSingleRegister(1, 0, 69);
-                    master.writeSingleCoil(1, 5, true);*/
-                    //master.writeMultipleRegisters(1, 2, new int[]{rand.nextInt(), rand.nextInt(), rand.nextInt(), rand.nextInt(), rand.nextInt(), rand.nextInt(), rand.nextInt()});
-                    /*master.writeMultipleCoils(1, 0, new boolean[]{true, false, true});*/
+                    master.writeSingleCoil(1, 5, true);
+                    master.writeMultipleRegisters(1, 2, new int[]{rand.nextInt(), rand.nextInt(), rand.nextInt(), rand.nextInt(), rand.nextInt(), rand.nextInt(), rand.nextInt()});
+                    master.writeMultipleCoils(1, 0, new boolean[]{true, false, true});
                 } catch (RuntimeException e) {
                     throw e;
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
-            /*
+
             try {
                 master.disconnect();
             } catch (ModbusIOException e) {
                 System.out.format("%s %s%n", "Can't close connection:", e.getLocalizedMessage());
             } catch (RuntimeException e) {
                 throw e;
-            }*/
+            }
         } catch (RuntimeException e) {
             throw e;
         } catch (Exception e) {
