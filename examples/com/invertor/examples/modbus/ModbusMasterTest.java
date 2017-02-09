@@ -4,10 +4,13 @@ import com.invertor.modbus.Modbus;
 import com.invertor.modbus.ModbusMaster;
 import com.invertor.modbus.ModbusMasterFactory;
 import com.invertor.modbus.exception.ModbusIOException;
+import com.invertor.modbus.serial.SerialParameters;
 import com.invertor.modbus.serial.SerialPort;
+import com.invertor.modbus.tcp.TcpParameters;
 import jssc.SerialPortList;
 
 import java.net.InetAddress;
+import java.util.Random;
 
 /*
  * Copyright (C) 2016 "Invertor" Factory", JSC
@@ -55,15 +58,16 @@ public class ModbusMasterTest {
             printUsage();
             return;
         }
-
+        SerialParameters sp;
         ModbusMaster master;
         try {
             switch (TransportType.get(argv[0])) {
 
                 case TCP:
+                    TcpParameters tp = new TcpParameters();
                     String host = "localhost";
                     int port = Modbus.TCP_PORT;
-                    boolean keepAlive = false;
+                    boolean keepAlive = true;
                     try {
                         host = initParameter("baud_rate", host, argv[1], new ParameterInitializer<String>() {
                             @Override
@@ -80,10 +84,15 @@ public class ModbusMasterTest {
                     } catch (IndexOutOfBoundsException ie) {
                         //it's ok
                     }
+                    tp.setHost(InetAddress.getByName(host));
+                    tp.setPort(port);
+                    tp.setKeepAlive(keepAlive);
                     System.out.format("Starting Modbus Master TCP with settings:%n\t%s%n, %s", host, keepAlive);
-                    master = ModbusMasterFactory.createModbusMasterTCP(host, port, keepAlive);
+                    master = ModbusMasterFactory.createModbusMasterTCP(tp);
                     break;
                 case RTU:
+                    sp = new SerialParameters();
+
                     String device_name = SerialPortList.getPortNames()[0];
                     SerialPort.BaudRate baud_rate = SerialPort.BaudRate.BAUD_RATE_115200;
                     int data_bits = 8;
@@ -126,9 +135,16 @@ public class ModbusMasterTest {
                     }
                     System.out.format("Starting ModbusMaster RTU with settings:%n\t%s%n, %s, %d, %d, %s%n",
                             device_name, baud_rate.toString(), data_bits, stop_bits, parity.toString());
-                    master = ModbusMasterFactory.createModbusMasterRTU(device_name, baud_rate, data_bits, stop_bits, parity);
+
+                    sp.setDevice(device_name);
+                    sp.setBaudRate(baud_rate);
+                    sp.setDataBits(data_bits);
+                    sp.setStopBits(stop_bits);
+                    sp.setParity(parity);
+                    master = ModbusMasterFactory.createModbusMasterRTU(sp);
                     break;
                 case ASCII:
+                    sp = new SerialParameters();
                     device_name = SerialPortList.getPortNames()[0];
                     baud_rate = SerialPort.BaudRate.BAUD_RATE_115200;
                     parity = SerialPort.Parity.NONE;
@@ -156,10 +172,13 @@ public class ModbusMasterTest {
                     }
                     System.out.format("Starting ModbusMaster ASCII with settings:%n\t%s%n, %s, %s%n",
                             device_name, baud_rate.toString(), parity.toString());
-                    master = ModbusMasterFactory.createModbusMasterASCII(device_name, baud_rate, parity);
+                    sp.setDevice(device_name);
+                    sp.setBaudRate(baud_rate);
+                    sp.setParity(parity);
+                    master = ModbusMasterFactory.createModbusMasterASCII(sp);
                     break;
                 default:
-                    master = ModbusMasterFactory.createModbusMasterTCP("127.0.0.1", false);
+                    master = ModbusMasterFactory.createModbusMasterTCP(new TcpParameters(InetAddress.getLocalHost(), Modbus.TCP_PORT, true));
             }
 
             master.setResponseTimeout(1000);
@@ -170,32 +189,35 @@ public class ModbusMasterTest {
                 System.out.format("%s %s%n", "Can't open connection:", e.getLocalizedMessage());
             }
 
-            for (int r = 0; r < 5; r++) {
+            Random rand = new Random(System.currentTimeMillis() & 0xffff);
+            Modbus.setLogLevel(Modbus.LogLevel.LEVEL_DEBUG);
+            for (; ; ) {
                 try {
-                    Thread.sleep(1000);
+                    Thread.sleep(200);
                     System.out.println();
                     System.out.println("Master output");
-                    printRegisters("Holding registers", master.readHoldingRegisters(1, 0, 10));
-                    printRegisters("Input registers", master.readInputRegisters(1, 0, 10));
+                    printRegisters("Holding registers", master.readHoldingRegisters(1, 0, 2));
+                    /*printRegisters("Input registers", master.readInputRegisters(1, 0, 10));
                     printBits("Coils", master.readCoils(1, 0, 10));
                     printBits("Discrete inputs", master.readDiscreteInputs(1, 0, 10));
                     master.writeSingleRegister(1, 0, 69);
-                    master.writeSingleCoil(1, 5, true);
-                    master.writeMultipleRegisters(1, 1, new int[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 77});
-                    master.writeMultipleCoils(1, 0, new boolean[]{true, false, true});
+                    master.writeSingleCoil(1, 5, true);*/
+                    //master.writeMultipleRegisters(1, 2, new int[]{rand.nextInt(), rand.nextInt(), rand.nextInt(), rand.nextInt(), rand.nextInt(), rand.nextInt(), rand.nextInt()});
+                    /*master.writeMultipleCoils(1, 0, new boolean[]{true, false, true});*/
                 } catch (RuntimeException e) {
                     throw e;
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
+            /*
             try {
                 master.disconnect();
             } catch (ModbusIOException e) {
                 System.out.format("%s %s%n", "Can't close connection:", e.getLocalizedMessage());
             } catch (RuntimeException e) {
                 throw e;
-            }
+            }*/
         } catch (RuntimeException e) {
             throw e;
         } catch (Exception e) {

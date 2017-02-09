@@ -8,7 +8,9 @@ import com.invertor.modbus.data.SimpleDataHolderBuilder;
 import com.invertor.modbus.exception.IllegalDataAddressException;
 import com.invertor.modbus.exception.IllegalDataValueException;
 import com.invertor.modbus.exception.ModbusIOException;
+import com.invertor.modbus.serial.SerialParameters;
 import com.invertor.modbus.serial.SerialPort;
+import com.invertor.modbus.tcp.TcpParameters;
 import jssc.SerialPortList;
 
 import java.net.InetAddress;
@@ -63,18 +65,19 @@ public class ModbusSlaveTest {
         }
 
         ModbusSlave slave;
-
+        SerialParameters sp;
         try {
             switch (TransportType.get(argv[0])) {
 
                 case TCP:
-                    String host = "localhost";
+                    TcpParameters tp = new TcpParameters();
+                    InetAddress host = InetAddress.getLocalHost();
                     int port = Modbus.TCP_PORT;
                     try {
-                        host = initParameter("host", host, argv[1], new ParameterInitializer<String>() {
+                        host = initParameter("host", host, argv[1], new ParameterInitializer<InetAddress>() {
                             @Override
-                            public String init(String arg) throws Exception {
-                                return InetAddress.getByName(arg).getHostAddress();
+                            public InetAddress init(String arg) throws Exception {
+                                return InetAddress.getByName(arg);
                             }
                         });
                         port = initParameter("port", port, argv[2], new ParameterInitializer<Integer>() {
@@ -87,9 +90,13 @@ public class ModbusSlaveTest {
                         //it's ok
                     }
                     System.out.format("Starting Modbus Slave TCP with settings:%n\t%s%n", host);
-                    slave = ModbusSlaveFactory.createModbusSlaveTCP(host, port);
+
+                    tp.setHost(host);
+                    tp.setPort(port);
+                    slave = ModbusSlaveFactory.createModbusSlaveTCP(tp);
                     break;
                 case RTU:
+                    sp = new SerialParameters();
                     String device_name = SerialPortList.getPortNames()[0];
                     SerialPort.BaudRate baud_rate = SerialPort.BaudRate.BAUD_RATE_115200;
                     int data_bits = 8;
@@ -132,9 +139,15 @@ public class ModbusSlaveTest {
                     }
                     System.out.format("Starting ModbusMaster RTU with settings:%n\t%s, %s, %d, %d, %s%n",
                             device_name, baud_rate.toString(), data_bits, stop_bits, parity.toString());
-                    slave = ModbusSlaveFactory.createModbusSlaveRTU(device_name, baud_rate, data_bits, stop_bits, parity);
+                    sp.setParity(parity);
+                    sp.setStopBits(stop_bits);
+                    sp.setDataBits(data_bits);
+                    sp.setBaudRate(baud_rate);
+                    sp.setDevice(device_name);
+                    slave = ModbusSlaveFactory.createModbusSlaveRTU(sp);
                     break;
                 case ASCII:
+                    sp = new SerialParameters();
                     device_name = SerialPortList.getPortNames()[0];
                     baud_rate = SerialPort.BaudRate.BAUD_RATE_115200;
                     parity = SerialPort.Parity.ODD;
@@ -162,10 +175,15 @@ public class ModbusSlaveTest {
                     }
                     System.out.format("Starting ModbusMaster ASCII with settings:%n\t%s, %s, %s%n",
                             device_name, baud_rate.toString(), parity.toString());
-                    slave = ModbusSlaveFactory.createModbusSlaveASCII(device_name, baud_rate, parity);
+
+                    sp.setParity(parity);
+                    sp.setBaudRate(baud_rate);
+                    sp.setDevice(device_name);
+
+                    slave = ModbusSlaveFactory.createModbusSlaveASCII(sp);
                     break;
                 default:
-                    slave = ModbusSlaveFactory.createModbusSlaveTCP("localhost");
+                    slave = ModbusSlaveFactory.createModbusSlaveTCP(new TcpParameters(InetAddress.getLocalHost(), Modbus.TCP_PORT, true));
             }
 
             slave.setServerAddress(1);

@@ -30,8 +30,22 @@ abstract public class ModbusSlave {
 
     private int serverAddress = 1;
     private DataHolder dataHolder = new DataHolder();
+    /**
+     * a timeout for single connection handler. if master makes a new connection for every data request,
+     * we should close it's last connection as soon as possible. Else, if master is working through a single connection,
+     * we should be waiting for the next request as long as it is possible :).
+     */
+    private volatile int readTimeout = Modbus.MAX_RESPONSE_TIMEOUT;
 
     protected ModbusSlave() {
+    }
+
+    public int getReadTimeout() {
+        return readTimeout;
+    }
+
+    public void setReadTimeout(int readTimeout) {
+        this.readTimeout = readTimeout;
     }
 
     /**
@@ -50,12 +64,12 @@ abstract public class ModbusSlave {
         return dataHolder;
     }
 
-    public void setDataHolder(DataHolder dataHolder) {
-        this.dataHolder = dataHolder;
-    }
-
     public void setDataHolder(DataHolderBuilder builder) {
         setDataHolder(builder.build());
+    }
+
+    public void setDataHolder(DataHolder dataHolder) {
+        this.dataHolder = dataHolder;
     }
 
     public int getServerAddress() {

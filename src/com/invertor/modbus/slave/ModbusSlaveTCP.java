@@ -106,7 +106,7 @@ public class ModbusSlaveTCP extends ModbusSlave implements Runnable {
                 s = server.accept();
                 try {
                     conn = ModbusConnectionFactory.getTcpSlave(s);
-                    conn.setReadTimeout(10000);
+                    conn.setReadTimeout(getReadTimeout());
                     threadPool.execute(new RequestHandlerTCP(this, conn));
                 } catch (ModbusIOException ioe) {
                     Modbus.log().warning(ioe.getLocalizedMessage());

@@ -1,7 +1,6 @@
 package com.invertor.modbus;
 
 import com.invertor.modbus.serial.SerialParameters;
-import com.invertor.modbus.serial.SerialPort;
 import com.invertor.modbus.serial.SerialPortException;
 import com.invertor.modbus.slave.ModbusSlaveASCII;
 import com.invertor.modbus.slave.ModbusSlaveRTU;
@@ -37,28 +36,10 @@ final public class ModbusSlaveFactory {
     }
 
     /**
-     * Creates ModbusSlaveRTU instance.
+     * Creates a ModbusSlaveRTU instance.
      *
-     * @param device   - serial port device name
-     * @param baudRate - baud rate
-     * @param dataBits - data bit count
-     * @param stopBits - stop bit count(1,2)
-     * @param parity   - parity bit(NONE, EVEN, ODD, MARK, SPACE)
-     * @return ModbusSlave instance if there is no errors, else null
-     * @see com.invertor.modbus.serial.SerialPort.Parity
-     * @see com.invertor.modbus.serial.SerialPort.BaudRate
-     * @see com.invertor.modbus.slave.ModbusSlaveRTU
-     * @see com.invertor.modbus.ModbusSlave
-     */
-    static public ModbusSlave createModbusSlaveRTU(String device, SerialPort.BaudRate baudRate, int dataBits, int stopBits, SerialPort.Parity parity) throws SerialPortException {
-        return new ModbusSlaveRTU(device, baudRate, dataBits, stopBits, parity);
-    }
-
-    /**
-     * Creates ModbusSlaveRTU instance.
-     *
-     * @param sp - a SerialParameters instance.
-     * @return ModbusSlave instance if there is no errors, else null
+     * @param sp parameters of the serial port
+     * @return the newly created rtu-slave
      * @see com.invertor.modbus.serial.SerialParameters
      * @see com.invertor.modbus.slave.ModbusSlaveRTU
      * @see com.invertor.modbus.ModbusSlave
@@ -68,69 +49,42 @@ final public class ModbusSlaveFactory {
     }
 
     /**
-     * Creates ModbusSlaveASCII instance.
+     * Creates a ModbusSlaveASCII instance.
      *
-     * @param device   - serial port device name
-     * @param baudRate - baud rate
-     * @param parity   - parity bit(NONE, EVEN, ODD, MARK, SPACE)
-     * @return ModbusSlave instance if there is no errors, else null
+     * @param sp parameters of the serial port
+     * @return the newly created ascii-slave
      * @see com.invertor.modbus.serial.SerialParameters
      * @see com.invertor.modbus.slave.ModbusSlaveASCII
      * @see com.invertor.modbus.ModbusSlave
      */
-    static public ModbusSlave createModbusSlaveASCII(String device, SerialPort.BaudRate baudRate, SerialPort.Parity parity) throws SerialPortException {
-        return new ModbusSlaveASCII(device, baudRate, parity);
+    static public ModbusSlave createModbusSlaveASCII(SerialParameters sp) throws SerialPortException {
+        return new ModbusSlaveASCII(sp);
     }
 
     /**
-     * Creates ModbusSlaveASCII instance with even parity completion.
+     * Creates a ModbusSlaveTCP instance.
      *
-     * @param device   - serial port device name
-     * @param baudRate - baud rate
-     * @return ModbusSlave instance if there is no errors, else null
-     * @see com.invertor.modbus.serial.SerialPort.BaudRate
-     * @see com.invertor.modbus.slave.ModbusSlaveASCII
-     * @see com.invertor.modbus.ModbusSlave
-     */
-    static public ModbusSlave createModbusSlaveASCII(String device, SerialPort.BaudRate baudRate) throws SerialPortException {
-        return new ModbusSlaveASCII(device, baudRate);
-    }
-
-    /**
-     * Creates ModbusSlaveTCP instance.
-     *
-     * @param host - ip address of remote slave
-     * @return ModbusSlave instance if there is no errors, else null
-     * @see com.invertor.modbus.slave.ModbusSlaveTCP
-     * @see com.invertor.modbus.ModbusSlave
-     */
-    static public ModbusSlave createModbusSlaveTCP(String host) {
-        return createModbusSlaveTCP(host, Modbus.TCP_PORT);
-    }
-
-    /**
-     * Creates ModbusSlaveTCP instance.
-     *
-     * @param host - ip address of remote slave
-     * @param port - tcp port
-     * @return ModbusSlave instance if there is no errors, else null
-     * @see com.invertor.modbus.slave.ModbusSlaveTCP
-     * @see com.invertor.modbus.ModbusSlave
-     */
-    static public ModbusSlave createModbusSlaveTCP(String host, int port) {
-        return new ModbusSlaveTCP(new TcpParameters(host, port, false));
-    }
-
-    /**
-     * Creates ModbusSlaveTCP instance.
-     *
-     * @param tcpParameters - a TcpParameters instance
-     * @return ModbusSlave instance if there is no errors, else null
+     * @param tcpParameters tcp parameters.
+     * @return the newly created tcp-slave
      * @see com.invertor.modbus.slave.ModbusSlaveTCP
      * @see com.invertor.modbus.ModbusSlave
      * @see com.invertor.modbus.tcp.TcpParameters
      */
     static public ModbusSlave createModbusSlaveTCP(TcpParameters tcpParameters) {
         return new ModbusSlaveTCP(tcpParameters);
+    }
+
+    /**
+     * Creates a ModbusSlaveTCP instance.
+     *
+     * @param tcpParameters tcp parameters.
+     * @param poolSize      the number of threads in the pool
+     * @return the newly created tcp-slave
+     * @see com.invertor.modbus.slave.ModbusSlaveTCP
+     * @see com.invertor.modbus.ModbusSlave
+     * @see com.invertor.modbus.tcp.TcpParameters
+     */
+    static public ModbusSlave createModbusSlaveTCP(TcpParameters tcpParameters, int poolSize) {
+        return new ModbusSlaveTCP(tcpParameters, poolSize);
     }
 }

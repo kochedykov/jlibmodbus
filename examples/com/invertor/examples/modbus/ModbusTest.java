@@ -4,7 +4,7 @@ import com.invertor.modbus.*;
 import com.invertor.modbus.data.DataHolder;
 import com.invertor.modbus.data.FifoQueue;
 import com.invertor.modbus.data.SimpleDataHolderBuilder;
-import com.invertor.modbus.data.events.ModbusEventSend;
+import com.invertor.modbus.data.comm.ModbusCommEventSend;
 import com.invertor.modbus.data.mei.ReadDeviceIdentificationInterface;
 import com.invertor.modbus.exception.IllegalDataAddressException;
 import com.invertor.modbus.exception.IllegalDataValueException;
@@ -12,7 +12,9 @@ import com.invertor.modbus.exception.ModbusIOException;
 import com.invertor.modbus.master.ModbusMasterTCP;
 import com.invertor.modbus.msg.base.mei.MEIReadDeviceIdentification;
 import com.invertor.modbus.msg.base.mei.ReadDeviceIdentificationCode;
+import com.invertor.modbus.serial.SerialParameters;
 import com.invertor.modbus.serial.SerialPort;
+import com.invertor.modbus.tcp.TcpParameters;
 import jssc.SerialPortList;
 
 import java.net.InetAddress;
@@ -52,7 +54,6 @@ import static com.invertor.modbus.data.mei.ReadDeviceIdentificationInterface.Dat
  */
 public class ModbusTest implements Runnable {
 
-    private static final String DEFAULT_HOST = "localhost";
     private ModbusMaster master;
     private ModbusSlave slave;
     private long timeout = 0;
@@ -75,20 +76,22 @@ public class ModbusTest implements Runnable {
             return;
         }
 
+        SerialParameters sp;
+        TcpParameters tp;
         ModbusTest test = new ModbusTest();
-
         try {
             switch (TransportType.get(argv[0])) {
 
                 case TCP:
-                    String host = DEFAULT_HOST;
+                    tp = new TcpParameters();
+                    InetAddress host = InetAddress.getLocalHost();
                     int port = Modbus.TCP_PORT;
                     boolean keepAlive = true;
                     try {
-                        host = initParameter("host", host, argv[1], new ParameterInitializer<String>() {
+                        host = initParameter("host", host, argv[1], new ParameterInitializer<InetAddress>() {
                             @Override
-                            public String init(String arg) throws Exception {
-                                return InetAddress.getByName(arg).getHostAddress();
+                            public InetAddress init(String arg) throws Exception {
+                                return InetAddress.getByName(arg);
                             }
                         });
                         port = initParameter("port", port, argv[2], new ParameterInitializer<Integer>() {
@@ -107,10 +110,14 @@ public class ModbusTest implements Runnable {
                         //it's ok
                     }
                     System.out.format("Starting Modbus TCP with settings:%n\t%s, %s, %s%n", host, port, keepAlive);
-                    test.master = ModbusMasterFactory.createModbusMasterTCP(host, port, keepAlive);
-                    test.slave = ModbusSlaveFactory.createModbusSlaveTCP(host, port);
+                    tp.setHost(host);
+                    tp.setPort(port);
+                    tp.setKeepAlive(keepAlive);
+                    test.master = ModbusMasterFactory.createModbusMasterTCP(tp);
+                    test.slave = ModbusSlaveFactory.createModbusSlaveTCP(tp);
                     break;
                 case RTU:
+                    sp = new SerialParameters();
                     String device_name_slave = SerialPortList.getPortNames()[0];
                     String device_name_master = SerialPortList.getPortNames()[1];
                     SerialPort.BaudRate baud_rate = SerialPort.BaudRate.BAUD_RATE_115200;
@@ -160,10 +167,18 @@ public class ModbusTest implements Runnable {
                     }
                     System.out.format("Starting Modbus RTU with settings:%n\t%s, %s, %d, %d, %s%n",
                             device_name_slave, baud_rate.toString(), data_bits, stop_bits, parity.toString());
-                    test.master = ModbusMasterFactory.createModbusMasterRTU(device_name_master, baud_rate, data_bits, stop_bits, parity);
-                    test.slave = ModbusSlaveFactory.createModbusSlaveRTU(device_name_slave, baud_rate, data_bits, stop_bits, parity);
+
+                    sp.setParity(parity);
+                    sp.setStopBits(stop_bits);
+                    sp.setDataBits(data_bits);
+                    sp.setBaudRate(baud_rate);
+                    sp.setDevice(device_name_master);
+                    test.master = ModbusMasterFactory.createModbusMasterRTU(sp);
+                    sp.setDevice(device_name_slave);
+                    test.slave = ModbusSlaveFactory.createModbusSlaveRTU(sp);
                     break;
                 case ASCII:
+                    sp = new SerialParameters();
                     device_name_slave = SerialPortList.getPortNames()[0];
                     device_name_master = SerialPortList.getPortNames()[1];
                     baud_rate = SerialPort.BaudRate.BAUD_RATE_115200;
@@ -198,12 +213,18 @@ public class ModbusTest implements Runnable {
                     }
                     System.out.format("Starting Modbus ASCII with settings:%n\t%s, %s, %s%n",
                             device_name_slave, baud_rate.toString(), parity.toString());
-                    test.master = ModbusMasterFactory.createModbusMasterASCII(device_name_master, baud_rate, parity);
-                    test.slave = ModbusSlaveFactory.createModbusSlaveASCII(device_name_slave, baud_rate, parity);
+
+                    sp.setParity(parity);
+                    sp.setBaudRate(baud_rate);
+                    sp.setDevice(device_name_master);
+                    test.master = ModbusMasterFactory.createModbusMasterASCII(sp);
+                    sp.setDevice(device_name_slave);
+                    test.slave = ModbusSlaveFactory.createModbusSlaveASCII(sp);
                     break;
                 default:
-                    test.master = ModbusMasterFactory.createModbusMasterTCP(DEFAULT_HOST, false);
-                    test.slave = ModbusSlaveFactory.createModbusSlaveTCP(DEFAULT_HOST);
+                    tp = new TcpParameters(InetAddress.getLocalHost(), Modbus.TCP_PORT, true);
+                    test.master = ModbusMasterFactory.createModbusMasterTCP(tp);
+                    test.slave = ModbusSlaveFactory.createModbusSlaveTCP(tp);
 
             }
             test.master.setResponseTimeout(1000);
@@ -222,7 +243,7 @@ public class ModbusTest implements Runnable {
                 dataHolder.getHoldingRegisters().setRange(0, new int[]{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10});
                 dataHolder.getSlaveId().set("slave implementation = jlibmodbus".getBytes(Charset.forName("UTF-8")));
                 dataHolder.getExceptionStatus().set(123);
-                dataHolder.getCommStatus().addEvent(ModbusEventSend.createExceptionSentRead());
+                dataHolder.getCommStatus().addEvent(ModbusCommEventSend.createExceptionSentRead());
                 ReadDeviceIdentificationInterface rii = dataHolder.getReadDeviceIdentificationInterface();
                 rii.setVendorName("Vendor name=\"JSC Invertor\"");
                 rii.setProductCode("Product code=\"3245234658\"");
@@ -299,7 +320,7 @@ public class ModbusTest implements Runnable {
         master.setResponseTimeout(1000);
         while ((System.currentTimeMillis() - time) < timeout) {
             try {
-                Thread.sleep(200);
+                Thread.sleep(10);
                 System.out.println("Slave output");
                 printRegisters("Holding registers", slave.getDataHolder().getHoldingRegisters().getRange(0, 16));
                 printRegisters("Input registers", slave.getDataHolder().getInputRegisters().getRange(0, 16));

@@ -35,6 +35,13 @@ public class SerialParameters {
         setParity(SerialPort.Parity.NONE);
     }
 
+    /**
+     * @param device   the name(path) of the serial port
+     * @param baudRate baud rate
+     * @param dataBits the number of data bits
+     * @param stopBits the number of stop bits(1,2)
+     * @param parity   parity check (NONE, EVEN, ODD, MARK, SPACE)
+     */
     public SerialParameters(String device, SerialPort.BaudRate baudRate, int dataBits, int stopBits, SerialPort.Parity parity) {
         setDevice(device);
         setBaudRate(baudRate);
