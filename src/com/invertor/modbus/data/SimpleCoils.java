@@ -49,10 +49,10 @@ public class SimpleCoils implements Coils {
 
     @Override
     public void setRange(int offset, boolean[] range) throws IllegalDataAddressException, IllegalDataValueException {
+        checkRange(offset, range.length);
         if (!Modbus.checkWriteCoilCount(range.length))
             throw new IllegalDataValueException();
-        for (int i = 0; i < range.length; i++)
-            set(offset + i, range[i]);
+        System.arraycopy(range, 0, coils, offset, range.length);
     }
 
     @Override
@@ -68,14 +68,14 @@ public class SimpleCoils implements Coils {
 
     @Override
     public boolean[] getRange(int offset, int quantity) throws IllegalDataAddressException, IllegalDataValueException {
+        checkRange(offset, quantity);
         if (!Modbus.checkReadCoilCount(quantity))
             throw new IllegalDataValueException();
-        checkRange(offset, quantity);
         return Arrays.copyOfRange(coils, offset, offset + quantity);
     }
 
     private void checkRange(int offset, int quantity) throws IllegalDataAddressException {
-        if (!Modbus.checkStartAddress(offset) || !Modbus.checkEndAddress(offset + quantity))
+        if (offset + quantity > quantity())
             throw new IllegalDataAddressException(offset);
     }
 

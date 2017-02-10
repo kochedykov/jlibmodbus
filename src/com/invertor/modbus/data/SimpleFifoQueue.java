@@ -42,12 +42,15 @@ public class SimpleFifoQueue extends FifoQueue {
 
     @Override
     protected int[] peekImpl() {
-        int[] r = new int[queue.size()];
-        Iterator<Integer> iterator = queue.iterator();
-        for (int i = 0; i < r.length && iterator.hasNext(); i++) {
-            r[i] = iterator.next();
+        if (queue.size() > 0) {
+            int[] r = new int[queue.size()];
+            Iterator<Integer> iterator = queue.iterator();
+            for (int i = 0; i < r.length && iterator.hasNext(); i++) {
+                r[i] = iterator.next();
+            }
+            return r;
         }
-        return r;
+        return new int[0];
     }
 
     @Override
@@ -57,6 +60,6 @@ public class SimpleFifoQueue extends FifoQueue {
 
     @Override
     protected void pollImpl() {
-        queue.remove();
+        queue.poll();
     }
 }

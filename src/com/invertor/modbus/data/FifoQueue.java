@@ -50,7 +50,7 @@ abstract public class FifoQueue {
     }
 
     final public int[] get() throws IllegalDataValueException {
-        if (size() > 31) {
+        if (size() > 31 || size() == 0) {
             throw new IllegalDataValueException();
         }
         return peekImpl();
