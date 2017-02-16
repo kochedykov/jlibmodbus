@@ -25,6 +25,19 @@ rxtx home page:
 http://users.frii.com/jarvi/rxtx/index.html
 
 -----------------------------------------------------------------------------------------------------------
+----Release version 1.2.5 ---------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------
+This version contains some bug fixes and API changes.
+	NEWS
+	* Added new example.
+	* Added readTimeout to ModbusSlave. 
+	* API changes: Deleted a few factory-methods from ModbusMasterFactory and ModbusSlaveFactory.
+	* API changes: Renamed ModbusEvent to ModbusCommEvent.
+	* API changes: added new methods Coils#quantity() and HoldingRegisters#quantity().
+	* API changes: ModbusSlaver#open() -> ModbusSlaver#listen(), ModbusSlaver#close() -> ModbusSlaver#shutdown().
+	* API changes: ModbusMaster#open() -> ModbusMaster#connect(), ModbusMaster#close() -> ModbusMaster#disconnect().
+	* fixed bug that type of quantity must be double or float before it'll be divided.
+-----------------------------------------------------------------------------------------------------------
 ----Release version 1.2.4 ---------------------------------------------------------------------------------
 -----------------------------------------------------------------------------------------------------------
 This version contains bug fixes and performance improovments.
