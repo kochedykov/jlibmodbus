@@ -42,6 +42,7 @@ public class SimpleMasterRTU {
 
     static public void main(String[] arg) {
         SerialParameters sp = new SerialParameters();
+        Modbus.setLogLevel(Modbus.LogLevel.LEVEL_DEBUG);
         try {
             // you can use just string to get connection with remote slave,
             // but you can also get a list of all serial ports available at your system.
@@ -55,27 +56,32 @@ public class SimpleMasterRTU {
                 sp.setDataBits(8);
                 sp.setParity(SerialPort.Parity.NONE);
                 sp.setStopBits(1);
-                Modbus.setLogLevel(Modbus.LogLevel.LEVEL_DEBUG);
-                //you can use jssc, rxtx to communicate via serial port.
-                //by default the jssc library is used.
+                //you can choose the library to use.
+                //the library uses jssc by default.
+                //
+                //first, you should set the factory that will be used by library to create an instance of SerialPort.
                 //SerialUtils.setSerialPortFactory(new SerialPortFactoryRXTX());
+                //  JSSC is Java Simple Serial Connector
                 //SerialUtils.setSerialPortFactory(new SerialPortFactoryJSSC());
+                //  PJC is PureJavaComm.
+                //SerialUtils.setSerialPortFactory(new SerialPortFactoryPJC());
+                //  JavaComm is the Java Communications API (also known as javax.comm)
+                //SerialUtils.setSerialPortFactory(new SerialPortFactoryJavaComm());
                 //in case of using serial-to-wifi adapter
                 //String ip = "192.168.0.180";//for instance
                 //int port  = 777;
                 //SerialUtils.setSerialPortFactory(new SerialPortFactoryTcp(new TcpParameters(InetAddress.getByName(ip), port, true)));
-                //if you would like to set connection parameters separately,
                 // you should use another method:
-                // createModbusMasterRTU(String device, SerialPort.BaudRate baudRate, int dataBits, int stopBits, SerialPort.Parity parity)
+                //next you just create your master and use it.
                 ModbusMaster m = ModbusMasterFactory.createModbusMasterRTU(sp);
                 int slaveId = 1;
                 int offset = 0;
                 int quantity = 1;
-
+                //you can invoke #connect method manually, otherwise it'll be invoked automatically
                 try {
                     // at next string we receive ten registers from a slave with id of 1 at offset of 0.
                     int[] registerValues = m.readHoldingRegisters(slaveId, offset, quantity);
-                    // let's print them all :)
+                    // print values
                     for (int value : registerValues) {
                         System.out.println("Address: " + offset++ + ", Value: " + value);
                     }
