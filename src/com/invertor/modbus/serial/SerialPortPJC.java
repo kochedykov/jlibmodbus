@@ -1,8 +1,8 @@
 package com.invertor.modbus.serial;
 
 import com.invertor.modbus.Modbus;
+import purejavacomm.*;
 
-import javax.comm.*;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -31,15 +31,15 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * email: vladislav.kochedykov@gmail.com
  */
 
-public class SerialPortJavaComm extends com.invertor.modbus.serial.SerialPort implements SerialPortEventListener {
+public class SerialPortPJC extends SerialPort implements SerialPortEventListener {
 
-    private javax.comm.SerialPort port;
+    private purejavacomm.SerialPort port;
     private AtomicBoolean opened = new AtomicBoolean(false);
     private InputStream in;
     private OutputStream out;
 
 
-    public SerialPortJavaComm(SerialParameters sp) throws SerialPortException {
+    public SerialPortPJC(SerialParameters sp) throws SerialPortException {
         super(sp);
     }
 
@@ -82,15 +82,15 @@ public class SerialPortJavaComm extends com.invertor.modbus.serial.SerialPort im
             } else {
                 CommPort commPort = portIdentifier.open(this.getClass().getName(), Modbus.MAX_CONNECTION_TIMEOUT);
 
-                if (commPort instanceof javax.comm.SerialPort) {
-                    port = (javax.comm.SerialPort) commPort;
+                if (commPort instanceof purejavacomm.SerialPort) {
+                    port = (purejavacomm.SerialPort) commPort;
                     port.setSerialPortParams(sp.getBaudRate(), sp.getDataBits(), sp.getStopBits(), sp.getParity().getValue());
-                    port.setFlowControlMode(javax.comm.SerialPort.FLOWCONTROL_NONE);
+                    port.setFlowControlMode(gnu.io.SerialPort.FLOWCONTROL_NONE);
 
                     in = port.getInputStream();
                     out = port.getOutputStream();
 
-                    port.enableReceiveTimeout(Modbus.MAX_RESPONSE_TIMEOUT);
+                    port.enableReceiveTimeout(getReadTimeout());
                     setOpened(true);
                 } else {
                     Modbus.log().severe(sp.getDevice() + " is not a serial port.");
@@ -153,7 +153,6 @@ public class SerialPortJavaComm extends com.invertor.modbus.serial.SerialPort im
         try {
             if (isOpened()) {
                 setOpened(false);
-
                 in.close();
                 out.close();
                 port.close();
