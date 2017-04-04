@@ -107,7 +107,8 @@ public class SerialPortJavaComm extends com.invertor.modbus.serial.SerialPort im
     public void setReadTimeout(int readTimeout) {
         super.setReadTimeout(readTimeout);
         try {
-            port.enableReceiveTimeout(readTimeout);
+            if (isOpened())
+                port.enableReceiveTimeout(readTimeout);
         } catch (UnsupportedCommOperationException e) {
             Modbus.log().warning(e.getLocalizedMessage());
         }
