@@ -29,7 +29,7 @@ package com.invertor.modbus;
  */
 class Version {
 	
-	private static final String version = "1.2.5";
+	private static final String version = "1.2.6";
 	/**
 	 * returns the current version of the JLibModbus library
 	 *

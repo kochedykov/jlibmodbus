@@ -23,7 +23,13 @@ https://github.com/scream3r/java-simple-serial-connector
 
 rxtx home page:
 http://users.frii.com/jarvi/rxtx/index.html
-
+-----------------------------------------------------------------------------------------------------------
+----Release version 1.2.6 ---------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------
+This version contains some bug fixes and API changes.
+	NEWS
+	* fixed bug with null-pointer-exception thrown if setReadTimeout is invoked before port has been opened.
+	* IMPORTANT! Added support for PureJavaComm!
 -----------------------------------------------------------------------------------------------------------
 ----Release version 1.2.5 ---------------------------------------------------------------------------------
 -----------------------------------------------------------------------------------------------------------
