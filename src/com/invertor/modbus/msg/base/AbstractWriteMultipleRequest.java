@@ -56,9 +56,9 @@ abstract public class AbstractWriteMultipleRequest extends AbstractMultipleReque
     protected void readData(ModbusInputStream fifo) throws IOException, ModbusNumberException {
         super.readData(fifo);
         setByteCount(fifo.read());
-        setValues(new byte[byteCount]);
+        values = new byte[byteCount];
         int size;
-        if ((size = fifo.read(getValues(), 0, getByteCount())) < getByteCount())
+        if ((size = fifo.read(values, 0, getByteCount())) < getByteCount())
             Modbus.log().warning(getByteCount() + " bytes expected, but " + size + " received.");
     }
 
