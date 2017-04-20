@@ -1,8 +1,10 @@
 README
 
-The MODBUS protocol implementation in pure java. The goals of the library are:
-1 - support of the most popular serial communication libraries(jssc, rxtx, java comm api); 
-2 - complete implementation of the modbus protocol v1.1b.
+The MODBUS protocol implementation in pure java.
+
+The main advantages of the library are following:
+- the library supports a lot of communication libraries (jssc, rxtx, purejavacomm, java comm api); 
+- the library has (practically) complete implementation of the modbus protocol v1.1b.
 
 AUTHORS
 
@@ -17,12 +19,21 @@ WEB SITE
 project homepage:
 http://jlibmodbus.sourceforge.net
 
+javacomm homepage:
+http://www.sparetimelabs.com/purejavacomm/purejavacomm.php
+
 jssc home page:
 https://code.google.com/p/java-simple-serial-connector
 https://github.com/scream3r/java-simple-serial-connector
 
 rxtx home page:
 http://users.frii.com/jarvi/rxtx/index.html
+-----------------------------------------------------------------------------------------------------------
+----Release version 1.2.7 ---------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------
+This version contains important bug fix.
+	NEWS
+	* IMPORTANT! fixed bug with reading of multiple values in request.
 -----------------------------------------------------------------------------------------------------------
 ----Release version 1.2.6 ---------------------------------------------------------------------------------
 -----------------------------------------------------------------------------------------------------------
