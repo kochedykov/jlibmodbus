@@ -74,6 +74,8 @@ public class SimpleMasterRTU {
                 // you should use another method:
                 //next you just create your master and use it.
                 ModbusMaster m = ModbusMasterFactory.createModbusMasterRTU(sp);
+                m.connect();
+
                 int slaveId = 1;
                 int offset = 0;
                 int quantity = 1;
@@ -89,9 +91,9 @@ public class SimpleMasterRTU {
                     throw e;
                 } catch (Exception e) {
                     e.printStackTrace();
+                } finally {
                     try {
                         m.disconnect();
-                        m.connect();
                     } catch (ModbusIOException e1) {
                         e1.printStackTrace();
                     }
