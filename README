@@ -29,6 +29,13 @@ https://github.com/scream3r/java-simple-serial-connector
 rxtx home page:
 http://users.frii.com/jarvi/rxtx/index.html
 -----------------------------------------------------------------------------------------------------------
+----Release version 1.2.8 ---------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------
+This version contains important bug fix.
+	NEWS
+	* added isConnected, which returns true if a master is connected to a remote slave.
+	* added isListening method, which returns true if a slave is already listening for incoming connections.
+-----------------------------------------------------------------------------------------------------------
 ----Release version 1.2.7 ---------------------------------------------------------------------------------
 -----------------------------------------------------------------------------------------------------------
 This version contains important bug fix.
