@@ -60,11 +60,14 @@ public class SimpleMasterTCP {
             int offset = 0;
             int quantity = 10;
             try {
-                // at next string we receive ten registers from a slave with id of 1 at offset of 0.
-                int[] registerValues = m.readHoldingRegisters(slaveId, offset, quantity);
-                // let's print them all :)
-                for (int value : registerValues) {
-                    System.out.println("Address: " + offset++ + ", Value: " + value);
+                // since 1.2.8
+                if (m.isConnected()) {
+                    // at next string we receive ten registers from a slave with id of 1 at offset of 0.
+                    int[] registerValues = m.readHoldingRegisters(slaveId, offset, quantity);
+                    // let's print them all :)
+                    for (int value : registerValues) {
+                        System.out.println("Address: " + offset++ + ", Value: " + value);
+                    }
                 }
             } catch (ModbusProtocolException e) {
                 e.printStackTrace();

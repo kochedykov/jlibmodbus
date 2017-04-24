@@ -42,6 +42,7 @@ abstract public class ModbusMaster {
     final protected ModbusRequestFactory requestFactory = ModbusRequestFactory.getInstance();
     private int transactionId = 0;
     private long requestTime = 0;
+    private boolean connected = false;
 
     protected ModbusMaster() {
 
@@ -59,10 +60,20 @@ abstract public class ModbusMaster {
 
     public void connect() throws ModbusIOException {
         getConnection().open();
+        setConnected(true);
     }
 
     public void disconnect() throws ModbusIOException {
         getConnection().close();
+        setConnected(false);
+    }
+
+    public boolean isConnected() {
+        return connected;
+    }
+
+    protected void setConnected(boolean connected) {
+        this.connected = connected;
     }
 
     protected void sendRequest(ModbusMessage msg) throws ModbusIOException {
@@ -85,7 +96,7 @@ abstract public class ModbusMaster {
             try {
                 msg = (ModbusResponse) readResponse();
                 request.validateResponse(msg);
-                /**
+                /*
                  * if you have received an ACKNOWLEDGE,
                  * it means that operation is in processing and you should be waiting for the answer
                  */
@@ -98,7 +109,7 @@ abstract public class ModbusMaster {
                 Modbus.log().warning(mne.getLocalizedMessage());
             }
         } while (System.currentTimeMillis() - requestTime < getConnection().getReadTimeout());
-        /**
+        /*
          * throw an exception if there is a response timeout
          */
         throw new ModbusIOException("Response timeout.");
