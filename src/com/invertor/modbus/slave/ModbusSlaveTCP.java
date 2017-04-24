@@ -43,7 +43,6 @@ public class ModbusSlaveTCP extends ModbusSlave implements Runnable {
     final private TcpParameters tcp;
     private Thread mainThread = null;
     private ServerSocket server = null;
-    private volatile boolean listening = false;
 
     public ModbusSlaveTCP(TcpParameters tcp) {
         this(tcp, DEFAULT_POOLS_SIZE);
@@ -55,11 +54,11 @@ public class ModbusSlaveTCP extends ModbusSlave implements Runnable {
     }
 
     @Override
-    synchronized public void listen() throws ModbusIOException {
+    synchronized public void listenImpl() throws ModbusIOException {
         try {
             server = new ServerSocket(tcp.getPort());
-            listening = true;
             mainThread = new Thread(this);
+            setListening(true);
             mainThread.start();
         } catch (IOException e) {
             throw new ModbusIOException(e);
@@ -67,9 +66,7 @@ public class ModbusSlaveTCP extends ModbusSlave implements Runnable {
     }
 
     @Override
-    synchronized public void shutdown() {
-        listening = false;
-
+    synchronized public void shutdownImpl() {
         try {
             if (server != null)
                 server.close();
@@ -102,7 +99,7 @@ public class ModbusSlaveTCP extends ModbusSlave implements Runnable {
         Socket s;
         ModbusConnection conn;
         try {
-            while (listening) {
+            while (isListening()) {
                 s = server.accept();
                 try {
                     conn = ModbusConnectionFactory.getTcpSlave(s);
@@ -124,7 +121,11 @@ public class ModbusSlaveTCP extends ModbusSlave implements Runnable {
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            shutdown();
+            try {
+                shutdown();
+            } catch (ModbusIOException e) {
+                Modbus.log().warning("Cannot shutdown: " + e.getLocalizedMessage());
+            }
         }
     }
 }

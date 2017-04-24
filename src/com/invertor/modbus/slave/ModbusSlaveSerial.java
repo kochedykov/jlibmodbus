@@ -37,7 +37,7 @@ class ModbusSlaveSerial extends ModbusSlave {
     }
 
     @Override
-    synchronized public void listen() throws ModbusIOException {
+    synchronized public void listenImpl() throws ModbusIOException {
         shutdown();
         conn.open();
         mainThread = new Thread(requestHandler);
@@ -45,7 +45,7 @@ class ModbusSlaveSerial extends ModbusSlave {
     }
 
     @Override
-    synchronized public void shutdown() throws ModbusIOException {
+    synchronized public void shutdownImpl() throws ModbusIOException {
         requestHandler.setListening(false);
         try {
             if (mainThread != null) {

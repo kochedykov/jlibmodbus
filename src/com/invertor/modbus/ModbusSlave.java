@@ -4,6 +4,8 @@ import com.invertor.modbus.data.DataHolder;
 import com.invertor.modbus.data.DataHolderBuilder;
 import com.invertor.modbus.exception.ModbusIOException;
 
+import java.util.concurrent.atomic.AtomicBoolean;
+
 /*
  * Copyright (C) 2016 "Invertor" Factory", JSC
  * [http://www.sbp-invertor.ru]
@@ -30,6 +32,7 @@ abstract public class ModbusSlave {
 
     private int serverAddress = 1;
     private DataHolder dataHolder = new DataHolder();
+    private AtomicBoolean listening = new AtomicBoolean(false);
     /**
      * a timeout for single connection handler. if master makes a new connection for every data request,
      * we should close it's last connection as soon as possible. Else, if master is working through a single connection,
@@ -48,16 +51,33 @@ abstract public class ModbusSlave {
         this.readTimeout = readTimeout;
     }
 
+    abstract protected void listenImpl() throws ModbusIOException;
+
+    abstract protected void shutdownImpl() throws ModbusIOException;
+
     /**
      * starts the ModbusSlave thread.
      */
-    abstract public void listen() throws ModbusIOException;
+    final public void listen() throws ModbusIOException {
+        listenImpl();
+        setListening(true);
+    }
 
     /**
      * should have stop the thread of the ModbusSlave.
      */
-    abstract public void shutdown() throws ModbusIOException;
+    final public void shutdown() throws ModbusIOException {
+        shutdownImpl();
+        setListening(false);
+    }
 
+    public boolean isListening() {
+        return listening.get();
+    }
+
+    protected void setListening(boolean listening) {
+        this.listening.set(listening);
+    }
 
     /*Getters & Setters*/
     public DataHolder getDataHolder() {

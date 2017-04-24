@@ -89,28 +89,33 @@ public class SimpleSlaveTCP {
             hr.set(0, 12345);
             slave.getDataHolder().setHoldingRegisters(hr);
             slave.setServerAddress(1);
-            /**
+            /*
              * using master-branch it should be #slave.open();
              */
             slave.listen();
 
-            Runtime.getRuntime().addShutdownHook(new Thread() {
-                @Override
-                public void run() {
-                    synchronized (slave) {
-                        slave.notifyAll();
-                    }
-                }
-            });
-
-            synchronized (slave) {
-                slave.wait();
-            }
-
-            /**
-             * using master-branch it should be #slave.close();
+            /*
+             * since 1.2.8
              */
-            slave.shutdown();
+            if (slave.isListening()) {
+                Runtime.getRuntime().addShutdownHook(new Thread() {
+                    @Override
+                    public void run() {
+                        synchronized (slave) {
+                            slave.notifyAll();
+                        }
+                    }
+                });
+
+                synchronized (slave) {
+                    slave.wait();
+                }
+
+                /*
+                 * using master-branch it should be #slave.close();
+                 */
+                slave.shutdown();
+            }
         } catch (RuntimeException e) {
             throw e;
         } catch (Exception e) {
