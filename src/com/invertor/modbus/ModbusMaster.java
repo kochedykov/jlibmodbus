@@ -58,14 +58,36 @@ abstract public class ModbusMaster {
 
     abstract protected ModbusConnection getConnection();
 
-    public void connect() throws ModbusIOException {
+    /**
+     * this method allows you to implement your own behavior of connect method.
+     *
+     * @throws ModbusIOException
+     */
+    protected void connectImpl() throws ModbusIOException {
         getConnection().open();
-        setConnected(true);
     }
 
-    public void disconnect() throws ModbusIOException {
-        getConnection().close();
-        setConnected(false);
+    /**
+     * this method allows you to implement your own behavior of disconnect method.
+     *
+     * @throws ModbusIOException
+     */
+    protected void disconnectImpl() throws ModbusIOException {
+        getConnection().open();
+    }
+
+    final public void connect() throws ModbusIOException {
+        if (!isConnected()) {
+            connectImpl();
+            setConnected(true);
+        }
+    }
+
+    final public void disconnect() throws ModbusIOException {
+        if (isConnected()) {
+            disconnectImpl();
+            setConnected(false);
+        }
     }
 
     public boolean isConnected() {

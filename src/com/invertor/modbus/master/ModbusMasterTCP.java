@@ -90,17 +90,6 @@ final public class ModbusMasterTCP extends ModbusMaster {
     }
 
     @Override
-    public void connect() throws ModbusIOException {
-        disconnect();
-        conn.open();
-    }
-
-    @Override
-    public void disconnect() throws ModbusIOException {
-        conn.close();
-    }
-
-    @Override
     protected ModbusConnection getConnection() {
         return conn;
     }
@@ -199,6 +188,4 @@ final public class ModbusMasterTCP extends ModbusMaster {
     public void diagnosticsClearOverrunCounterAndFlag(int serverAddress) throws ModbusNumberException, IllegalFunctionException {
         throw new IllegalFunctionException(ModbusFunctionCode.DIAGNOSTICS.toInt());
     }
-
-
 }
