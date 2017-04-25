@@ -19,7 +19,7 @@ WEB SITE
 project homepage:
 http://jlibmodbus.sourceforge.net
 
-javacomm homepage:
+purejavacomm homepage:
 http://www.sparetimelabs.com/purejavacomm/purejavacomm.php
 
 jssc home page:
@@ -28,30 +28,38 @@ https://github.com/scream3r/java-simple-serial-connector
 
 rxtx home page:
 http://users.frii.com/jarvi/rxtx/index.html
+
+-----------------------------------------------------------------------------------------------------------
+----Release version 1.2.8.1 -------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------
+This release contains one minor bug fix and some API changes.
+	NEWS
+	* fixed a minor bug: setting of the "connected" status had no effect.
+	* added ModbuMaster#connectImpl and ModbusMaster#disconnectImpl methods.
 -----------------------------------------------------------------------------------------------------------
 ----Release version 1.2.8 ---------------------------------------------------------------------------------
 -----------------------------------------------------------------------------------------------------------
-This version contains important bug fix.
+This release contains important bug fix.
 	NEWS
 	* added isConnected, which returns true if a master is connected to a remote slave.
 	* added isListening method, which returns true if a slave is already listening for incoming connections.
 -----------------------------------------------------------------------------------------------------------
 ----Release version 1.2.7 ---------------------------------------------------------------------------------
 -----------------------------------------------------------------------------------------------------------
-This version contains important bug fix.
+This release contains important bug fix.
 	NEWS
 	* IMPORTANT! fixed bug with reading of multiple values in request.
 -----------------------------------------------------------------------------------------------------------
 ----Release version 1.2.6 ---------------------------------------------------------------------------------
 -----------------------------------------------------------------------------------------------------------
-This version contains some bug fixes and API changes.
+This release contains some bug fixes and API changes.
 	NEWS
 	* fixed bug with null-pointer-exception thrown if setReadTimeout is invoked before port has been opened.
 	* IMPORTANT! Added support for PureJavaComm!
 -----------------------------------------------------------------------------------------------------------
 ----Release version 1.2.5 ---------------------------------------------------------------------------------
 -----------------------------------------------------------------------------------------------------------
-This version contains some bug fixes and API changes.
+This release contains some bug fixes and API changes.
 	NEWS
 	* Added new example.
 	* Added readTimeout to ModbusSlave. 
@@ -64,7 +72,7 @@ This version contains some bug fixes and API changes.
 -----------------------------------------------------------------------------------------------------------
 ----Release version 1.2.4 ---------------------------------------------------------------------------------
 -----------------------------------------------------------------------------------------------------------
-This version contains bug fixes and performance improovments.
+This release contains bug fixes and performance improovments.
 	NEWS
 	* fixed bug with address and quantity checking in ReadCoilsRequest#checkAddressRange.
 	* improved search of a ModbusFunctionCode instance by value.
@@ -74,7 +82,7 @@ This version contains bug fixes and performance improovments.
 -----------------------------------------------------------------------------------------------------------
 ----Release version 1.2.3 ---------------------------------------------------------------------------------
 -----------------------------------------------------------------------------------------------------------
-This version contains some improvements.
+This release contains some improvements.
 	NEWS
 	* added an echo generating a class to obtain the version of the library.
 	* improved logger output.
@@ -82,7 +90,7 @@ This version contains some improvements.
 -----------------------------------------------------------------------------------------------------------
 ----Release version 1.2.2 ---------------------------------------------------------------------------------
 -----------------------------------------------------------------------------------------------------------
-Since this version the library is destributed under Apache license version 2.0. Also, added support of the java communication api 3.0.
+Since this release the library is destributed under Apache license version 2.0. Also, added support of the java communication api 3.0.
 	NEWS
 	* IMPORTANT! added support for java communication api 3.0.
 	* IMPORTANT! migration to the apache license version 2.0.
@@ -94,7 +102,7 @@ Since this version the library is destributed under Apache license version 2.0. 
 -----------------------------------------------------------------------------------------------------------
 ----Release version 1.2.1 ---------------------------------------------------------------------------------
 -----------------------------------------------------------------------------------------------------------
-This version contains some improvements and some bug fixes. Also, the RXTX library is currently supported.
+This release contains some improvements and some bug fixes. Also, the RXTX library is currently supported.
 	NEWS:
 	* IMPORTANT! the RXTX library is now supported! You should invoke SerialUtils.setSerialPortFactory(new SerialPortFactoryRXTX()); before you'll have created a master or a slave.
 	* added checking if jssc library is available
@@ -106,7 +114,7 @@ This version contains some improvements and some bug fixes. Also, the RXTX libra
 -----------------------------------------------------------------------------------------------------------
 ----Release version 1.2 -----------------------------------------------------------------------------------
 -----------------------------------------------------------------------------------------------------------
-This version contains some improvements.
+This release contains some improvements.
 	NEWS:
 	* Added extended logging.
 	* Auto increment of transaction id is currently supported. see Modbus.setAutoIncrementTransactionId.
@@ -114,7 +122,7 @@ This version contains some improvements.
 -----------------------------------------------------------------------------------------------------------
 ----Release version 1.1 -----------------------------------------------------------------------------------
 -----------------------------------------------------------------------------------------------------------
-This version contains important fixes. Also, debugging information such as names of variables has been added.
+This release contains important fixes. Also, debugging information such as names of variables has been added.
 	NEWS:
 	* Important! fixed bug with read of starting address.
 	* Important! fixed data conversion issues.
