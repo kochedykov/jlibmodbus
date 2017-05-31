@@ -29,4 +29,6 @@ public interface SerialPortAbstractFactory {
     SerialPort createSerial(SerialParameters sp) throws SerialPortException;
 
     List<String> getPortIdentifiers();
+
+    String getVersion();
 }

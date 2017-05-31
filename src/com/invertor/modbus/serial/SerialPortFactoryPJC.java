@@ -1,5 +1,6 @@
 package com.invertor.modbus.serial;
 
+import com.invertor.modbus.Modbus;
 import purejavacomm.CommPortIdentifier;
 
 import java.util.ArrayList;
@@ -49,5 +50,17 @@ public class SerialPortFactoryPJC implements SerialPortAbstractFactory {
             }
         }
         return list;
+    }
+
+    @Override
+    public String getVersion() {
+        String version = "information about version is unavailable.";
+        try {
+            Class.forName("purejavacomm.PureJavaComm");
+            version = purejavacomm.PureJavaComm.getVersion();
+        } catch (ClassNotFoundException e) {
+            Modbus.log().warning("The PureJavaComm library is not found.");
+        }
+        return version;
     }
 }

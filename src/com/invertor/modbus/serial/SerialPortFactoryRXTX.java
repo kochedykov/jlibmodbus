@@ -1,5 +1,6 @@
 package com.invertor.modbus.serial;
 
+import com.invertor.modbus.Modbus;
 import gnu.io.CommPortIdentifier;
 
 import java.util.ArrayList;
@@ -50,5 +51,17 @@ public class SerialPortFactoryRXTX implements SerialPortAbstractFactory {
             }
         }
         return list;
+    }
+
+    @Override
+    public String getVersion() {
+        String version = "information about version is unavailable.";
+        try {
+            Class.forName("gnu.io.SerialPort");
+            version = gnu.io.RXTXVersion.getVersion();
+        } catch (ClassNotFoundException e) {
+            Modbus.log().warning("The RXTX library is not found.");
+        }
+        return version;
     }
 }

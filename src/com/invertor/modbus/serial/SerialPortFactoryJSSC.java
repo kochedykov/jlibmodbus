@@ -39,4 +39,9 @@ public class SerialPortFactoryJSSC implements SerialPortAbstractFactory {
     public List<String> getPortIdentifiers() {
         return Arrays.asList(jssc.SerialPortList.getPortNames());
     }
+
+    @Override
+    public String getVersion() {
+        return "information about version is unavailable.";
+    }
 }

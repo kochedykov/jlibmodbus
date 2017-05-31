@@ -60,6 +60,11 @@ public class SerialPortFactoryTcp implements SerialPortAbstractFactory {
         return new LinkedList<String>();
     }
 
+    @Override
+    public String getVersion() {
+        return "information about version is unavailable.";
+    }
+
     private class SerialPortViaTCP extends SerialPort {
 
         private Socket socket;

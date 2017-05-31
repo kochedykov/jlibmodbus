@@ -49,4 +49,9 @@ public class SerialPortFactoryJavaComm implements SerialPortAbstractFactory {
         }
         return list;
     }
+
+    @Override
+    public String getVersion() {
+        return "information about version is unavailable.";
+    }
 }

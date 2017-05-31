@@ -46,4 +46,8 @@ public class SerialUtils {
     static public List<String> getPortIdentifiers() {
         return factory.getPortIdentifiers();
     }
+
+    static public String getConnectorVersion() {
+        return factory.getVersion();
+    }
 }
