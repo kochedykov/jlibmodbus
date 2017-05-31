@@ -141,7 +141,7 @@ public abstract class SerialPort {
     public enum BaudRate {
         BAUD_RATE_4800(4800),
         BAUD_RATE_9600(9600),
-        BAUD_RATE_1440(14400),
+        BAUD_RATE_14400(14400),
         BAUD_RATE_19200(19200),
         BAUD_RATE_38400(38400),
         BAUD_RATE_57600(57600),

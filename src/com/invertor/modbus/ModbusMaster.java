@@ -73,7 +73,7 @@ abstract public class ModbusMaster {
      * @throws ModbusIOException
      */
     protected void disconnectImpl() throws ModbusIOException {
-        getConnection().open();
+        getConnection().close();
     }
 
     final public void connect() throws ModbusIOException {
