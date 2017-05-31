@@ -30,6 +30,13 @@ rxtx home page:
 http://users.frii.com/jarvi/rxtx/index.html
 
 -----------------------------------------------------------------------------------------------------------
+----Release version 1.2.8.2 -------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------
+This release contains one minor bug fix and some API changes.
+	NEWS
+	* Add new method - SerialUtils#getConnectorVersion.
+	* Fix bug in ModbusMaster#disconnectImpl. Thanks to dpozimski (https://github.com/dpozimski)!
+-----------------------------------------------------------------------------------------------------------
 ----Release version 1.2.8.1 -------------------------------------------------------------------------------
 -----------------------------------------------------------------------------------------------------------
 This release contains one minor bug fix and some API changes.
