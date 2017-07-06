@@ -45,6 +45,8 @@ final public class Modbus {
     final static public int MAX_SERVER_ADDRESS = 247;
     final static public int TCP_PORT = 502;
     final static public int PROTOCOL_ID = 0;
+    final static public int TCP_DEFAULT_ID = 0xFF;
+    final static public int BROADCAST_ID = 0x00;
     final static public int ASCII_CODE_CR = 0xd;
     final static public int ASCII_CODE_LF = 0xa;
     final static public int ASCII_CODE_COLON = 0x3a;
@@ -168,11 +170,16 @@ final public class Modbus {
         * hook for server address is equals zero:
         * some of modbus tcp slaves sets the UnitId value to zero, not ignoring value in this field.
         */
-        if (0 == serverAddress) {
-            Modbus.log().warning("Server address must be in range from " + Modbus.MIN_SERVER_ADDRESS + " to " + Modbus.MAX_SERVER_ADDRESS);
-            return true;
+        switch (serverAddress) {
+            case 0x00:
+                Modbus.log().info("Broadcast message");
+                return true;
+            case 0xFF:
+                Modbus.log().info("0xFF default slave id using ModbusTCP");
+                return true;
+            default:
+                return !(serverAddress < Modbus.MIN_SERVER_ADDRESS || serverAddress > Modbus.MAX_SERVER_ADDRESS);
         }
-        return !(serverAddress < Modbus.MIN_SERVER_ADDRESS || serverAddress > Modbus.MAX_SERVER_ADDRESS);
     }
 
     /**

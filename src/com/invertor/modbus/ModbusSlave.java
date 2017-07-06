@@ -33,6 +33,7 @@ abstract public class ModbusSlave {
     private int serverAddress = 1;
     private DataHolder dataHolder = new DataHolder();
     private AtomicBoolean listening = new AtomicBoolean(false);
+    private AtomicBoolean broadcastEnabled = new AtomicBoolean(false);
     /**
      * a timeout for single connection handler. if master makes a new connection for every data request,
      * we should close it's last connection as soon as possible. Else, if master is working through a single connection,
@@ -84,12 +85,12 @@ abstract public class ModbusSlave {
         return dataHolder;
     }
 
-    public void setDataHolder(DataHolderBuilder builder) {
-        setDataHolder(builder.build());
-    }
-
     public void setDataHolder(DataHolder dataHolder) {
         this.dataHolder = dataHolder;
+    }
+
+    public void setDataHolder(DataHolderBuilder builder) {
+        setDataHolder(builder.build());
     }
 
     public int getServerAddress() {
@@ -99,5 +100,13 @@ abstract public class ModbusSlave {
     public void setServerAddress(int serverAddress) {
         if (Modbus.checkServerAddress(serverAddress))
             this.serverAddress = serverAddress;
+    }
+
+    public boolean isBroadcastEnabled() {
+        return broadcastEnabled.get();
+    }
+
+    public void setBroadcastEnabled(boolean broadcastEnabled) {
+        this.broadcastEnabled.set(broadcastEnabled);
     }
 }

@@ -85,6 +85,9 @@ class RequestHandlerSerial extends RequestHandler {
                         commStatus.incNoResponseCounter();
                         throw e;
                     }
+                } else if (/*broadcast*/ request.getServerAddress() == Modbus.BROADCAST_ID && getSlave().isBroadcastEnabled()) {
+                    //we do not answer these requests to avoid collisions on the bus
+                    request.process(dataHolder);
                 }
             } catch (ModbusChecksumException e) {
                 commStatus.incCommErrorCounter();
