@@ -30,12 +30,19 @@ rxtx home page:
 http://users.frii.com/jarvi/rxtx/index.html
 
 -----------------------------------------------------------------------------------------------------------
+----Release version 1.2.8.3 -------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------
+The release contains important bug fix.
+	NEWS
+	* IMPORTANT! fixed bug #1 Support of SlaveID=255 with ModbusTCP. Thanks to Francois DELOYE (https://sourceforge.net/u/sesa258801).
+	* added broadcast support.
+-----------------------------------------------------------------------------------------------------------
 ----Release version 1.2.8.2 -------------------------------------------------------------------------------
 -----------------------------------------------------------------------------------------------------------
 This release contains one minor bug fix and some API changes.
 	NEWS
-	* Add new method - SerialUtils#getConnectorVersion.
-	* Fix bug in ModbusMaster#disconnectImpl. Thanks to dpozimski (https://github.com/dpozimski)!
+	* added new method - SerialUtils#getConnectorVersion.
+	* fixed bug in ModbusMaster#disconnectImpl. Thanks to dpozimski (https://github.com/dpozimski)!
 -----------------------------------------------------------------------------------------------------------
 ----Release version 1.2.8.1 -------------------------------------------------------------------------------
 -----------------------------------------------------------------------------------------------------------
@@ -79,7 +86,7 @@ This release contains some bug fixes and API changes.
 -----------------------------------------------------------------------------------------------------------
 ----Release version 1.2.4 ---------------------------------------------------------------------------------
 -----------------------------------------------------------------------------------------------------------
-This release contains bug fixes and performance improovments.
+This release contains bug fixes and performance improvments.
 	NEWS
 	* fixed bug with address and quantity checking in ReadCoilsRequest#checkAddressRange.
 	* improved search of a ModbusFunctionCode instance by value.
