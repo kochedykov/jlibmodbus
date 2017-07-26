@@ -33,7 +33,7 @@ import java.io.IOException;
  */
 public class ReadCoilsResponse extends AbstractReadResponse {
 
-    private byte[] buffer = null;
+    private byte[] buffer = new byte[0];
 
     public ReadCoilsResponse(int serverAddress) throws ModbusNumberException {
         super(serverAddress);
@@ -48,7 +48,7 @@ public class ReadCoilsResponse extends AbstractReadResponse {
     }
 
     final public boolean[] getCoils() {
-        return buffer != null ? DataUtils.toBitsArray(buffer, buffer.length * 8) : new boolean[0];
+        return DataUtils.toBitsArray(buffer, buffer.length * 8);
     }
 
     final public void setCoils(boolean[] coils) throws ModbusNumberException {

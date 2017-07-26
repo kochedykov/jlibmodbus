@@ -9,6 +9,7 @@ import com.invertor.modbus.utils.DataUtils;
 import com.invertor.modbus.utils.ModbusFunctionCode;
 
 import java.io.IOException;
+import java.util.Arrays;
 
 /*
  * Copyright (C) 2016 "Invertor" Factory", JSC
@@ -33,10 +34,19 @@ import java.io.IOException;
  */
 public class ReadHoldingRegistersResponse extends AbstractReadResponse {
 
-    private byte[] buffer;
+    private byte[] buffer = new byte[0];
 
     public ReadHoldingRegistersResponse(int serverAddress) throws ModbusNumberException {
         super(serverAddress);
+    }
+
+    /**
+     * returns a copy of the raw byte-buffer
+     *
+     * @return registers bytes
+     */
+    final public byte[] getBytes() {
+        return Arrays.copyOf(buffer, buffer.length);
     }
 
     final public int[] getRegisters() {
