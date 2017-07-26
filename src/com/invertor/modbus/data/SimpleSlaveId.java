@@ -32,12 +32,12 @@ public class SimpleSlaveId implements SlaveId {
     }
 
     @Override
-    public byte[] get() {
+    synchronized public byte[] get() {
         return Arrays.copyOf(bytes, bytes.length);
     }
 
     @Override
-    public void set(byte[] data) {
+    synchronized public void set(byte[] data) {
         bytes = Arrays.copyOf(data, data.length);
     }
 }

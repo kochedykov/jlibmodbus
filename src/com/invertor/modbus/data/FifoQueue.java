@@ -39,17 +39,17 @@ abstract public class FifoQueue {
 
     abstract protected void pollImpl();
 
-    final public void poll() {
+    synchronized final public void poll() {
         if (size() != 0)
             pollImpl();
     }
 
-    final public void add(int register) {
+    synchronized final public void add(int register) {
         if (size() < capacity)
             addImpl(register);
     }
 
-    final public int[] get() throws IllegalDataValueException {
+    synchronized final public int[] get() throws IllegalDataValueException {
         if (size() > 31 || size() == 0) {
             throw new IllegalDataValueException();
         }

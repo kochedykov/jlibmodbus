@@ -39,15 +39,25 @@ public class SimpleHoldingRegisters extends HoldingRegisters {
         this.registers = new int[Modbus.checkEndAddress(size) ? size : Modbus.MAX_START_ADDRESS];
     }
 
+    void setSize(int size) {
+        synchronized (this) {
+            if (registers.length != size) {
+                registers = Arrays.copyOf(registers, size);
+            }
+        }
+    }
+
     @Override
     public void set(int offset, int value) throws IllegalDataAddressException, IllegalDataValueException {
         checkAddress(offset);
         checkValue(value);
-        registers[offset] = value;
-         /*
+        synchronized (this) {
+            registers[offset] = value;
+        }
+        /*
          * notify observers
          */
-        set(offset, value);
+        super.set(offset, value);
     }
 
     @Override
@@ -55,22 +65,26 @@ public class SimpleHoldingRegisters extends HoldingRegisters {
         checkRange(offset, range.length);
         if (!Modbus.checkWriteRegisterCount(range.length))
             throw new IllegalDataAddressException(offset);
-        System.arraycopy(range, 0, registers, offset, range.length);
-         /*
+        synchronized (this) {
+            System.arraycopy(range, 0, registers, offset, range.length);
+        }
+        /*
          * notify observers
          */
         super.setRange(offset, range);
     }
 
     @Override
-    public int quantity() {
+    synchronized public int quantity() {
         return registers.length;
     }
 
     @Override
     public int get(int offset) throws IllegalDataAddressException {
         checkAddress(offset);
-        return registers[offset];
+        synchronized (this) {
+            return registers[offset];
+        }
     }
 
     @Override
@@ -78,7 +92,9 @@ public class SimpleHoldingRegisters extends HoldingRegisters {
         checkRange(offset, quantity);
         if (!Modbus.checkReadRegisterCount(quantity))
             throw new IllegalDataAddressException(offset);
-        return Arrays.copyOfRange(registers, offset, offset + quantity);
+        synchronized (this) {
+            return Arrays.copyOfRange(registers, offset, offset + quantity);
+        }
     }
 
     private void checkRange(int offset, int quantity) throws IllegalDataAddressException {

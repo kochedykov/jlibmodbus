@@ -38,7 +38,7 @@ public class SimpleModbusFile extends ModbusFile {
     }
 
     @Override
-    public int[] read(int recordNumber, int recordLength) throws IllegalDataAddressException {
+    synchronized public int[] read(int recordNumber, int recordLength) throws IllegalDataAddressException {
         if (!records.containsKey(recordNumber))
             throw new IllegalDataAddressException(recordNumber);
         int[] buffer = records.get(recordNumber).getRegisters();
@@ -48,7 +48,7 @@ public class SimpleModbusFile extends ModbusFile {
     }
 
     @Override
-    public void write(int recordNumber, int[] buffer) throws IllegalDataAddressException, IllegalDataValueException {
+    synchronized public void write(int recordNumber, int[] buffer) throws IllegalDataAddressException, IllegalDataValueException {
         if (records.containsKey(recordNumber)) {
             records.get(recordNumber).writeRegisters(buffer);
         } else {

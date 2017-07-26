@@ -34,12 +34,12 @@ public class SimpleExceptionStatus implements ExceptionStatus {
     }
 
     @Override
-    public int get() {
+    synchronized public int get() {
         return value;
     }
 
     @Override
-    public void set(int value) {
+    synchronized public void set(int value) {
         this.value = value;
     }
 }
