@@ -26,7 +26,7 @@ package com.invertor.modbus.utils;
  * following class implements longitudinal redundancy checkFrame.
  */
 public class LRC {
-    static public int calc(byte [] b) {
+    static public int calc(byte[] b) {
         int lrc = 0;
         byte[] buffer = b;
         for (int i = 0; i < b.length; i++) {

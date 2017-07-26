@@ -3,6 +3,8 @@ package com.invertor.modbus.data;
 import com.invertor.modbus.exception.IllegalDataAddressException;
 import com.invertor.modbus.exception.IllegalDataValueException;
 
+import java.util.Observable;
+
 /*
  * Copyright (C) 2016 "Invertor" Factory", JSC
  * [http://www.sbp-invertor.ru]
@@ -24,15 +26,26 @@ import com.invertor.modbus.exception.IllegalDataValueException;
  * Authors: Vladislav Y. Kochedykov, software engineer.
  * email: vladislav.kochedykov@gmail.com
  */
-public interface Coils {
 
-    int quantity();
+/**
+ * since 1.2.8.4 it extends Observable to notify observers if register values was changed.
+ *
+ * @see java.util.Observable
+ * @see java.util.Observer
+ */
+public abstract class Coils extends Observable {
 
-    boolean get(int offset) throws IllegalDataAddressException;
+    abstract public int quantity();
 
-    boolean[] getRange(int offset, int quantity) throws IllegalDataAddressException, IllegalDataValueException;
+    abstract public boolean get(int offset) throws IllegalDataAddressException;
 
-    void set(int offset, boolean value) throws IllegalDataAddressException;
+    abstract public boolean[] getRange(int offset, int quantity) throws IllegalDataAddressException, IllegalDataValueException;
 
-    void setRange(int offset, boolean[] range) throws IllegalDataAddressException, IllegalDataValueException;
+    public void set(int offset, boolean value) throws IllegalDataAddressException {
+        notifyObservers(new int[]{offset, 1});
+    }
+
+    public void setRange(int offset, boolean[] range) throws IllegalDataAddressException, IllegalDataValueException {
+        notifyObservers(new int[]{offset, range.length});
+    }
 }

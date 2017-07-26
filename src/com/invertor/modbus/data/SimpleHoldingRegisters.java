@@ -27,7 +27,11 @@ import java.util.Arrays;
  * Authors: Vladislav Y. Kochedykov, software engineer.
  * email: vladislav.kochedykov@gmail.com
  */
-public class SimpleHoldingRegisters implements HoldingRegisters {
+
+/**
+ * A simple implementation of register storage.
+ */
+public class SimpleHoldingRegisters extends HoldingRegisters {
 
     private int[] registers = new int[0];
 
@@ -40,6 +44,10 @@ public class SimpleHoldingRegisters implements HoldingRegisters {
         checkAddress(offset);
         checkValue(value);
         registers[offset] = value;
+         /*
+         * notify observers
+         */
+        set(offset, value);
     }
 
     @Override
@@ -48,6 +56,10 @@ public class SimpleHoldingRegisters implements HoldingRegisters {
         if (!Modbus.checkWriteRegisterCount(range.length))
             throw new IllegalDataAddressException(offset);
         System.arraycopy(range, 0, registers, offset, range.length);
+         /*
+         * notify observers
+         */
+        super.setRange(offset, range);
     }
 
     @Override
@@ -83,6 +95,7 @@ public class SimpleHoldingRegisters implements HoldingRegisters {
         if (!Modbus.checkRegisterValue(value))
             throw new IllegalDataValueException();
     }
+
     /*
     @Override
     public Iterator<Integer> iterator() {

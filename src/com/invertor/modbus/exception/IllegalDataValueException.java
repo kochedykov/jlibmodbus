@@ -26,7 +26,7 @@ import com.invertor.modbus.utils.ModbusExceptionCode;
 
 /**
  * quote from MODBUS Application Protocol Specification V1.1b
- *
+ * <p>
  * "A value contained in the query data field is not an
  * allowable value for server (or slave). This
  * indicates a fault in the structure of the remainder

@@ -26,7 +26,7 @@ import com.invertor.modbus.utils.ModbusExceptionCode;
 
 /**
  * quote from MODBUS Application Protocol Specification V1.1b
- *
+ * <p>
  * "Specialized use in conjunction with gateways,
  * indicates that no response was obtained from the
  * target device. Usually means that the device is

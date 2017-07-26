@@ -32,8 +32,8 @@ import java.io.InputStream;
  * and <code>ModbusInputStream#readShortBE()</code> methods. Also it allows to set max read
  * operation time with <code>ModbusInputStream#setReadTimeout()</code> method.
  *
- * @since 1.0
  * @author kochedykov
+ * @since 1.0
  */
 abstract public class ModbusInputStream extends InputStream {
 
@@ -42,9 +42,8 @@ abstract public class ModbusInputStream extends InputStream {
      *
      * @param b a byte array to fill by values from the input stream.
      * @return total number of values read from the input stream into the byte array
-
-     * @exception  IOException if there is a read operation timeout
-     * @exception  NullPointerException  if <code>b</code> is <code>null</code>.
+     * @throws IOException          if there is a read operation timeout
+     * @throws NullPointerException if <code>b</code> is <code>null</code>.
      */
     @Override
     public int read(byte[] b) throws IOException {
@@ -63,7 +62,6 @@ abstract public class ModbusInputStream extends InputStream {
      *
      * @return 16-bit value placed in first two bytes of integer value, second two bytes is equal zero.
      * @throws IOException
-     *
      * @see ModbusInputStream#readShortLE()
      */
     public int readShortBE() throws IOException {
@@ -79,7 +77,6 @@ abstract public class ModbusInputStream extends InputStream {
      *
      * @return 16-bit value placed in first two bytes of integer value, second two bytes is equal zero.
      * @throws IOException
-     *
      * @see ModbusInputStream#readShortBE()
      */
     public int readShortLE() throws IOException {

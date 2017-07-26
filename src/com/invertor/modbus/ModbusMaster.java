@@ -413,11 +413,11 @@ abstract public class ModbusMaster {
      * Current Contents=    12  0001 0010
      * And_Mask =           F2  1111 0010
      * Or_Mask =            25  0010 0101
-     *
+     * <p>
      * (NOT And_Mask)=      0D  0000 1101
-     *
+     * <p>
      * Result =             17  0001 0111
-     *
+     * <p>
      * Note:
      * y If the Or_Mask value is zero, the result is simply the logical ANDing of the current contents and
      * And_Mask. If the And_Mask value is zero, the result is equal to the Or_Mask value.

@@ -26,7 +26,7 @@ import com.invertor.modbus.utils.ModbusExceptionCode;
 
 /**
  * quote from MODBUS Application Protocol Specification V1.1b
- *
+ * <p>
  * "Specialized use in conjunction with gateways,
  * indicates that the gateway was unable to allocate
  * an internal communication path from the input

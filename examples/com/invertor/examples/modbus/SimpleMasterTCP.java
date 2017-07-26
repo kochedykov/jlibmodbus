@@ -42,7 +42,7 @@ import java.net.InetAddress;
  */
 public class SimpleMasterTCP {
 
-    static public void main(String [] args) {
+    static public void main(String[] args) {
         try {
             TcpParameters tcpParameters = new TcpParameters();
 

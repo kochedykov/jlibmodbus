@@ -25,18 +25,20 @@ package com.invertor.modbus.data;
 import com.invertor.modbus.exception.IllegalDataAddressException;
 import com.invertor.modbus.exception.IllegalDataValueException;
 
+import java.util.Observable;
+
 /**
  * quote from MODBUS Application Protocol Specification V1.1b
- *
+ * <p>
  * "A file is an organization of records. Each file contains 10000 records, addressed 0000 to
  * 9999 decimal or 0X0000 to 0X270F. For example, record 12 is addressed as 12.
  * ...
  * The quantity of registers to be read, combined with all other fields in the expected response,
  * must not exceed the allowable length of the MODBUS PDU : 253 bytes."
- *
+ * <p>
  * so the length of file record must not exceed 250 bytes(253 - function_code - resp_data_len - sub_req_resp_len).
  */
-abstract public class ModbusFile {
+abstract public class ModbusFile extends Observable {
     private final int number;
 
     public ModbusFile(int number) {
@@ -53,9 +55,9 @@ abstract public class ModbusFile {
      */
     abstract public int[] read(int recordNumber, int recordLength) throws IllegalDataAddressException;
 
-    abstract public void write(int recordNumber, int[] buffer) throws IllegalDataAddressException, IllegalDataValueException;
-
-    abstract void write(int recordNumber, byte[] buffer) throws IllegalDataAddressException, IllegalDataValueException;
+    public void write(int recordNumber, int[] buffer) throws IllegalDataAddressException, IllegalDataValueException {
+        notifyObservers(new int[]{recordNumber, buffer.length});
+    }
 
     public int getNumber() {
         return number;

@@ -26,7 +26,7 @@ import com.invertor.modbus.utils.ModbusExceptionCode;
 
 /**
  * quote from MODBUS Application Protocol Specification V1.1b
- *
+ * <p>
  * "An unrecoverable error occurred while the server
  * (or slave) was attempting to perform the
  * requested action."

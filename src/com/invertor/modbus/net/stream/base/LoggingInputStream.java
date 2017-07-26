@@ -31,8 +31,8 @@ import java.io.IOException;
 /**
  * this class allows to log a content of the input stream stream.
  *
- * @since 1.2
  * @author kochedykov
+ * @since 1.2
  */
 public class LoggingInputStream extends ModbusInputStream {
 

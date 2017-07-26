@@ -26,7 +26,7 @@ import com.invertor.modbus.utils.ModbusExceptionCode;
 
 /**
  * quote from MODBUS Application Protocol Specification V1.1b
- *
+ * <p>
  * "The function code received in the query is not an
  * allowable action for the server (or slave). This
  * may be because the function code is only

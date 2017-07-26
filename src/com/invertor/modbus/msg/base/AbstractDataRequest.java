@@ -42,7 +42,7 @@ abstract public class AbstractDataRequest extends ModbusRequest {
         if (!Modbus.checkStartAddress(startAddress))
             throw new ModbusNumberException("Error in start address", startAddress);
 
-        setStartAddress(((short)startAddress)&0xffff);
+        setStartAddress(((short) startAddress) & 0xffff);
     }
 
     abstract protected void writeData(ModbusOutputStream fifo) throws IOException;

@@ -26,7 +26,7 @@ import com.invertor.modbus.utils.ModbusExceptionCode;
 
 /**
  * quote from MODBUS Application Protocol Specification V1.1b
- *
+ * <p>
  * "The data address received in the query is not an
  * allowable address for the server (or slave). More
  * specifically, the combination of reference number

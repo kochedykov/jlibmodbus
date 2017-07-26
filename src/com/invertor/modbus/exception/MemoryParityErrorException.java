@@ -26,7 +26,7 @@ import com.invertor.modbus.utils.ModbusExceptionCode;
 
 /**
  * quote from MODBUS Application Protocol Specification V1.1b
- *
+ * <p>
  * "Specialized use in conjunction with function codes
  * 20 and 21 and reference type 6, to indicate that
  * the extended file area failed to pass a consistency

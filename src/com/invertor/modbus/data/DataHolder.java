@@ -36,7 +36,6 @@ import java.util.TreeMap;
 facade
  */
 public class DataHolder {
-
     final private CommStatus commStatus = new CommStatus();
     final private Map<Integer, FifoQueue> fifoMap = new TreeMap<Integer, FifoQueue>();
     final private Map<Integer, ModbusFile> fileMap = new TreeMap<Integer, ModbusFile>();
@@ -116,22 +115,11 @@ public class DataHolder {
         return discreteInputs.getRange(offset, quantity);
     }
 
-    public int[] readFileRecord(int fileNumber, int recordNumber, int recordLength) throws IllegalDataAddressException, IllegalDataValueException {
-        ModbusFile file = getFile(fileNumber);
-        checkPointer(file, fileNumber);
-        return file.read(recordNumber, recordLength);
-    }
-
-    public void readFileRecord(ModbusFileRecord fileRecord) throws IllegalDataAddressException, IllegalDataValueException {
+    public ModbusFileRecord readFileRecord(ModbusFileRecord fileRecord) throws IllegalDataAddressException, IllegalDataValueException {
         ModbusFile file = getFile(fileRecord.getFileNumber());
         checkPointer(file, fileRecord.getFileNumber());
         fileRecord.writeRegisters(file.read(fileRecord.getRecordNumber(), fileRecord.getRecordLength()));
-    }
-
-    public void writeFileRecord(int fileNumber, int recordNumber, int[] registers) throws IllegalDataAddressException, IllegalDataValueException {
-        ModbusFile file = getFile(fileNumber);
-        checkPointer(file, fileNumber);
-        file.write(recordNumber, registers);
+        return fileRecord;
     }
 
     public void writeFileRecord(ModbusFileRecord fileRecord) throws IllegalDataAddressException, IllegalDataValueException {

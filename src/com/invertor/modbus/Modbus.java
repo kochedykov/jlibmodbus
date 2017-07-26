@@ -106,6 +106,7 @@ final public class Modbus {
 
     /**
      * getter for log level
+     *
      * @return current log level
      */
     static public LogLevel getLogLevel() {

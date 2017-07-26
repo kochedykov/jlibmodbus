@@ -27,7 +27,11 @@ import java.util.Arrays;
  * Authors: Vladislav Y. Kochedykov, software engineer.
  * email: vladislav.kochedykov@gmail.com
  */
-public class SimpleCoils implements Coils {
+
+/**
+ * A simple implementation of coil storage.
+ */
+public class SimpleCoils extends Coils {
 
     private boolean[] coils = new boolean[0];
 
@@ -45,6 +49,10 @@ public class SimpleCoils implements Coils {
     public void set(int offset, boolean coil) throws IllegalDataAddressException {
         checkAddress(offset);
         coils[offset] = coil;
+        /*
+         * notify observers
+         */
+        super.set(offset, coil);
     }
 
     @Override
@@ -53,6 +61,10 @@ public class SimpleCoils implements Coils {
         if (!Modbus.checkWriteCoilCount(range.length))
             throw new IllegalDataValueException();
         System.arraycopy(range, 0, coils, offset, range.length);
+        /*
+         * notify observers
+         */
+        super.setRange(offset, range);
     }
 
     @Override
