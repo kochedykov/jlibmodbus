@@ -110,7 +110,23 @@ abstract public class ModbusMaster {
         return getConnection().getTransport().readResponse();
     }
 
-    protected ModbusResponse processRequest(ModbusRequest request) throws ModbusProtocolException,
+    /**
+     * this function allows you to process your own ModbusRequest.
+     * Each request class has a compliant response class for instance ReadHoldingRegistersRequest and ReadHoldingRegistersResponse.
+     * If you process an instance of ReadHoldingRegistersRequest this function exactly either returns a ReadHoldingRegistersResponse instance or throws an exception.
+     *
+     * @param request an instance of ModbusRequest.
+     * @return an instance of ModbusResponse.
+     * @throws ModbusProtocolException if
+     * @throws ModbusNumberException
+     * @throws ModbusIOException
+     * @see ModbusRequestFactory
+     * @see ModbusRequest
+     * @see ModbusResponse
+     * @see com.invertor.modbus.msg.response
+     * @see com.invertor.modbus.msg.request
+     */
+    public ModbusResponse processRequest(ModbusRequest request) throws ModbusProtocolException,
             ModbusNumberException, ModbusIOException {
         sendRequest(request);
         ModbusResponse msg;
@@ -161,9 +177,9 @@ abstract public class ModbusMaster {
      * @param startAddress  starting register address
      * @param quantity      the number of registers
      * @return the register data
-     * @throws ModbusProtocolException if exception response received
+     * @throws ModbusProtocolException if modbus-exception is received
      * @throws ModbusNumberException   if response is invalid
-     * @throws ModbusIOException       if remote slave unavailable
+     * @throws ModbusIOException       if remote slave is unavailable
      */
     final synchronized public int[] readHoldingRegisters(int serverAddress, int startAddress, int quantity) throws
             ModbusProtocolException, ModbusNumberException, ModbusIOException {
@@ -182,9 +198,9 @@ abstract public class ModbusMaster {
      * @param startAddress  starting register address
      * @param quantity      the number of registers
      * @return the register data
-     * @throws ModbusProtocolException if exception response received
+     * @throws ModbusProtocolException if modbus-exception is received
      * @throws ModbusNumberException   if response is invalid
-     * @throws ModbusIOException       if remote slave unavailable
+     * @throws ModbusIOException       if remote slave is unavailable
      */
     final synchronized public int[] readInputRegisters(int serverAddress, int startAddress, int quantity) throws
             ModbusProtocolException, ModbusNumberException, ModbusIOException {
@@ -205,9 +221,9 @@ abstract public class ModbusMaster {
      * @param startAddress  the address of the first coil
      * @param quantity      the number of coils
      * @return the coils
-     * @throws ModbusProtocolException if exception response received
+     * @throws ModbusProtocolException if modbus-exception is received
      * @throws ModbusNumberException   if response is invalid
-     * @throws ModbusIOException       if remote slave unavailable
+     * @throws ModbusIOException       if remote slave is unavailable
      */
     final synchronized public boolean[] readCoils(int serverAddress, int startAddress, int quantity) throws
             ModbusProtocolException, ModbusNumberException, ModbusIOException {
@@ -228,9 +244,9 @@ abstract public class ModbusMaster {
      * @param startAddress  the address of the first input
      * @param quantity      the number of inputs
      * @return the discrete inputs
-     * @throws ModbusProtocolException if exception response received
+     * @throws ModbusProtocolException if modbus-exception is received
      * @throws ModbusNumberException   if response is invalid
-     * @throws ModbusIOException       if remote slave unavailable
+     * @throws ModbusIOException       if remote slave is unavailable
      */
     final synchronized public boolean[] readDiscreteInputs(int serverAddress, int startAddress, int quantity) throws
             ModbusProtocolException, ModbusNumberException, ModbusIOException {
@@ -249,9 +265,9 @@ abstract public class ModbusMaster {
      * @param serverAddress a slave address
      * @param startAddress  the address of the coil to be forced
      * @param flag          the request data field
-     * @throws ModbusProtocolException if exception response received
+     * @throws ModbusProtocolException if modbus-exception is received
      * @throws ModbusNumberException   if response is invalid
-     * @throws ModbusIOException       if remote slave unavailable
+     * @throws ModbusIOException       if remote slave is unavailable
      */
     final synchronized public void writeSingleCoil(int serverAddress, int startAddress, boolean flag) throws
             ModbusProtocolException, ModbusNumberException, ModbusIOException {
@@ -266,9 +282,9 @@ abstract public class ModbusMaster {
      * @param serverAddress a slave address
      * @param startAddress  the address of the register to be written
      * @param register      value
-     * @throws ModbusProtocolException if exception response received
+     * @throws ModbusProtocolException if modbus-exception is received
      * @throws ModbusNumberException   if response is invalid
-     * @throws ModbusIOException       if remote slave unavailable
+     * @throws ModbusIOException       if remote slave is unavailable
      */
     final synchronized public void writeSingleRegister(int serverAddress, int startAddress, int register) throws
             ModbusProtocolException, ModbusNumberException, ModbusIOException {
@@ -286,9 +302,9 @@ abstract public class ModbusMaster {
      * @param serverAddress a slave address
      * @param startAddress  the address of the coils to be written
      * @param coils         the coils
-     * @throws ModbusProtocolException if exception response received
+     * @throws ModbusProtocolException if modbus-exception is received
      * @throws ModbusNumberException   if response is invalid
-     * @throws ModbusIOException       if remote slave unavailable
+     * @throws ModbusIOException       if remote slave is unavailable
      */
     final synchronized public void writeMultipleCoils(int serverAddress, int startAddress, boolean[] coils) throws
             ModbusProtocolException, ModbusNumberException, ModbusIOException {
@@ -304,9 +320,9 @@ abstract public class ModbusMaster {
      * @param serverAddress a slave address
      * @param startAddress  the address of the registers to be written
      * @param registers     the register data
-     * @throws ModbusProtocolException if exception response received
+     * @throws ModbusProtocolException if modbus-exception is received
      * @throws ModbusNumberException   if response is invalid
-     * @throws ModbusIOException       if remote slave unavailable
+     * @throws ModbusIOException       if remote slave is unavailable
      */
     final synchronized public void writeMultipleRegisters(int serverAddress, int startAddress, int[] registers) throws
             ModbusProtocolException, ModbusNumberException, ModbusIOException {
@@ -327,9 +343,9 @@ abstract public class ModbusMaster {
      * @param writeAddress  the address of the registers to be written
      * @param registers     the number of registers to be written
      * @return the register value
-     * @throws ModbusProtocolException if exception response received
+     * @throws ModbusProtocolException if modbus-exception is received
      * @throws ModbusNumberException   if response is invalid
-     * @throws ModbusIOException       if remote slave unavailable
+     * @throws ModbusIOException       if remote slave is unavailable
      */
     final synchronized public int[] readWriteMultipleRegisters(int serverAddress, int readAddress, int readQuantity, int writeAddress, int[] registers) throws
             ModbusProtocolException, ModbusNumberException, ModbusIOException {
@@ -349,9 +365,9 @@ abstract public class ModbusMaster {
      * @param serverAddress      a slave address
      * @param fifoPointerAddress address of a fifo pointer register
      * @return the data register value
-     * @throws ModbusProtocolException if exception response received
+     * @throws ModbusProtocolException if modbus-exception is received
      * @throws ModbusNumberException   if response is invalid
-     * @throws ModbusIOException       if remote slave unavailable
+     * @throws ModbusIOException       if remote slave is unavailable
      */
     final synchronized public int[] readFifoQueue(int serverAddress, int fifoPointerAddress) throws
             ModbusProtocolException, ModbusNumberException, ModbusIOException {
@@ -369,9 +385,9 @@ abstract public class ModbusMaster {
      * @param serverAddress a slave address
      * @param records       array of ModbusFileRecord
      * @return array of ModbusFileRecord has been read
-     * @throws ModbusProtocolException if exception response received
+     * @throws ModbusProtocolException if modbus-exception is received
      * @throws ModbusNumberException   if response is invalid
-     * @throws ModbusIOException       if remote slave unavailable
+     * @throws ModbusIOException       if remote slave is unavailable
      */
     final synchronized public ModbusFileRecord[] readFileRecord(int serverAddress, ModbusFileRecord[] records) throws
             ModbusProtocolException, ModbusNumberException, ModbusIOException {
@@ -390,9 +406,9 @@ abstract public class ModbusMaster {
      *
      * @param serverAddress a server address
      * @param record        the ModbusFileRecord to be written
-     * @throws ModbusProtocolException if exception response received
+     * @throws ModbusProtocolException if modbus-exception is received
      * @throws ModbusNumberException   if response is invalid
-     * @throws ModbusIOException       if remote slave unavailable
+     * @throws ModbusIOException       if remote slave is unavailable
      */
     final synchronized public void writeFileRecord(int serverAddress, ModbusFileRecord record) throws
             ModbusProtocolException, ModbusNumberException, ModbusIOException {
@@ -428,9 +444,9 @@ abstract public class ModbusMaster {
      * @param startAddress  reference address
      * @param and           the AND mask
      * @param or            the OR mask
-     * @throws ModbusProtocolException if exception response received
+     * @throws ModbusProtocolException if modbus-exception is received
      * @throws ModbusNumberException   if response is invalid
-     * @throws ModbusIOException       if remote slave unavailable
+     * @throws ModbusIOException       if remote slave is unavailable
      */
     final synchronized public void maskWriteRegister(int serverAddress, int startAddress, int and, int or) throws
             ModbusProtocolException, ModbusNumberException, ModbusIOException {
@@ -449,9 +465,9 @@ abstract public class ModbusMaster {
      *
      * @param serverAddress a slave address
      * @return the eight Exception Status outputs
-     * @throws ModbusProtocolException if exception response received
+     * @throws ModbusProtocolException if modbus-exception is received
      * @throws ModbusNumberException   if response is invalid
-     * @throws ModbusIOException       if remote slave unavailable
+     * @throws ModbusIOException       if remote slave is unavailable
      */
     abstract public int readExceptionStatus(int serverAddress) throws
             ModbusProtocolException, ModbusNumberException, ModbusIOException;
@@ -462,10 +478,10 @@ abstract public class ModbusMaster {
      * The data contents are specific to each type of device.
      *
      * @param serverAddress slave address
-     * @return a byte array of the device specific data
-     * @throws ModbusProtocolException if exception response received
+     * @return a byte array of the device's specific data
+     * @throws ModbusProtocolException if modbus-exception is received
      * @throws ModbusNumberException   if response is invalid
-     * @throws ModbusIOException       if remote slave unavailable
+     * @throws ModbusIOException       if remote slave is unavailable
      */
     abstract public byte[] reportSlaveId(int serverAddress) throws
             ModbusProtocolException, ModbusNumberException, ModbusIOException;
@@ -483,9 +499,9 @@ abstract public class ModbusMaster {
      *
      * @param serverAddress a slave address
      * @return the CommStatus instance
-     * @throws ModbusProtocolException if exception response received
+     * @throws ModbusProtocolException if modbus-exception is received
      * @throws ModbusNumberException   if response is invalid
-     * @throws ModbusIOException       if remote slave unavailable
+     * @throws ModbusIOException       if remote slave is unavailable
      * @see com.invertor.modbus.data.CommStatus
      */
     abstract public CommStatus getCommEventCounter(int serverAddress) throws
@@ -507,9 +523,9 @@ abstract public class ModbusMaster {
      *
      * @param serverAddress a slave address
      * @return the CommStatus instance
-     * @throws ModbusProtocolException if exception response received
+     * @throws ModbusProtocolException if modbus-exception is received
      * @throws ModbusNumberException   if response is invalid
-     * @throws ModbusIOException       if remote slave unavailable
+     * @throws ModbusIOException       if remote slave is unavailable
      * @see com.invertor.modbus.data.CommStatus
      */
     abstract public CommStatus getCommEventLog(int serverAddress) throws

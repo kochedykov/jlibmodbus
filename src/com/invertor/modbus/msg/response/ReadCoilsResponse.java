@@ -9,6 +9,7 @@ import com.invertor.modbus.utils.DataUtils;
 import com.invertor.modbus.utils.ModbusFunctionCode;
 
 import java.io.IOException;
+import java.util.Arrays;
 
 /*
  * Copyright (C) 2016 "Invertor" Factory", JSC
@@ -45,6 +46,15 @@ public class ReadCoilsResponse extends AbstractReadResponse {
 
     static public int calcByteCount(int coilCount) {
         return (int) Math.ceil((double) coilCount / 8);
+    }
+
+    /**
+     * returns a copy of the raw byte-buffer
+     *
+     * @return registers bytes
+     */
+    final public byte[] getBytes() {
+        return Arrays.copyOf(buffer, buffer.length);
     }
 
     final public boolean[] getCoils() {

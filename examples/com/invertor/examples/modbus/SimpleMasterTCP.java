@@ -6,6 +6,9 @@ import com.invertor.modbus.ModbusMasterFactory;
 import com.invertor.modbus.exception.ModbusIOException;
 import com.invertor.modbus.exception.ModbusNumberException;
 import com.invertor.modbus.exception.ModbusProtocolException;
+import com.invertor.modbus.msg.ModbusRequestFactory;
+import com.invertor.modbus.msg.base.ModbusRequest;
+import com.invertor.modbus.msg.response.ReadHoldingRegistersResponse;
 import com.invertor.modbus.tcp.TcpParameters;
 
 import java.net.InetAddress;
@@ -65,10 +68,19 @@ public class SimpleMasterTCP {
                 if (!m.isConnected()) {
                     m.connect();
                 }
+
                 // at next string we receive ten registers from a slave with id of 1 at offset of 0.
                 int[] registerValues = m.readHoldingRegisters(slaveId, offset, quantity);
-                // let's print them all :)
+
                 for (int value : registerValues) {
+                    System.out.println("Address: " + offset++ + ", Value: " + value);
+                }
+                // also since 1.2.8.4 you can create your own request and process it with the master
+                offset = 0;
+                ModbusRequest request = ModbusRequestFactory.getInstance().createReadHoldingRegisters(slaveId, offset, quantity);
+                ReadHoldingRegistersResponse response = (ReadHoldingRegistersResponse) m.processRequest(request);
+                // you can get either int[] containing register values or byte[] containing raw bytes.
+                for (int value : response.getRegisters()) {
                     System.out.println("Address: " + offset++ + ", Value: " + value);
                 }
             } catch (ModbusProtocolException e) {
