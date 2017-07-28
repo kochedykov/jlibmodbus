@@ -26,12 +26,14 @@
 			<version>2.1.7</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/javax.comm/comm -->
+		<!-- this is very ugly - may be not using javax.comm at all is the better option -->
 		<dependency>
 			<groupId>javax.comm</groupId>
 			<artifactId>comm</artifactId>
 			<version>2.0.3</version>
 			<scope>system</scope>
 			<systemPath>${project.basedir}/lib/comm.jar</systemPath>
+			<optional>true</optional>
 		</dependency>
 	</dependencies>
 	<build>
