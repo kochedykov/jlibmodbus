@@ -18,6 +18,7 @@ WEB SITE
 
 project homepage:
 http://jlibmodbus.sourceforge.net
+https://github.com/kochedykov/jlibmodbus
 
 purejavacomm homepage:
 http://www.sparetimelabs.com/purejavacomm/purejavacomm.php
@@ -29,6 +30,17 @@ https://github.com/scream3r/java-simple-serial-connector
 rxtx home page:
 http://users.frii.com/jarvi/rxtx/index.html
 
+-----------------------------------------------------------------------------------------------------------
+----Release version 1.2.8.4 -------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------
+This release contains some improvements including maven support.
+	NEWS
+	* added a new constructor WriteMultipleRegistersRequest(int serverAddress, int startAddress, byte[] bytes) and a factory method createWriteMultipleRegisters(int serverAddress, int startAddress, byte[] bytes).
+	* added basic maven pom file
+	* ModbusMaster#processRequest public.
+	* thread safety. thanks to Kevin Kieffer.
+	* HoldingRegisters and Coils is now observable. thanks to Kevin Kieffer.
+	* added a method to get a byte-buffer from ReadHoldingRegistersResponse.
 -----------------------------------------------------------------------------------------------------------
 ----Release version 1.2.8.3 -------------------------------------------------------------------------------
 -----------------------------------------------------------------------------------------------------------

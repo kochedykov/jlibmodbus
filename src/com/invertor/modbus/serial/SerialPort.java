@@ -67,6 +67,7 @@ public abstract class SerialPort {
     }
 
     public ModbusInputStream getInputStream() {
+
         return new ModbusInputStream() {
 
             final private SerialPort serial = SerialPort.this;
