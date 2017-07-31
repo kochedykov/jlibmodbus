@@ -76,6 +76,10 @@ final public class ModbusRequestFactory implements ModbusMessageFactory {
         return new WriteMultipleRegistersRequest(serverAddress, startAddress, registers);
     }
 
+    public ModbusRequest createWriteMultipleRegisters(int serverAddress, int startAddress, byte[] bytes) throws ModbusNumberException {
+        return new WriteMultipleRegistersRequest(serverAddress, startAddress, bytes);
+    }
+
     public ModbusRequest createWriteSingleRegister(int serverAddress, int startAddress, int register) throws ModbusNumberException {
         return new WriteSingleRegisterRequest(serverAddress, startAddress, register);
     }

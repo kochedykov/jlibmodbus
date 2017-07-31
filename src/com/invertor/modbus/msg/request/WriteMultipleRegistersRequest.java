@@ -43,8 +43,13 @@ final public class WriteMultipleRegistersRequest extends AbstractWriteMultipleRe
 
     public WriteMultipleRegistersRequest(int serverAddress, int startAddress, int[] registers) throws ModbusNumberException {
         super(serverAddress, startAddress, DataUtils.toByteArray(registers), registers.length);
+    }
 
-        setRegisters(registers);
+    public WriteMultipleRegistersRequest(int serverAddress, int startAddress, byte[] bytes) throws ModbusNumberException {
+        super(serverAddress, startAddress, bytes, bytes.length / 2);
+        if (bytes.length % 2 != 0) {
+            throw new ModbusNumberException("bytes.length=" + bytes.length + " should be an even number");
+        }
     }
 
     @Override
@@ -87,10 +92,6 @@ final public class WriteMultipleRegistersRequest extends AbstractWriteMultipleRe
 
     public int[] getRegisters() {
         return DataUtils.toIntArray(getValues());
-    }
-
-    private void setRegisters(int[] registers) {
-        setValues(DataUtils.toByteArray(registers));
     }
 
     @Override
