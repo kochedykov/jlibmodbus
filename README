@@ -14,6 +14,16 @@ CONTACT
 
 If you have problems, questions or suggestions, please contact me at email address vladislav.kochedykov@gmail.com
 
+To learn how to use the library you can either use examples in "examples\com\invertor\examples\modbus" folder or contact me at email.
+
+Maven dependency:
+<!--since 1.2.8.4-->
+<dependency>
+  <groupId>com.github.kochedykov</groupId>
+  <artifactId>jlibmodbus</artifactId>
+  <version>1.2.8.4</version>
+</dependency>
+
 WEB SITE
 
 project homepage:
