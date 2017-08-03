@@ -39,19 +39,28 @@ import java.io.IOException;
 final public class WriteFileRecordRequest extends ModbusRequest {
 
     final static public int READ_SUB_REQ_LENGTH = 7;
-    private ModbusFileRecord record = null;
+    private ModbusFileRecord fileRecord = null;
 
-    public WriteFileRecordRequest(int serverAddress) throws ModbusNumberException {
-        super(serverAddress);
+    public WriteFileRecordRequest() throws ModbusNumberException {
+        super();
     }
 
-    public WriteFileRecordRequest(int serverAddress, ModbusFileRecord record) throws ModbusNumberException {
-        super(serverAddress);
-        this.record = record;
+    public ModbusFileRecord getFileRecord() {
+        return fileRecord;
+    }
+
+    public void setFileRecord(ModbusFileRecord record) {
+        this.fileRecord = record;
+    }
+
+    @Override
+    protected Class getResponseClass() {
+        return WriteFileRecordResponse.class;
     }
 
     @Override
     public void writeRequest(ModbusOutputStream fifo) throws IOException {
+        ModbusFileRecord record = getFileRecord();
         fifo.write(READ_SUB_REQ_LENGTH + record.getRecordLength() * 2);
         fifo.write(ModbusFileRecord.REF_TYPE);
         fifo.writeShortBE(record.getFileNumber());
@@ -73,17 +82,18 @@ final public class WriteFileRecordRequest extends ModbusRequest {
         byte[] buffer = new byte[record_length * 2];
         if (fifo.read(buffer) != buffer.length)
             throw new ModbusNumberException(record_length + " bytes expected, but not received.");
-        record = new ModbusFileRecord(file_number, record_number, DataUtils.toIntArray(buffer));
+        setFileRecord(new ModbusFileRecord(file_number, record_number, DataUtils.toIntArray(buffer)));
     }
 
     @Override
     public int requestSize() {
-        return 1 + READ_SUB_REQ_LENGTH * record.getRecordLength() * 2;
+        return 1 + READ_SUB_REQ_LENGTH * getFileRecord().getRecordLength() * 2;
     }
 
     @Override
     public ModbusResponse process(DataHolder dataHolder) throws ModbusNumberException {
-        WriteFileRecordResponse response = new WriteFileRecordResponse(getServerAddress(), record);
+        WriteFileRecordResponse response = (WriteFileRecordResponse) getResponse();
+        response.setFileRecord(getFileRecord());
         try {
             dataHolder.writeFileRecord(response.getFileRecord());
         } catch (ModbusProtocolException e) {
@@ -98,10 +108,11 @@ final public class WriteFileRecordRequest extends ModbusRequest {
         if (!(response instanceof WriteFileRecordResponse)) {
             return false;
         }
+        ModbusFileRecord reqRecord = getFileRecord();
         ModbusFileRecord respRecord = ((WriteFileRecordResponse) response).getFileRecord();
-        return !(respRecord.getFileNumber() != record.getFileNumber() ||
-                respRecord.getRecordNumber() != record.getRecordNumber() ||
-                respRecord.getRecordLength() != record.getRecordLength());
+        return !(respRecord.getFileNumber() != reqRecord.getFileNumber() ||
+                respRecord.getRecordNumber() != reqRecord.getRecordNumber() ||
+                respRecord.getRecordLength() != reqRecord.getRecordLength());
     }
 
     @Override

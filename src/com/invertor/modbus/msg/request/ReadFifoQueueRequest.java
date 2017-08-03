@@ -35,12 +35,13 @@ import java.io.IOException;
  */
 public class ReadFifoQueueRequest extends AbstractDataRequest {
 
-    public ReadFifoQueueRequest(int serverAddress) throws ModbusNumberException {
-        super(serverAddress);
+    public ReadFifoQueueRequest() throws ModbusNumberException {
+        super();
     }
 
-    public ReadFifoQueueRequest(int serverAddress, int startAddress) throws ModbusNumberException {
-        super(serverAddress, startAddress);
+    @Override
+    protected Class getResponseClass() {
+        return ReadFifoQueueResponse.class;
     }
 
     @Override
@@ -60,7 +61,8 @@ public class ReadFifoQueueRequest extends AbstractDataRequest {
 
     @Override
     public ModbusResponse process(DataHolder dataHolder) throws ModbusNumberException {
-        ReadFifoQueueResponse response = new ReadFifoQueueResponse(getServerAddress());
+        ReadFifoQueueResponse response = new ReadFifoQueueResponse();
+        response.setServerAddress(getServerAddress());
         try {
             int[] r = dataHolder.readFifoQueue(getStartAddress());
             response.setFifoValueRegister(r);

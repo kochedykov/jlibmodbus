@@ -36,8 +36,8 @@ public class EncapsulatedInterfaceTransportResponse extends ModbusResponse {
 
     private ModbusEncapsulatedInterface mei = null;
 
-    public EncapsulatedInterfaceTransportResponse(int serverAddress) throws ModbusNumberException {
-        super(serverAddress);
+    public EncapsulatedInterfaceTransportResponse() {
+        super();
     }
 
     @Override

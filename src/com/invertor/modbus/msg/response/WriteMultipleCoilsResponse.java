@@ -27,12 +27,16 @@ import com.invertor.modbus.utils.ModbusFunctionCode;
  */
 final public class WriteMultipleCoilsResponse extends WriteSingleRegisterResponse {
 
-    public WriteMultipleCoilsResponse(int serverAddress) throws ModbusNumberException {
-        super(serverAddress);
+    public WriteMultipleCoilsResponse() throws ModbusNumberException {
+        super();
     }
 
-    public WriteMultipleCoilsResponse(int serverAddress, int startAddress, int coilCount) throws ModbusNumberException {
-        super(serverAddress, startAddress, coilCount);
+    public int getQuantity() {
+        return getValue();
+    }
+
+    public void setQuantity(int quantity) throws ModbusNumberException {
+        setValue(quantity);
     }
 
     @Override

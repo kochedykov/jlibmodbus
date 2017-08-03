@@ -38,21 +38,23 @@ final public class MaskWriteRegisterRequest extends AbstractDataRequest {
     private int maskAnd;
     private int maskOr;
 
-    public MaskWriteRegisterRequest(int serverAddress) throws ModbusNumberException {
-        super(serverAddress);
+    public MaskWriteRegisterRequest() throws ModbusNumberException {
+        super();
     }
 
-    public MaskWriteRegisterRequest(int serverAddress, int startAddress, int maskAnd, int maskOr) throws ModbusNumberException {
-        super(serverAddress, startAddress);
-
-        setMaskAnd(maskAnd);
-        setMaskOr(maskOr);
+    @Override
+    protected Class getResponseClass() {
+        return MaskWriteRegisterResponse.class;
     }
 
     /*result = ((reg & and) | (or & !and))*/
     @Override
     public ModbusResponse process(DataHolder dataHolder) throws ModbusNumberException {
-        MaskWriteRegisterResponse response = new MaskWriteRegisterResponse(getServerAddress(), getStartAddress(), getMaskAnd(), getMaskOr());
+        MaskWriteRegisterResponse response = (MaskWriteRegisterResponse) getResponse();
+        response.setStartAddress(getStartAddress());
+        response.setMaskAnd(getMaskAnd());
+        response.setMaskOr(getMaskOr());
+
         try {
             int reg = dataHolder.readHoldingRegister(getStartAddress());
             dataHolder.writeHoldingRegister(getStartAddress(), (reg & getMaskAnd()) | (getMaskOr() & (~getMaskAnd())));

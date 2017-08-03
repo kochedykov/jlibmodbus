@@ -13,8 +13,8 @@ import com.invertor.modbus.net.stream.base.ModbusOutputStream;
 import com.invertor.modbus.utils.ModbusFunctionCode;
 
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.LinkedList;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 /*
@@ -39,22 +39,29 @@ import java.util.List;
  * email: vladislav.kochedykov@gmail.com
  */
 final public class ReadFileRecordRequest extends ModbusRequest {
-
     final static public int READ__SUB_REQ_LENGTH = 7;
-    private ModbusFileRecord[] records = null;
+    final List<ModbusFileRecord> records = new ArrayList<ModbusFileRecord>();
 
-    public ReadFileRecordRequest(int serverAddress) throws ModbusNumberException {
-        super(serverAddress);
+    public ReadFileRecordRequest() throws ModbusNumberException {
+        super();
     }
 
-    public ReadFileRecordRequest(int serverAddress, ModbusFileRecord[] records) throws ModbusNumberException {
-        super(serverAddress);
-        this.records = Arrays.copyOf(records, records.length);
+    public void addFileRecord(ModbusFileRecord record) {
+        this.records.add(record);
+    }
+
+    public void addFileRecords(Collection<ModbusFileRecord> records) {
+        this.records.addAll(records);
+    }
+
+    @Override
+    protected Class getResponseClass() {
+        return ReadFileRecordResponse.class;
     }
 
     @Override
     public void writeRequest(ModbusOutputStream fifo) throws IOException {
-        fifo.write(READ__SUB_REQ_LENGTH * records.length);
+        fifo.write(READ__SUB_REQ_LENGTH * records.size());
         for (ModbusFileRecord record : records) {
             fifo.write(ModbusFileRecord.REF_TYPE);
             fifo.writeShortBE(record.getFileNumber());
@@ -65,7 +72,6 @@ final public class ReadFileRecordRequest extends ModbusRequest {
 
     @Override
     public void readPDU(ModbusInputStream fifo) throws ModbusNumberException, IOException {
-        List<ModbusFileRecord> records = new LinkedList<ModbusFileRecord>();
         int byteCount = fifo.read();
         if (byteCount > (Modbus.MAX_PDU_LENGTH - 2))
             throw new ModbusNumberException("Byte count greater than max allowable");
@@ -79,22 +85,24 @@ final public class ReadFileRecordRequest extends ModbusRequest {
             read += READ__SUB_REQ_LENGTH;
             records.add(new ModbusFileRecord(file_number, record_number, record_length));
         }
-        this.records = records.toArray(new ModbusFileRecord[records.size()]);
     }
 
     @Override
     public int requestSize() {
-        return 1 + READ__SUB_REQ_LENGTH * records.length;
+        return 1 + READ__SUB_REQ_LENGTH * records.size();
     }
 
     @Override
     public ModbusResponse process(DataHolder dataHolder) throws ModbusNumberException {
-        ReadFileRecordResponse response = new ReadFileRecordResponse(getServerAddress());
+        ReadFileRecordResponse response = (ReadFileRecordResponse) getResponse();
         try {
             for (ModbusFileRecord r : records) {
                 dataHolder.readFileRecord(r);
             }
-            response.setFileRecords(records);
+            /*
+            TODO: it's required to reduce the number of data-copying-operations here
+             */
+            response.setFileRecords((ModbusFileRecord[]) records.toArray());
         } catch (ModbusProtocolException e) {
             response.setException();
             response.setModbusExceptionCode(e.getException().getValue());
@@ -108,10 +116,10 @@ final public class ReadFileRecordRequest extends ModbusRequest {
             return false;
         }
         ModbusFileRecord[] respRecords = ((ReadFileRecordResponse) response).getFileRecords();
-        if (records.length != respRecords.length)
+        if (records.size() != respRecords.length)
             return false;
-        for (int i = 0; i < records.length; i++) {
-            if (respRecords[i].getRecordLength() != records[i].getRecordLength())
+        for (int i = 0; i < records.size(); i++) {
+            if (respRecords[i].getRecordLength() != records.get(i).getRecordLength())
                 return false;
         }
         return true;

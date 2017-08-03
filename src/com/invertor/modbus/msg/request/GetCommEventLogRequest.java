@@ -5,6 +5,7 @@ import com.invertor.modbus.data.DataHolder;
 import com.invertor.modbus.exception.ModbusNumberException;
 import com.invertor.modbus.msg.base.ModbusRequest;
 import com.invertor.modbus.msg.base.ModbusResponse;
+import com.invertor.modbus.msg.response.GetCommEventCounterResponse;
 import com.invertor.modbus.msg.response.GetCommEventLogResponse;
 import com.invertor.modbus.net.stream.base.ModbusInputStream;
 import com.invertor.modbus.net.stream.base.ModbusOutputStream;
@@ -35,8 +36,13 @@ import java.io.IOException;
  */
 final public class GetCommEventLogRequest extends ModbusRequest {
 
-    public GetCommEventLogRequest(int serverAddress) throws ModbusNumberException {
-        super(serverAddress);
+    public GetCommEventLogRequest() throws ModbusNumberException {
+        super();
+    }
+
+    @Override
+    protected Class getResponseClass() {
+        return GetCommEventCounterResponse.class;
     }
 
     @Override
@@ -51,7 +57,8 @@ final public class GetCommEventLogRequest extends ModbusRequest {
 
     @Override
     public ModbusResponse process(DataHolder dataHolder) throws ModbusNumberException {
-        GetCommEventLogResponse response = new GetCommEventLogResponse(getServerAddress());
+        GetCommEventLogResponse response = new GetCommEventLogResponse();
+        response.setServerAddress(getServerAddress());
         CommStatus commStatus = dataHolder.getCommStatus();
         response.setEventCount(commStatus.getEventCount());
         response.setStatus(commStatus.getCommStatus());

@@ -34,20 +34,17 @@ public class WriteSingleRegisterResponse extends AbstractWriteResponse {
 
     int value;
 
-    public WriteSingleRegisterResponse(int serverAddress) throws ModbusNumberException {
-        super(serverAddress);
-    }
-
-    public WriteSingleRegisterResponse(int serverAddress, int startAddress, int value) throws ModbusNumberException {
-        super(serverAddress, startAddress);
-        setValue(value);
-        if (!checkValue())
-            throw new ModbusNumberException("Error in register value", startAddress);
+    public WriteSingleRegisterResponse() {
+        super();
     }
 
     @Override
     final protected void readValue(ModbusInputStream fifo) throws IOException {
-        setValue(fifo.readShortBE());
+        try {
+            setValue(fifo.readShortBE());
+        } catch (ModbusNumberException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -68,7 +65,9 @@ public class WriteSingleRegisterResponse extends AbstractWriteResponse {
         return value;
     }
 
-    final public void setValue(int value) {
+    final public void setValue(int value) throws ModbusNumberException {
         this.value = ((short) value) & 0xffff;
+        if (!checkValue())
+            throw new ModbusNumberException("Error in register value", value);
     }
 }

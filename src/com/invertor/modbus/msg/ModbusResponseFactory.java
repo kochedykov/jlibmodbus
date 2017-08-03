@@ -56,61 +56,61 @@ final public class ModbusResponseFactory implements ModbusMessageFactory {
 
         switch (ModbusFunctionCode.get(functionCode)) {
             case READ_COILS:
-                msg = new ReadCoilsResponse(serverAddress);
+                msg = new ReadCoilsResponse();
                 break;
             case READ_DISCRETE_INPUTS:
-                msg = new ReadDiscreteInputsResponse(serverAddress);
+                msg = new ReadDiscreteInputsResponse();
                 break;
             case READ_HOLDING_REGISTERS:
-                msg = new ReadHoldingRegistersResponse(serverAddress);
+                msg = new ReadHoldingRegistersResponse();
                 break;
             case READ_INPUT_REGISTERS:
-                msg = new ReadInputRegistersResponse(serverAddress);
+                msg = new ReadInputRegistersResponse();
                 break;
             case WRITE_SINGLE_COIL:
-                msg = new WriteSingleCoilResponse(serverAddress);
+                msg = new WriteSingleCoilResponse();
                 break;
             case WRITE_SINGLE_REGISTER:
-                msg = new WriteSingleRegisterResponse(serverAddress);
+                msg = new WriteSingleRegisterResponse();
                 break;
             case WRITE_MULTIPLE_COILS:
-                msg = new WriteMultipleCoilsResponse(serverAddress);
+                msg = new WriteMultipleCoilsResponse();
                 break;
             case WRITE_MULTIPLE_REGISTERS:
-                msg = new WriteMultipleRegistersResponse(serverAddress);
+                msg = new WriteMultipleRegistersResponse();
                 break;
             case MASK_WRITE_REGISTER:
-                msg = new MaskWriteRegisterResponse(serverAddress);
+                msg = new MaskWriteRegisterResponse();
                 break;
             case READ_WRITE_MULTIPLE_REGISTERS:
-                msg = new ReadWriteMultipleRegistersResponse(serverAddress);
+                msg = new ReadWriteMultipleRegistersResponse();
                 break;
             case READ_FIFO_QUEUE:
-                msg = new ReadFifoQueueResponse(serverAddress);
+                msg = new ReadFifoQueueResponse();
                 break;
             case READ_FILE_RECORD:
-                msg = new ReadFileRecordResponse(serverAddress);
+                msg = new ReadFileRecordResponse();
                 break;
             case WRITE_FILE_RECORD:
-                msg = new WriteFileRecordResponse(serverAddress);
+                msg = new WriteFileRecordResponse();
                 break;
             case READ_EXCEPTION_STATUS:
-                msg = new ReadExceptionStatusResponse(serverAddress);
+                msg = new ReadExceptionStatusResponse();
                 break;
             case REPORT_SLAVE_ID:
-                msg = new ReportSlaveIdResponse(serverAddress);
+                msg = new ReportSlaveIdResponse();
                 break;
             case GET_COMM_EVENT_COUNTER:
-                msg = new GetCommEventCounterResponse(serverAddress);
+                msg = new GetCommEventCounterResponse();
                 break;
             case GET_COMM_EVENT_LOG:
-                msg = new GetCommEventLogResponse(serverAddress);
+                msg = new GetCommEventLogResponse();
                 break;
             case DIAGNOSTICS:
-                msg = new DiagnosticsResponse(serverAddress);
+                msg = new DiagnosticsResponse();
                 break;
             case ENCAPSULATED_INTERFACE_TRANSPORT:
-                msg = new EncapsulatedInterfaceTransportResponse(serverAddress);
+                msg = new EncapsulatedInterfaceTransportResponse();
                 break;
             default:
                 throw new ModbusNumberException("Unknown function code", functionCode);
@@ -118,6 +118,7 @@ final public class ModbusResponseFactory implements ModbusMessageFactory {
         if (ModbusFunctionCode.isException(functionCode)) {
             msg.setException();
         }
+        msg.setServerAddress(serverAddress);
         msg.read(fifo);
         return msg;
     }

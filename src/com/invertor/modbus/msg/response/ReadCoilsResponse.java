@@ -36,8 +36,8 @@ public class ReadCoilsResponse extends AbstractReadResponse {
 
     private byte[] buffer = new byte[0];
 
-    public ReadCoilsResponse(int serverAddress) throws ModbusNumberException {
-        super(serverAddress);
+    public ReadCoilsResponse() {
+        super();
     }
 
     static public int calcByteCount(boolean[] coils) {

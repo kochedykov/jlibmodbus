@@ -32,17 +32,8 @@ abstract public class AbstractDataRequest extends ModbusRequest {
 
     private int startAddress;
 
-    protected AbstractDataRequest(int serverAddress) throws ModbusNumberException {
-        super(serverAddress);
-    }
-
-    protected AbstractDataRequest(int serverAddress, int startAddress) throws ModbusNumberException {
-        super(serverAddress);
-
-        if (!Modbus.checkStartAddress(startAddress))
-            throw new ModbusNumberException("Error in start address", startAddress);
-
-        setStartAddress(((short) startAddress) & 0xffff);
+    protected AbstractDataRequest() {
+        super();
     }
 
     abstract protected void writeData(ModbusOutputStream fifo) throws IOException;
@@ -65,7 +56,10 @@ abstract public class AbstractDataRequest extends ModbusRequest {
         return startAddress;
     }
 
-    public void setStartAddress(int startAddress) {
+    public void setStartAddress(int startAddress) throws ModbusNumberException {
+        if (!Modbus.checkStartAddress(startAddress)) {
+            throw new ModbusNumberException("Error in start address", startAddress);
+        }
         this.startAddress = startAddress;
     }
 

@@ -32,14 +32,8 @@ abstract public class AbstractReadResponse extends ModbusResponse {
 
     private int byteCount = 0;
 
-    protected AbstractReadResponse(int serverAddress) throws ModbusNumberException {
-        super(serverAddress);
-    }
-
-    protected AbstractReadResponse(int serverAddress, int byteCount) throws ModbusNumberException {
-        super(serverAddress);
-
-        this.byteCount = byteCount;
+    protected AbstractReadResponse() {
+        super();
     }
 
     public int getByteCount() {

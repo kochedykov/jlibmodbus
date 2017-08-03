@@ -28,17 +28,9 @@ import com.invertor.modbus.utils.MEITypeCode;
  */
 public class ReadDeviceIdentificationRequest extends EncapsulatedInterfaceTransportRequest {
 
-    public ReadDeviceIdentificationRequest(int serverAddress) throws ModbusNumberException {
-        super(serverAddress);
+    public ReadDeviceIdentificationRequest() throws ModbusNumberException {
+        super();
         setMEIType(MEITypeCode.READ_DEVICE_IDENTIFICATION);
-    }
-
-    public ReadDeviceIdentificationRequest(int serverAddress, int objectId, ReadDeviceIdentificationCode readDeviceId) throws ModbusNumberException {
-        super(serverAddress);
-        setMEIType(MEITypeCode.READ_DEVICE_IDENTIFICATION);
-        MEIReadDeviceIdentification mei = (MEIReadDeviceIdentification) getMei();
-        mei.setObjectId(objectId);
-        mei.setReadDeviceId(readDeviceId);
     }
 
     public void setObjectId(int objectId) {

@@ -6,7 +6,6 @@ import com.invertor.modbus.net.stream.base.ModbusInputStream;
 import com.invertor.modbus.net.stream.base.ModbusOutputStream;
 
 import java.io.IOException;
-import java.util.Arrays;
 
 /*
  * Copyright (C) 2016 "Invertor" Factory", JSC
@@ -34,15 +33,8 @@ abstract public class AbstractWriteMultipleRequest extends AbstractMultipleReque
     private byte[] values;
     private int byteCount;
 
-    protected AbstractWriteMultipleRequest(int serverAddress) throws ModbusNumberException {
-        super(serverAddress);
-    }
-
-    protected AbstractWriteMultipleRequest(int serverAddress, int startAddress, byte[] values, int quantity) throws ModbusNumberException {
-        super(serverAddress, startAddress, quantity);
-
-        setByteCount(values.length);
-        setValues(values);
+    protected AbstractWriteMultipleRequest() throws ModbusNumberException {
+        super();
     }
 
     @Override
@@ -62,20 +54,25 @@ abstract public class AbstractWriteMultipleRequest extends AbstractMultipleReque
             Modbus.log().warning(getByteCount() + " bytes expected, but " + size + " received.");
     }
 
-    protected int getByteCount() {
+    public int getByteCount() {
         return byteCount;
     }
 
-    private void setByteCount(int byteCount) {
+    public void setByteCount(int byteCount) throws ModbusNumberException {
+        if (byteCount > Modbus.MAX_WRITE_REGISTER_COUNT * 2) {
+            //TODO add a description
+            throw new ModbusNumberException("" + byteCount);
+        }
         this.byteCount = byteCount;
     }
 
     public byte[] getValues() {
-        return Arrays.copyOf(values, values.length);
+        return values;
     }
 
-    public void setValues(byte[] values) {
-        this.values = Arrays.copyOf(values, values.length);
+    public void setValues(byte[] values) throws ModbusNumberException {
+        this.values = values;
+        setByteCount(values.length);
     }
 
     @Override

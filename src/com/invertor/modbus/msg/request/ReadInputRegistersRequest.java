@@ -31,17 +31,14 @@ import com.invertor.modbus.utils.ModbusFunctionCode;
 
 final public class ReadInputRegistersRequest extends ReadHoldingRegistersRequest {
 
-    public ReadInputRegistersRequest(int serverAddress) throws ModbusNumberException {
-        super(serverAddress);
-    }
-
-    public ReadInputRegistersRequest(int serverAddress, int startAddress, int quantity) throws ModbusNumberException {
-        super(serverAddress, startAddress, quantity);
+    public ReadInputRegistersRequest() throws ModbusNumberException {
+        super();
     }
 
     @Override
     public ModbusResponse process(DataHolder dataHolder) throws ModbusNumberException {
-        ReadInputRegistersResponse response = new ReadInputRegistersResponse(getServerAddress());
+        ReadInputRegistersResponse response = (ReadInputRegistersResponse) getResponse();
+        response.setServerAddress(getServerAddress());
         try {
             int[] range = dataHolder.readInputRegisterRange(getStartAddress(), getQuantity());
             response.setBuffer(range);
@@ -64,5 +61,10 @@ final public class ReadInputRegistersRequest extends ReadHoldingRegistersRequest
     @Override
     public int getFunction() {
         return ModbusFunctionCode.READ_INPUT_REGISTERS.toInt();
+    }
+
+    @Override
+    protected Class getResponseClass() {
+        return ReadInputRegistersResponse.class;
     }
 }

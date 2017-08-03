@@ -12,6 +12,7 @@ import com.invertor.modbus.utils.DataUtils;
 import com.invertor.modbus.utils.ModbusFunctionCode;
 
 import java.io.IOException;
+import java.util.Arrays;
 
 /*
  * Copyright (C) 2016 "Invertor" Factory", JSC
@@ -37,19 +38,22 @@ import java.io.IOException;
 
 final public class WriteMultipleRegistersRequest extends AbstractWriteMultipleRequest {
 
-    public WriteMultipleRegistersRequest(int serverAddress) throws ModbusNumberException {
-        super(serverAddress);
+    public WriteMultipleRegistersRequest() throws ModbusNumberException {
+        super();
     }
 
-    public WriteMultipleRegistersRequest(int serverAddress, int startAddress, int[] registers) throws ModbusNumberException {
-        super(serverAddress, startAddress, DataUtils.toByteArray(registers), registers.length);
+    @Override
+    protected Class getResponseClass() {
+        return WriteMultipleRegistersResponse.class;
     }
 
-    public WriteMultipleRegistersRequest(int serverAddress, int startAddress, byte[] bytes) throws ModbusNumberException {
-        super(serverAddress, startAddress, bytes, bytes.length / 2);
-        if (bytes.length % 2 != 0) {
-            throw new ModbusNumberException("bytes.length=" + bytes.length + " should be an even number");
+    @Override
+    public void setByteCount(int byteCount) throws ModbusNumberException {
+        if (byteCount % 2 != 0) {
+            throw new ModbusNumberException("bytes.length=" + byteCount + " should be an even number");
         }
+        super.setByteCount(byteCount);
+        setQuantity(byteCount / 2);
     }
 
     @Override
@@ -61,7 +65,9 @@ final public class WriteMultipleRegistersRequest extends AbstractWriteMultipleRe
 
     @Override
     public ModbusResponse process(DataHolder dataHolder) throws ModbusNumberException {
-        WriteMultipleRegistersResponse response = new WriteMultipleRegistersResponse(getServerAddress(), getStartAddress(), getQuantity());
+        WriteMultipleRegistersResponse response = (WriteMultipleRegistersResponse) getResponse();
+        response.setStartAddress(getStartAddress());
+        response.setQuantity(getQuantity());
         try {
             dataHolder.writeHoldingRegisterRange(getStartAddress(), getRegisters());
         } catch (ModbusProtocolException e) {
@@ -92,6 +98,22 @@ final public class WriteMultipleRegistersRequest extends AbstractWriteMultipleRe
 
     public int[] getRegisters() {
         return DataUtils.toIntArray(getValues());
+    }
+
+    public void setRegisters(int[] registers) throws ModbusNumberException {
+        super.setValues(DataUtils.toByteArray(registers));
+        setByteCount(registers.length * 2);
+    }
+
+    @Override
+    public byte[] getValues() {
+        return Arrays.copyOf(super.getValues(), super.getByteCount());
+    }
+
+    @Override
+    public void setValues(byte[] values) throws ModbusNumberException {
+        super.setValues(Arrays.copyOf(values, values.length));
+        setByteCount(values.length);
     }
 
     @Override

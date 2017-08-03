@@ -35,8 +35,8 @@ public class DiagnosticsResponse extends ModbusResponse {
     private DiagnosticsSubFunctionCode subFunctionCode;
     private int subFunctionData = 0;
 
-    public DiagnosticsResponse(int serverAddress) throws ModbusNumberException {
-        super(serverAddress);
+    public DiagnosticsResponse() {
+        super();
     }
 
     @Override

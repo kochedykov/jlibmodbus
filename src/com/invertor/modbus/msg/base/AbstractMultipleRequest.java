@@ -30,16 +30,8 @@ import java.io.IOException;
 abstract public class AbstractMultipleRequest extends AbstractDataRequest {
     private int quantity;
 
-    protected AbstractMultipleRequest(int serverAddress) throws ModbusNumberException {
-        super(serverAddress);
-    }
-
-    protected AbstractMultipleRequest(int serverAddress, int startAddress, int quantity) throws ModbusNumberException {
-        super(serverAddress, startAddress);
-        if (!checkAddressRange(startAddress, quantity))
-            throw new ModbusNumberException("Error in start address", startAddress);
-
-        setQuantity(quantity);
+    protected AbstractMultipleRequest() {
+        super();
     }
 
     @Override
@@ -61,7 +53,9 @@ abstract public class AbstractMultipleRequest extends AbstractDataRequest {
         return quantity;
     }
 
-    public void setQuantity(int quantity) {
+    public void setQuantity(int quantity) throws ModbusNumberException {
+        if (!checkAddressRange(getStartAddress(), quantity))
+            throw new ModbusNumberException("End address out of bounds", getStartAddress() + quantity);
         this.quantity = quantity;
     }
 

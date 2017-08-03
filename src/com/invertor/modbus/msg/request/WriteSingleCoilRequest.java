@@ -31,17 +31,20 @@ import com.invertor.modbus.utils.ModbusFunctionCode;
  */
 final public class WriteSingleCoilRequest extends WriteSingleRegisterRequest {
 
-    public WriteSingleCoilRequest(int serverAddress) throws ModbusNumberException {
-        super(serverAddress);
+    public WriteSingleCoilRequest() {
+        super();
     }
 
-    public WriteSingleCoilRequest(int serverAddress, int startAddress, boolean coil) throws ModbusNumberException {
-        super(serverAddress, startAddress, Modbus.fromCoil(coil));
+    @Override
+    protected Class getResponseClass() {
+        return WriteSingleCoilResponse.class;
     }
 
     @Override
     public ModbusResponse process(DataHolder dataHolder) throws ModbusNumberException {
-        WriteSingleCoilResponse response = new WriteSingleCoilResponse(getServerAddress(), getStartAddress(), getCoil());
+        WriteSingleCoilResponse response = (WriteSingleCoilResponse) getResponse();
+        response.setStartAddress(getStartAddress());
+        response.setValue(getValue());
         try {
             dataHolder.writeCoil(getStartAddress(), getCoil());
         } catch (ModbusProtocolException e) {
@@ -60,8 +63,12 @@ final public class WriteSingleCoilRequest extends WriteSingleRegisterRequest {
         return r.getStartAddress() == getStartAddress() && r.getValue() == getValue();
     }
 
-    private boolean getCoil() {
+    public boolean getCoil() {
         return Modbus.toCoil(getValue());
+    }
+
+    public void setCoil(boolean coil) throws ModbusNumberException {
+        setValue(Modbus.fromCoil(coil));
     }
 
     @Override

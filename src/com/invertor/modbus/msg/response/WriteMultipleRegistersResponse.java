@@ -27,12 +27,16 @@ import com.invertor.modbus.utils.ModbusFunctionCode;
  */
 final public class WriteMultipleRegistersResponse extends WriteSingleRegisterResponse {
 
-    public WriteMultipleRegistersResponse(int serverAddress) throws ModbusNumberException {
-        super(serverAddress);
+    public WriteMultipleRegistersResponse() {
+        super();
     }
 
-    public WriteMultipleRegistersResponse(int serverAddress, int startAddress, int byteCount) throws ModbusNumberException {
-        super(serverAddress, startAddress, byteCount);
+    public int getQuantity() {
+        return getValue();
+    }
+
+    public void setQuantity(int quantity) throws ModbusNumberException {
+        setValue(quantity);
     }
 
     @Override

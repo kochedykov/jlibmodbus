@@ -5,6 +5,8 @@ import com.invertor.modbus.exception.ModbusNumberException;
 import com.invertor.modbus.net.stream.base.ModbusOutputStream;
 
 import java.io.IOException;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 
 /*
  * Copyright (C) 2016 "Invertor" Factory", JSC
@@ -29,9 +31,38 @@ import java.io.IOException;
  */
 abstract public class ModbusRequest extends ModbusMessage {
 
-    public ModbusRequest(int serverAddress) throws ModbusNumberException {
-        super(serverAddress);
+    final private ModbusResponse response;
+
+    public ModbusRequest() {
+        ModbusResponse response = null;
+        try {
+            Constructor<ModbusResponse> constructor = getResponseClass().getConstructor();
+            response = constructor.newInstance();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        } finally {
+            this.response = response;
+        }
     }
+
+    @Override
+    public void setServerAddress(int serverAddress) throws ModbusNumberException {
+        super.setServerAddress(serverAddress);
+
+        getResponse().setServerAddress(serverAddress);
+    }
+
+    public ModbusResponse getResponse() {
+        return response;
+    }
+
+    protected abstract Class getResponseClass();
 
     abstract public void writeRequest(ModbusOutputStream fifo) throws IOException;
 

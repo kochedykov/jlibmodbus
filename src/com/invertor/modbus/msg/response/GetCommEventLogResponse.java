@@ -41,8 +41,8 @@ final public class GetCommEventLogResponse extends ModbusResponse {
     private int messageCount;
     private List<ModbusCommEvent> events = new LinkedList<ModbusCommEvent>();
 
-    public GetCommEventLogResponse(int serverAddress) throws ModbusNumberException {
-        super(serverAddress);
+    public GetCommEventLogResponse() {
+        super();
     }
 
     @Override

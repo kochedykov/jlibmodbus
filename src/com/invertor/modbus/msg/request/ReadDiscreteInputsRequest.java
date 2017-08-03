@@ -32,17 +32,18 @@ import com.invertor.modbus.utils.ModbusFunctionCode;
 
 final public class ReadDiscreteInputsRequest extends ReadCoilsRequest {
 
-    public ReadDiscreteInputsRequest(int serverAddress) throws ModbusNumberException {
-        super(serverAddress);
+    public ReadDiscreteInputsRequest() {
+        super();
     }
 
-    public ReadDiscreteInputsRequest(int serverAddress, int startAddress, int quantity) throws ModbusNumberException {
-        super(serverAddress, startAddress, quantity);
+    @Override
+    protected Class getResponseClass() {
+        return ReadDiscreteInputsResponse.class;
     }
 
     @Override
     public ModbusResponse process(DataHolder dataHolder) throws ModbusNumberException {
-        ReadDiscreteInputsResponse response = new ReadDiscreteInputsResponse(getServerAddress());
+        ReadDiscreteInputsResponse response = (ReadDiscreteInputsResponse) getResponse();
         try {
             boolean[] range = dataHolder.readDiscreteInputRange(getStartAddress(), getQuantity());
             response.setCoils(range);

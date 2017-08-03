@@ -64,8 +64,13 @@ public class DiagnosticsRequest extends ModbusRequest {
     private DiagnosticsSubFunctionCode subFunctionCode = DiagnosticsSubFunctionCode.RESERVED;
     private int subFunctionData = 0;
 
-    public DiagnosticsRequest(int serverAddress) throws ModbusNumberException {
-        super(serverAddress);
+    public DiagnosticsRequest() throws ModbusNumberException {
+        super();
+    }
+
+    @Override
+    protected Class getResponseClass() {
+        return DiagnosticsResponse.class;
     }
 
     @Override
@@ -81,7 +86,8 @@ public class DiagnosticsRequest extends ModbusRequest {
 
     @Override
     public ModbusResponse process(DataHolder dataHolder) throws ModbusNumberException {
-        DiagnosticsResponse response = new DiagnosticsResponse(getServerAddress());
+        DiagnosticsResponse response = new DiagnosticsResponse();
+        response.setServerAddress(getServerAddress());
         response.setSubFunctionCode(getSubFunctionCode());
         CommStatus commStatus = dataHolder.getCommStatus();
         switch (getSubFunctionCode()) {

@@ -33,12 +33,13 @@ import com.invertor.modbus.utils.ModbusFunctionCode;
 
 public class ReadCoilsRequest extends AbstractMultipleRequest {
 
-    public ReadCoilsRequest(int serverAddress) throws ModbusNumberException {
-        super(serverAddress);
+    public ReadCoilsRequest() {
+        super();
     }
 
-    public ReadCoilsRequest(int serverAddress, int startAddress, int quantity) throws ModbusNumberException {
-        super(serverAddress, startAddress, quantity);
+    @Override
+    protected Class getResponseClass() {
+        return ReadCoilsResponse.class;
     }
 
     @Override
@@ -58,7 +59,7 @@ public class ReadCoilsRequest extends AbstractMultipleRequest {
 
     @Override
     public ModbusResponse process(DataHolder dataHolder) throws ModbusNumberException {
-        ReadCoilsResponse response = new ReadCoilsResponse(getServerAddress());
+        ReadCoilsResponse response = (ReadCoilsResponse) getResponse();
         try {
             boolean[] range = dataHolder.readCoilRange(getStartAddress(), getQuantity());
             response.setCoils(range);

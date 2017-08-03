@@ -27,12 +27,16 @@ import com.invertor.modbus.utils.ModbusFunctionCode;
  */
 final public class WriteSingleCoilResponse extends WriteSingleRegisterResponse {
 
-    public WriteSingleCoilResponse(int serverAddress) throws ModbusNumberException {
-        super(serverAddress);
+    public WriteSingleCoilResponse() {
+        super();
     }
 
-    public WriteSingleCoilResponse(int serverAddress, int startAddress, boolean coil) throws ModbusNumberException {
-        super(serverAddress, startAddress, Modbus.fromCoil(coil));
+    public boolean getCoil() {
+        return Modbus.toCoil(getValue());
+    }
+
+    public void setCoil(boolean coil) throws ModbusNumberException {
+        setValue(Modbus.fromCoil(coil));
     }
 
     @Override

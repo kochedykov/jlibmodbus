@@ -1,6 +1,5 @@
 package com.invertor.modbus.msg.response;
 
-import com.invertor.modbus.exception.ModbusNumberException;
 import com.invertor.modbus.msg.base.ModbusResponse;
 import com.invertor.modbus.net.stream.base.ModbusInputStream;
 import com.invertor.modbus.net.stream.base.ModbusOutputStream;
@@ -34,8 +33,8 @@ final public class GetCommEventCounterResponse extends ModbusResponse {
     private int status;
     private int eventCount;
 
-    public GetCommEventCounterResponse(int serverAddress) throws ModbusNumberException {
-        super(serverAddress);
+    public GetCommEventCounterResponse() {
+        super();
     }
 
     @Override

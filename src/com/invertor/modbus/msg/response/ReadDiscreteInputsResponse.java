@@ -1,6 +1,5 @@
 package com.invertor.modbus.msg.response;
 
-import com.invertor.modbus.exception.ModbusNumberException;
 import com.invertor.modbus.utils.ModbusFunctionCode;
 
 /*
@@ -26,8 +25,8 @@ import com.invertor.modbus.utils.ModbusFunctionCode;
  */
 final public class ReadDiscreteInputsResponse extends ReadCoilsResponse {
 
-    public ReadDiscreteInputsResponse(int serverAddress) throws ModbusNumberException {
-        super(serverAddress);
+    public ReadDiscreteInputsResponse() {
+        super();
     }
 
     @Override

@@ -37,15 +37,13 @@ import java.io.IOException;
 
 final public class WriteMultipleCoilsRequest extends AbstractWriteMultipleRequest {
 
-    private boolean[] coils = null;
-
-    public WriteMultipleCoilsRequest(int serverAddress) throws ModbusNumberException {
-        super(serverAddress);
+    public WriteMultipleCoilsRequest() throws ModbusNumberException {
+        super();
     }
 
-    public WriteMultipleCoilsRequest(int serverAddress, int startAddress, boolean[] coils) throws ModbusNumberException {
-        super(serverAddress, startAddress, DataUtils.toByteArray(coils), coils.length);
-        setCoils(coils);
+    @Override
+    protected Class getResponseClass() {
+        return WriteMultipleCoilsResponse.class;
     }
 
     @Override
@@ -57,7 +55,9 @@ final public class WriteMultipleCoilsRequest extends AbstractWriteMultipleReques
 
     @Override
     public ModbusResponse process(DataHolder dataHolder) throws ModbusNumberException {
-        WriteMultipleCoilsResponse response = new WriteMultipleCoilsResponse(getServerAddress(), getStartAddress(), getQuantity());
+        WriteMultipleCoilsResponse response = (WriteMultipleCoilsResponse) getResponse();
+        response.setStartAddress(getStartAddress());
+        response.setQuantity(getQuantity());
         try {
             dataHolder.writeCoilRange(getStartAddress(), getCoils());
         } catch (ModbusProtocolException e) {
@@ -87,12 +87,13 @@ final public class WriteMultipleCoilsRequest extends AbstractWriteMultipleReques
         setCoils(DataUtils.toBitsArray(getValues(), getQuantity()));
     }
 
-    private boolean[] getCoils() {
-        return coils;
+    public boolean[] getCoils() {
+        return DataUtils.toBitsArray(getValues(), getQuantity());
     }
 
-    private void setCoils(boolean[] coils) {
-        this.coils = coils;
+    public void setCoils(boolean[] coils) throws ModbusNumberException {
+        setValues(DataUtils.toByteArray(coils));
+        setQuantity(coils.length);
     }
 
     @Override

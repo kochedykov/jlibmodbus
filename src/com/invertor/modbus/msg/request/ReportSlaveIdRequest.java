@@ -35,8 +35,13 @@ import java.io.IOException;
  */
 final public class ReportSlaveIdRequest extends ModbusRequest {
 
-    public ReportSlaveIdRequest(int serverAddress) throws ModbusNumberException {
-        super(serverAddress);
+    public ReportSlaveIdRequest() throws ModbusNumberException {
+        super();
+    }
+
+    @Override
+    protected Class getResponseClass() {
+        return ReportSlaveIdResponse.class;
     }
 
     @Override
@@ -51,7 +56,7 @@ final public class ReportSlaveIdRequest extends ModbusRequest {
 
     @Override
     public ModbusResponse process(DataHolder dataHolder) throws ModbusNumberException {
-        ReportSlaveIdResponse response = new ReportSlaveIdResponse(getServerAddress());
+        ReportSlaveIdResponse response = (ReportSlaveIdResponse) getResponse();
         try {
             byte[] slaveId = dataHolder.readSlaveId();
             response.setSlaveId(slaveId);

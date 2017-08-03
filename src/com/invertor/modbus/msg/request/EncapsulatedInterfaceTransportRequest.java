@@ -40,8 +40,13 @@ public class EncapsulatedInterfaceTransportRequest extends ModbusRequest {
 
     private ModbusEncapsulatedInterface mei = null;
 
-    public EncapsulatedInterfaceTransportRequest(int serverAddress) throws ModbusNumberException {
-        super(serverAddress);
+    public EncapsulatedInterfaceTransportRequest() throws ModbusNumberException {
+        super();
+    }
+
+    @Override
+    protected Class getResponseClass() {
+        return EncapsulatedInterfaceTransportResponse.class;
     }
 
     public void setMEIType(MEITypeCode meiTypeCode) {
@@ -70,7 +75,8 @@ public class EncapsulatedInterfaceTransportRequest extends ModbusRequest {
 
     @Override
     public ModbusResponse process(DataHolder dataHolder) throws ModbusNumberException {
-        EncapsulatedInterfaceTransportResponse response = new EncapsulatedInterfaceTransportResponse(getServerAddress());
+        EncapsulatedInterfaceTransportResponse response = new EncapsulatedInterfaceTransportResponse();
+        response.setServerAddress(getServerAddress());
         response.setMei(mei);
         try {
             response.getMei().process(dataHolder);

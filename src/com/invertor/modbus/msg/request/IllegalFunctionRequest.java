@@ -35,9 +35,15 @@ public class IllegalFunctionRequest extends ModbusRequest {
 
     final private int functionCode;
 
-    public IllegalFunctionRequest(int serverAddress, int functionCode) throws ModbusNumberException {
-        super(serverAddress);
+    public IllegalFunctionRequest(int functionCode) throws ModbusNumberException {
+        super();
+
         this.functionCode = functionCode;
+    }
+
+    @Override
+    protected Class getResponseClass() {
+        return IllegalFunctionResponse.class;
     }
 
     @Override
@@ -52,7 +58,9 @@ public class IllegalFunctionRequest extends ModbusRequest {
 
     @Override
     public ModbusResponse process(DataHolder dataHolder) throws ModbusNumberException {
-        return new IllegalFunctionResponse(getServerAddress(), getFunction());
+        IllegalFunctionResponse response = (IllegalFunctionResponse) getResponse();
+        response.setFunctionCode(getFunction());
+        return response;
     }
 
     @Override

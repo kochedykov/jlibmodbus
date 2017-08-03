@@ -36,8 +36,8 @@ public class ReadHoldingRegistersResponse extends AbstractReadResponse {
 
     private byte[] buffer = new byte[0];
 
-    public ReadHoldingRegistersResponse(int serverAddress) throws ModbusNumberException {
-        super(serverAddress);
+    public ReadHoldingRegistersResponse() {
+        super();
     }
 
     /**

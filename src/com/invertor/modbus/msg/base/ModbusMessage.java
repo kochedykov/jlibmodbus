@@ -32,14 +32,12 @@ import java.io.IOException;
 
 abstract public class ModbusMessage {
 
-    final private int serverAddress;
+    private int serverAddress = Modbus.TCP_DEFAULT_ID;
     private int protocolId = Modbus.PROTOCOL_ID;
     private int transactionId = 0;
 
-    ModbusMessage(int serverAddress) throws ModbusNumberException {
-        if (!Modbus.checkServerAddress(serverAddress))
-            throw new ModbusNumberException("Error in slave id", serverAddress);
-        this.serverAddress = serverAddress;
+    public ModbusMessage() {
+
     }
 
     final public void write(ModbusOutputStream fifo) throws ModbusIOException {
@@ -73,6 +71,17 @@ abstract public class ModbusMessage {
 
     public int getServerAddress() {
         return serverAddress;
+    }
+
+    /*
+        protected ModbusMessage(int serverAddress) throws ModbusNumberException {
+            setServerAddress(serverAddress);
+        }
+    */
+    public void setServerAddress(int serverAddress) throws ModbusNumberException {
+        if (!Modbus.checkServerAddress(serverAddress))
+            throw new ModbusNumberException("Error in slave id", serverAddress);
+        this.serverAddress = serverAddress;
     }
 
     public int getProtocolId() {

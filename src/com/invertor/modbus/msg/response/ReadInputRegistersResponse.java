@@ -26,8 +26,8 @@ import com.invertor.modbus.utils.ModbusFunctionCode;
  */
 final public class ReadInputRegistersResponse extends ReadHoldingRegistersResponse {
 
-    public ReadInputRegistersResponse(int serverAddress) throws ModbusNumberException {
-        super(serverAddress);
+    public ReadInputRegistersResponse() throws ModbusNumberException {
+        super();
     }
 
     @Override

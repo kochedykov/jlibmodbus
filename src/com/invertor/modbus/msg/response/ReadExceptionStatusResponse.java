@@ -1,6 +1,5 @@
 package com.invertor.modbus.msg.response;
 
-import com.invertor.modbus.exception.ModbusNumberException;
 import com.invertor.modbus.msg.base.ModbusResponse;
 import com.invertor.modbus.net.stream.base.ModbusInputStream;
 import com.invertor.modbus.net.stream.base.ModbusOutputStream;
@@ -33,8 +32,8 @@ final public class ReadExceptionStatusResponse extends ModbusResponse {
 
     private int exceptionStatus = 0;
 
-    public ReadExceptionStatusResponse(int serverAddress) throws ModbusNumberException {
-        super(serverAddress);
+    public ReadExceptionStatusResponse() {
+        super();
     }
 
     public int getExceptionStatus() {

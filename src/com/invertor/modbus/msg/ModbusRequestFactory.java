@@ -2,9 +2,7 @@ package com.invertor.modbus.msg;
 
 import com.invertor.modbus.exception.ModbusIOException;
 import com.invertor.modbus.exception.ModbusNumberException;
-import com.invertor.modbus.msg.base.ModbusFileRecord;
-import com.invertor.modbus.msg.base.ModbusMessage;
-import com.invertor.modbus.msg.base.ModbusRequest;
+import com.invertor.modbus.msg.base.*;
 import com.invertor.modbus.msg.base.mei.ReadDeviceIdentificationCode;
 import com.invertor.modbus.msg.request.*;
 import com.invertor.modbus.net.stream.base.ModbusInputStream;
@@ -12,6 +10,7 @@ import com.invertor.modbus.utils.DiagnosticsSubFunctionCode;
 import com.invertor.modbus.utils.ModbusFunctionCode;
 
 import java.io.IOException;
+import java.util.Arrays;
 
 /*
  * Copyright (C) 2016 "Invertor" Factory", JSC
@@ -44,76 +43,134 @@ final public class ModbusRequestFactory implements ModbusMessageFactory {
         return SingletonHolder.instance;
     }
 
+    private ModbusRequest setBaseParameter(ModbusRequest request, int serverAddress) throws ModbusNumberException {
+        request.setServerAddress(serverAddress);
+        return request;
+    }
+
+    private void setSimpleDataRequestParameters(AbstractDataRequest request, int serverAddress, int startAddress) throws ModbusNumberException {
+        request.setServerAddress(serverAddress);
+        request.setStartAddress(startAddress);
+    }
+
+    private void setMultipleDataRequestParameters(AbstractMultipleRequest request, int serverAddress, int startAddress, int quantity) throws ModbusNumberException {
+        setSimpleDataRequestParameters(request, serverAddress, startAddress);
+        request.setQuantity(quantity);
+    }
+
     public ModbusRequest createReadCoils(int serverAddress, int startAddress, int quantity) throws ModbusNumberException {
-        return new ReadCoilsRequest(serverAddress, startAddress, quantity);
+        ReadCoilsRequest request = new ReadCoilsRequest();
+        setMultipleDataRequestParameters(request, serverAddress, startAddress, quantity);
+        return request;
     }
 
     public ModbusRequest createReadDiscreteInputs(int serverAddress, int startAddress, int quantity) throws ModbusNumberException {
-        return new ReadDiscreteInputsRequest(serverAddress, startAddress, quantity);
+        ReadDiscreteInputsRequest request = new ReadDiscreteInputsRequest();
+        setMultipleDataRequestParameters(request, serverAddress, startAddress, quantity);
+        return request;
     }
 
     public ModbusRequest createReadInputRegisters(int serverAddress, int startAddress, int quantity) throws ModbusNumberException {
-        return new ReadInputRegistersRequest(serverAddress, startAddress, quantity);
+        ReadInputRegistersRequest request = new ReadInputRegistersRequest();
+        setMultipleDataRequestParameters(request, serverAddress, startAddress, quantity);
+        return request;
     }
 
     public ModbusRequest createReadHoldingRegisters(int serverAddress, int startAddress, int quantity) throws ModbusNumberException {
-        return new ReadHoldingRegistersRequest(serverAddress, startAddress, quantity);
+        ReadHoldingRegistersRequest request = new ReadHoldingRegistersRequest();
+        setMultipleDataRequestParameters(request, serverAddress, startAddress, quantity);
+        return request;
     }
 
     public ModbusRequest createReadWriteMultipleRegisters(int serverAddress, int readAddress, int readQuantity, int writeAddress, int[] registers) throws ModbusNumberException {
-        return new ReadWriteMultipleRegistersRequest(serverAddress, readAddress, readQuantity, writeAddress, registers);
+        ReadWriteMultipleRegistersRequest request = new ReadWriteMultipleRegistersRequest();
+        request.setServerAddress(serverAddress);
+        request.setReadAddress(readAddress);
+        request.setReadQuantity(readQuantity);
+        request.setWriteAddress(writeAddress);
+        request.setWriteRegisters(registers);
+        return request;
     }
 
     public ModbusRequest createWriteSingleCoil(int serverAddress, int startAddress, boolean coil) throws ModbusNumberException {
-        return new WriteSingleCoilRequest(serverAddress, startAddress, coil);
+        WriteSingleCoilRequest request = new WriteSingleCoilRequest();
+        setSimpleDataRequestParameters(request, serverAddress, startAddress);
+        request.setCoil(coil);
+        return request;
     }
 
     public ModbusRequest createWriteMultipleCoils(int serverAddress, int startAddress, boolean[] coils) throws ModbusNumberException {
-        return new WriteMultipleCoilsRequest(serverAddress, startAddress, coils);
+        WriteMultipleCoilsRequest request = new WriteMultipleCoilsRequest();
+        setSimpleDataRequestParameters(request, serverAddress, startAddress);
+        request.setCoils(coils);
+
+        return request;
     }
 
     public ModbusRequest createWriteMultipleRegisters(int serverAddress, int startAddress, int[] registers) throws ModbusNumberException {
-        return new WriteMultipleRegistersRequest(serverAddress, startAddress, registers);
+        WriteMultipleRegistersRequest request = new WriteMultipleRegistersRequest();
+        setSimpleDataRequestParameters(request, serverAddress, startAddress);
+        request.setRegisters(registers);
+        return request;
     }
 
     public ModbusRequest createWriteMultipleRegisters(int serverAddress, int startAddress, byte[] bytes) throws ModbusNumberException {
-        return new WriteMultipleRegistersRequest(serverAddress, startAddress, bytes);
+        WriteMultipleRegistersRequest request = new WriteMultipleRegistersRequest();
+        setSimpleDataRequestParameters(request, serverAddress, startAddress);
+        request.setValues(bytes);
+        return request;
     }
 
     public ModbusRequest createWriteSingleRegister(int serverAddress, int startAddress, int register) throws ModbusNumberException {
-        return new WriteSingleRegisterRequest(serverAddress, startAddress, register);
+        WriteSingleRegisterRequest request = new WriteSingleRegisterRequest();
+        setSimpleDataRequestParameters(request, serverAddress, startAddress);
+        request.setValue(register);
+        return request;
     }
 
     public ModbusRequest createMaskWriteRegister(int serverAddress, int startAddress, int and, int or) throws ModbusNumberException {
-        return new MaskWriteRegisterRequest(serverAddress, startAddress, and, or);
+        MaskWriteRegisterRequest request = new MaskWriteRegisterRequest();
+        setSimpleDataRequestParameters(request, serverAddress, startAddress);
+        request.setMaskAnd(and);
+        request.setMaskOr(or);
+        return request;
     }
 
     public ModbusRequest createReadExceptionStatus(int serverAddress) throws ModbusNumberException {
-        return new ReadExceptionStatusRequest(serverAddress);
+        return setBaseParameter(new ReadExceptionStatusRequest(), serverAddress);
     }
 
     public ModbusRequest createReportSlaveId(int serverAddress) throws ModbusNumberException {
-        return new ReportSlaveIdRequest(serverAddress);
+        return setBaseParameter(new ReportSlaveIdRequest(), serverAddress);
     }
 
     public ModbusRequest createGetCommEventCounter(int serverAddress) throws ModbusNumberException {
-        return new GetCommEventCounterRequest(serverAddress);
+        return setBaseParameter(new GetCommEventCounterRequest(), serverAddress);
     }
 
     public ModbusRequest createGetCommEventLog(int serverAddress) throws ModbusNumberException {
-        return new GetCommEventLogRequest(serverAddress);
+        return setBaseParameter(new GetCommEventLogRequest(), serverAddress);
     }
 
     public ModbusRequest createReadFifoQueue(int serverAddress, int fifoPointerAddress) throws ModbusNumberException {
-        return new ReadFifoQueueRequest(serverAddress, fifoPointerAddress);
+        ReadFifoQueueRequest request = new ReadFifoQueueRequest();
+        request.setServerAddress(serverAddress);
+        request.setStartAddress(fifoPointerAddress);
+        return request;
     }
 
     public ModbusRequest createReadFileRecord(int serverAddress, ModbusFileRecord[] records) throws ModbusNumberException {
-        return new ReadFileRecordRequest(serverAddress, records);
+        ReadFileRecordRequest request = new ReadFileRecordRequest();
+        request.setServerAddress(serverAddress);
+        request.addFileRecords(Arrays.asList(records));
+        return request;
     }
 
     public ModbusRequest createWriteFileRecord(int serverAddress, ModbusFileRecord record) throws ModbusNumberException {
-        return new WriteFileRecordRequest(serverAddress, record);
+        WriteFileRecordRequest request = new WriteFileRecordRequest();
+        request.setServerAddress(serverAddress);
+        request.setFileRecord(record);
+        return request;
     }
 
     /**
@@ -131,7 +188,8 @@ final public class ModbusRequestFactory implements ModbusMessageFactory {
      * @see com.invertor.modbus.utils.DiagnosticsSubFunctionCode
      */
     public ModbusRequest createDiagnostics(DiagnosticsSubFunctionCode subFunctionCode, int serverAddress, int data) throws ModbusNumberException {
-        DiagnosticsRequest request = new DiagnosticsRequest(serverAddress);
+        DiagnosticsRequest request = new DiagnosticsRequest();
+        request.setServerAddress(serverAddress);
         request.setSubFunctionCode(subFunctionCode);
         request.setSubFunctionData(data);
         return request;
@@ -340,7 +398,11 @@ final public class ModbusRequestFactory implements ModbusMessageFactory {
     }
 
     public ModbusRequest createReadDeviceIdentification(int serverAddress, int objectId, ReadDeviceIdentificationCode readDeviceId) throws ModbusNumberException {
-        return new ReadDeviceIdentificationRequest(serverAddress, objectId, readDeviceId);
+        ReadDeviceIdentificationRequest request = new ReadDeviceIdentificationRequest();
+        request.setServerAddress(serverAddress);
+        request.setObjectId(objectId);
+        request.setReadDeviceId(readDeviceId);
+        return request;
     }
 
     @Override
@@ -356,65 +418,66 @@ final public class ModbusRequestFactory implements ModbusMessageFactory {
         }
         switch (ModbusFunctionCode.get(functionCode)) {
             case READ_COILS:
-                msg = new ReadCoilsRequest(serverAddress);
+                msg = new ReadCoilsRequest();
                 break;
             case READ_DISCRETE_INPUTS:
-                msg = new ReadDiscreteInputsRequest(serverAddress);
+                msg = new ReadDiscreteInputsRequest();
                 break;
             case READ_HOLDING_REGISTERS:
-                msg = new ReadHoldingRegistersRequest(serverAddress);
+                msg = new ReadHoldingRegistersRequest();
                 break;
             case READ_INPUT_REGISTERS:
-                msg = new ReadInputRegistersRequest(serverAddress);
+                msg = new ReadInputRegistersRequest();
                 break;
             case WRITE_SINGLE_COIL:
-                msg = new WriteSingleCoilRequest(serverAddress);
+                msg = new WriteSingleCoilRequest();
                 break;
             case WRITE_SINGLE_REGISTER:
-                msg = new WriteSingleRegisterRequest(serverAddress);
+                msg = new WriteSingleRegisterRequest();
                 break;
             case WRITE_MULTIPLE_COILS:
-                msg = new WriteMultipleCoilsRequest(serverAddress);
+                msg = new WriteMultipleCoilsRequest();
                 break;
             case WRITE_MULTIPLE_REGISTERS:
-                msg = new WriteMultipleRegistersRequest(serverAddress);
+                msg = new WriteMultipleRegistersRequest();
                 break;
             case MASK_WRITE_REGISTER:
-                msg = new MaskWriteRegisterRequest(serverAddress);
+                msg = new MaskWriteRegisterRequest();
                 break;
             case READ_WRITE_MULTIPLE_REGISTERS:
-                msg = new ReadWriteMultipleRegistersRequest(serverAddress);
+                msg = new ReadWriteMultipleRegistersRequest();
                 break;
             case READ_FIFO_QUEUE:
-                msg = new ReadFifoQueueRequest(serverAddress);
+                msg = new ReadFifoQueueRequest();
                 break;
             case READ_FILE_RECORD:
-                msg = new ReadFileRecordRequest(serverAddress);
+                msg = new ReadFileRecordRequest();
                 break;
             case WRITE_FILE_RECORD:
-                msg = new WriteFileRecordRequest(serverAddress);
+                msg = new WriteFileRecordRequest();
                 break;
             case READ_EXCEPTION_STATUS:
-                msg = new ReadExceptionStatusRequest(serverAddress);
+                msg = new ReadExceptionStatusRequest();
                 break;
             case REPORT_SLAVE_ID:
-                msg = new ReportSlaveIdRequest(serverAddress);
+                msg = new ReportSlaveIdRequest();
                 break;
             case GET_COMM_EVENT_COUNTER:
-                msg = new GetCommEventCounterRequest(serverAddress);
+                msg = new GetCommEventCounterRequest();
                 break;
             case GET_COMM_EVENT_LOG:
-                msg = new GetCommEventLogRequest(serverAddress);
+                msg = new GetCommEventLogRequest();
                 break;
             case DIAGNOSTICS:
-                msg = new DiagnosticsRequest(serverAddress);
+                msg = new DiagnosticsRequest();
                 break;
             case ENCAPSULATED_INTERFACE_TRANSPORT:
-                msg = new EncapsulatedInterfaceTransportRequest(serverAddress);
+                msg = new EncapsulatedInterfaceTransportRequest();
                 break;
             default:
-                msg = new IllegalFunctionRequest(serverAddress, functionCode);
+                msg = new IllegalFunctionRequest(functionCode);
         }
+        msg.setServerAddress(serverAddress);
         msg.read(fifo);
         return msg;
     }

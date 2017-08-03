@@ -34,8 +34,13 @@ import java.io.IOException;
  */
 final public class GetCommEventCounterRequest extends ModbusRequest {
 
-    public GetCommEventCounterRequest(int serverAddress) throws ModbusNumberException {
-        super(serverAddress);
+    public GetCommEventCounterRequest() throws ModbusNumberException {
+        super();
+    }
+
+    @Override
+    protected Class getResponseClass() {
+        return GetCommEventCounterResponse.class;
     }
 
     @Override
@@ -50,7 +55,8 @@ final public class GetCommEventCounterRequest extends ModbusRequest {
 
     @Override
     public ModbusResponse process(DataHolder dataHolder) throws ModbusNumberException {
-        GetCommEventCounterResponse response = new GetCommEventCounterResponse(getServerAddress());
+        GetCommEventCounterResponse response = new GetCommEventCounterResponse();
+        response.setServerAddress(getServerAddress());
         response.setEventCount(dataHolder.getCommStatus().getEventCount());
         response.setStatus(dataHolder.getCommStatus().getCommStatus());
         return response;

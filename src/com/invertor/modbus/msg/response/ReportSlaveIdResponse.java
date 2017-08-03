@@ -35,8 +35,8 @@ final public class ReportSlaveIdResponse extends AbstractReadResponse {
 
     private byte[] slaveId;
 
-    public ReportSlaveIdResponse(int serverAddress) throws ModbusNumberException {
-        super(serverAddress);
+    public ReportSlaveIdResponse() {
+        super();
     }
 
     public byte[] getSlaveId() {

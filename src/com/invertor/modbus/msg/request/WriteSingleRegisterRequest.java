@@ -38,22 +38,20 @@ public class WriteSingleRegisterRequest extends AbstractDataRequest {
 
     private int value;
 
-    public WriteSingleRegisterRequest(int serverAddress) throws ModbusNumberException {
-        super(serverAddress);
+    public WriteSingleRegisterRequest() {
+        super();
     }
 
-    public WriteSingleRegisterRequest(int serverAddress, int startAddress, int value) throws ModbusNumberException {
-        super(serverAddress, startAddress);
-
-        if (!Modbus.checkRegisterValue(value)) {
-            throw new ModbusNumberException("Register value out of range", value);
-        }
-        setValue(value);
+    @Override
+    protected Class getResponseClass() {
+        return WriteSingleRegisterResponse.class;
     }
 
     @Override
     public ModbusResponse process(DataHolder dataHolder) throws ModbusNumberException {
-        WriteSingleRegisterResponse response = new WriteSingleRegisterResponse(getServerAddress(), getStartAddress(), getValue());
+        WriteSingleRegisterResponse response = (WriteSingleRegisterResponse) getResponse();
+        response.setStartAddress(getStartAddress());
+        response.setValue(getValue());
         try {
             dataHolder.writeHoldingRegister(getStartAddress(), getValue());
         } catch (ModbusProtocolException e) {
@@ -74,7 +72,11 @@ public class WriteSingleRegisterRequest extends AbstractDataRequest {
 
     @Override
     final protected void readData(ModbusInputStream fifo) throws IOException {
-        setValue(fifo.readShortBE());
+        try {
+            setValue(fifo.readShortBE());
+        } catch (ModbusNumberException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -96,7 +98,10 @@ public class WriteSingleRegisterRequest extends AbstractDataRequest {
         return value;
     }
 
-    public void setValue(int value) {
+    public void setValue(int value) throws ModbusNumberException {
+        if (!Modbus.checkRegisterValue(value)) {
+            throw new ModbusNumberException("Register value out of range", value);
+        }
         this.value = ((short) value) & 0xffff;
     }
 }

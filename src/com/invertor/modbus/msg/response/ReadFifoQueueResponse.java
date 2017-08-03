@@ -35,8 +35,8 @@ public class ReadFifoQueueResponse extends ModbusResponse {
 
     private byte[] bytes;
 
-    public ReadFifoQueueResponse(int serverAddress) throws ModbusNumberException {
-        super(serverAddress);
+    public ReadFifoQueueResponse() {
+        super();
     }
 
     private void checkFifoCount(int fifoCount) throws ModbusNumberException {

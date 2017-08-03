@@ -37,13 +37,8 @@ final public class WriteFileRecordResponse extends ModbusResponse {
     final static public int READ_SUB_REQ_LENGTH = 7;
     private ModbusFileRecord record = null;
 
-    public WriteFileRecordResponse(int serverAddress) throws ModbusNumberException {
-        super(serverAddress);
-    }
-
-    public WriteFileRecordResponse(int serverAddress, ModbusFileRecord record) throws ModbusNumberException {
-        super(serverAddress);
-        setFileRecord(record);
+    public WriteFileRecordResponse() {
+        super();
     }
 
     @Override

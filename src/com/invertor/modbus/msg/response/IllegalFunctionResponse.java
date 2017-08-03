@@ -29,17 +29,21 @@ import java.io.IOException;
  * email: vladislav.kochedykov@gmail.com
  */
 public class IllegalFunctionResponse extends ModbusResponse {
-    private int function;
+    private int functionCode = 0;
 
-    public IllegalFunctionResponse(int serverAddress, int function) throws ModbusNumberException {
-        super(serverAddress);
-        this.function = function;
+    public IllegalFunctionResponse(int functionCode) throws ModbusNumberException {
+        super();
+        this.functionCode = functionCode;
         setException();
     }
 
     @Override
     public int getFunction() {
-        return function;
+        return functionCode;
+    }
+
+    public void setFunctionCode(int functionCode) {
+        this.functionCode = functionCode;
     }
 
     @Override

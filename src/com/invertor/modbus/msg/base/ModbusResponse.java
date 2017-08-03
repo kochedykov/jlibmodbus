@@ -34,8 +34,8 @@ public abstract class ModbusResponse extends ModbusMessage {
 
     private volatile ModbusExceptionCode modbusExceptionCode = ModbusExceptionCode.NO_EXCEPTION;
 
-    protected ModbusResponse(int serverAddress) throws ModbusNumberException {
-        super(serverAddress);
+    protected ModbusResponse() {
+        super();
     }
 
     final public boolean isException() {

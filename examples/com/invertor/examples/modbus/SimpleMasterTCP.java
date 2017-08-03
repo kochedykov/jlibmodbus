@@ -6,8 +6,7 @@ import com.invertor.modbus.ModbusMasterFactory;
 import com.invertor.modbus.exception.ModbusIOException;
 import com.invertor.modbus.exception.ModbusNumberException;
 import com.invertor.modbus.exception.ModbusProtocolException;
-import com.invertor.modbus.msg.ModbusRequestFactory;
-import com.invertor.modbus.msg.base.ModbusRequest;
+import com.invertor.modbus.msg.request.ReadHoldingRegistersRequest;
 import com.invertor.modbus.msg.response.ReadHoldingRegistersResponse;
 import com.invertor.modbus.tcp.TcpParameters;
 
@@ -77,7 +76,10 @@ public class SimpleMasterTCP {
                 }
                 // also since 1.2.8.4 you can create your own request and process it with the master
                 offset = 0;
-                ModbusRequest request = ModbusRequestFactory.getInstance().createReadHoldingRegisters(slaveId, offset, quantity);
+                ReadHoldingRegistersRequest request = new ReadHoldingRegistersRequest();
+                request.setServerAddress(1);
+                request.setStartAddress(offset);
+                request.setTransactionId(0);
                 ReadHoldingRegistersResponse response = (ReadHoldingRegistersResponse) m.processRequest(request);
                 // you can get either int[] containing register values or byte[] containing raw bytes.
                 for (int value : response.getRegisters()) {

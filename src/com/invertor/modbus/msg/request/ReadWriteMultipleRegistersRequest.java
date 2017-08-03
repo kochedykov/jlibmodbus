@@ -39,16 +39,15 @@ public class ReadWriteMultipleRegistersRequest extends ModbusRequest {
     final private ReadHoldingRegistersRequest reader;
     final private WriteMultipleRegistersRequest writer;
 
-    public ReadWriteMultipleRegistersRequest(int serverAddress) throws ModbusNumberException {
-        super(serverAddress);
-        reader = new ReadHoldingRegistersRequest(serverAddress);
-        writer = new WriteMultipleRegistersRequest(serverAddress);
+    public ReadWriteMultipleRegistersRequest() throws ModbusNumberException {
+        super();
+        reader = new ReadHoldingRegistersRequest();
+        writer = new WriteMultipleRegistersRequest();
     }
 
-    public ReadWriteMultipleRegistersRequest(int serverAddress, int readAddress, int readQuantity, int writeAddress, int[] buffer) throws ModbusNumberException {
-        super(serverAddress);
-        reader = new ReadHoldingRegistersRequest(serverAddress, readAddress, readQuantity);
-        writer = new WriteMultipleRegistersRequest(serverAddress, writeAddress, buffer);
+    @Override
+    protected Class getResponseClass() {
+        return ReadWriteMultipleRegistersResponse.class;
     }
 
     @Override
@@ -64,7 +63,7 @@ public class ReadWriteMultipleRegistersRequest extends ModbusRequest {
 
     @Override
     public ModbusResponse process(DataHolder dataHolder) throws ModbusNumberException {
-        ReadWriteMultipleRegistersResponse response = new ReadWriteMultipleRegistersResponse(getServerAddress());
+        ReadWriteMultipleRegistersResponse response = (ReadWriteMultipleRegistersResponse) getResponse();
         try {
             dataHolder.writeHoldingRegisterRange(writer.getStartAddress(), writer.getRegisters());
             int[] range = dataHolder.readHoldingRegisterRange(reader.getStartAddress(), reader.getQuantity());
@@ -94,5 +93,40 @@ public class ReadWriteMultipleRegistersRequest extends ModbusRequest {
     @Override
     public int getFunction() {
         return ModbusFunctionCode.READ_WRITE_MULTIPLE_REGISTERS.toInt();
+    }
+
+    @Override
+    public void setServerAddress(int serverAddress) throws ModbusNumberException {
+        super.setServerAddress(serverAddress);
+
+        reader.setServerAddress(serverAddress);
+        writer.setServerAddress(serverAddress);
+    }
+
+    public int getReadAddress() {
+        return reader.getStartAddress();
+    }
+
+    /*
+    facade
+     */
+    public void setReadAddress(int address) throws ModbusNumberException {
+        reader.setStartAddress(address);
+    }
+
+    public int getReadQuantity() {
+        return reader.getQuantity();
+    }
+
+    public void setReadQuantity(int quantity) throws ModbusNumberException {
+        reader.setQuantity(quantity);
+    }
+
+    public void setWriteAddress(int address) throws ModbusNumberException {
+        writer.setStartAddress(address);
+    }
+
+    public void setWriteRegisters(int[] registers) throws ModbusNumberException {
+        writer.setRegisters(registers);
     }
 }

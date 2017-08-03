@@ -35,8 +35,13 @@ import java.io.IOException;
  */
 final public class ReadExceptionStatusRequest extends ModbusRequest {
 
-    public ReadExceptionStatusRequest(int serverAddress) throws ModbusNumberException {
-        super(serverAddress);
+    public ReadExceptionStatusRequest() throws ModbusNumberException {
+        super();
+    }
+
+    @Override
+    protected Class getResponseClass() {
+        return ReadExceptionStatusResponse.class;
     }
 
     @Override
@@ -51,7 +56,7 @@ final public class ReadExceptionStatusRequest extends ModbusRequest {
 
     @Override
     public ModbusResponse process(DataHolder dataHolder) throws ModbusNumberException {
-        ReadExceptionStatusResponse response = new ReadExceptionStatusResponse(getServerAddress());
+        ReadExceptionStatusResponse response = (ReadExceptionStatusResponse) getResponse();
         try {
             int exceptionStatus = dataHolder.readExceptionStatus();
             response.setExceptionStatus(exceptionStatus);

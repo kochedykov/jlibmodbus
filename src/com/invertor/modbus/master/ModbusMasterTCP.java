@@ -72,6 +72,7 @@ final public class ModbusMasterTCP extends ModbusMaster {
             super.sendRequest(msg);
         } catch (ModbusIOException e) {
             if (isKeepAlive()) {
+                disconnect();
                 connect();
                 super.sendRequest(msg);
             } else {

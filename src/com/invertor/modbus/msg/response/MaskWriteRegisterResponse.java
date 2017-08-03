@@ -1,6 +1,5 @@
 package com.invertor.modbus.msg.response;
 
-import com.invertor.modbus.exception.ModbusNumberException;
 import com.invertor.modbus.msg.base.AbstractWriteResponse;
 import com.invertor.modbus.net.stream.base.ModbusInputStream;
 import com.invertor.modbus.net.stream.base.ModbusOutputStream;
@@ -34,15 +33,8 @@ final public class MaskWriteRegisterResponse extends AbstractWriteResponse {
     private int maskAnd;
     private int maskOr;
 
-    public MaskWriteRegisterResponse(int serverAddress) throws ModbusNumberException {
-        super(serverAddress);
-    }
-
-    public MaskWriteRegisterResponse(int serverAddress, int startAddress, int maskAnd, int maskOr) throws ModbusNumberException {
-        super(serverAddress, startAddress);
-
-        setMaskAnd(maskAnd);
-        setMaskOr(maskOr);
+    public MaskWriteRegisterResponse() {
+        super();
     }
 
     @Override

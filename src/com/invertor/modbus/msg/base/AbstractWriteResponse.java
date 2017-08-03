@@ -32,22 +32,17 @@ import java.io.IOException;
 public abstract class AbstractWriteResponse extends ModbusResponse {
     private int startAddress = 0;
 
-    protected AbstractWriteResponse(int serverAddress) throws ModbusNumberException {
-        super(serverAddress);
-    }
-
-    protected AbstractWriteResponse(int serverAddress, int startAddress) throws ModbusNumberException {
-        super(serverAddress);
-
-        if (!(Modbus.checkStartAddress(startAddress)))
-            throw new ModbusNumberException("Error in start address", startAddress);
-
-        setStartAddress(startAddress);
+    protected AbstractWriteResponse() {
+        super();
     }
 
     @Override
     final protected void readResponse(ModbusInputStream fifo) throws IOException {
-        setStartAddress(fifo.readShortBE());
+        try {
+            setStartAddress(fifo.readShortBE());
+        } catch (ModbusNumberException e) {
+            e.printStackTrace();
+        }
         readValue(fifo);
     }
 
@@ -65,7 +60,9 @@ public abstract class AbstractWriteResponse extends ModbusResponse {
         return startAddress;
     }
 
-    private void setStartAddress(int startAddress) {
+    public void setStartAddress(int startAddress) throws ModbusNumberException {
+        if (!(Modbus.checkStartAddress(startAddress)))
+            throw new ModbusNumberException("Error in start address", startAddress);
         this.startAddress = startAddress;
     }
 

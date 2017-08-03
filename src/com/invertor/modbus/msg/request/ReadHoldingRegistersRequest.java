@@ -33,17 +33,19 @@ import com.invertor.modbus.utils.ModbusFunctionCode;
 
 public class ReadHoldingRegistersRequest extends AbstractMultipleRequest {
 
-    public ReadHoldingRegistersRequest(int serverAddress) throws ModbusNumberException {
-        super(serverAddress);
+    public ReadHoldingRegistersRequest() throws ModbusNumberException {
+        super();
     }
 
-    public ReadHoldingRegistersRequest(int serverAddress, int startAddress, int quantity) throws ModbusNumberException {
-        super(serverAddress, startAddress, quantity);
+    @Override
+    protected Class getResponseClass() {
+        return ReadHoldingRegistersResponse.class;
     }
 
     @Override
     public ModbusResponse process(DataHolder dataHolder) throws ModbusNumberException {
-        ReadHoldingRegistersResponse response = new ReadHoldingRegistersResponse(getServerAddress());
+        ReadHoldingRegistersResponse response = (ReadHoldingRegistersResponse) getResponse();
+        response.setServerAddress(getServerAddress());
         try {
             int[] range = dataHolder.readHoldingRegisterRange(getStartAddress(), getQuantity());
             response.setBuffer(range);

@@ -9,8 +9,8 @@ import com.invertor.modbus.utils.DataUtils;
 import com.invertor.modbus.utils.ModbusFunctionCode;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.LinkedList;
 import java.util.List;
 
 /*
@@ -37,15 +37,15 @@ import java.util.List;
 final public class ReadFileRecordResponse extends AbstractReadResponse {
 
     public static final int READ_RESP_SUB_REQ_LENGTH = 2;
-    private ModbusFileRecord[] fileRecords = null;
+    private List<ModbusFileRecord> records;
 
-    public ReadFileRecordResponse(int serverAddress) throws ModbusNumberException {
-        super(serverAddress);
+    public ReadFileRecordResponse() throws ModbusNumberException {
+        super();
+        this.records = new ArrayList<ModbusFileRecord>();
     }
 
     @Override
     protected void readData(ModbusInputStream fifo) throws IOException, ModbusNumberException {
-        List<ModbusFileRecord> records = new LinkedList<ModbusFileRecord>();
         int response_byte_count = getByteCount();
         int read = 0;
         int i = 0;
@@ -82,11 +82,12 @@ final public class ReadFileRecordResponse extends AbstractReadResponse {
     }
 
     public ModbusFileRecord[] getFileRecords() {
-        return Arrays.copyOf(fileRecords, fileRecords.length);
+        return (ModbusFileRecord[]) records.toArray();
     }
 
     public void setFileRecords(ModbusFileRecord[] fileRecords) throws ModbusNumberException {
-        this.fileRecords = Arrays.copyOf(fileRecords, fileRecords.length);
+        records = Arrays.asList(fileRecords);
+
         int byteCount = 0;
         for (ModbusFileRecord r : getFileRecords()) {
             byteCount += 2 + r.getRecordLength() * 2;
