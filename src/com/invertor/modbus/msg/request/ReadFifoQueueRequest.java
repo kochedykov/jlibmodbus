@@ -35,7 +35,7 @@ import java.io.IOException;
  */
 public class ReadFifoQueueRequest extends AbstractDataRequest {
 
-    public ReadFifoQueueRequest() throws ModbusNumberException {
+    public ReadFifoQueueRequest() {
         super();
     }
 

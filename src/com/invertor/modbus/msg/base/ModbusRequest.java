@@ -29,6 +29,7 @@ import java.lang.reflect.InvocationTargetException;
  * Authors: Vladislav Y. Kochedykov, software engineer.
  * email: vladislav.kochedykov@gmail.com
  */
+@SuppressWarnings("unchecked")
 abstract public class ModbusRequest extends ModbusMessage {
 
     final private ModbusResponse response;
@@ -36,15 +37,18 @@ abstract public class ModbusRequest extends ModbusMessage {
     public ModbusRequest() {
         ModbusResponse response = null;
         try {
-            Constructor<ModbusResponse> constructor = getResponseClass().getConstructor();
-            response = constructor.newInstance();
+            final Constructor<ModbusResponse>[] constructors = (Constructor<ModbusResponse>[]) getResponseClass().getConstructors();
+            for (Constructor<ModbusResponse> c : constructors) {
+                if (c.getParameterTypes().length == 0) {
+                    response = c.newInstance();
+                    break;
+                }
+            }
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         } catch (InstantiationException e) {
             e.printStackTrace();
         } catch (InvocationTargetException e) {
-            e.printStackTrace();
-        } catch (NoSuchMethodException e) {
             e.printStackTrace();
         } finally {
             this.response = response;

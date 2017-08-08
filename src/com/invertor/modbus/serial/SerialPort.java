@@ -33,7 +33,7 @@ public abstract class SerialPort {
     final private SerialParameters serialParameters;
     private int readTimeout = Modbus.MAX_RESPONSE_TIMEOUT;
 
-    public SerialPort(SerialParameters sp) throws SerialPortException {
+    public SerialPort(SerialParameters sp) {
         this.serialParameters = sp;
     }
 

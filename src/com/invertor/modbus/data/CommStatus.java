@@ -101,7 +101,7 @@ public class CommStatus {
      * Comm event queue. Capacity = PDU length(254) - server_address - function_code - 3 x 2 Bytes,
      * (Length of Status, Event Count and Message Count).
      */
-    private LinkedList<ModbusCommEvent> eventQueue = new LinkedList<ModbusCommEvent>();
+    final private LinkedList<ModbusCommEvent> eventQueue = new LinkedList<ModbusCommEvent>();
 
     public CommStatus() {
     }

@@ -41,7 +41,7 @@ final public class WriteFileRecordRequest extends ModbusRequest {
     final static public int READ_SUB_REQ_LENGTH = 7;
     private ModbusFileRecord fileRecord = null;
 
-    public WriteFileRecordRequest() throws ModbusNumberException {
+    public WriteFileRecordRequest() {
         super();
     }
 

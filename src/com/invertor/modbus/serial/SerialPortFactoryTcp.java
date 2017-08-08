@@ -71,7 +71,7 @@ public class SerialPortFactoryTcp implements SerialPortAbstractFactory {
         private InputStreamTCP is;
         private OutputStreamTCP os;
 
-        public SerialPortViaTCP(SerialParameters sp) throws SerialPortException {
+        public SerialPortViaTCP(SerialParameters sp) {
             super(sp);
         }
 

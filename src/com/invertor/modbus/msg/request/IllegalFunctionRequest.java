@@ -35,7 +35,7 @@ public class IllegalFunctionRequest extends ModbusRequest {
 
     final private int functionCode;
 
-    public IllegalFunctionRequest(int functionCode) throws ModbusNumberException {
+    public IllegalFunctionRequest(int functionCode) {
         super();
 
         this.functionCode = functionCode;

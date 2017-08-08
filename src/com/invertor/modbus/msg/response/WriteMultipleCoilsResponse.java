@@ -27,7 +27,7 @@ import com.invertor.modbus.utils.ModbusFunctionCode;
  */
 final public class WriteMultipleCoilsResponse extends WriteSingleRegisterResponse {
 
-    public WriteMultipleCoilsResponse() throws ModbusNumberException {
+    public WriteMultipleCoilsResponse() {
         super();
     }
 

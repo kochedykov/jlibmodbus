@@ -29,7 +29,7 @@ public class SerialPortJSSC extends SerialPort {
 
     final private jssc.SerialPort port;
 
-    public SerialPortJSSC(SerialParameters sp) throws SerialPortException {
+    public SerialPortJSSC(SerialParameters sp) {
         super(sp);
         this.port = new jssc.SerialPort(sp.getDevice());
     }

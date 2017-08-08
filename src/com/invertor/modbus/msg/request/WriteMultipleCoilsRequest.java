@@ -37,7 +37,7 @@ import java.io.IOException;
 
 final public class WriteMultipleCoilsRequest extends AbstractWriteMultipleRequest {
 
-    public WriteMultipleCoilsRequest() throws ModbusNumberException {
+    public WriteMultipleCoilsRequest() {
         super();
     }
 

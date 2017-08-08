@@ -72,7 +72,7 @@ public class LoggingInputStream extends ModbusInputStream {
 
     public void log() {
         if (Modbus.isLoggingEnabled()) {
-            Modbus.log().info(new StringBuilder().append(LOG_MESSAGE_TITLE).append(DataUtils.toAscii(fifo.toByteArray())).toString());
+            Modbus.log().info(LOG_MESSAGE_TITLE + DataUtils.toAscii(fifo.toByteArray()));
             fifo.reset();
         }
     }

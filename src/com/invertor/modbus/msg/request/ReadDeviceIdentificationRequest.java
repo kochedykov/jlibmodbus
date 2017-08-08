@@ -1,6 +1,5 @@
 package com.invertor.modbus.msg.request;
 
-import com.invertor.modbus.exception.ModbusNumberException;
 import com.invertor.modbus.msg.base.mei.MEIReadDeviceIdentification;
 import com.invertor.modbus.msg.base.mei.ReadDeviceIdentificationCode;
 import com.invertor.modbus.utils.MEITypeCode;
@@ -28,7 +27,7 @@ import com.invertor.modbus.utils.MEITypeCode;
  */
 public class ReadDeviceIdentificationRequest extends EncapsulatedInterfaceTransportRequest {
 
-    public ReadDeviceIdentificationRequest() throws ModbusNumberException {
+    public ReadDeviceIdentificationRequest() {
         super();
         setMEIType(MEITypeCode.READ_DEVICE_IDENTIFICATION);
     }

@@ -31,7 +31,7 @@ import com.invertor.modbus.utils.ModbusFunctionCode;
 
 final public class ReadInputRegistersRequest extends ReadHoldingRegistersRequest {
 
-    public ReadInputRegistersRequest() throws ModbusNumberException {
+    public ReadInputRegistersRequest() {
         super();
     }
 

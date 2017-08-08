@@ -64,7 +64,7 @@ public class DiagnosticsRequest extends ModbusRequest {
     private DiagnosticsSubFunctionCode subFunctionCode = DiagnosticsSubFunctionCode.RESERVED;
     private int subFunctionData = 0;
 
-    public DiagnosticsRequest() throws ModbusNumberException {
+    public DiagnosticsRequest() {
         super();
     }
 

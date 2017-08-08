@@ -39,7 +39,7 @@ public abstract class HoldingRegisters extends Observable {
 
     abstract public int get(int offset) throws IllegalDataAddressException;
 
-    abstract public int[] getRange(int offset, int quantity) throws IllegalDataAddressException, IllegalDataValueException;
+    abstract public int[] getRange(int offset, int quantity) throws IllegalDataAddressException;
 
     public void set(int offset, int value) throws IllegalDataAddressException, IllegalDataValueException {
         /*

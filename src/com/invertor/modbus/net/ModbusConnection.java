@@ -32,7 +32,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 abstract public class ModbusConnection {
 
     private int readTimeout = Modbus.MAX_RESPONSE_TIMEOUT;
-    private AtomicBoolean opened = new AtomicBoolean(false);
+    final private AtomicBoolean opened = new AtomicBoolean(false);
 
     abstract public ModbusOutputStream getOutputStream();
 
@@ -67,8 +67,8 @@ abstract public class ModbusConnection {
         close();
     }
 
-    public boolean isOpened() {
-        return opened.get();
+    public boolean isNotOpened() {
+        return !opened.get();
     }
 
     public void setOpened(boolean opened) {

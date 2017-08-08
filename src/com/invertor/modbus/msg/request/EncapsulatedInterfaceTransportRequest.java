@@ -2,7 +2,6 @@ package com.invertor.modbus.msg.request;
 
 import com.invertor.modbus.data.DataHolder;
 import com.invertor.modbus.exception.ModbusNumberException;
-import com.invertor.modbus.exception.ModbusProtocolException;
 import com.invertor.modbus.msg.base.ModbusRequest;
 import com.invertor.modbus.msg.base.ModbusResponse;
 import com.invertor.modbus.msg.base.mei.MEIFactory;
@@ -40,7 +39,7 @@ public class EncapsulatedInterfaceTransportRequest extends ModbusRequest {
 
     private ModbusEncapsulatedInterface mei = null;
 
-    public EncapsulatedInterfaceTransportRequest() throws ModbusNumberException {
+    public EncapsulatedInterfaceTransportRequest() {
         super();
     }
 
@@ -77,13 +76,8 @@ public class EncapsulatedInterfaceTransportRequest extends ModbusRequest {
     public ModbusResponse process(DataHolder dataHolder) throws ModbusNumberException {
         EncapsulatedInterfaceTransportResponse response = new EncapsulatedInterfaceTransportResponse();
         response.setServerAddress(getServerAddress());
+        mei.process(dataHolder);
         response.setMei(mei);
-        try {
-            response.getMei().process(dataHolder);
-        } catch (ModbusProtocolException e) {
-            response.setException();
-            response.setModbusExceptionCode(e.getException().getValue());
-        }
         return response;
     }
 
@@ -97,10 +91,7 @@ public class EncapsulatedInterfaceTransportRequest extends ModbusRequest {
 
     @Override
     protected boolean validateResponseImpl(ModbusResponse response) {
-        if (!(response instanceof EncapsulatedInterfaceTransportResponse)) {
-            return false;
-        }
-        return mei.getTypeCode() == ((EncapsulatedInterfaceTransportResponse) response).getMei().getTypeCode();
+        return response instanceof EncapsulatedInterfaceTransportResponse && mei.getTypeCode() == ((EncapsulatedInterfaceTransportResponse) response).getMei().getTypeCode();
     }
 
     @Override

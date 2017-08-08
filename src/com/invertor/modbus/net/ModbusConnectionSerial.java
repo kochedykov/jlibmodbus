@@ -55,7 +55,7 @@ abstract class ModbusConnectionSerial extends ModbusConnection {
 
     @Override
     public void open() throws ModbusIOException {
-        if (!isOpened()) {
+        if (isNotOpened()) {
             try {
                 this.serial.open();
                 setOpened(true);

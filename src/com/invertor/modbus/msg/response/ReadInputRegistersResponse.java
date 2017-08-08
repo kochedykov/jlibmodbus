@@ -1,6 +1,5 @@
 package com.invertor.modbus.msg.response;
 
-import com.invertor.modbus.exception.ModbusNumberException;
 import com.invertor.modbus.utils.ModbusFunctionCode;
 
 /*
@@ -26,7 +25,7 @@ import com.invertor.modbus.utils.ModbusFunctionCode;
  */
 final public class ReadInputRegistersResponse extends ReadHoldingRegistersResponse {
 
-    public ReadInputRegistersResponse() throws ModbusNumberException {
+    public ReadInputRegistersResponse() {
         super();
     }
 

@@ -33,7 +33,7 @@ import com.invertor.modbus.utils.ModbusFunctionCode;
 
 public class ReadHoldingRegistersRequest extends AbstractMultipleRequest {
 
-    public ReadHoldingRegistersRequest() throws ModbusNumberException {
+    public ReadHoldingRegistersRequest() {
         super();
     }
 

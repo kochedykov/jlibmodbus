@@ -1,7 +1,5 @@
 package com.invertor.modbus.data.mei;
 
-import com.invertor.modbus.exception.IllegalDataAddressException;
-
 import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.TreeMap;
@@ -94,7 +92,7 @@ public class ReadDeviceIdentificationInterface {
         setValue(OBJECT_ID_MAJOR_MINOR_REVISION, value);
     }
 
-    public DataObject getVendorUrl() throws IllegalDataAddressException {
+    public DataObject getVendorUrl() {
         return getValue(OBJECT_ID_VENDOR_URL);
     }
 
@@ -102,7 +100,7 @@ public class ReadDeviceIdentificationInterface {
         setValue(OBJECT_ID_VENDOR_URL, value);
     }
 
-    public DataObject getProductName() throws IllegalDataAddressException {
+    public DataObject getProductName() {
         return getValue(OBJECT_ID_PRODUCT_NAME);
     }
 
@@ -110,7 +108,7 @@ public class ReadDeviceIdentificationInterface {
         setValue(OBJECT_ID_PRODUCT_NAME, value);
     }
 
-    public DataObject getModelName() throws IllegalDataAddressException {
+    public DataObject getModelName() {
         return getValue(OBJECT_ID_MODEL_NAME);
     }
 
@@ -118,7 +116,7 @@ public class ReadDeviceIdentificationInterface {
         setValue(OBJECT_ID_MODEL_NAME, value);
     }
 
-    public DataObject getUserApplicationName() throws IllegalDataAddressException {
+    public DataObject getUserApplicationName() {
         return getValue(OBJECT_ID_USER_APPLICATION_NAME);
     }
 
@@ -126,15 +124,15 @@ public class ReadDeviceIdentificationInterface {
         setValue(OBJECT_ID_USER_APPLICATION_NAME, value);
     }
 
-    public DataObject[] getBasic() throws IllegalDataAddressException {
+    public DataObject[] getBasic() {
         return dataObjectsBasic.toArray();
     }
 
-    public DataObject[] getRegular() throws IllegalDataAddressException {
+    public DataObject[] getRegular() {
         return dataObjectsRegular.toArray();
     }
 
-    public DataObject[] getExtended() throws IllegalDataAddressException {
+    public DataObject[] getExtended() {
         return dataObjectsExtended.toArray();
     }
 
@@ -162,7 +160,7 @@ public class ReadDeviceIdentificationInterface {
 
     static private class DataObjectsHolder {
         final private int capacity;
-        TreeMap<Integer, DataObject> map;
+        final TreeMap<Integer, DataObject> map;
 
         public DataObjectsHolder(int capacity) {
             this.capacity = capacity;

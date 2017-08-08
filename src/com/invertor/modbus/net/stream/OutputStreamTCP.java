@@ -36,16 +36,6 @@ public class OutputStreamTCP extends LoggingOutputStream {
             final private BufferedOutputStream os = new BufferedOutputStream(socket.getOutputStream());
 
             @Override
-            public void write(byte[] b) throws IOException {
-                super.write(b);
-            }
-
-            @Override
-            public void write(int b) throws IOException {
-                super.write(b);
-            }
-
-            @Override
             public void flush() throws IOException {
                 try {
                     os.write(toByteArray());

@@ -31,7 +31,7 @@ import java.io.IOException;
 public class IllegalFunctionResponse extends ModbusResponse {
     private int functionCode = 0;
 
-    public IllegalFunctionResponse(int functionCode) throws ModbusNumberException {
+    public IllegalFunctionResponse(int functionCode) {
         super();
         this.functionCode = functionCode;
         setException();

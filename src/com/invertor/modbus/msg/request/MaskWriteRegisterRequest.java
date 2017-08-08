@@ -38,7 +38,7 @@ final public class MaskWriteRegisterRequest extends AbstractDataRequest {
     private int maskAnd;
     private int maskOr;
 
-    public MaskWriteRegisterRequest() throws ModbusNumberException {
+    public MaskWriteRegisterRequest() {
         super();
     }
 

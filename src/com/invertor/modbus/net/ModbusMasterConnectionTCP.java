@@ -59,7 +59,7 @@ class ModbusMasterConnectionTCP extends ModbusConnection {
 
     @Override
     public void open() throws ModbusIOException {
-        if (!isOpened()) {
+        if (isNotOpened()) {
             if (parameters != null) {
                 Socket socket = new Socket();
                 InetSocketAddress isa = new InetSocketAddress(parameters.getHost(), parameters.getPort());

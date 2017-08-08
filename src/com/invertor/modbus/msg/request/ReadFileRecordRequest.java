@@ -42,7 +42,7 @@ final public class ReadFileRecordRequest extends ModbusRequest {
     final static public int READ__SUB_REQ_LENGTH = 7;
     final List<ModbusFileRecord> records = new ArrayList<ModbusFileRecord>();
 
-    public ReadFileRecordRequest() throws ModbusNumberException {
+    public ReadFileRecordRequest() {
         super();
     }
 

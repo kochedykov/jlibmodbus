@@ -35,7 +35,7 @@ import java.io.IOException;
  */
 final public class ReportSlaveIdRequest extends ModbusRequest {
 
-    public ReportSlaveIdRequest() throws ModbusNumberException {
+    public ReportSlaveIdRequest() {
         super();
     }
 

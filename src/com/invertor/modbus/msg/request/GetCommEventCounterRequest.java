@@ -34,7 +34,7 @@ import java.io.IOException;
  */
 final public class GetCommEventCounterRequest extends ModbusRequest {
 
-    public GetCommEventCounterRequest() throws ModbusNumberException {
+    public GetCommEventCounterRequest() {
         super();
     }
 

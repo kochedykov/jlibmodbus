@@ -28,9 +28,9 @@ package com.invertor.modbus.utils;
 public class LRC {
     static public int calc(byte[] b) {
         int lrc = 0;
-        byte[] buffer = b;
-        for (int i = 0; i < b.length; i++) {
-            lrc += buffer[i];
+
+        for (byte aB : b) {
+            lrc += aB;
         }
         return (byte) (-lrc) & 0xff;
     }

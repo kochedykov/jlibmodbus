@@ -32,8 +32,8 @@ abstract public class ModbusSlave {
 
     private int serverAddress = 1;
     private DataHolder dataHolder = new DataHolder();
-    private AtomicBoolean listening = new AtomicBoolean(false);
-    private AtomicBoolean broadcastEnabled = new AtomicBoolean(false);
+    final private AtomicBoolean listening = new AtomicBoolean(false);
+    final private AtomicBoolean broadcastEnabled = new AtomicBoolean(false);
     /**
      * a timeout for single connection handler. if master makes a new connection for every data request,
      * we should close it's last connection as soon as possible. Else, if master is working through a single connection,

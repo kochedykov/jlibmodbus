@@ -57,7 +57,7 @@ public class DataHolder {
         return holdingRegisters.get(offset);
     }
 
-    public int[] readHoldingRegisterRange(int offset, int quantity) throws IllegalDataAddressException, IllegalDataValueException {
+    public int[] readHoldingRegisterRange(int offset, int quantity) throws IllegalDataAddressException {
         checkPointer(holdingRegisters, offset);
         return holdingRegisters.getRange(offset, quantity);
     }
@@ -72,7 +72,7 @@ public class DataHolder {
         holdingRegisters.setRange(offset, range);
     }
 
-    public int[] readInputRegisterRange(int offset, int quantity) throws IllegalDataAddressException, IllegalDataValueException {
+    public int[] readInputRegisterRange(int offset, int quantity) throws IllegalDataAddressException {
         checkPointer(inputRegisters, offset);
         return inputRegisters.getRange(offset, quantity);
     }
@@ -115,11 +115,10 @@ public class DataHolder {
         return discreteInputs.getRange(offset, quantity);
     }
 
-    public ModbusFileRecord readFileRecord(ModbusFileRecord fileRecord) throws IllegalDataAddressException, IllegalDataValueException {
+    public void readFileRecord(ModbusFileRecord fileRecord) throws IllegalDataAddressException, IllegalDataValueException {
         ModbusFile file = getFile(fileRecord.getFileNumber());
         checkPointer(file, fileRecord.getFileNumber());
         fileRecord.writeRegisters(file.read(fileRecord.getRecordNumber(), fileRecord.getRecordLength()));
-        return fileRecord;
     }
 
     public void writeFileRecord(ModbusFileRecord fileRecord) throws IllegalDataAddressException, IllegalDataValueException {

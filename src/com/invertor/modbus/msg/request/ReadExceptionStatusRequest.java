@@ -35,7 +35,7 @@ import java.io.IOException;
  */
 final public class ReadExceptionStatusRequest extends ModbusRequest {
 
-    public ReadExceptionStatusRequest() throws ModbusNumberException {
+    public ReadExceptionStatusRequest() {
         super();
     }
 

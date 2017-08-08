@@ -34,12 +34,12 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class SerialPortPJC extends SerialPort implements SerialPortEventListener {
 
     private purejavacomm.SerialPort port;
-    private AtomicBoolean opened = new AtomicBoolean(false);
+    final private AtomicBoolean opened = new AtomicBoolean(false);
     private InputStream in;
     private OutputStream out;
 
 
-    public SerialPortPJC(SerialParameters sp) throws SerialPortException {
+    public SerialPortPJC(SerialParameters sp) {
         super(sp);
     }
 

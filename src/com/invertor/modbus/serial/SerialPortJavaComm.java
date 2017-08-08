@@ -34,12 +34,12 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class SerialPortJavaComm extends com.invertor.modbus.serial.SerialPort implements SerialPortEventListener {
 
     private javax.comm.SerialPort port;
-    private AtomicBoolean opened = new AtomicBoolean(false);
+    final private AtomicBoolean opened = new AtomicBoolean(false);
     private InputStream in;
     private OutputStream out;
 
 
-    public SerialPortJavaComm(SerialParameters sp) throws SerialPortException {
+    public SerialPortJavaComm(SerialParameters sp) {
         super(sp);
     }
 

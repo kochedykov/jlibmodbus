@@ -38,7 +38,7 @@ import java.util.Arrays;
 
 final public class WriteMultipleRegistersRequest extends AbstractWriteMultipleRequest {
 
-    public WriteMultipleRegistersRequest() throws ModbusNumberException {
+    public WriteMultipleRegistersRequest() {
         super();
     }
 

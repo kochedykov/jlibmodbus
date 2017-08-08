@@ -39,7 +39,7 @@ public class ReadWriteMultipleRegistersRequest extends ModbusRequest {
     final private ReadHoldingRegistersRequest reader;
     final private WriteMultipleRegistersRequest writer;
 
-    public ReadWriteMultipleRegistersRequest() throws ModbusNumberException {
+    public ReadWriteMultipleRegistersRequest() {
         super();
         reader = new ReadHoldingRegistersRequest();
         writer = new WriteMultipleRegistersRequest();

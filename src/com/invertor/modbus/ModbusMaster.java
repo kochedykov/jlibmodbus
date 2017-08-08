@@ -117,8 +117,7 @@ abstract public class ModbusMaster {
      *
      * @param request an instance of ModbusRequest.
      * @return an instance of ModbusResponse.
-     * @throws ModbusProtocolException if
-     * @throws ModbusNumberException
+     * @throws ModbusProtocolException
      * @throws ModbusIOException
      * @see ModbusRequestFactory
      * @see ModbusRequest
@@ -126,8 +125,7 @@ abstract public class ModbusMaster {
      * @see com.invertor.modbus.msg.response
      * @see com.invertor.modbus.msg.request
      */
-    public ModbusResponse processRequest(ModbusRequest request) throws ModbusProtocolException,
-            ModbusNumberException, ModbusIOException {
+    public ModbusResponse processRequest(ModbusRequest request) throws ModbusProtocolException, ModbusIOException {
         sendRequest(request);
         ModbusResponse msg;
         do {

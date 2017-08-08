@@ -36,7 +36,7 @@ import java.net.Socket;
  */
 class ModbusTransportTCP extends ModbusTransport {
 
-    ModbusTransportTCP(Socket socket) throws ModbusIOException, IOException {
+    ModbusTransportTCP(Socket socket) throws IOException {
         super(new InputStreamTCP(socket), new OutputStreamTCP(socket));
     }
 
@@ -60,10 +60,5 @@ class ModbusTransportTCP extends ModbusTransport {
         header.setPduSize(msg.size());
         header.write(os);
         msg.write(os);
-    }
-
-    @Override
-    public void close() throws IOException {
-        super.close();
     }
 }

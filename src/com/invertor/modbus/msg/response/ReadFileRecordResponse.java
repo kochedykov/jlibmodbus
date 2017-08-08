@@ -39,7 +39,7 @@ final public class ReadFileRecordResponse extends AbstractReadResponse {
     public static final int READ_RESP_SUB_REQ_LENGTH = 2;
     private List<ModbusFileRecord> records;
 
-    public ReadFileRecordResponse() throws ModbusNumberException {
+    public ReadFileRecordResponse() {
         super();
         this.records = new ArrayList<ModbusFileRecord>();
     }
