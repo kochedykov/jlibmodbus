@@ -30,7 +30,11 @@ final public class Modbus {
     final static public int MAX_CONNECTION_TIMEOUT = 3000;
     final static public int MAX_RESPONSE_TIMEOUT = 1000;
     final static public int MAX_PDU_LENGTH = 254;
-    final static public int MIN_PDU_LENGTH = 3;
+    /*
+       slave id + function code.
+       Note that actually the modbus pdu doesn't include the "slave id" field.
+     */
+    final static public int MIN_PDU_LENGTH = 2;
     //final static public int MAX_TCP_ADU_LENGTH = 260;
     final static public int MAX_RTU_ADU_LENGTH = 256;
     final static public int MAX_REGISTER_VALUE = 0xFFFF;
