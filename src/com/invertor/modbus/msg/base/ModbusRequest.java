@@ -62,7 +62,7 @@ abstract public class ModbusRequest extends ModbusMessage {
         getResponse().setServerAddress(serverAddress);
     }
 
-    public ModbusResponse getResponse() {
+    protected ModbusResponse getResponse() {
         return response;
     }
 

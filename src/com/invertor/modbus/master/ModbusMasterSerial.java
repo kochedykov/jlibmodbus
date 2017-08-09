@@ -5,6 +5,7 @@ import com.invertor.modbus.data.CommStatus;
 import com.invertor.modbus.exception.ModbusIOException;
 import com.invertor.modbus.exception.ModbusNumberException;
 import com.invertor.modbus.exception.ModbusProtocolException;
+import com.invertor.modbus.msg.ModbusRequestBuilder;
 import com.invertor.modbus.msg.base.ModbusRequest;
 import com.invertor.modbus.msg.response.*;
 
@@ -36,21 +37,21 @@ abstract public class ModbusMasterSerial extends ModbusMaster {
     @Override
     final synchronized public int readExceptionStatus(int serverAddress) throws
             ModbusProtocolException, ModbusNumberException, ModbusIOException {
-        ModbusRequest request = requestFactory.createReadExceptionStatus(serverAddress);
+        ModbusRequest request = ModbusRequestBuilder.getInstance().buildReadExceptionStatus(serverAddress);
         ReadExceptionStatusResponse response = (ReadExceptionStatusResponse) processRequest(request);
         return response.getExceptionStatus();
     }
 
     @Override
     final synchronized public byte[] reportSlaveId(int serverAddress) throws ModbusProtocolException, ModbusNumberException, ModbusIOException {
-        ModbusRequest request = requestFactory.createReportSlaveId(serverAddress);
+        ModbusRequest request = ModbusRequestBuilder.getInstance().buildReportSlaveId(serverAddress);
         ReportSlaveIdResponse response = (ReportSlaveIdResponse) processRequest(request);
         return response.getSlaveId();
     }
 
     @Override
     final synchronized public CommStatus getCommEventCounter(int serverAddress) throws ModbusProtocolException, ModbusNumberException, ModbusIOException {
-        ModbusRequest request = requestFactory.createGetCommEventCounter(serverAddress);
+        ModbusRequest request = ModbusRequestBuilder.getInstance().buildGetCommEventCounter(serverAddress);
         GetCommEventCounterResponse response = (GetCommEventCounterResponse) processRequest(request);
         commStatus.setCommStatus(response.getStatus());
         commStatus.setEventCount(response.getEventCount());
@@ -59,7 +60,7 @@ abstract public class ModbusMasterSerial extends ModbusMaster {
 
     @Override
     final synchronized public CommStatus getCommEventLog(int serverAddress) throws ModbusProtocolException, ModbusNumberException, ModbusIOException {
-        ModbusRequest request = requestFactory.createGetCommEventLog(serverAddress);
+        ModbusRequest request = ModbusRequestBuilder.getInstance().buildGetCommEventLog(serverAddress);
         GetCommEventLogResponse response = (GetCommEventLogResponse) processRequest(request);
         commStatus.setCommStatus(response.getStatus());
         commStatus.setEventCount(response.getEventCount());
@@ -70,94 +71,94 @@ abstract public class ModbusMasterSerial extends ModbusMaster {
 
     @Override
     final synchronized public void diagnosticsReturnQueryData(int serverAddress, int queryData) throws ModbusNumberException, ModbusProtocolException, ModbusIOException {
-        processRequest(requestFactory.createReturnQueryData(serverAddress, queryData));
+        processRequest(ModbusRequestBuilder.getInstance().buildReturnQueryData(serverAddress, queryData));
     }
 
     @Override
     final synchronized public void diagnosticsRestartCommunicationsOption(int serverAddress, boolean clearLog) throws ModbusNumberException, ModbusProtocolException, ModbusIOException {
-        processRequest(requestFactory.createRestartCommunicationsOption(serverAddress, clearLog));
+        processRequest(ModbusRequestBuilder.getInstance().buildRestartCommunicationsOption(serverAddress, clearLog));
     }
 
     @Override
     final synchronized public int diagnosticsReturnDiagnosticRegister(int serverAddress) throws ModbusNumberException, ModbusProtocolException, ModbusIOException {
-        ModbusRequest request = requestFactory.createReturnDiagnosticRegister(serverAddress);
+        ModbusRequest request = ModbusRequestBuilder.getInstance().buildReturnDiagnosticRegister(serverAddress);
         DiagnosticsResponse response = (DiagnosticsResponse) processRequest(request);
         return response.getSubFunctionData();
     }
 
     @Override
     final synchronized public void diagnosticsChangeAsciiInputDelimiter(int serverAddress, int delimiter) throws ModbusNumberException, ModbusProtocolException, ModbusIOException {
-        processRequest(requestFactory.createChangeAsciiInputDelimiter(serverAddress, delimiter));
+        processRequest(ModbusRequestBuilder.getInstance().buildChangeAsciiInputDelimiter(serverAddress, delimiter));
     }
 
     @Override
     final synchronized public void diagnosticsForceListenOnlyMode(int serverAddress) throws ModbusNumberException, ModbusProtocolException, ModbusIOException {
-        processRequest(requestFactory.createForceListenOnlyMode(serverAddress));
+        processRequest(ModbusRequestBuilder.getInstance().buildForceListenOnlyMode(serverAddress));
     }
 
     @Override
     final synchronized public void diagnosticsClearCountersAndDiagnosticRegister(int serverAddress) throws ModbusNumberException, ModbusProtocolException, ModbusIOException {
-        processRequest(requestFactory.createClearCountersAndDiagnosticRegister(serverAddress));
+        processRequest(ModbusRequestBuilder.getInstance().buildClearCountersAndDiagnosticRegister(serverAddress));
     }
 
     @Override
     final synchronized public int diagnosticsReturnBusMessageCount(int serverAddress) throws ModbusNumberException, ModbusProtocolException, ModbusIOException {
-        ModbusRequest request = requestFactory.createReturnBusMessageCount(serverAddress);
+        ModbusRequest request = ModbusRequestBuilder.getInstance().buildReturnBusMessageCount(serverAddress);
         DiagnosticsResponse response = (DiagnosticsResponse) processRequest(request);
         return response.getSubFunctionData();
     }
 
     @Override
     final synchronized public int diagnosticsReturnBusCommunicationErrorCount(int serverAddress) throws ModbusNumberException, ModbusProtocolException, ModbusIOException {
-        ModbusRequest request = requestFactory.createReturnBusCommunicationErrorCount(serverAddress);
+        ModbusRequest request = ModbusRequestBuilder.getInstance().buildReturnBusCommunicationErrorCount(serverAddress);
         DiagnosticsResponse response = (DiagnosticsResponse) processRequest(request);
         return response.getSubFunctionData();
     }
 
     @Override
     final synchronized public int diagnosticsReturnBusExceptionErrorCount(int serverAddress) throws ModbusNumberException, ModbusProtocolException, ModbusIOException {
-        ModbusRequest request = requestFactory.createReturnBusExceptionErrorCount(serverAddress);
+        ModbusRequest request = ModbusRequestBuilder.getInstance().buildReturnBusExceptionErrorCount(serverAddress);
         DiagnosticsResponse response = (DiagnosticsResponse) processRequest(request);
         return response.getSubFunctionData();
     }
 
     @Override
     final synchronized public int diagnosticsReturnSlaveMessageCount(int serverAddress) throws ModbusNumberException, ModbusProtocolException, ModbusIOException {
-        ModbusRequest request = requestFactory.createReturnSlaveMessageCount(serverAddress);
+        ModbusRequest request = ModbusRequestBuilder.getInstance().buildReturnSlaveMessageCount(serverAddress);
         DiagnosticsResponse response = (DiagnosticsResponse) processRequest(request);
         return response.getSubFunctionData();
     }
 
     @Override
     final synchronized public int diagnosticsReturnSlaveNoResponseCount(int serverAddress) throws ModbusNumberException, ModbusProtocolException, ModbusIOException {
-        ModbusRequest request = requestFactory.createReturnSlaveNoResponseCount(serverAddress);
+        ModbusRequest request = ModbusRequestBuilder.getInstance().buildReturnSlaveNoResponseCount(serverAddress);
         DiagnosticsResponse response = (DiagnosticsResponse) processRequest(request);
         return response.getSubFunctionData();
     }
 
     @Override
     final synchronized public int diagnosticsReturnSlaveNAKCount(int serverAddress) throws ModbusNumberException, ModbusProtocolException, ModbusIOException {
-        ModbusRequest request = requestFactory.createReturnSlaveNAKCount(serverAddress);
+        ModbusRequest request = ModbusRequestBuilder.getInstance().buildReturnSlaveNAKCount(serverAddress);
         DiagnosticsResponse response = (DiagnosticsResponse) processRequest(request);
         return response.getSubFunctionData();
     }
 
     @Override
     final synchronized public int diagnosticsReturnSlaveBusyCount(int serverAddress) throws ModbusNumberException, ModbusProtocolException, ModbusIOException {
-        ModbusRequest request = requestFactory.createReturnSlaveBusyCount(serverAddress);
+        ModbusRequest request = ModbusRequestBuilder.getInstance().buildReturnSlaveBusyCount(serverAddress);
         DiagnosticsResponse response = (DiagnosticsResponse) processRequest(request);
         return response.getSubFunctionData();
     }
 
     @Override
     final synchronized public int diagnosticsReturnBusCharacterOverrunCount(int serverAddress) throws ModbusNumberException, ModbusProtocolException, ModbusIOException {
-        ModbusRequest request = requestFactory.createReturnBusCharacterOverrunCount(serverAddress);
+        ModbusRequest request = ModbusRequestBuilder.getInstance().buildReturnBusCharacterOverrunCount(serverAddress);
         DiagnosticsResponse response = (DiagnosticsResponse) processRequest(request);
         return response.getSubFunctionData();
     }
 
     @Override
     final synchronized public void diagnosticsClearOverrunCounterAndFlag(int serverAddress) throws ModbusNumberException, ModbusProtocolException, ModbusIOException {
-        processRequest(requestFactory.createClearOverrunCounterAndFlag(serverAddress));
+        processRequest(ModbusRequestBuilder.getInstance().buildClearOverrunCounterAndFlag(serverAddress));
     }
 }

@@ -47,6 +47,15 @@ public abstract class ModbusTransport {
         os.close();
     }
 
+    protected ModbusMessage createMessage(ModbusMessageFactory factory) throws IOException, ModbusNumberException, ModbusIOException {
+        int serverAddress = is.read();
+        int functionCode = is.read();
+        ModbusMessage msg = factory.createMessage(functionCode);
+        msg.setServerAddress(serverAddress);
+        msg.read(is);
+        return msg;
+    }
+
     public ModbusMessage readRequest() throws ModbusNumberException, ModbusIOException {
         return readMessage(ModbusRequestFactory.getInstance());
     }

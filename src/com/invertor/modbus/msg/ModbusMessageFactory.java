@@ -1,9 +1,6 @@
 package com.invertor.modbus.msg;
 
-import com.invertor.modbus.exception.ModbusIOException;
-import com.invertor.modbus.exception.ModbusNumberException;
 import com.invertor.modbus.msg.base.ModbusMessage;
-import com.invertor.modbus.net.stream.base.ModbusInputStream;
 
 /*
  * Copyright (C) 2016 "Invertor" Factory", JSC
@@ -27,5 +24,16 @@ import com.invertor.modbus.net.stream.base.ModbusInputStream;
  * email: vladislav.kochedykov@gmail.com
  */
 public interface ModbusMessageFactory {
-    ModbusMessage createMessage(ModbusInputStream fifo) throws ModbusNumberException, ModbusIOException;
+    /**
+     * This method creates a #ModbusMessage instance from #functionCode.
+     * The returned value can be either an instance of ModbusRequest or ModbusResponse.
+     *
+     * @param functionCode a number representing a modbus function
+     * @return an instance of a specific ModbusMessage
+     * @see com.invertor.modbus.msg.base.ModbusRequest
+     * @see com.invertor.modbus.msg.base.ModbusResponse
+     * @see ModbusMessageFactory
+     * @see ModbusResponseFactory
+     */
+    ModbusMessage createMessage(int functionCode);
 }

@@ -4,6 +4,7 @@ import com.invertor.modbus.data.CommStatus;
 import com.invertor.modbus.exception.ModbusIOException;
 import com.invertor.modbus.exception.ModbusNumberException;
 import com.invertor.modbus.exception.ModbusProtocolException;
+import com.invertor.modbus.msg.ModbusRequestBuilder;
 import com.invertor.modbus.msg.ModbusRequestFactory;
 import com.invertor.modbus.msg.base.ModbusFileRecord;
 import com.invertor.modbus.msg.base.ModbusMessage;
@@ -181,7 +182,7 @@ abstract public class ModbusMaster {
      */
     final synchronized public int[] readHoldingRegisters(int serverAddress, int startAddress, int quantity) throws
             ModbusProtocolException, ModbusNumberException, ModbusIOException {
-        ModbusRequest request = requestFactory.createReadHoldingRegisters(serverAddress, startAddress, quantity);
+        ModbusRequest request = ModbusRequestBuilder.getInstance().buildReadHoldingRegisters(serverAddress, startAddress, quantity);
         ReadHoldingRegistersResponse response = (ReadHoldingRegistersResponse) processRequest(request);
         return response.getRegisters();
     }
@@ -202,7 +203,7 @@ abstract public class ModbusMaster {
      */
     final synchronized public int[] readInputRegisters(int serverAddress, int startAddress, int quantity) throws
             ModbusProtocolException, ModbusNumberException, ModbusIOException {
-        ModbusRequest request = requestFactory.createReadInputRegisters(serverAddress, startAddress, quantity);
+        ModbusRequest request = ModbusRequestBuilder.getInstance().buildReadInputRegisters(serverAddress, startAddress, quantity);
         ReadHoldingRegistersResponse response = (ReadInputRegistersResponse) processRequest(request);
         return response.getRegisters();
     }
@@ -225,7 +226,7 @@ abstract public class ModbusMaster {
      */
     final synchronized public boolean[] readCoils(int serverAddress, int startAddress, int quantity) throws
             ModbusProtocolException, ModbusNumberException, ModbusIOException {
-        ModbusRequest request = requestFactory.createReadCoils(serverAddress, startAddress, quantity);
+        ModbusRequest request = ModbusRequestBuilder.getInstance().buildReadCoils(serverAddress, startAddress, quantity);
         ReadCoilsResponse response = (ReadCoilsResponse) processRequest(request);
         return response.getCoils();
     }
@@ -248,7 +249,7 @@ abstract public class ModbusMaster {
      */
     final synchronized public boolean[] readDiscreteInputs(int serverAddress, int startAddress, int quantity) throws
             ModbusProtocolException, ModbusNumberException, ModbusIOException {
-        ModbusRequest request = requestFactory.createReadDiscreteInputs(serverAddress, startAddress, quantity);
+        ModbusRequest request = ModbusRequestBuilder.getInstance().buildReadDiscreteInputs(serverAddress, startAddress, quantity);
         ReadDiscreteInputsResponse response = (ReadDiscreteInputsResponse) processRequest(request);
         return response.getCoils();
     }
@@ -269,7 +270,7 @@ abstract public class ModbusMaster {
      */
     final synchronized public void writeSingleCoil(int serverAddress, int startAddress, boolean flag) throws
             ModbusProtocolException, ModbusNumberException, ModbusIOException {
-        processRequest(requestFactory.createWriteSingleCoil(serverAddress, startAddress, flag));
+        processRequest(ModbusRequestBuilder.getInstance().buildWriteSingleCoil(serverAddress, startAddress, flag));
     }
 
     /**
@@ -286,7 +287,7 @@ abstract public class ModbusMaster {
      */
     final synchronized public void writeSingleRegister(int serverAddress, int startAddress, int register) throws
             ModbusProtocolException, ModbusNumberException, ModbusIOException {
-        processRequest(requestFactory.createWriteSingleRegister(serverAddress, startAddress, register));
+        processRequest(ModbusRequestBuilder.getInstance().buildWriteSingleRegister(serverAddress, startAddress, register));
     }
 
     /**
@@ -306,7 +307,7 @@ abstract public class ModbusMaster {
      */
     final synchronized public void writeMultipleCoils(int serverAddress, int startAddress, boolean[] coils) throws
             ModbusProtocolException, ModbusNumberException, ModbusIOException {
-        processRequest(requestFactory.createWriteMultipleCoils(serverAddress, startAddress, coils));
+        processRequest(ModbusRequestBuilder.getInstance().buildWriteMultipleCoils(serverAddress, startAddress, coils));
     }
 
     /**
@@ -324,7 +325,7 @@ abstract public class ModbusMaster {
      */
     final synchronized public void writeMultipleRegisters(int serverAddress, int startAddress, int[] registers) throws
             ModbusProtocolException, ModbusNumberException, ModbusIOException {
-        processRequest(requestFactory.createWriteMultipleRegisters(serverAddress, startAddress, registers));
+        processRequest(ModbusRequestBuilder.getInstance().buildWriteMultipleRegisters(serverAddress, startAddress, registers));
     }
 
     /**
@@ -347,7 +348,7 @@ abstract public class ModbusMaster {
      */
     final synchronized public int[] readWriteMultipleRegisters(int serverAddress, int readAddress, int readQuantity, int writeAddress, int[] registers) throws
             ModbusProtocolException, ModbusNumberException, ModbusIOException {
-        ModbusRequest request = requestFactory.createReadWriteMultipleRegisters(serverAddress, readAddress, readQuantity, writeAddress, registers);
+        ModbusRequest request = ModbusRequestBuilder.getInstance().buildReadWriteMultipleRegisters(serverAddress, readAddress, readQuantity, writeAddress, registers);
         ReadWriteMultipleRegistersResponse response = (ReadWriteMultipleRegistersResponse) processRequest(request);
         return response.getRegisters();
     }
@@ -369,7 +370,7 @@ abstract public class ModbusMaster {
      */
     final synchronized public int[] readFifoQueue(int serverAddress, int fifoPointerAddress) throws
             ModbusProtocolException, ModbusNumberException, ModbusIOException {
-        ModbusRequest request = requestFactory.createReadFifoQueue(serverAddress, fifoPointerAddress);
+        ModbusRequest request = ModbusRequestBuilder.getInstance().buildReadFifoQueue(serverAddress, fifoPointerAddress);
         ReadFifoQueueResponse response = (ReadFifoQueueResponse) processRequest(request);
         return response.getFifoValueRegister();
     }
@@ -389,7 +390,7 @@ abstract public class ModbusMaster {
      */
     final synchronized public ModbusFileRecord[] readFileRecord(int serverAddress, ModbusFileRecord[] records) throws
             ModbusProtocolException, ModbusNumberException, ModbusIOException {
-        ModbusRequest request = requestFactory.createReadFileRecord(serverAddress, records);
+        ModbusRequest request = ModbusRequestBuilder.getInstance().buildReadFileRecord(serverAddress, records);
         ReadFileRecordResponse response = (ReadFileRecordResponse) processRequest(request);
         return response.getFileRecords();
     }
@@ -410,7 +411,7 @@ abstract public class ModbusMaster {
      */
     final synchronized public void writeFileRecord(int serverAddress, ModbusFileRecord record) throws
             ModbusProtocolException, ModbusNumberException, ModbusIOException {
-        processRequest(requestFactory.createWriteFileRecord(serverAddress, record));
+        processRequest(ModbusRequestBuilder.getInstance().buildWriteFileRecord(serverAddress, record));
     }
 
     /**
@@ -448,7 +449,7 @@ abstract public class ModbusMaster {
      */
     final synchronized public void maskWriteRegister(int serverAddress, int startAddress, int and, int or) throws
             ModbusProtocolException, ModbusNumberException, ModbusIOException {
-        processRequest(requestFactory.createMaskWriteRegister(serverAddress, startAddress, and, or));
+        processRequest(ModbusRequestBuilder.getInstance().buildMaskWriteRegister(serverAddress, startAddress, and, or));
     }
 
     /**
@@ -727,7 +728,7 @@ abstract public class ModbusMaster {
      */
     final public MEIReadDeviceIdentification readDeviceIdentification(int serverAddress, int objectId, ReadDeviceIdentificationCode readDeviceId) throws
             ModbusProtocolException, ModbusNumberException, ModbusIOException {
-        EncapsulatedInterfaceTransportResponse response = (EncapsulatedInterfaceTransportResponse) processRequest(requestFactory.createReadDeviceIdentification(serverAddress, objectId, readDeviceId));
+        EncapsulatedInterfaceTransportResponse response = (EncapsulatedInterfaceTransportResponse) processRequest(ModbusRequestBuilder.getInstance().buildReadDeviceIdentification(serverAddress, objectId, readDeviceId));
         return (MEIReadDeviceIdentification) response.getMei();
     }
 }

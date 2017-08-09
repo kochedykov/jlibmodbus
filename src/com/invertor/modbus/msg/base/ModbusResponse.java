@@ -39,7 +39,7 @@ public abstract class ModbusResponse extends ModbusMessage {
     }
 
     final public boolean isException() {
-        return modbusExceptionCode != ModbusExceptionCode.NO_EXCEPTION;
+        return getModbusExceptionCode() != ModbusExceptionCode.NO_EXCEPTION;
     }
 
     final public void setException() {

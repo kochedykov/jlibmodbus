@@ -1,14 +1,10 @@
 package com.invertor.modbus.msg;
 
-import com.invertor.modbus.exception.ModbusIOException;
-import com.invertor.modbus.exception.ModbusNumberException;
 import com.invertor.modbus.msg.base.ModbusMessage;
+import com.invertor.modbus.msg.base.ModbusRequest;
 import com.invertor.modbus.msg.base.ModbusResponse;
 import com.invertor.modbus.msg.response.*;
-import com.invertor.modbus.net.stream.base.ModbusInputStream;
 import com.invertor.modbus.utils.ModbusFunctionCode;
-
-import java.io.IOException;
 
 /*
  * Copyright (C) 2016 "Invertor" Factory", JSC
@@ -41,18 +37,18 @@ final public class ModbusResponseFactory implements ModbusMessageFactory {
         return SingletonHolder.instance;
     }
 
+    /**
+     * This method creates a #ModbusResponse instance from #functionCode
+     *
+     * @param functionCode a number representing a modbus function
+     * @return an instance of a specific ModbusRequest
+     * @see ModbusRequest
+     * @see ModbusMessageFactory
+     * @see ModbusResponseFactory
+     */
     @Override
-    public ModbusMessage createMessage(ModbusInputStream fifo) throws ModbusNumberException, ModbusIOException {
+    public ModbusMessage createMessage(int functionCode) {
         ModbusResponse msg;
-        int serverAddress;
-        int functionCode;
-
-        try {
-            serverAddress = fifo.read();
-            functionCode = fifo.read();
-        } catch (IOException e) {
-            throw new ModbusIOException(e);
-        }
 
         switch (ModbusFunctionCode.get(functionCode)) {
             case READ_COILS:
@@ -113,13 +109,11 @@ final public class ModbusResponseFactory implements ModbusMessageFactory {
                 msg = new EncapsulatedInterfaceTransportResponse();
                 break;
             default:
-                throw new ModbusNumberException("Unknown function code", functionCode);
+                msg = new IllegalFunctionResponse(functionCode);
         }
         if (ModbusFunctionCode.isException(functionCode)) {
             msg.setException();
         }
-        msg.setServerAddress(serverAddress);
-        msg.read(fifo);
         return msg;
     }
 

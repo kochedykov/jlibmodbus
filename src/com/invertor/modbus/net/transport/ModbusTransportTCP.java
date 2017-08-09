@@ -45,10 +45,16 @@ class ModbusTransportTCP extends ModbusTransport {
         ModbusInputStream is = getInputStream();
         TcpAduHeader header = new TcpAduHeader();
         header.read(is);
-        ModbusMessage msg = factory.createMessage(is);
-        msg.setTransactionId(header.getTransactionId());
-        msg.setProtocolId(header.getProtocolId());
-        return msg;
+        try {
+            ModbusMessage msg = createMessage(factory);
+
+            msg.setTransactionId(header.getTransactionId());
+            msg.setProtocolId(header.getProtocolId());
+
+            return msg;
+        } catch (IOException e) {
+            throw new ModbusIOException(e);
+        }
     }
 
     @Override
