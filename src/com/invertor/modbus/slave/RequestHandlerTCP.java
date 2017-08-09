@@ -46,15 +46,15 @@ class RequestHandlerTCP extends RequestHandler {
                 ModbusTransport transport = getConn().getTransport();
                 ModbusRequest request = (ModbusRequest) transport.readRequest();
 
-                if (    //default tcp session
-                        request.getServerAddress() == Modbus.TCP_DEFAULT_ID ||
-                                //via gateway
-                                request.getServerAddress() == getSlave().getServerAddress() ||
-                                //broadcast
-                                (request.getServerAddress() == Modbus.BROADCAST_ID && getSlave().isBroadcastEnabled())) {
+                if (/*default tcp session*/request.getServerAddress() == Modbus.TCP_DEFAULT_ID ||
+                        /*gateway*/request.getServerAddress() == getSlave().getServerAddress()) {
                     ModbusMessage response = request.process(dataHolder);
                     response.setTransactionId(request.getTransactionId());
-                    transport.send(response);
+                    if (request.getServerAddress() != Modbus.BROADCAST_ID)
+                        transport.send(response);
+                } else if (/*broadcast*/ request.getServerAddress() == Modbus.BROADCAST_ID && getSlave().isBroadcastEnabled()) {
+                    //we do not answer broadcast requests
+                    request.process(dataHolder);
                 }
             } while (isListening());
 
