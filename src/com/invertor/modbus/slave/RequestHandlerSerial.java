@@ -73,6 +73,7 @@ class RequestHandlerSerial extends RequestHandler {
                             transport.send(response);
                         if (commStatus.isRestartCommunicationsOption()) {
                             commStatus.restartCommunicationsOption();
+                            getSlave().shutdown();
                             getSlave().listen();
                         }
                     } catch (RuntimeException re) {
