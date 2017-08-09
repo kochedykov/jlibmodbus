@@ -38,6 +38,11 @@ abstract public class ModbusOutputStream extends OutputStream {
     }
 
     @Override
+    public void write(byte b[], int off, int len) throws IOException {
+        fifo.write(b, off, len);
+    }
+
+    @Override
     public void write(int b) throws IOException {
         fifo.write(b);
     }
@@ -62,5 +67,9 @@ abstract public class ModbusOutputStream extends OutputStream {
 
     public byte[] toByteArray() {
         return fifo.toByteArray();
+    }
+
+    public ByteFifo getFifo() {
+        return fifo;
     }
 }

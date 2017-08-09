@@ -8,6 +8,7 @@ import com.invertor.modbus.exception.ModbusIOException;
 import com.invertor.modbus.exception.ModbusNumberException;
 import com.invertor.modbus.exception.ModbusProtocolException;
 import com.invertor.modbus.msg.base.ModbusMessage;
+import com.invertor.modbus.msg.base.ModbusRequest;
 import com.invertor.modbus.net.ModbusConnection;
 import com.invertor.modbus.net.ModbusConnectionFactory;
 import com.invertor.modbus.tcp.TcpParameters;
@@ -82,8 +83,8 @@ final public class ModbusMasterTCP extends ModbusMaster {
     }
 
     @Override
-    protected ModbusMessage readResponse() throws ModbusNumberException, ModbusIOException, ModbusProtocolException {
-        ModbusMessage msg = super.readResponse();
+    protected ModbusMessage readResponse(ModbusRequest request) throws ModbusNumberException, ModbusIOException, ModbusProtocolException {
+        ModbusMessage msg = super.readResponse(request);
         if (!isKeepAlive()) {
             disconnect();
         }

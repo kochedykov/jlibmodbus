@@ -2,6 +2,8 @@ package com.invertor.modbus.msg.base;
 
 import com.invertor.modbus.data.DataHolder;
 import com.invertor.modbus.exception.ModbusNumberException;
+import com.invertor.modbus.msg.ModbusMessageFactory;
+import com.invertor.modbus.msg.ModbusResponseFactory;
 import com.invertor.modbus.net.stream.base.ModbusOutputStream;
 
 import java.io.IOException;
@@ -30,7 +32,7 @@ import java.lang.reflect.InvocationTargetException;
  * email: vladislav.kochedykov@gmail.com
  */
 @SuppressWarnings("unchecked")
-abstract public class ModbusRequest extends ModbusMessage {
+abstract public class ModbusRequest extends ModbusMessage implements ModbusMessageFactory {
 
     final private ModbusResponse response;
 
@@ -62,7 +64,7 @@ abstract public class ModbusRequest extends ModbusMessage {
         getResponse().setServerAddress(serverAddress);
     }
 
-    protected ModbusResponse getResponse() {
+    public ModbusResponse getResponse() {
         return response;
     }
 
@@ -99,6 +101,15 @@ abstract public class ModbusRequest extends ModbusMessage {
         if (!msg.isException()) {
             if (!validateResponseImpl(msg))
                 throw new ModbusNumberException("Collision: response does not matches the request");
+        }
+    }
+
+    @Override
+    public ModbusMessage createMessage(int functionCode) {
+        if (functionCode != getFunction()) {
+            return ModbusResponseFactory.getInstance().createMessage(functionCode);
+        } else {
+            return getResponse();
         }
     }
 }

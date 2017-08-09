@@ -1,7 +1,6 @@
 package com.invertor.modbus.net.stream.base;
 
 import com.invertor.modbus.Modbus;
-import com.invertor.modbus.utils.ByteFifo;
 import com.invertor.modbus.utils.DataUtils;
 
 import java.io.IOException;
@@ -41,18 +40,24 @@ public class LoggingOutputStream extends ModbusOutputStream {
      * The output stream to be logged
      */
     final private ModbusOutputStream out;
-    final private ByteFifo fifo = new ByteFifo(Modbus.MAX_PDU_LENGTH);
 
     public LoggingOutputStream(ModbusOutputStream out) {
         this.out = out;
     }
 
-
     @Override
     public void write(byte[] b) throws IOException {
         out.write(b);
         if (Modbus.isLoggingEnabled()) {
-            fifo.write(b);
+            super.write(b);
+        }
+    }
+
+    @Override
+    public void write(byte[] b, int offset, int length) throws IOException {
+        out.write(b, offset, length);
+        if (Modbus.isLoggingEnabled()) {
+            super.write(b, offset, length);
         }
     }
 
@@ -60,7 +65,7 @@ public class LoggingOutputStream extends ModbusOutputStream {
     public void write(int b) throws IOException {
         out.write(b);
         if (Modbus.isLoggingEnabled()) {
-            fifo.write(b);
+            super.write(b);
         }
     }
 
@@ -72,8 +77,8 @@ public class LoggingOutputStream extends ModbusOutputStream {
 
     public void log() {
         if (Modbus.isLoggingEnabled()) {
-            Modbus.log().info(LOG_MESSAGE_TITLE + DataUtils.toAscii(fifo.toByteArray()));
-            fifo.reset();
+            Modbus.log().info(LOG_MESSAGE_TITLE + DataUtils.toAscii(super.toByteArray()));
+            super.getFifo().reset();
         }
     }
 

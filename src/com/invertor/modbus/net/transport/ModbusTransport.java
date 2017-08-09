@@ -4,8 +4,8 @@ import com.invertor.modbus.exception.ModbusIOException;
 import com.invertor.modbus.exception.ModbusNumberException;
 import com.invertor.modbus.msg.ModbusMessageFactory;
 import com.invertor.modbus.msg.ModbusRequestFactory;
-import com.invertor.modbus.msg.ModbusResponseFactory;
 import com.invertor.modbus.msg.base.ModbusMessage;
+import com.invertor.modbus.msg.base.ModbusRequest;
 import com.invertor.modbus.net.stream.base.LoggingInputStream;
 import com.invertor.modbus.net.stream.base.LoggingOutputStream;
 
@@ -60,8 +60,8 @@ public abstract class ModbusTransport {
         return readMessage(ModbusRequestFactory.getInstance());
     }
 
-    public ModbusMessage readResponse() throws ModbusNumberException, ModbusIOException {
-        return readMessage(ModbusResponseFactory.getInstance());
+    public ModbusMessage readResponse(ModbusRequest request) throws ModbusNumberException, ModbusIOException {
+        return readMessage(request);
     }
 
     final public ModbusMessage readMessage(ModbusMessageFactory factory) throws ModbusNumberException, ModbusIOException {

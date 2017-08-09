@@ -107,8 +107,8 @@ abstract public class ModbusMaster {
         requestTime = System.currentTimeMillis();
     }
 
-    protected ModbusMessage readResponse() throws ModbusProtocolException, ModbusNumberException, ModbusIOException {
-        return getConnection().getTransport().readResponse();
+    protected ModbusMessage readResponse(ModbusRequest request) throws ModbusProtocolException, ModbusNumberException, ModbusIOException {
+        return getConnection().getTransport().readResponse(request);
     }
 
     /**
@@ -131,7 +131,7 @@ abstract public class ModbusMaster {
         ModbusResponse msg;
         do {
             try {
-                msg = (ModbusResponse) readResponse();
+                msg = (ModbusResponse) readResponse(request);
                 request.validateResponse(msg);
                 /*
                  * if you have received an ACKNOWLEDGE,

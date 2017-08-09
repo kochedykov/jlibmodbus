@@ -45,30 +45,31 @@ public class ReadHoldingRegistersResponse extends AbstractReadResponse {
      *
      * @return registers bytes
      */
-    final public byte[] getBytes() {
+    synchronized final public byte[] getBytes() {
         return Arrays.copyOf(buffer, buffer.length);
     }
 
-    final public int[] getRegisters() {
+    synchronized final public int[] getRegisters() {
         return DataUtils.toIntArray(buffer);
     }
 
-    final public void setBuffer(int[] registers) throws ModbusNumberException {
+    synchronized final public void setBuffer(int[] registers) throws ModbusNumberException {
         this.buffer = DataUtils.toByteArray(registers);
         setByteCount(this.buffer.length);
     }
 
     @Override
-    final protected void readData(ModbusInputStream fifo) throws IOException {
-        buffer = new byte[getByteCount()];
+    synchronized final protected void readData(ModbusInputStream fifo) throws IOException {
+        if (buffer.length != getByteCount())
+            buffer = new byte[getByteCount()];
         int size;
-        if ((size = fifo.read(buffer)) < buffer.length)
-            Modbus.log().warning(buffer.length + " bytes expected, but " + size + " received.");
+        if ((size = fifo.read(buffer, 0, getByteCount())) < getByteCount())
+            Modbus.log().warning(getByteCount() + " bytes expected, but " + size + " received.");
     }
 
     @Override
-    final protected void writeData(ModbusOutputStream fifo) throws IOException {
-        fifo.write(buffer);
+    synchronized final protected void writeData(ModbusOutputStream fifo) throws IOException {
+        fifo.write(buffer, 0, getByteCount());
     }
 
     @Override
