@@ -40,6 +40,9 @@ public class InputStreamRTU extends InputStreamSerial {
         int r_crc = readShortLE();
         // crc from the same crc equals zero
         int c_crc = getCrc();
+        if (c_crc == 0 && r_crc == 0) {
+            return;
+        }
         if (c_crc != 0 || r_crc == 0) {
             throw new ModbusChecksumException(r_crc, c_crc);
         }
