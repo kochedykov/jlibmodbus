@@ -61,10 +61,17 @@ public class DataUtils {
         return dst;
     }
 
-    static public int[] toIntArray(byte[] bytes) {
+    static public int[] BeToIntArray(byte[] bytes) {
         int[] dst = new int[bytes.length / 2];
         for (int i = 0, j = 0; i < dst.length; i++, j += 2)
             dst[i] = ((bytes[j] & 0xff) << 8) | (bytes[j + 1] & 0xff);
+        return dst;
+    }
+
+    static public int[] LeToIntArray(byte[] bytes) {
+        int[] dst = new int[bytes.length / 2];
+        for (int i = 0, j = 0; i < dst.length; i++, j += 2)
+            dst[i] = ((bytes[j + 1] & 0xff) << 8) | (bytes[j] & 0xff);
         return dst;
     }
 
@@ -119,5 +126,33 @@ public class DataUtils {
 
     public static byte byteHigh(int b) {
         return (byte) (((short) b >> 8) & 0xff);
+    }
+
+    public static int wordLow(int b) {
+        return b & 0xffff;
+    }
+
+    public static int wordHigh(int b) {
+        return (b >> 16) & 0xffff;
+    }
+
+    public static int dwordLow(long l) {
+        return (int) (l & 0xffffffff);
+    }
+
+    public static int dwordHigh(long l) {
+        return (int) ((l >> 32) & 0xffffffff);
+    }
+
+    public static int wordFromBytes(int l, int h) {
+        return (l & 0xff) & ((h & 0xff) << 8);
+    }
+
+    public static int dwordFromWords(int l, int h) {
+        return (l & 0xffff) & ((h & 0xffff) << 16);
+    }
+
+    public static long Int64FromDwords(int l, int h) {
+        return ((long) l & 0xffffffff) & (((long) h & 0xffffffff) << 32);
     }
 }
