@@ -45,7 +45,7 @@ abstract public class ModbusValues<T> extends Observable implements Iterable<T> 
             public T next() {
                 if (hasNext()) {
                     try {
-                        return get(++index);
+                        return get(index++);
                     } catch (IllegalDataAddressException e) {
                         Modbus.log().severe(this.getClass().getSimpleName() + " " + e.getLocalizedMessage() + ": quantity = " + getQuantity() + ", index = " + index);
                         throw new NoSuchElementException();
