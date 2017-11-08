@@ -39,10 +39,10 @@ public class DataHolder {
     final private CommStatus commStatus = new CommStatus();
     final private Map<Integer, FifoQueue> fifoMap = new TreeMap<Integer, FifoQueue>();
     final private Map<Integer, ModbusFile> fileMap = new TreeMap<Integer, ModbusFile>();
-    private Coils coils = null;
-    private Coils discreteInputs = null;
-    private HoldingRegisters holdingRegisters = null;
-    private HoldingRegisters inputRegisters = null;
+    private ModbusCoils coils = null;
+    private ModbusCoils discreteInputs = null;
+    private ModbusHoldingRegisters holdingRegisters = null;
+    private ModbusHoldingRegisters inputRegisters = null;
     private SlaveId slaveId = null;
     private ExceptionStatus exceptionStatus = null;
     private ReadDeviceIdentificationInterface readDeviceIdentificationInterface = null;
@@ -88,7 +88,7 @@ public class DataHolder {
         return coils.getRange(offset, quantity);
     }
 
-    public void writeCoil(int offset, boolean value) throws IllegalDataAddressException {
+    public void writeCoil(int offset, boolean value) throws IllegalDataAddressException, IllegalDataValueException {
         checkPointer(coils, offset);
         coils.set(offset, value);
     }
@@ -127,35 +127,35 @@ public class DataHolder {
         file.write(fileRecord.getRecordNumber(), fileRecord.getRegisters());
     }
 
-    public Coils getCoils() {
+    public ModbusCoils getCoils() {
         return coils;
     }
 
-    public void setCoils(Coils coils) {
+    public void setCoils(ModbusCoils coils) {
         this.coils = coils;
     }
 
-    public Coils getDiscreteInputs() {
+    public ModbusCoils getDiscreteInputs() {
         return discreteInputs;
     }
 
-    public void setDiscreteInputs(Coils discreteInputs) {
+    public void setDiscreteInputs(ModbusCoils discreteInputs) {
         this.discreteInputs = discreteInputs;
     }
 
-    public HoldingRegisters getHoldingRegisters() {
+    public ModbusHoldingRegisters getHoldingRegisters() {
         return holdingRegisters;
     }
 
-    public void setHoldingRegisters(HoldingRegisters holdingRegisters) {
+    public void setHoldingRegisters(ModbusHoldingRegisters holdingRegisters) {
         this.holdingRegisters = holdingRegisters;
     }
 
-    public HoldingRegisters getInputRegisters() {
+    public ModbusHoldingRegisters getInputRegisters() {
         return inputRegisters;
     }
 
-    public void setInputRegisters(HoldingRegisters inputRegisters) {
+    public void setInputRegisters(ModbusHoldingRegisters inputRegisters) {
         this.inputRegisters = inputRegisters;
     }
 

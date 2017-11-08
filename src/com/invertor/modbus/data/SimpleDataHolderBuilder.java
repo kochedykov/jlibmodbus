@@ -49,23 +49,23 @@ public class SimpleDataHolderBuilder extends DataHolderBuilder {
 
     @Override
     public void buildCoils() {
-        dataHolder.setCoils(new SimpleCoils(coilCount));
+        dataHolder.setCoils(new ModbusCoils(coilCount));
     }
 
     @Override
     public void buildDiscreteInputs() {
-        dataHolder.setDiscreteInputs(new SimpleCoils(discreteInputCount));
+        dataHolder.setDiscreteInputs(new ModbusCoils(discreteInputCount));
 
     }
 
     @Override
     public void buildHoldingRegisters() {
-        dataHolder.setHoldingRegisters(new SimpleHoldingRegisters(holdingRegisterCount));
+        dataHolder.setHoldingRegisters(new ModbusHoldingRegisters(holdingRegisterCount));
     }
 
     @Override
     public void buildInputRegisters() {
-        dataHolder.setInputRegisters(new SimpleHoldingRegisters(inputRegisterCount));
+        dataHolder.setInputRegisters(new ModbusHoldingRegisters(inputRegisterCount));
     }
 
     @Override

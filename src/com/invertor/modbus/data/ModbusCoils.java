@@ -3,8 +3,9 @@ package com.invertor.modbus.data;
 import com.invertor.modbus.Modbus;
 import com.invertor.modbus.exception.IllegalDataAddressException;
 import com.invertor.modbus.exception.IllegalDataValueException;
+import com.invertor.modbus.utils.DataUtils;
 
-import java.util.Arrays;
+import java.util.*;
 
 /*
  * Copyright (C) 2016 "Invertor" Factory", JSC
@@ -29,14 +30,34 @@ import java.util.Arrays;
  */
 
 /**
- * A simple implementation of coil storage.
+ * since 1.2.8.4 it extends Observable to notify observers if register values was changed.
+ *
+ * @see java.util.Observable
+ * @see java.util.Observer
  */
-public class SimpleCoils extends Coils {
-
+public class ModbusCoils extends ModbusValues<Boolean> {
     private boolean[] coils = new boolean[0];
 
-    public SimpleCoils(int size) {
+    public ModbusCoils(int size) {
         this.coils = new boolean[Modbus.checkEndAddress(size) ? size : Modbus.MAX_START_ADDRESS];
+    }
+
+    public ModbusCoils() {
+
+    }
+
+    @Override
+    public byte[] getBytes() {
+        return DataUtils.toByteArray(coils);
+    }
+
+    @Override
+    public void setBytes(byte[] bytes) {
+        coils = DataUtils.toBitsArray(bytes, bytes.length*8);
+    }
+
+    public void setBytes(byte[] bytes, int quantity) {
+        coils = DataUtils.toBitsArray(bytes, quantity);
     }
 
     void setSize(int size) {
@@ -46,45 +67,24 @@ public class SimpleCoils extends Coils {
     }
 
     @Override
-    public void set(int offset, boolean coil) throws IllegalDataAddressException {
+    public void setImpl(int offset, Boolean coil) throws IllegalDataAddressException, IllegalDataValueException {
         checkAddress(offset);
         synchronized (this) {
             coils[offset] = coil;
         }
-        /*
-         * notify observers
-         */
-        super.set(offset, coil);
     }
 
-    @Override
     public void setRange(int offset, boolean[] range) throws IllegalDataAddressException, IllegalDataValueException {
         checkRange(offset, range.length);
         if (!Modbus.checkWriteCoilCount(range.length))
             throw new IllegalDataValueException();
         synchronized (this) {
-            System.arraycopy(range, 0, coils, offset, range.length);
-        }
-        /*
-         * notify observers
-         */
-        super.setRange(offset, range);
-    }
-
-    @Override
-    synchronized public int quantity() {
-        return coils.length;
-    }
-
-    @Override
-    public boolean get(int offset) throws IllegalDataAddressException {
-        checkAddress(offset);
-        synchronized (this) {
-            return coils[offset];
+            for (int i = 0; i < range.length; i++) {
+                set(i, range[i]);
+            }
         }
     }
 
-    @Override
     public boolean[] getRange(int offset, int quantity) throws IllegalDataAddressException, IllegalDataValueException {
         checkRange(offset, quantity);
         if (!Modbus.checkReadCoilCount(quantity))
@@ -94,8 +94,26 @@ public class SimpleCoils extends Coils {
         }
     }
 
+    @Override
+    synchronized public int getQuantity() {
+        return coils.length;
+    }
+
+    @Override
+    synchronized public int getByteCount() {
+        return (int)Math.ceil((double)coils.length/8);
+    }
+
+    @Override
+    public Boolean get(int offset) throws IllegalDataAddressException {
+        checkAddress(offset);
+        synchronized (this) {
+            return coils[offset];
+        }
+    }
+
     private void checkRange(int offset, int quantity) throws IllegalDataAddressException {
-        if (offset + quantity > quantity())
+        if (offset + quantity > getQuantity())
             throw new IllegalDataAddressException(offset);
     }
 
