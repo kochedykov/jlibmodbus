@@ -37,10 +37,10 @@ public class InputStreamRTU extends InputStreamSerial {
 
     @Override
     public void frameCheck() throws IOException, ModbusChecksumException {
-        int r_crc = readShortLE();
-        // crc from the same crc equals zero
         int c_crc = getCrc();
-        if (c_crc != 0 || r_crc == 0) {
+        int r_crc = readShortLE();
+
+        if (c_crc != r_crc) {
             throw new ModbusChecksumException(r_crc, c_crc);
         }
     }
