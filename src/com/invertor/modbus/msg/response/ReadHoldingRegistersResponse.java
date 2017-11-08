@@ -50,7 +50,7 @@ public class ReadHoldingRegistersResponse extends AbstractReadResponse {
     }
 
     synchronized final public int[] getRegisters() {
-        return DataUtils.toIntArray(buffer);
+        return DataUtils.BeToIntArray(buffer);
     }
 
     synchronized final public void setBuffer(int[] registers) throws ModbusNumberException {

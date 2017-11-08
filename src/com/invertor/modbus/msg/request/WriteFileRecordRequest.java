@@ -82,7 +82,7 @@ final public class WriteFileRecordRequest extends ModbusRequest {
         byte[] buffer = new byte[record_length * 2];
         if (fifo.read(buffer) != buffer.length)
             throw new ModbusNumberException(record_length + " bytes expected, but not received.");
-        setFileRecord(new ModbusFileRecord(file_number, record_number, DataUtils.toIntArray(buffer)));
+        setFileRecord(new ModbusFileRecord(file_number, record_number, DataUtils.BeToIntArray(buffer)));
     }
 
     @Override

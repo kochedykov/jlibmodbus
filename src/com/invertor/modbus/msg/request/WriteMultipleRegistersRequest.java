@@ -97,22 +97,22 @@ final public class WriteMultipleRegistersRequest extends AbstractWriteMultipleRe
     }
 
     public int[] getRegisters() {
-        return DataUtils.toIntArray(getValues());
+        return DataUtils.BeToIntArray(getBytes());
     }
 
     public void setRegisters(int[] registers) throws ModbusNumberException {
-        super.setValues(DataUtils.toByteArray(registers));
+        super.setBytes(DataUtils.toByteArray(registers));
         setByteCount(registers.length * 2);
     }
 
     @Override
-    public byte[] getValues() {
-        return Arrays.copyOf(super.getValues(), super.getByteCount());
+    public byte[] getBytes() {
+        return Arrays.copyOf(super.getBytes(), super.getByteCount());
     }
 
     @Override
-    public void setValues(byte[] values) throws ModbusNumberException {
-        super.setValues(Arrays.copyOf(values, values.length));
+    public void setBytes(byte[] values) throws ModbusNumberException {
+        super.setBytes(Arrays.copyOf(values, values.length));
         setByteCount(values.length);
     }
 

@@ -84,15 +84,15 @@ final public class WriteMultipleCoilsRequest extends AbstractWriteMultipleReques
         }
         if (!checkAddressRange(getStartAddress(), getQuantity()))
             throw new ModbusNumberException("Coil count greater than max coil count", getQuantity());
-        setCoils(DataUtils.toBitsArray(getValues(), getQuantity()));
+        setCoils(DataUtils.toBitsArray(getBytes(), getQuantity()));
     }
 
     public boolean[] getCoils() {
-        return DataUtils.toBitsArray(getValues(), getQuantity());
+        return DataUtils.toBitsArray(getBytes(), getQuantity());
     }
 
     public void setCoils(boolean[] coils) throws ModbusNumberException {
-        setValues(DataUtils.toByteArray(coils));
+        setBytes(DataUtils.toByteArray(coils));
         setQuantity(coils.length);
     }
 

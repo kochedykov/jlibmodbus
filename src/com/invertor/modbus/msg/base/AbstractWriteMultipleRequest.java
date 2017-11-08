@@ -41,7 +41,7 @@ abstract public class AbstractWriteMultipleRequest extends AbstractMultipleReque
     public void writeData(ModbusOutputStream fifo) throws IOException {
         super.writeData(fifo);
         fifo.write(getByteCount());
-        fifo.write(getValues());
+        fifo.write(getBytes());
     }
 
     @Override
@@ -66,11 +66,11 @@ abstract public class AbstractWriteMultipleRequest extends AbstractMultipleReque
         this.byteCount = byteCount;
     }
 
-    public byte[] getValues() {
+    public byte[] getBytes() {
         return values;
     }
 
-    public void setValues(byte[] values) throws ModbusNumberException {
+    public void setBytes(byte[] values) throws ModbusNumberException {
         this.values = values;
         setByteCount(values.length);
     }
