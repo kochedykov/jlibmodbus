@@ -4,8 +4,7 @@ import com.invertor.modbus.Modbus;
 import com.invertor.modbus.ModbusSlave;
 import com.invertor.modbus.ModbusSlaveFactory;
 import com.invertor.modbus.data.DataHolder;
-import com.invertor.modbus.data.HoldingRegisters;
-import com.invertor.modbus.data.SimpleHoldingRegisters;
+import com.invertor.modbus.data.ModbusHoldingRegisters;
 import com.invertor.modbus.exception.IllegalDataAddressException;
 import com.invertor.modbus.exception.IllegalDataValueException;
 import com.invertor.modbus.tcp.TcpParameters;
@@ -85,7 +84,7 @@ public class SimpleSlaveTCP {
             });
 
             slave.setDataHolder(dh);
-            HoldingRegisters hr = new SimpleHoldingRegisters(10);
+            ModbusHoldingRegisters hr = new ModbusHoldingRegisters(10);
             hr.set(0, 12345);
             slave.getDataHolder().setHoldingRegisters(hr);
             slave.setServerAddress(1);
@@ -142,7 +141,7 @@ public class SimpleSlaveTCP {
             /*
             something like that:
             setHoldingRegisters(new SimpleHoldingRegisters(10));
-            setCoils(new SimpleCoils(128));
+            setCoils(new Coils(128));
             ...
             etc.
              */
@@ -173,7 +172,7 @@ public class SimpleSlaveTCP {
         }
 
         @Override
-        public void writeCoil(int offset, boolean value) throws IllegalDataAddressException {
+        public void writeCoil(int offset, boolean value) throws IllegalDataAddressException, IllegalDataValueException {
             for (ModbusEventListener l : modbusEventListenerList) {
                 l.onWriteToSingleCoil(offset, value);
             }
