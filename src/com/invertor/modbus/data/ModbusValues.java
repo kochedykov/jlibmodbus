@@ -21,7 +21,7 @@ abstract public class ModbusValues<T> extends Observable implements Iterable<T> 
 
     abstract public byte[] getBytes();
 
-    abstract public void setBytes(byte[] bytes);
+    abstract public void setBytesBe(byte[] bytes);
 
     final public void set(int offset, T value) throws IllegalDataAddressException, IllegalDataValueException {
         setImpl(offset, value);

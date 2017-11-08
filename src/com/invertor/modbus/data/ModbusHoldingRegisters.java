@@ -5,7 +5,7 @@ import com.invertor.modbus.exception.IllegalDataAddressException;
 import com.invertor.modbus.exception.IllegalDataValueException;
 import com.invertor.modbus.utils.DataUtils;
 
-import java.util.*;
+import java.util.Arrays;
 
 /*
  * Copyright (C) 2016 "Invertor" Factory", JSC
@@ -152,12 +152,8 @@ public class ModbusHoldingRegisters extends ModbusValues<Integer> {
     }
 
     @Override
-    public void setBytes(byte[] bytes) {
-        registers = DataUtils.BeToIntArray(bytes);
-    }
-
     public void setBytesBe(byte[] bytes) {
-        this.registers = DataUtils.BeToIntArray(bytes);
+        registers = DataUtils.BeToIntArray(bytes);
     }
 
     public void setBytesLe(byte[] bytes) {

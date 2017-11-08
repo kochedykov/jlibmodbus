@@ -5,7 +5,7 @@ import com.invertor.modbus.exception.IllegalDataAddressException;
 import com.invertor.modbus.exception.IllegalDataValueException;
 import com.invertor.modbus.utils.DataUtils;
 
-import java.util.*;
+import java.util.Arrays;
 
 /*
  * Copyright (C) 2016 "Invertor" Factory", JSC
@@ -52,7 +52,7 @@ public class ModbusCoils extends ModbusValues<Boolean> {
     }
 
     @Override
-    public void setBytes(byte[] bytes) {
+    public void setBytesBe(byte[] bytes) {
         coils = DataUtils.toBitsArray(bytes, bytes.length*8);
     }
 
