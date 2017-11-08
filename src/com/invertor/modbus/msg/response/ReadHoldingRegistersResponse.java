@@ -1,6 +1,7 @@
 package com.invertor.modbus.msg.response;
 
 import com.invertor.modbus.Modbus;
+import com.invertor.modbus.data.ModbusHoldingRegisters;
 import com.invertor.modbus.exception.ModbusNumberException;
 import com.invertor.modbus.msg.base.AbstractReadResponse;
 import com.invertor.modbus.net.stream.base.ModbusInputStream;
@@ -49,8 +50,15 @@ public class ReadHoldingRegistersResponse extends AbstractReadResponse {
         return Arrays.copyOf(buffer, buffer.length);
     }
 
+    @Deprecated
     synchronized final public int[] getRegisters() {
         return DataUtils.BeToIntArray(buffer);
+    }
+
+    synchronized final public ModbusHoldingRegisters getHoldingRegisters() {
+        ModbusHoldingRegisters mhr = new ModbusHoldingRegisters();
+        mhr.setBytesBe(buffer);
+        return mhr;
     }
 
     synchronized final public void setBuffer(int[] registers) throws ModbusNumberException {
