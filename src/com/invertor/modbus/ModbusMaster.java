@@ -40,7 +40,7 @@ import com.invertor.modbus.utils.ModbusExceptionCode;
  */
 abstract public class ModbusMaster {
 
-    final protected ModbusRequestFactory requestFactory = ModbusRequestFactory.getInstance();
+    final private BroadcastResponse broadcastResponse = new BroadcastResponse();
     private int transactionId = 0;
     private long requestTime = 0;
     private boolean connected = false;
@@ -128,28 +128,35 @@ abstract public class ModbusMaster {
      */
     public ModbusResponse processRequest(ModbusRequest request) throws ModbusProtocolException, ModbusIOException {
         sendRequest(request);
-        ModbusResponse msg;
-        do {
-            try {
-                msg = (ModbusResponse) readResponse(request);
-                request.validateResponse(msg);
+        if (request.getServerAddress() != Modbus.BROADCAST_ID) {
+            do {
+                try {
+                    ModbusResponse msg = (ModbusResponse) readResponse(request);
+                    request.validateResponse(msg);
                 /*
                  * if you have received an ACKNOWLEDGE,
                  * it means that operation is in processing and you should be waiting for the answer
                  */
-                if (msg.getModbusExceptionCode() != ModbusExceptionCode.ACKNOWLEDGE) {
-                    if (msg.isException())
-                        throw new ModbusProtocolException(msg.getModbusExceptionCode());
-                    return msg;
+                    if (msg.getModbusExceptionCode() != ModbusExceptionCode.ACKNOWLEDGE) {
+                        if (msg.isException())
+                            throw new ModbusProtocolException(msg.getModbusExceptionCode());
+                        return msg;
+                    }
+                } catch (ModbusNumberException mne) {
+                    Modbus.log().warning(mne.getLocalizedMessage());
                 }
-            } catch (ModbusNumberException mne) {
-                Modbus.log().warning(mne.getLocalizedMessage());
-            }
-        } while (System.currentTimeMillis() - requestTime < getConnection().getReadTimeout());
+            } while (System.currentTimeMillis() - requestTime < getConnection().getReadTimeout());
         /*
          * throw an exception if there is a response timeout
          */
-        throw new ModbusIOException("Response timeout.");
+            throw new ModbusIOException("Response timeout.");
+        } else {
+            /*
+             return because slaves do not respond broadcast requests
+             */
+            broadcastResponse.setFunction(request.getFunction());
+            return broadcastResponse;
+        }
     }
 
     /**
