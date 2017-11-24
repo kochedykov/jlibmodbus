@@ -42,8 +42,8 @@ public class ModbusCoils extends ModbusValues<Boolean> {
         this.coils = new boolean[Modbus.checkEndAddress(size) ? size : Modbus.MAX_START_ADDRESS];
     }
 
-    public ModbusCoils() {
-
+    public ModbusCoils(byte[] bytes) {
+        coils = DataUtils.toBitsArray(bytes, bytes.length);
     }
 
     @Override

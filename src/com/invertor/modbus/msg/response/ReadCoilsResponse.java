@@ -1,6 +1,7 @@
 package com.invertor.modbus.msg.response;
 
 import com.invertor.modbus.Modbus;
+import com.invertor.modbus.data.ModbusCoils;
 import com.invertor.modbus.exception.ModbusNumberException;
 import com.invertor.modbus.msg.base.AbstractReadResponse;
 import com.invertor.modbus.net.stream.base.ModbusInputStream;
@@ -57,8 +58,14 @@ public class ReadCoilsResponse extends AbstractReadResponse {
         return Arrays.copyOf(buffer, buffer.length);
     }
 
+    @Deprecated
     final public boolean[] getCoils() {
         return DataUtils.toBitsArray(buffer, buffer.length * 8);
+    }
+
+    @Deprecated
+    final public ModbusCoils getModbusCoils() {
+        return new ModbusCoils(buffer);
     }
 
     final public void setCoils(boolean[] coils) throws ModbusNumberException {
