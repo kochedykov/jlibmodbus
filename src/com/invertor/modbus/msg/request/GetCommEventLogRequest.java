@@ -5,7 +5,6 @@ import com.invertor.modbus.data.DataHolder;
 import com.invertor.modbus.exception.ModbusNumberException;
 import com.invertor.modbus.msg.base.ModbusRequest;
 import com.invertor.modbus.msg.base.ModbusResponse;
-import com.invertor.modbus.msg.response.GetCommEventCounterResponse;
 import com.invertor.modbus.msg.response.GetCommEventLogResponse;
 import com.invertor.modbus.net.stream.base.ModbusInputStream;
 import com.invertor.modbus.net.stream.base.ModbusOutputStream;
@@ -42,7 +41,7 @@ final public class GetCommEventLogRequest extends ModbusRequest {
 
     @Override
     protected Class getResponseClass() {
-        return GetCommEventCounterResponse.class;
+        return GetCommEventLogResponse.class;
     }
 
     @Override
