@@ -1,4 +1,4 @@
-package com.invertor.modbus.examples;
+package com.intelligt.modbus.examples;
 
 import com.intelligt.modbus.jlibmodbus.Modbus;
 import com.intelligt.modbus.jlibmodbus.ModbusSlave;

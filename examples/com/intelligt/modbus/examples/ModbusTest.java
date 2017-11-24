@@ -1,4 +1,4 @@
-package com.invertor.modbus.examples;
+package com.intelligt.modbus.examples;
 
 import com.intelligt.modbus.jlibmodbus.*;
 import com.intelligt.modbus.jlibmodbus.data.DataHolder;
