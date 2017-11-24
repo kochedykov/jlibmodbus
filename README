@@ -17,7 +17,15 @@ If you have problems, questions or suggestions, please contact me at email addre
 To learn how to use the library you can either use examples in "examples\com\invertor\examples\modbus" folder or contact me at email.
 
 Maven dependency:
-<!--since 1.2.8.4-->
+
+The latest stable release.
+<dependency>
+  <groupId>com.intelligt.modbus</groupId>
+  <artifactId>jlibmodbus</artifactId>
+  <version>1.2.9.0</version>
+</dependency>
+
+The previous stable release.
 <dependency>
   <groupId>com.github.kochedykov</groupId>
   <artifactId>jlibmodbus</artifactId>
