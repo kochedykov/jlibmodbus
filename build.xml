@@ -25,13 +25,14 @@ email: vladislav.kochedykov@gmail.com
 	<property name="build.name" value="jlibmodbus"/>
 	<property name="build.info" value="${basedir}${file.separator}project.properties"/>
     <property name="build.src" value="${basedir}${file.separator}src"/>
-	<property name="build.packages" value="com.invertor.modbus.*"/>
+	<property name="build.packages" value="com.intelligt.modbus.jlibmodbus.*"/>
     <property name="build.lib" value="${basedir}${file.separator}lib"/>
 	<property name="build.dir" value="${basedir}${file.separator}build"/>
     <property name="build.classes" value="${build.dir}${file.separator}classes"/>
 	<property name="build.javadoc" value="${build.dir}${file.separator}javadoc"/>
     <property file="build.properties"/>
 	<property file="build.version"/>
+	<property file="build.deprecation"/>
 	<property file="build.copyright"/>
 	<property file="build.number"/>
 	
@@ -85,8 +86,8 @@ email: vladislav.kochedykov@gmail.com
 			System:       ${build.sysinfo}    ${line.separator}
 			"
 		/>
-		<echo file="${build.src}${file.separator}com${file.separator}invertor${file.separator}modbus${file.separator}Version.java" 
-		append="false">package com.invertor.modbus;
+		<echo file="${build.src}${file.separator}com${file.separator}intelligt${file.separator}modbus${file.separator}jlibmodbus${file.separator}Version.java" 
+		append="false">package com.intelligt.modbus.jlibmodbus;
 /*
  * Copyright (C) 2016 "Invertor" Factory", JSC
  * [http://www.sbp-invertor.ru]

@@ -39,7 +39,33 @@ https://github.com/scream3r/java-simple-serial-connector
 
 rxtx home page:
 http://users.frii.com/jarvi/rxtx/index.html
-
+-----------------------------------------------------------------------------------------------------------
+----Release version 1.2.9.0 -------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------
+This release contains important bug fixes and improvements.
+	NEWS
+	* IMPORTANT! Renamed package from com.invertor.modbus to com.intelligt.modbus.jlibmodbus! 
+	* IMPORTANT! Change default read timeout to one second.
+	* Added new examples.
+	* Fixed bug in GetCommEventLog.
+	* Added data frame events to Input/Output streams.
+	* Added loopback serial port for testing applications without actual serial hardware. Author Kevin Kieffer.
+	* Added method ReadCoilsResponse#getModbusCoils that returns a ModbusCoils instance.
+	* Fixed bug in ModbusValue#next().
+	* Fixed errors in data conversion operations.
+	* Added method ReadHoldingRegisters#getHoldingRegisters that returns a ModbusHoldingRegisters instance.
+	* Renamed getBytes -> getBytesBe.
+	* Renamed Coils->ModbusCoils, HoldingRegistors->ModbusHoldingRegisters.
+	* Added class ModbusValues.
+	* Renamed getValues -> getBytes, setValues -> setBytes.
+	* Added additional helpers.
+	* Added BroadcastResponse class to avoid timeout exception while sending broadcast requests.
+	* Fixed incorrect logic if crc equals zero. Thanks to flooduk (https://github.com/flooduk).
+	* Fixed handling of broadcast requests.
+	* Fixed handling of RestartCommunicationsOption.
+	* Optimized memory usage.
+	* Fixed the MIN_PDU_LENGTH value.
+	* Reduced copy operations number.
 -----------------------------------------------------------------------------------------------------------
 ----Release version 1.2.8.4 -------------------------------------------------------------------------------
 -----------------------------------------------------------------------------------------------------------
