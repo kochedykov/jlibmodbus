@@ -1,8 +1,7 @@
 package com.invertor.modbus.net.stream.base;
 
 import com.invertor.modbus.Modbus;
-import com.invertor.modbus.utils.ByteFifo;
-import com.invertor.modbus.utils.DataUtils;
+import com.invertor.modbus.utils.*;
 
 import java.io.IOException;
 
@@ -34,8 +33,9 @@ import java.io.IOException;
  * @author kochedykov
  * @since 1.2
  */
-public class LoggingInputStream extends ModbusInputStream {
+public class LoggingInputStream extends ModbusInputStream implements FrameEventListenerList {
 
+    final private FrameEventListenerList listenerList = new FrameEventListenerListImpl();
     final static private String LOG_MESSAGE_TITLE = "Frame recv: ";
     /**
      * The input stream to be logged
@@ -72,8 +72,33 @@ public class LoggingInputStream extends ModbusInputStream {
 
     public void log() {
         if (Modbus.isLoggingEnabled()) {
-            Modbus.log().info(LOG_MESSAGE_TITLE + DataUtils.toAscii(fifo.toByteArray()));
+            byte[] bytes = fifo.toByteArray();
+            Modbus.log().info(LOG_MESSAGE_TITLE + DataUtils.toAscii(bytes));
+            fireFrameReceivedEvent(new FrameEvent(bytes));
             fifo.reset();
         }
+    }
+
+    /*
+     * facade
+     */
+    @Override
+    public void addListener(FrameEventListener listener) {
+        listenerList.addListener(listener);
+    }
+
+    @Override
+    public void removeListener(FrameEventListener listener) {
+        listenerList.removeListener(listener);
+    }
+
+    @Override
+    public void fireFrameReceivedEvent(FrameEvent event) {
+        listenerList.fireFrameReceivedEvent(event);
+    }
+
+    @Override
+    public void fireFrameSentEvent(FrameEvent event) {
+        listenerList.fireFrameSentEvent(event);
     }
 }

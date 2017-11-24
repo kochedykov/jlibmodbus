@@ -1,7 +1,7 @@
 package com.invertor.modbus.net.stream.base;
 
 import com.invertor.modbus.Modbus;
-import com.invertor.modbus.utils.DataUtils;
+import com.invertor.modbus.utils.*;
 
 import java.io.IOException;
 
@@ -33,8 +33,9 @@ import java.io.IOException;
  * @author kochedykov
  * @since 1.2
  */
-public class LoggingOutputStream extends ModbusOutputStream {
+public class LoggingOutputStream extends ModbusOutputStream implements FrameEventListenerList {
 
+    final private FrameEventListenerList listenerList = new FrameEventListenerListImpl();
     final static private String LOG_MESSAGE_TITLE = "Frame sent: ";
     /**
      * The output stream to be logged
@@ -77,12 +78,38 @@ public class LoggingOutputStream extends ModbusOutputStream {
 
     public void log() {
         if (Modbus.isLoggingEnabled()) {
-            Modbus.log().info(LOG_MESSAGE_TITLE + DataUtils.toAscii(super.toByteArray()));
+            byte[] bytes = super.toByteArray();
+            fireFrameSentEvent(new FrameEvent(bytes));
+            Modbus.log().info(LOG_MESSAGE_TITLE + DataUtils.toAscii(bytes));
             super.getFifo().reset();
         }
     }
 
     public byte[] toByteArray() {
         return out.toByteArray();
+    }
+
+    /*
+     * facade
+     */
+
+    @Override
+    public void addListener(FrameEventListener listener) {
+        listenerList.addListener(listener);
+    }
+
+    @Override
+    public void removeListener(FrameEventListener listener) {
+        listenerList.removeListener(listener);
+    }
+
+    @Override
+    public void fireFrameReceivedEvent(FrameEvent event) {
+        listenerList.fireFrameReceivedEvent(event);
+    }
+
+    @Override
+    public void fireFrameSentEvent(FrameEvent event) {
+        listenerList.fireFrameSentEvent(event);
     }
 }
