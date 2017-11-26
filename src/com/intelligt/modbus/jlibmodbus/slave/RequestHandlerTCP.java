@@ -8,6 +8,7 @@ import com.intelligt.modbus.jlibmodbus.exception.ModbusNumberException;
 import com.intelligt.modbus.jlibmodbus.msg.base.ModbusMessage;
 import com.intelligt.modbus.jlibmodbus.msg.base.ModbusRequest;
 import com.intelligt.modbus.jlibmodbus.net.ModbusConnection;
+import com.intelligt.modbus.jlibmodbus.net.ModbusSlaveConnectionTCP;
 import com.intelligt.modbus.jlibmodbus.net.transport.ModbusTransport;
 
 /*
@@ -66,6 +67,7 @@ class RequestHandlerTCP extends RequestHandler {
             setListening(false);
             try {
                 getConn().close();
+                ((ModbusSlaveTCP) getSlave()).notifyObservers(((ModbusSlaveConnectionTCP) getConn()).getClientInfo());
             } catch (ModbusIOException ioe) {
                 Modbus.log().warning(ioe.getMessage());
             }

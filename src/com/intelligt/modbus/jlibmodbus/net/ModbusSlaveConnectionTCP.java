@@ -5,6 +5,7 @@ import com.intelligt.modbus.jlibmodbus.net.stream.base.ModbusInputStream;
 import com.intelligt.modbus.jlibmodbus.net.stream.base.ModbusOutputStream;
 import com.intelligt.modbus.jlibmodbus.net.transport.ModbusTransport;
 import com.intelligt.modbus.jlibmodbus.net.transport.ModbusTransportFactory;
+import com.intelligt.modbus.jlibmodbus.utils.TcpClientInfo;
 
 import java.io.IOException;
 import java.net.Socket;
@@ -30,15 +31,17 @@ import java.net.Socket;
  * Authors: Vladislav Y. Kochedykov, software engineer.
  * email: vladislav.kochedykov@gmail.com
  */
-class ModbusSlaveConnectionTCP extends ModbusConnection {
+public class ModbusSlaveConnectionTCP extends ModbusConnection {
 
     private Socket socket;
     private ModbusTransport transport = null;
+    private final TcpClientInfo clientInfo;
 
     ModbusSlaveConnectionTCP(Socket socket) throws ModbusIOException {
         this.socket = socket;
         transport = ModbusTransportFactory.createTCP(socket);
         open();
+        clientInfo = new TcpClientInfo(socket.getLocalAddress(), socket.getLocalPort(), socket.getInetAddress(), socket.getPort(), true);
     }
 
     @Override
@@ -59,6 +62,7 @@ class ModbusSlaveConnectionTCP extends ModbusConnection {
     @Override
     public void open() throws ModbusIOException {
         setOpened(true);
+        clientInfo.setOpened(true);
     }
 
     @Override
@@ -72,6 +76,15 @@ class ModbusSlaveConnectionTCP extends ModbusConnection {
         } finally {
             transport = null;
             socket = null;
+            clientInfo.setOpened(false);
         }
+    }
+
+    public Socket getSocket() {
+        return socket;
+    }
+
+    public TcpClientInfo getClientInfo() {
+        return clientInfo;
     }
 }

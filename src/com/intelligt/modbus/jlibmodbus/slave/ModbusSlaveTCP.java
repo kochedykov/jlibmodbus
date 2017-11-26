@@ -5,12 +5,15 @@ import com.intelligt.modbus.jlibmodbus.ModbusSlave;
 import com.intelligt.modbus.jlibmodbus.exception.ModbusIOException;
 import com.intelligt.modbus.jlibmodbus.net.ModbusConnection;
 import com.intelligt.modbus.jlibmodbus.net.ModbusConnectionFactory;
+import com.intelligt.modbus.jlibmodbus.net.ModbusSlaveConnectionTCP;
 import com.intelligt.modbus.jlibmodbus.tcp.TcpParameters;
 
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
+import java.util.Observable;
+import java.util.Observer;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -43,6 +46,7 @@ public class ModbusSlaveTCP extends ModbusSlave implements Runnable {
     final private TcpParameters tcp;
     private Thread mainThread = null;
     private ServerSocket server = null;
+    private Observable observable = new Observable();
 
     public ModbusSlaveTCP(TcpParameters tcp) {
         this(tcp, DEFAULT_POOLS_SIZE);
@@ -102,8 +106,10 @@ public class ModbusSlaveTCP extends ModbusSlave implements Runnable {
             while (isListening()) {
                 s = server.accept();
                 try {
+                    notifyObservers(s);
                     conn = ModbusConnectionFactory.getTcpSlave(s);
                     conn.setReadTimeout(getReadTimeout());
+                    notifyObservers(((ModbusSlaveConnectionTCP) conn).getClientInfo());
                     threadPool.execute(new RequestHandlerTCP(this, conn));
                 } catch (ModbusIOException ioe) {
                     Modbus.log().warning(ioe.getLocalizedMessage());
@@ -127,5 +133,32 @@ public class ModbusSlaveTCP extends ModbusSlave implements Runnable {
                 Modbus.log().warning("Cannot shutdown: " + e.getLocalizedMessage());
             }
         }
+    }
+
+    /*
+    facade
+     */
+    void addObserver(Observer observer) {
+        observable.addObserver(observer);
+    }
+
+    void deleteObserver(Observer observer) {
+        observable.deleteObserver(observer);
+    }
+
+    void deleteObservers() {
+        observable.deleteObservers();
+    }
+
+    void hasChanged() {
+        observable.hasChanged();
+    }
+
+    int countObservers() {
+        return observable.countObservers();
+    }
+
+    void notifyObservers(Object o) {
+        observable.notifyObservers(o);
     }
 }
