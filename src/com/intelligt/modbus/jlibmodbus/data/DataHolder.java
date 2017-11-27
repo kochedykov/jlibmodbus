@@ -84,7 +84,7 @@ public class DataHolder {
     }
 
     public boolean[] readCoilRange(int offset, int quantity) throws IllegalDataAddressException, IllegalDataValueException {
-        checkPointer(holdingRegisters, offset);
+        checkPointer(coils, offset);
         return coils.getRange(offset, quantity);
     }
 
