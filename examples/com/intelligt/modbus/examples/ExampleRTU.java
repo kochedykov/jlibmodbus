@@ -1,19 +1,23 @@
 package com.intelligt.modbus.examples;
 
-import com.intelligt.modbus.jlibmodbus.ModbusMaster;
-import com.intelligt.modbus.jlibmodbus.ModbusMasterFactory;
-import com.intelligt.modbus.jlibmodbus.ModbusSlave;
-import com.intelligt.modbus.jlibmodbus.ModbusSlaveFactory;
+import com.intelligt.modbus.jlibmodbus.Modbus;
 import com.intelligt.modbus.jlibmodbus.data.ModbusHoldingRegisters;
 import com.intelligt.modbus.jlibmodbus.exception.ModbusIOException;
 import com.intelligt.modbus.jlibmodbus.exception.ModbusNumberException;
 import com.intelligt.modbus.jlibmodbus.exception.ModbusProtocolException;
+import com.intelligt.modbus.jlibmodbus.master.ModbusMaster;
+import com.intelligt.modbus.jlibmodbus.master.ModbusMasterFactory;
 import com.intelligt.modbus.jlibmodbus.msg.request.ReadHoldingRegistersRequest;
 import com.intelligt.modbus.jlibmodbus.msg.response.ReadHoldingRegistersResponse;
 import com.intelligt.modbus.jlibmodbus.serial.SerialParameters;
 import com.intelligt.modbus.jlibmodbus.serial.SerialPortException;
 import com.intelligt.modbus.jlibmodbus.serial.SerialPortFactoryLoopback;
 import com.intelligt.modbus.jlibmodbus.serial.SerialUtils;
+import com.intelligt.modbus.jlibmodbus.slave.ModbusSlave;
+import com.intelligt.modbus.jlibmodbus.slave.ModbusSlaveFactory;
+import com.intelligt.modbus.jlibmodbus.utils.DataUtils;
+import com.intelligt.modbus.jlibmodbus.utils.FrameEvent;
+import com.intelligt.modbus.jlibmodbus.utils.FrameEventListener;
 
 public class ExampleRTU {
 
@@ -21,6 +25,7 @@ public class ExampleRTU {
 
     public static void main(String[] argv) {
         try {
+            Modbus.setLogLevel(Modbus.LogLevel.LEVEL_DEBUG);
             SerialParameters serialParameters = new SerialParameters();
             /*
              Use a virtual serial port SerialPortLoopback
@@ -35,6 +40,21 @@ public class ExampleRTU {
             slave.setServerAddress(slaveId);
             slave.setBroadcastEnabled(true);
             slave.setReadTimeout(10000);
+
+            FrameEventListener listener = new FrameEventListener() {
+                @Override
+                public void frameSentEvent(FrameEvent event) {
+                    System.out.println("frame sent " + DataUtils.toAscii(event.getBytes()));
+                }
+
+                @Override
+                public void frameReceivedEvent(FrameEvent event) {
+                    System.out.println("frame recv " + DataUtils.toAscii(event.getBytes()));
+                }
+            };
+
+            slave.addListener(listener);
+            master.addListener(listener);
 
             ModbusHoldingRegisters holdingRegisters = new ModbusHoldingRegisters(1000);
 

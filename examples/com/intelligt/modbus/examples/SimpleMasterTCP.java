@@ -1,11 +1,11 @@
 package com.intelligt.modbus.examples;
 
 import com.intelligt.modbus.jlibmodbus.Modbus;
-import com.intelligt.modbus.jlibmodbus.ModbusMaster;
-import com.intelligt.modbus.jlibmodbus.ModbusMasterFactory;
 import com.intelligt.modbus.jlibmodbus.exception.ModbusIOException;
 import com.intelligt.modbus.jlibmodbus.exception.ModbusNumberException;
 import com.intelligt.modbus.jlibmodbus.exception.ModbusProtocolException;
+import com.intelligt.modbus.jlibmodbus.master.ModbusMaster;
+import com.intelligt.modbus.jlibmodbus.master.ModbusMasterFactory;
 import com.intelligt.modbus.jlibmodbus.msg.request.ReadHoldingRegistersRequest;
 import com.intelligt.modbus.jlibmodbus.msg.response.ReadHoldingRegistersResponse;
 import com.intelligt.modbus.jlibmodbus.tcp.TcpParameters;

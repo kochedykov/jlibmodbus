@@ -1,6 +1,6 @@
 package com.intelligt.modbus.examples;
 
-import com.intelligt.modbus.jlibmodbus.*;
+import com.intelligt.modbus.jlibmodbus.Modbus;
 import com.intelligt.modbus.jlibmodbus.data.DataHolder;
 import com.intelligt.modbus.jlibmodbus.data.FifoQueue;
 import com.intelligt.modbus.jlibmodbus.data.SimpleDataHolderBuilder;
@@ -9,11 +9,15 @@ import com.intelligt.modbus.jlibmodbus.data.mei.ReadDeviceIdentificationInterfac
 import com.intelligt.modbus.jlibmodbus.exception.IllegalDataAddressException;
 import com.intelligt.modbus.jlibmodbus.exception.IllegalDataValueException;
 import com.intelligt.modbus.jlibmodbus.exception.ModbusIOException;
+import com.intelligt.modbus.jlibmodbus.master.ModbusMaster;
+import com.intelligt.modbus.jlibmodbus.master.ModbusMasterFactory;
 import com.intelligt.modbus.jlibmodbus.master.ModbusMasterTCP;
 import com.intelligt.modbus.jlibmodbus.msg.base.mei.MEIReadDeviceIdentification;
 import com.intelligt.modbus.jlibmodbus.msg.base.mei.ReadDeviceIdentificationCode;
 import com.intelligt.modbus.jlibmodbus.serial.SerialParameters;
 import com.intelligt.modbus.jlibmodbus.serial.SerialPort;
+import com.intelligt.modbus.jlibmodbus.slave.ModbusSlave;
+import com.intelligt.modbus.jlibmodbus.slave.ModbusSlaveFactory;
 import com.intelligt.modbus.jlibmodbus.tcp.TcpParameters;
 import jssc.SerialPortList;
 

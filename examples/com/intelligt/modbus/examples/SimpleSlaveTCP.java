@@ -1,12 +1,12 @@
 package com.intelligt.modbus.examples;
 
 import com.intelligt.modbus.jlibmodbus.Modbus;
-import com.intelligt.modbus.jlibmodbus.ModbusSlave;
-import com.intelligt.modbus.jlibmodbus.ModbusSlaveFactory;
 import com.intelligt.modbus.jlibmodbus.data.DataHolder;
 import com.intelligt.modbus.jlibmodbus.data.ModbusHoldingRegisters;
 import com.intelligt.modbus.jlibmodbus.exception.IllegalDataAddressException;
 import com.intelligt.modbus.jlibmodbus.exception.IllegalDataValueException;
+import com.intelligt.modbus.jlibmodbus.slave.ModbusSlave;
+import com.intelligt.modbus.jlibmodbus.slave.ModbusSlaveFactory;
 import com.intelligt.modbus.jlibmodbus.tcp.TcpParameters;
 
 import java.net.InetAddress;

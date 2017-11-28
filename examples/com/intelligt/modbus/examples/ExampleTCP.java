@@ -1,16 +1,22 @@
 package com.intelligt.modbus.examples;
 
-import com.intelligt.modbus.jlibmodbus.*;
+import com.intelligt.modbus.jlibmodbus.Modbus;
 import com.intelligt.modbus.jlibmodbus.data.ModbusHoldingRegisters;
 import com.intelligt.modbus.jlibmodbus.exception.ModbusIOException;
 import com.intelligt.modbus.jlibmodbus.exception.ModbusNumberException;
 import com.intelligt.modbus.jlibmodbus.exception.ModbusProtocolException;
+import com.intelligt.modbus.jlibmodbus.master.ModbusMaster;
+import com.intelligt.modbus.jlibmodbus.master.ModbusMasterFactory;
 import com.intelligt.modbus.jlibmodbus.msg.request.ReadHoldingRegistersRequest;
 import com.intelligt.modbus.jlibmodbus.msg.response.ReadHoldingRegistersResponse;
+import com.intelligt.modbus.jlibmodbus.slave.ModbusSlaveFactory;
+import com.intelligt.modbus.jlibmodbus.slave.ModbusSlaveTCP;
 import com.intelligt.modbus.jlibmodbus.tcp.TcpParameters;
+import com.intelligt.modbus.jlibmodbus.utils.*;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.Observer;
 
 /*
  * Copyright (C) 2017 Vladislav Y. Kochedykov
@@ -33,7 +39,7 @@ import java.net.UnknownHostException;
  * Authors: Vladislav Y. Kochedykov, software engineer.
  * email: vladislav.kochedykov@gmail.com
  */
-public class TcpExample {
+public class ExampleTCP {
     static public void main(String[] argv) {
 
         //
@@ -44,13 +50,41 @@ public class TcpExample {
             tcpParameters.setPort(Modbus.TCP_PORT);
             tcpParameters.setKeepAlive(true);
 
-            ModbusSlave slave = ModbusSlaveFactory.createModbusSlaveTCP(tcpParameters);
+            ModbusSlaveTCP slave = (ModbusSlaveTCP) ModbusSlaveFactory.createModbusSlaveTCP(tcpParameters);
             ModbusMaster master = ModbusMasterFactory.createModbusMasterTCP(tcpParameters);
+
 
             master.setResponseTimeout(1000);
             slave.setServerAddress(Modbus.TCP_DEFAULT_ID);
             slave.setBroadcastEnabled(true);
-            slave.setReadTimeout(10000);
+            slave.setReadTimeout(1000);
+
+            FrameEventListener listener = new FrameEventListener() {
+                @Override
+                public void frameSentEvent(FrameEvent event) {
+                    System.out.println("frame sent " + DataUtils.toAscii(event.getBytes()));
+                }
+
+                @Override
+                public void frameReceivedEvent(FrameEvent event) {
+                    System.out.println("frame recv " + DataUtils.toAscii(event.getBytes()));
+                }
+            };
+
+            master.addListener(listener);
+            slave.addListener(listener);
+            Observer o = new ModbusSlaveTcpObserver() {
+                @Override
+                public void clientAccepted(TcpClientInfo info) {
+                    System.out.println("Client connected " + info.getTcpParameters().getHost());
+                }
+
+                @Override
+                public void clientDisconnected(TcpClientInfo info) {
+                    System.out.println("Client disonnected " + info.getTcpParameters().getHost());
+                }
+            };
+            slave.addObserver(o);
 
             ModbusHoldingRegisters holdingRegisters = new ModbusHoldingRegisters(1000);
 
