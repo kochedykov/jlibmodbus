@@ -1,8 +1,8 @@
 package com.intelligt.modbus.jlibmodbus.net.transport;
 
-import com.intelligt.modbus.jlibmodbus.Modbus;
 import com.intelligt.modbus.jlibmodbus.serial.SerialPort;
 
+import java.io.IOException;
 import java.net.Socket;
 
 /*
@@ -36,12 +36,7 @@ public class ModbusTransportFactory {
         return new ModbusTransportASCII(serial);
     }
 
-    static public ModbusTransport createTCP(Socket socket) {
-        try {
-            return new ModbusTransportTCP(socket);
-        } catch (Exception e) {
-            Modbus.log().severe(e.getLocalizedMessage());
-            return null;
-        }
+    static public ModbusTransport createTCP(Socket socket) throws IOException {
+        return new ModbusTransportTCP(socket);
     }
 }

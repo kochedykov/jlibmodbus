@@ -1,6 +1,5 @@
 package com.intelligt.modbus.jlibmodbus.master;
 
-import com.intelligt.modbus.jlibmodbus.net.ModbusConnection;
 import com.intelligt.modbus.jlibmodbus.net.ModbusConnectionFactory;
 import com.intelligt.modbus.jlibmodbus.serial.SerialParameters;
 import com.intelligt.modbus.jlibmodbus.serial.SerialPort;
@@ -31,10 +30,8 @@ import com.intelligt.modbus.jlibmodbus.serial.SerialUtils;
 
 final public class ModbusMasterASCII extends ModbusMasterSerial {
 
-    final private ModbusConnection conn;
-
     public ModbusMasterASCII(SerialParameters parameters) throws SerialPortException {
-        conn = ModbusConnectionFactory.getASCII(SerialUtils.createSerial(parameters));
+        super(ModbusConnectionFactory.getASCII(SerialUtils.createSerial(parameters)));
     }
 
     public ModbusMasterASCII(String device, SerialPort.BaudRate baudRate, SerialPort.Parity parity) throws SerialPortException {
@@ -43,10 +40,5 @@ final public class ModbusMasterASCII extends ModbusMasterSerial {
 
     public ModbusMasterASCII(String device, SerialPort.BaudRate baudRate) throws SerialPortException {
         this(device, baudRate, SerialPort.Parity.EVEN);
-    }
-
-    @Override
-    protected ModbusConnection getConnection() {
-        return conn;
     }
 }

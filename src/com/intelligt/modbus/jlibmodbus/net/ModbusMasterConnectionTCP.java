@@ -2,8 +2,8 @@ package com.intelligt.modbus.jlibmodbus.net;
 
 import com.intelligt.modbus.jlibmodbus.Modbus;
 import com.intelligt.modbus.jlibmodbus.exception.ModbusIOException;
-import com.intelligt.modbus.jlibmodbus.net.stream.base.ModbusInputStream;
-import com.intelligt.modbus.jlibmodbus.net.stream.base.ModbusOutputStream;
+import com.intelligt.modbus.jlibmodbus.net.stream.base.LoggingInputStream;
+import com.intelligt.modbus.jlibmodbus.net.stream.base.LoggingOutputStream;
 import com.intelligt.modbus.jlibmodbus.net.transport.ModbusTransport;
 import com.intelligt.modbus.jlibmodbus.net.transport.ModbusTransportFactory;
 import com.intelligt.modbus.jlibmodbus.tcp.TcpParameters;
@@ -43,12 +43,12 @@ class ModbusMasterConnectionTCP extends ModbusConnection {
     }
 
     @Override
-    public ModbusOutputStream getOutputStream() {
+    public LoggingOutputStream getOutputStream() {
         return transport.getOutputStream();
     }
 
     @Override
-    public ModbusInputStream getInputStream() {
+    public LoggingInputStream getInputStream() {
         return transport.getInputStream();
     }
 
@@ -58,27 +58,28 @@ class ModbusMasterConnectionTCP extends ModbusConnection {
     }
 
     @Override
-    public void open() throws ModbusIOException {
-        if (isNotOpened()) {
+    protected void openImpl() throws ModbusIOException {
+        if (!isOpened()) {
             if (parameters != null) {
                 Socket socket = new Socket();
                 InetSocketAddress isa = new InetSocketAddress(parameters.getHost(), parameters.getPort());
                 try {
                     socket.connect(isa, Modbus.MAX_CONNECTION_TIMEOUT);
                     socket.setKeepAlive(parameters.isKeepAlive());
+
+                    transport = ModbusTransportFactory.createTCP(socket);
+                    setReadTimeout(getReadTimeout());
                 } catch (Exception e) {
                     throw new ModbusIOException(e);
                 }
-                transport = ModbusTransportFactory.createTCP(socket);
-                setReadTimeout(getReadTimeout());
-                setOpened(true);
+            } else {
+                throw new ModbusIOException("TCP parameters is null");
             }
         }
     }
 
     @Override
-    public void close() throws ModbusIOException {
-        setOpened(false);
+    protected void closeImpl() throws ModbusIOException {
         try {
             if (transport != null) {
                 transport.close();

@@ -1,10 +1,11 @@
 package com.intelligt.modbus.jlibmodbus.net;
 
 import com.intelligt.modbus.jlibmodbus.exception.ModbusIOException;
-import com.intelligt.modbus.jlibmodbus.net.stream.base.ModbusInputStream;
-import com.intelligt.modbus.jlibmodbus.net.stream.base.ModbusOutputStream;
+import com.intelligt.modbus.jlibmodbus.net.stream.base.LoggingInputStream;
+import com.intelligt.modbus.jlibmodbus.net.stream.base.LoggingOutputStream;
 import com.intelligt.modbus.jlibmodbus.net.transport.ModbusTransport;
 import com.intelligt.modbus.jlibmodbus.net.transport.ModbusTransportFactory;
+import com.intelligt.modbus.jlibmodbus.tcp.TcpParameters;
 import com.intelligt.modbus.jlibmodbus.utils.TcpClientInfo;
 
 import java.io.IOException;
@@ -38,19 +39,24 @@ public class ModbusSlaveConnectionTCP extends ModbusConnection {
     private final TcpClientInfo clientInfo;
 
     ModbusSlaveConnectionTCP(Socket socket) throws ModbusIOException {
-        this.socket = socket;
-        transport = ModbusTransportFactory.createTCP(socket);
-        open();
-        clientInfo = new TcpClientInfo(socket.getLocalAddress(), socket.getLocalPort(), socket.getInetAddress(), socket.getPort(), true);
+        try {
+            this.socket = socket;
+            transport = ModbusTransportFactory.createTCP(socket);
+            clientInfo = new TcpClientInfo(new TcpParameters(socket.getInetAddress(), socket.getPort(), socket.getKeepAlive()), false);
+
+            open();
+        } catch (Exception e) {
+            throw new ModbusIOException(e);
+        }
     }
 
     @Override
-    public ModbusOutputStream getOutputStream() {
+    public LoggingOutputStream getOutputStream() {
         return transport.getOutputStream();
     }
 
     @Override
-    public ModbusInputStream getInputStream() {
+    public LoggingInputStream getInputStream() {
         return transport.getInputStream();
     }
 
@@ -60,14 +66,12 @@ public class ModbusSlaveConnectionTCP extends ModbusConnection {
     }
 
     @Override
-    public void open() throws ModbusIOException {
-        setOpened(true);
-        clientInfo.setOpened(true);
+    protected void openImpl() throws ModbusIOException {
+        clientInfo.setConnected(true);
     }
 
     @Override
-    public void close() throws ModbusIOException {
-        setOpened(false);
+    protected void closeImpl() throws ModbusIOException {
         try {
             if (socket != null)
                 socket.close();
@@ -76,7 +80,7 @@ public class ModbusSlaveConnectionTCP extends ModbusConnection {
         } finally {
             transport = null;
             socket = null;
-            clientInfo.setOpened(false);
+            clientInfo.setConnected(false);
         }
     }
 

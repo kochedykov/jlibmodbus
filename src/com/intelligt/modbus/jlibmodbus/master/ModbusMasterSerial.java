@@ -8,6 +8,7 @@ import com.intelligt.modbus.jlibmodbus.exception.ModbusProtocolException;
 import com.intelligt.modbus.jlibmodbus.msg.ModbusRequestBuilder;
 import com.intelligt.modbus.jlibmodbus.msg.base.ModbusRequest;
 import com.intelligt.modbus.jlibmodbus.msg.response.*;
+import com.intelligt.modbus.jlibmodbus.net.ModbusConnection;
 
 /*
  * Copyright (C) 2016 "Invertor" Factory", JSC
@@ -33,6 +34,10 @@ import com.intelligt.modbus.jlibmodbus.msg.response.*;
 abstract public class ModbusMasterSerial extends ModbusMaster {
 
     final private CommStatus commStatus = new CommStatus();
+
+    public ModbusMasterSerial(ModbusConnection conn) {
+        super(conn);
+    }
 
     @Override
     final synchronized public int readExceptionStatus(int serverAddress) throws

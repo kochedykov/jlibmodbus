@@ -1,8 +1,8 @@
 package com.intelligt.modbus.jlibmodbus.net;
 
 import com.intelligt.modbus.jlibmodbus.exception.ModbusIOException;
-import com.intelligt.modbus.jlibmodbus.net.stream.base.ModbusInputStream;
-import com.intelligt.modbus.jlibmodbus.net.stream.base.ModbusOutputStream;
+import com.intelligt.modbus.jlibmodbus.net.stream.base.LoggingInputStream;
+import com.intelligt.modbus.jlibmodbus.net.stream.base.LoggingOutputStream;
 import com.intelligt.modbus.jlibmodbus.net.transport.ModbusTransport;
 import com.intelligt.modbus.jlibmodbus.serial.SerialPort;
 import com.intelligt.modbus.jlibmodbus.serial.SerialPortException;
@@ -54,11 +54,10 @@ abstract class ModbusConnectionSerial extends ModbusConnection {
     }
 
     @Override
-    public void open() throws ModbusIOException {
-        if (isNotOpened()) {
+    protected void openImpl() throws ModbusIOException {
+        if (!isOpened()) {
             try {
                 this.serial.open();
-                setOpened(true);
             } catch (SerialPortException e) {
                 throw new ModbusIOException(e);
             }
@@ -66,18 +65,17 @@ abstract class ModbusConnectionSerial extends ModbusConnection {
     }
 
     @Override
-    public void close() {
-        setOpened(false);
+    protected void closeImpl() {
         this.serial.close();
     }
 
     @Override
-    public ModbusOutputStream getOutputStream() {
+    public LoggingOutputStream getOutputStream() {
         return transport.getOutputStream();
     }
 
     @Override
-    public ModbusInputStream getInputStream() {
+    public LoggingInputStream getInputStream() {
         return transport.getInputStream();
     }
 

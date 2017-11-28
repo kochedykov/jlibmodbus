@@ -9,7 +9,6 @@ import com.intelligt.modbus.jlibmodbus.exception.ModbusNumberException;
 import com.intelligt.modbus.jlibmodbus.exception.ModbusProtocolException;
 import com.intelligt.modbus.jlibmodbus.msg.base.ModbusMessage;
 import com.intelligt.modbus.jlibmodbus.msg.base.ModbusRequest;
-import com.intelligt.modbus.jlibmodbus.net.ModbusConnection;
 import com.intelligt.modbus.jlibmodbus.net.ModbusConnectionFactory;
 import com.intelligt.modbus.jlibmodbus.tcp.TcpParameters;
 import com.intelligt.modbus.jlibmodbus.utils.ModbusFunctionCode;
@@ -38,10 +37,9 @@ import com.intelligt.modbus.jlibmodbus.utils.ModbusFunctionCode;
 
 final public class ModbusMasterTCP extends ModbusMaster {
     final private boolean keepAlive;
-    final private ModbusConnection conn;
 
     public ModbusMasterTCP(TcpParameters parameters) {
-        conn = ModbusConnectionFactory.getTcpMaster(parameters);
+        super(ModbusConnectionFactory.getTcpMaster(parameters));
         keepAlive = parameters.isKeepAlive();
         try {
             if (isKeepAlive()) {
@@ -89,11 +87,6 @@ final public class ModbusMasterTCP extends ModbusMaster {
             disconnect();
         }
         return msg;
-    }
-
-    @Override
-    protected ModbusConnection getConnection() {
-        return conn;
     }
 
     @Override

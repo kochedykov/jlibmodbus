@@ -33,9 +33,9 @@ import java.io.IOException;
  * @author kochedykov
  * @since 1.2
  */
-public class LoggingInputStream extends ModbusInputStream implements FrameEventListenerList {
+public class LoggingInputStream extends ModbusInputStream {
 
-    final private FrameEventListenerList listenerList = new FrameEventListenerListImpl();
+    private FrameEventListenerList listenerList = new FrameEventListenerListImpl();
     final static private String LOG_MESSAGE_TITLE = "Frame recv: ";
     /**
      * The input stream to be logged
@@ -74,31 +74,12 @@ public class LoggingInputStream extends ModbusInputStream implements FrameEventL
         if (Modbus.isLoggingEnabled()) {
             byte[] bytes = fifo.toByteArray();
             Modbus.log().info(LOG_MESSAGE_TITLE + DataUtils.toAscii(bytes));
-            fireFrameReceivedEvent(new FrameEvent(bytes));
+            listenerList.fireFrameReceivedEvent(new FrameEvent(bytes));
             fifo.reset();
         }
     }
 
-    /*
-     * facade
-     */
-    @Override
-    public void addListener(FrameEventListener listener) {
-        listenerList.addListener(listener);
-    }
-
-    @Override
-    public void removeListener(FrameEventListener listener) {
-        listenerList.removeListener(listener);
-    }
-
-    @Override
-    public void fireFrameReceivedEvent(FrameEvent event) {
-        listenerList.fireFrameReceivedEvent(event);
-    }
-
-    @Override
-    public void fireFrameSentEvent(FrameEvent event) {
-        listenerList.fireFrameSentEvent(event);
+    public void setListenerList(FrameEventListenerList listenerList) {
+        this.listenerList = listenerList;
     }
 }

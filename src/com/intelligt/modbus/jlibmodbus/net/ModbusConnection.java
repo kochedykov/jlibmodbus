@@ -2,9 +2,10 @@ package com.intelligt.modbus.jlibmodbus.net;
 
 import com.intelligt.modbus.jlibmodbus.Modbus;
 import com.intelligt.modbus.jlibmodbus.exception.ModbusIOException;
-import com.intelligt.modbus.jlibmodbus.net.stream.base.ModbusInputStream;
-import com.intelligt.modbus.jlibmodbus.net.stream.base.ModbusOutputStream;
+import com.intelligt.modbus.jlibmodbus.net.stream.base.LoggingInputStream;
+import com.intelligt.modbus.jlibmodbus.net.stream.base.LoggingOutputStream;
 import com.intelligt.modbus.jlibmodbus.net.transport.ModbusTransport;
+import com.intelligt.modbus.jlibmodbus.utils.FrameEventListenerListImpl;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -29,22 +30,36 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * Authors: Vladislav Y. Kochedykov, software engineer.
  * email: vladislav.kochedykov@gmail.com
  */
-abstract public class ModbusConnection {
+abstract public class ModbusConnection extends FrameEventListenerListImpl {
 
     private int readTimeout = Modbus.MAX_RESPONSE_TIMEOUT;
     final private AtomicBoolean opened = new AtomicBoolean(false);
 
-    abstract public ModbusOutputStream getOutputStream();
+    abstract public LoggingOutputStream getOutputStream();
 
-    abstract public ModbusInputStream getInputStream();
+    abstract public LoggingInputStream getInputStream();
 
     abstract public ModbusTransport getTransport();
 
-    abstract public void open() throws ModbusIOException;
+    final public void open() throws ModbusIOException {
+        openImpl();
 
-    abstract public void close() throws ModbusIOException;
+        setOpened(true);
+        getOutputStream().setListenerList(this);
+        getInputStream().setListenerList(this);
+    }
 
-    //abstract public void reset() throws ModbusIOException;
+    final public void close() throws ModbusIOException {
+        try {
+            closeImpl();
+        } finally {
+            setOpened(false);
+        }
+    }
+
+    abstract protected void openImpl() throws ModbusIOException;
+
+    abstract protected void closeImpl() throws ModbusIOException;
 
     public int getReadTimeout() {
         return readTimeout;
@@ -53,7 +68,7 @@ abstract public class ModbusConnection {
     public void setReadTimeout(int timeout) {
         readTimeout = timeout;
         if (getTransport() != null) {
-            ModbusInputStream is = getInputStream();
+            LoggingInputStream is = getInputStream();
             if (is != null) {
                 is.setReadTimeout(timeout);
             }
@@ -67,11 +82,11 @@ abstract public class ModbusConnection {
         close();
     }
 
-    public boolean isNotOpened() {
-        return !opened.get();
+    public boolean isOpened() {
+        return opened.get();
     }
 
-    public void setOpened(boolean opened) {
+    private void setOpened(boolean opened) {
         this.opened.set(opened);
     }
 }

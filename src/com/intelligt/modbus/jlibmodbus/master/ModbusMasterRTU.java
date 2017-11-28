@@ -1,6 +1,5 @@
 package com.intelligt.modbus.jlibmodbus.master;
 
-import com.intelligt.modbus.jlibmodbus.net.ModbusConnection;
 import com.intelligt.modbus.jlibmodbus.net.ModbusConnectionFactory;
 import com.intelligt.modbus.jlibmodbus.serial.SerialParameters;
 import com.intelligt.modbus.jlibmodbus.serial.SerialPort;
@@ -31,18 +30,11 @@ import com.intelligt.modbus.jlibmodbus.serial.SerialUtils;
 
 final public class ModbusMasterRTU extends ModbusMasterSerial {
 
-    final private ModbusConnection conn;
-
     public ModbusMasterRTU(SerialParameters parameters) throws SerialPortException {
-        conn = ModbusConnectionFactory.getRTU(SerialUtils.createSerial(parameters));
+        super(ModbusConnectionFactory.getRTU(SerialUtils.createSerial(parameters)));
     }
 
     public ModbusMasterRTU(String device, SerialPort.BaudRate baudRate, int dataBits, int stopBits, SerialPort.Parity parity) throws SerialPortException {
         this(new SerialParameters(device, baudRate, dataBits, stopBits, parity));
-    }
-
-    @Override
-    protected ModbusConnection getConnection() {
-        return conn;
     }
 }

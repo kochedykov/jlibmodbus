@@ -88,7 +88,7 @@ public class SerialPortJSSC extends SerialPort {
 
     @Override
     public void close() {
-        if (port.isOpened()) {
+        if (isOpened()) {
             try {
                 port.closePort();
 

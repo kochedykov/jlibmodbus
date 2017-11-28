@@ -15,6 +15,9 @@ import com.intelligt.modbus.jlibmodbus.msg.base.mei.ReadDeviceIdentificationCode
 import com.intelligt.modbus.jlibmodbus.msg.response.*;
 import com.intelligt.modbus.jlibmodbus.net.ModbusConnection;
 import com.intelligt.modbus.jlibmodbus.net.transport.ModbusTransport;
+import com.intelligt.modbus.jlibmodbus.utils.FrameEvent;
+import com.intelligt.modbus.jlibmodbus.utils.FrameEventListener;
+import com.intelligt.modbus.jlibmodbus.utils.FrameEventListenerList;
 import com.intelligt.modbus.jlibmodbus.utils.ModbusExceptionCode;
 
 /*
@@ -38,15 +41,15 @@ import com.intelligt.modbus.jlibmodbus.utils.ModbusExceptionCode;
  * Authors: Vladislav Y. Kochedykov, software engineer.
  * email: vladislav.kochedykov@gmail.com
  */
-abstract public class ModbusMaster {
+abstract public class ModbusMaster implements FrameEventListenerList {
 
+    final private ModbusConnection conn;
     final private BroadcastResponse broadcastResponse = new BroadcastResponse();
     private int transactionId = 0;
     private long requestTime = 0;
-    private boolean connected = false;
 
-    protected ModbusMaster() {
-
+    public ModbusMaster(ModbusConnection conn) {
+        this.conn = conn;
     }
 
     public int getTransactionId() {
@@ -57,7 +60,9 @@ abstract public class ModbusMaster {
         this.transactionId = Math.min(Math.abs(transactionId), Modbus.TRANSACTION_ID_MAX_VALUE);
     }
 
-    abstract protected ModbusConnection getConnection();
+    protected ModbusConnection getConnection() {
+        return conn;
+    }
 
     /**
      * this method allows you to implement your own behavior of connect method.
@@ -80,23 +85,17 @@ abstract public class ModbusMaster {
     final public void connect() throws ModbusIOException {
         if (!isConnected()) {
             connectImpl();
-            setConnected(true);
         }
     }
 
     final public void disconnect() throws ModbusIOException {
         if (isConnected()) {
             disconnectImpl();
-            setConnected(false);
         }
     }
 
     public boolean isConnected() {
-        return connected;
-    }
-
-    protected void setConnected(boolean connected) {
-        this.connected = connected;
+        return getConnection().isOpened();
     }
 
     protected void sendRequest(ModbusMessage msg) throws ModbusIOException {
@@ -737,5 +736,31 @@ abstract public class ModbusMaster {
             ModbusProtocolException, ModbusNumberException, ModbusIOException {
         EncapsulatedInterfaceTransportResponse response = (EncapsulatedInterfaceTransportResponse) processRequest(ModbusRequestBuilder.getInstance().buildReadDeviceIdentification(serverAddress, objectId, readDeviceId));
         return (MEIReadDeviceIdentification) response.getMei();
+    }
+
+    /* facade */
+    @Override
+    public void addListener(FrameEventListener listener) {
+        getConnection().addListener(listener);
+    }
+
+    @Override
+    public void removeListener(FrameEventListener listener) {
+        getConnection().removeListener(listener);
+    }
+
+    @Override
+    public void removeListeners() {
+        getConnection().removeListeners();
+    }
+
+    @Override
+    public void fireFrameReceivedEvent(FrameEvent event) {
+        getConnection().fireFrameReceivedEvent(event);
+    }
+
+    @Override
+    public void fireFrameSentEvent(FrameEvent event) {
+        getConnection().fireFrameSentEvent(event);
     }
 }

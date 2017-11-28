@@ -1,7 +1,10 @@
 package com.intelligt.modbus.jlibmodbus.net.stream.base;
 
 import com.intelligt.modbus.jlibmodbus.Modbus;
-import com.intelligt.modbus.jlibmodbus.utils.*;
+import com.intelligt.modbus.jlibmodbus.utils.DataUtils;
+import com.intelligt.modbus.jlibmodbus.utils.FrameEvent;
+import com.intelligt.modbus.jlibmodbus.utils.FrameEventListenerList;
+import com.intelligt.modbus.jlibmodbus.utils.FrameEventListenerListImpl;
 
 import java.io.IOException;
 
@@ -33,9 +36,9 @@ import java.io.IOException;
  * @author kochedykov
  * @since 1.2
  */
-public class LoggingOutputStream extends ModbusOutputStream implements FrameEventListenerList {
+public class LoggingOutputStream extends ModbusOutputStream {
 
-    final private FrameEventListenerList listenerList = new FrameEventListenerListImpl();
+    private FrameEventListenerList listenerList = new FrameEventListenerListImpl();
     final static private String LOG_MESSAGE_TITLE = "Frame sent: ";
     /**
      * The output stream to be logged
@@ -79,7 +82,7 @@ public class LoggingOutputStream extends ModbusOutputStream implements FrameEven
     public void log() {
         if (Modbus.isLoggingEnabled()) {
             byte[] bytes = super.toByteArray();
-            fireFrameSentEvent(new FrameEvent(bytes));
+            listenerList.fireFrameSentEvent(new FrameEvent(bytes));
             Modbus.log().info(LOG_MESSAGE_TITLE + DataUtils.toAscii(bytes));
             super.getFifo().reset();
         }
@@ -89,27 +92,7 @@ public class LoggingOutputStream extends ModbusOutputStream implements FrameEven
         return out.toByteArray();
     }
 
-    /*
-     * facade
-     */
-
-    @Override
-    public void addListener(FrameEventListener listener) {
-        listenerList.addListener(listener);
-    }
-
-    @Override
-    public void removeListener(FrameEventListener listener) {
-        listenerList.removeListener(listener);
-    }
-
-    @Override
-    public void fireFrameReceivedEvent(FrameEvent event) {
-        listenerList.fireFrameReceivedEvent(event);
-    }
-
-    @Override
-    public void fireFrameSentEvent(FrameEvent event) {
-        listenerList.fireFrameSentEvent(event);
+    public void setListenerList(FrameEventListenerList listenerList) {
+        this.listenerList = listenerList;
     }
 }
