@@ -46,26 +46,29 @@ class RequestHandlerTCP extends RequestHandler {
             getSlave().connectionOpened(getConnection());
 
             do {
-                DataHolder dataHolder = getSlave().getDataHolder();
-                ModbusTransport transport = getConnection().getTransport();
-                ModbusRequest request = (ModbusRequest) transport.readRequest();
+                try {
+                    DataHolder dataHolder = getSlave().getDataHolder();
+                    ModbusTransport transport = getConnection().getTransport();
+                    ModbusRequest request = (ModbusRequest) transport.readRequest();
 
-                if (/*default tcp session*/request.getServerAddress() == Modbus.TCP_DEFAULT_ID ||
-                        /*gateway*/request.getServerAddress() == getSlave().getServerAddress()) {
-                    ModbusMessage response = request.process(dataHolder);
-                    response.setTransactionId(request.getTransactionId());
-                    if (request.getServerAddress() != Modbus.BROADCAST_ID)
-                        transport.send(response);
-                } else if (/*broadcast*/ request.getServerAddress() == Modbus.BROADCAST_ID && getSlave().isBroadcastEnabled()) {
-                    //we do not answer broadcast requests
-                    request.process(dataHolder);
+                    if (/*default tcp session*/request.getServerAddress() == Modbus.TCP_DEFAULT_ID ||
+                            /*gateway*/request.getServerAddress() == getSlave().getServerAddress()) {
+                        ModbusMessage response = request.process(dataHolder);
+                        response.setTransactionId(request.getTransactionId());
+                        if (request.getServerAddress() != Modbus.BROADCAST_ID)
+                            transport.send(response);
+                    } else if (/*broadcast*/ request.getServerAddress() == Modbus.BROADCAST_ID && getSlave().isBroadcastEnabled()) {
+                        //we do not answer broadcast requests
+                        request.process(dataHolder);
+                    }
+                } catch (ModbusNumberException e) {
+                    Modbus.log().warning(e.getLocalizedMessage());
                 }
             } while (isListening());
-
-        } catch (ModbusNumberException e) {
-            Modbus.log().warning(e.getLocalizedMessage());
         } catch (ModbusIOException e) {
-            Modbus.log().warning(e.getLocalizedMessage());
+            if (getSlave().isListening()) {
+                Modbus.log().warning(e.getLocalizedMessage());
+            }
         } finally {
             setListening(false);
             try {

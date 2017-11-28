@@ -9,6 +9,7 @@ import com.intelligt.modbus.jlibmodbus.tcp.TcpParameters;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -124,8 +125,12 @@ public class ModbusSlaveTCP extends ModbusSlave implements Runnable {
                     s.close();
                 }
             }
-
-        } catch (Exception e) {
+        } catch (SocketException e) {
+            if (server != null && !server.isClosed()) {
+                Modbus.log().warning(e.getLocalizedMessage());
+                e.printStackTrace();
+            }
+        } catch (IOException e) {
             Modbus.log().warning(e.getLocalizedMessage());
             e.printStackTrace();
         } finally {

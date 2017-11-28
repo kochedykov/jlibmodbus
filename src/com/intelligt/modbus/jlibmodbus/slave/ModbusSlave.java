@@ -84,8 +84,8 @@ abstract public class ModbusSlave implements FrameEventListenerList {
      * should have stop the thread of the ModbusSlave.
      */
     final public void shutdown() throws ModbusIOException {
-        shutdownImpl();
         setListening(false);
+        shutdownImpl();
     }
 
     public boolean isListening() {
