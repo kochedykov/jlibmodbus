@@ -1,6 +1,5 @@
 package com.intelligt.modbus.jlibmodbus.slave;
 
-import com.intelligt.modbus.jlibmodbus.ModbusSlave;
 import com.intelligt.modbus.jlibmodbus.net.ModbusConnection;
 
 /*
@@ -47,7 +46,7 @@ abstract public class RequestHandler implements Runnable {
         return slave;
     }
 
-    public ModbusConnection getConn() {
+    public ModbusConnection getConnection() {
         return conn;
     }
 }

@@ -1,44 +1,30 @@
 package com.intelligt.modbus.jlibmodbus.utils;
 
-import java.net.InetAddress;
+import com.intelligt.modbus.jlibmodbus.tcp.TcpParameters;
 
 public class TcpClientInfo {
-    final private InetAddress localAddress;
-    final private int localPort;
-    final private InetAddress remoteAddress;
-    final private int remotePort;
+    private TcpParameters tcpParameters = new TcpParameters();
 
-    volatile private boolean isOpened;
+    volatile private boolean connected;
 
-    public TcpClientInfo(InetAddress localAddress, int localPort, InetAddress remoteAddress, int remotePort, boolean isOpened) {
-        this.localAddress = localAddress;
-        this.localPort = localPort;
-        this.remoteAddress = remoteAddress;
-        this.remotePort = remotePort;
-        this.isOpened = isOpened;
+    public TcpClientInfo(TcpParameters tcpParameters, boolean connected) {
+        this.tcpParameters = tcpParameters;
+        this.connected = connected;
     }
 
-    public InetAddress getLocalAddress() {
-        return localAddress;
+    public TcpParameters getTcpParameters() {
+        return tcpParameters;
     }
 
-    public int getLocalPort() {
-        return localPort;
+    public void setTcpParameters(TcpParameters tcpParameters) {
+        this.tcpParameters = tcpParameters;
     }
 
-    public InetAddress getRemoteAddress() {
-        return remoteAddress;
+    public boolean isConnected() {
+        return connected;
     }
 
-    public int getRemotePort() {
-        return remotePort;
-    }
-
-    public boolean isOpened() {
-        return isOpened;
-    }
-
-    public void setOpened(boolean opened) {
-        isOpened = opened;
+    public void setConnected(boolean connected) {
+        this.connected = connected;
     }
 }

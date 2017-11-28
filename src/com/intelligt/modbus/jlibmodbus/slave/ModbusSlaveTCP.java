@@ -1,19 +1,14 @@
 package com.intelligt.modbus.jlibmodbus.slave;
 
 import com.intelligt.modbus.jlibmodbus.Modbus;
-import com.intelligt.modbus.jlibmodbus.ModbusSlave;
 import com.intelligt.modbus.jlibmodbus.exception.ModbusIOException;
 import com.intelligt.modbus.jlibmodbus.net.ModbusConnection;
-import com.intelligt.modbus.jlibmodbus.net.ModbusConnectionFactory;
 import com.intelligt.modbus.jlibmodbus.net.ModbusSlaveConnectionTCP;
 import com.intelligt.modbus.jlibmodbus.tcp.TcpParameters;
 
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.net.SocketException;
-import java.util.Observable;
-import java.util.Observer;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -46,7 +41,6 @@ public class ModbusSlaveTCP extends ModbusSlave implements Runnable {
     final private TcpParameters tcp;
     private Thread mainThread = null;
     private ServerSocket server = null;
-    private Observable observable = new Observable();
 
     public ModbusSlaveTCP(TcpParameters tcp) {
         this(tcp, DEFAULT_POOLS_SIZE);
@@ -71,23 +65,30 @@ public class ModbusSlaveTCP extends ModbusSlave implements Runnable {
 
     @Override
     synchronized public void shutdownImpl() {
+        /*
+        close server socket
+         */
         try {
             if (server != null)
                 server.close();
         } catch (IOException e) {
-            Modbus.log().warning("Something wrong with server socket: " + e.getLocalizedMessage());
+            Modbus.log().warning(e.getLocalizedMessage());
         } finally {
             server = null;
         }
+        /*
+        shutdown the thread pool
+         */
         threadPool.shutdown();
         try {
             threadPool.awaitTermination(1, TimeUnit.SECONDS);
         } catch (InterruptedException e) {
             threadPool.shutdownNow();
         }
+
         try {
             if (mainThread != null) {
-                mainThread.join(2000);
+                mainThread.join(1000);
                 if (mainThread.isAlive())
                     mainThread.interrupt();
             }
@@ -99,66 +100,40 @@ public class ModbusSlaveTCP extends ModbusSlave implements Runnable {
     }
 
     @Override
+    void connectionOpened(ModbusConnection connection) {
+        super.connectionOpened(connection);
+        notifyObservers(((ModbusSlaveConnectionTCP) connection).getClientInfo());
+    }
+
+    @Override
+    void connectionClosed(ModbusConnection connection) {
+        super.connectionClosed(connection);
+        notifyObservers(((ModbusSlaveConnectionTCP) connection).getClientInfo());
+    }
+
+    @Override
     public void run() {
         Socket s;
-        ModbusConnection conn;
         try {
             while (isListening()) {
                 s = server.accept();
                 try {
-                    notifyObservers(s);
-                    conn = ModbusConnectionFactory.getTcpSlave(s);
-                    conn.setReadTimeout(getReadTimeout());
-                    notifyObservers(((ModbusSlaveConnectionTCP) conn).getClientInfo());
-                    threadPool.execute(new RequestHandlerTCP(this, conn));
+                    threadPool.execute(new RequestHandlerTCP(this, s));
                 } catch (ModbusIOException ioe) {
                     Modbus.log().warning(ioe.getLocalizedMessage());
                     s.close();
                 }
             }
-        } catch (SocketException se) {
-            if (server != null) {
-                if (server.isClosed()) {
-                    Modbus.log().fine("All right, server socket has been closed:" + se.getLocalizedMessage());
-                } else {
-                    Modbus.log().warning("Something wrong:" + se.getLocalizedMessage());
-                }
-            }
+
         } catch (Exception e) {
+            Modbus.log().warning(e.getLocalizedMessage());
             e.printStackTrace();
         } finally {
             try {
                 shutdown();
             } catch (ModbusIOException e) {
-                Modbus.log().warning("Cannot shutdown: " + e.getLocalizedMessage());
+                Modbus.log().warning(e.getLocalizedMessage());
             }
         }
-    }
-
-    /*
-    facade
-     */
-    void addObserver(Observer observer) {
-        observable.addObserver(observer);
-    }
-
-    void deleteObserver(Observer observer) {
-        observable.deleteObserver(observer);
-    }
-
-    void deleteObservers() {
-        observable.deleteObservers();
-    }
-
-    void hasChanged() {
-        observable.hasChanged();
-    }
-
-    int countObservers() {
-        return observable.countObservers();
-    }
-
-    void notifyObservers(Object o) {
-        observable.notifyObservers(o);
     }
 }

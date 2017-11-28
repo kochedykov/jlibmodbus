@@ -29,8 +29,8 @@ import com.intelligt.modbus.jlibmodbus.serial.SerialUtils;
  */
 public class ModbusSlaveASCII extends ModbusSlaveSerial {
 
-    public ModbusSlaveASCII(SerialParameters parameters) throws SerialPortException {
-        super(ModbusConnectionFactory.getASCII(SerialUtils.createSerial(parameters)));
+    public ModbusSlaveASCII(SerialParameters sp) throws SerialPortException {
+        super(sp, ModbusConnectionFactory.getASCII(SerialUtils.createSerial(sp)));
     }
 
     public ModbusSlaveASCII(String device, SerialPort.BaudRate baudRate, SerialPort.Parity parity) throws SerialPortException {

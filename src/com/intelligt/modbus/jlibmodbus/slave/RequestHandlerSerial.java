@@ -1,7 +1,6 @@
 package com.intelligt.modbus.jlibmodbus.slave;
 
 import com.intelligt.modbus.jlibmodbus.Modbus;
-import com.intelligt.modbus.jlibmodbus.ModbusSlave;
 import com.intelligt.modbus.jlibmodbus.data.CommStatus;
 import com.intelligt.modbus.jlibmodbus.data.DataHolder;
 import com.intelligt.modbus.jlibmodbus.data.comm.ModbusCommEventSend;
@@ -47,7 +46,7 @@ class RequestHandlerSerial extends RequestHandler {
         do {
             DataHolder dataHolder = getSlave().getDataHolder();
             CommStatus commStatus = dataHolder.getCommStatus();
-            ModbusTransport transport = getConn().getTransport();
+            ModbusTransport transport = getConnection().getTransport();
             try {
                 ModbusRequest request = (ModbusRequest) transport.readRequest();
 
@@ -99,7 +98,7 @@ class RequestHandlerSerial extends RequestHandler {
             }
         } while (isListening());
         try {
-            getConn().close();
+            ((ModbusSlaveSerial) getSlave()).closeConnection();
         } catch (ModbusIOException e) {
             Modbus.log().warning(e.getMessage());
         }

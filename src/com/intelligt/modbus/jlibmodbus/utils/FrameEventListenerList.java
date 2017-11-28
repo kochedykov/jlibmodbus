@@ -30,6 +30,8 @@ public interface FrameEventListenerList {
 
     void removeListener(FrameEventListener listener);
 
+    void removeListeners();
+
     void fireFrameReceivedEvent(FrameEvent event);
 
     void fireFrameSentEvent(FrameEvent event);

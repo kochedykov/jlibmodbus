@@ -1,15 +1,15 @@
 package com.intelligt.modbus.jlibmodbus.slave;
 
 import com.intelligt.modbus.jlibmodbus.Modbus;
-import com.intelligt.modbus.jlibmodbus.ModbusSlave;
 import com.intelligt.modbus.jlibmodbus.data.DataHolder;
 import com.intelligt.modbus.jlibmodbus.exception.ModbusIOException;
 import com.intelligt.modbus.jlibmodbus.exception.ModbusNumberException;
 import com.intelligt.modbus.jlibmodbus.msg.base.ModbusMessage;
 import com.intelligt.modbus.jlibmodbus.msg.base.ModbusRequest;
-import com.intelligt.modbus.jlibmodbus.net.ModbusConnection;
-import com.intelligt.modbus.jlibmodbus.net.ModbusSlaveConnectionTCP;
+import com.intelligt.modbus.jlibmodbus.net.ModbusConnectionFactory;
 import com.intelligt.modbus.jlibmodbus.net.transport.ModbusTransport;
+
+import java.net.Socket;
 
 /*
  * Copyright (C) 2016 "Invertor" Factory", JSC
@@ -34,17 +34,20 @@ import com.intelligt.modbus.jlibmodbus.net.transport.ModbusTransport;
  */
 class RequestHandlerTCP extends RequestHandler {
 
-    RequestHandlerTCP(ModbusSlave slave, ModbusConnection conn) {
-        super(slave, conn);
+    RequestHandlerTCP(ModbusSlaveTCP slave, Socket s) throws ModbusIOException {
+        super(slave, ModbusConnectionFactory.getTcpSlave(s));
     }
 
     @Override
     public void run() {
         setListening(true);
         try {
+
+            getSlave().connectionOpened(getConnection());
+
             do {
                 DataHolder dataHolder = getSlave().getDataHolder();
-                ModbusTransport transport = getConn().getTransport();
+                ModbusTransport transport = getConnection().getTransport();
                 ModbusRequest request = (ModbusRequest) transport.readRequest();
 
                 if (/*default tcp session*/request.getServerAddress() == Modbus.TCP_DEFAULT_ID ||
@@ -66,8 +69,8 @@ class RequestHandlerTCP extends RequestHandler {
         } finally {
             setListening(false);
             try {
-                getConn().close();
-                ((ModbusSlaveTCP) getSlave()).notifyObservers(((ModbusSlaveConnectionTCP) getConn()).getClientInfo());
+                getConnection().close();
+                getSlave().connectionClosed(getConnection());
             } catch (ModbusIOException ioe) {
                 Modbus.log().warning(ioe.getMessage());
             }

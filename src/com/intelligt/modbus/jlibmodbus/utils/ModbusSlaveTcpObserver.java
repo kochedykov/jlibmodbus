@@ -8,7 +8,7 @@ abstract public class ModbusSlaveTcpObserver implements Observer {
     public void update(Observable o, Object arg) {
         if (arg instanceof TcpClientInfo) {
             TcpClientInfo clientInfo = (TcpClientInfo) arg;
-            if (clientInfo.isOpened()) {
+            if (clientInfo.isConnected()) {
                 clientAccepted(clientInfo);
             } else {
                 clientDisconnected(clientInfo);
@@ -16,7 +16,7 @@ abstract public class ModbusSlaveTcpObserver implements Observer {
         }
     }
 
-    abstract void clientAccepted(TcpClientInfo info);
+    public abstract void clientAccepted(TcpClientInfo info);
 
-    abstract void clientDisconnected(TcpClientInfo info);
+    public abstract void clientDisconnected(TcpClientInfo info);
 }

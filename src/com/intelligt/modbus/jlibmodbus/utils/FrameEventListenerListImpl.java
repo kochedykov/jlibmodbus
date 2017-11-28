@@ -47,6 +47,11 @@ public class FrameEventListenerListImpl implements FrameEventListenerList {
         }
     }
 
+    @Override
+    public void removeListeners() {
+        eventListenerList.clear();
+    }
+
     public void fireFrameReceivedEvent(FrameEvent event) {
         for (FrameEventListener l : eventListenerList) {
             l.frameReceivedEvent(event);

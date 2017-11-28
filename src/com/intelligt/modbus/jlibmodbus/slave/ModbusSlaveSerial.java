@@ -1,8 +1,12 @@
 package com.intelligt.modbus.jlibmodbus.slave;
 
-import com.intelligt.modbus.jlibmodbus.ModbusSlave;
+import com.intelligt.modbus.jlibmodbus.Modbus;
 import com.intelligt.modbus.jlibmodbus.exception.ModbusIOException;
 import com.intelligt.modbus.jlibmodbus.net.ModbusConnection;
+import com.intelligt.modbus.jlibmodbus.serial.SerialParameters;
+import com.intelligt.modbus.jlibmodbus.utils.FrameEvent;
+import com.intelligt.modbus.jlibmodbus.utils.FrameEventListener;
+import com.intelligt.modbus.jlibmodbus.utils.SerialPortInfo;
 
 /*
  * Copyright (C) 2016 "Invertor" Factory", JSC
@@ -29,17 +33,32 @@ class ModbusSlaveSerial extends ModbusSlave {
 
     final private ModbusConnection conn;
     final private RequestHandler requestHandler;
+    final private SerialPortInfo serialPortInfo;
     private Thread mainThread = null;
 
-    ModbusSlaveSerial(ModbusConnection conn) {
+    ModbusSlaveSerial(SerialParameters serialParameters, ModbusConnection conn) {
         this.conn = conn;
+        this.serialPortInfo = new SerialPortInfo(serialParameters);
         this.requestHandler = new RequestHandlerSerial(this, conn);
+        getConnection().setReadTimeout(Modbus.DEFAULT_READ_TIMEOUT);
+    }
+
+    void closeConnection() throws ModbusIOException {
+        getConnection().close();
+        connectionClosed(getConnection());
+        serialPortInfo.setOpened(false);
+    }
+
+    void openConnection() throws ModbusIOException {
+        getConnection().open();
+        connectionOpened(getConnection());
+        serialPortInfo.setOpened(true);
     }
 
     @Override
     synchronized public void listenImpl() throws ModbusIOException {
         shutdown();
-        conn.open();
+        openConnection();
         mainThread = new Thread(requestHandler);
         mainThread.start();
     }
@@ -57,10 +76,47 @@ class ModbusSlaveSerial extends ModbusSlave {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        conn.close();
+        closeConnection();
     }
 
-    ModbusConnection getConn() {
+    protected ModbusConnection getConnection() {
         return conn;
+    }
+
+    @Override
+    void connectionOpened(ModbusConnection connection) {
+        super.connectionOpened(connection);
+        notifyObservers(serialPortInfo);
+    }
+
+    @Override
+    void connectionClosed(ModbusConnection connection) {
+        super.connectionClosed(connection);
+        notifyObservers(serialPortInfo);
+    }
+
+    @Override
+    public void addListener(FrameEventListener listener) {
+        getConnection().addListener(listener);
+    }
+
+    @Override
+    public void removeListener(FrameEventListener listener) {
+        getConnection().removeListener(listener);
+    }
+
+    @Override
+    public void removeListeners() {
+        getConnection().removeListeners();
+    }
+
+    @Override
+    public void fireFrameReceivedEvent(FrameEvent event) {
+        getConnection().fireFrameReceivedEvent(event);
+    }
+
+    @Override
+    public void fireFrameSentEvent(FrameEvent event) {
+        fireFrameSentEvent(event);
     }
 }

@@ -1,6 +1,5 @@
 package com.intelligt.modbus.jlibmodbus.slave;
 
-import com.intelligt.modbus.jlibmodbus.Modbus;
 import com.intelligt.modbus.jlibmodbus.net.ModbusConnectionFactory;
 import com.intelligt.modbus.jlibmodbus.serial.SerialParameters;
 import com.intelligt.modbus.jlibmodbus.serial.SerialPort;
@@ -31,9 +30,7 @@ import com.intelligt.modbus.jlibmodbus.serial.SerialUtils;
 public class ModbusSlaveRTU extends ModbusSlaveSerial {
 
     public ModbusSlaveRTU(SerialParameters sp) throws SerialPortException {
-        super(ModbusConnectionFactory.getRTU(SerialUtils.createSerial(sp)));
-
-        getConn().setReadTimeout(Modbus.DEFAULT_READ_TIMEOUT);
+        super(sp, ModbusConnectionFactory.getRTU(SerialUtils.createSerial(sp)));
     }
 
     public ModbusSlaveRTU(String device, SerialPort.BaudRate baudRate, int dataBits, int stopBits, SerialPort.Parity parity) throws SerialPortException {
