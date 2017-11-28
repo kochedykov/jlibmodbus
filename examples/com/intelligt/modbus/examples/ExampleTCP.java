@@ -44,6 +44,7 @@ public class ExampleTCP {
 
         //
         try {
+            Modbus.setLogLevel(Modbus.LogLevel.LEVEL_DEBUG);
             TcpParameters tcpParameters = new TcpParameters();
             //listening on all interfaces
             tcpParameters.setHost(InetAddress.getByName("0.0.0.0"));
