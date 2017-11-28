@@ -1,8 +1,5 @@
-package com.intelligt.modbus.jlibmodbus;
+package com.intelligt.modbus.jlibmodbus.master;
 
-import com.intelligt.modbus.jlibmodbus.master.ModbusMasterASCII;
-import com.intelligt.modbus.jlibmodbus.master.ModbusMasterRTU;
-import com.intelligt.modbus.jlibmodbus.master.ModbusMasterTCP;
 import com.intelligt.modbus.jlibmodbus.serial.SerialParameters;
 import com.intelligt.modbus.jlibmodbus.serial.SerialPort;
 import com.intelligt.modbus.jlibmodbus.serial.SerialPortException;

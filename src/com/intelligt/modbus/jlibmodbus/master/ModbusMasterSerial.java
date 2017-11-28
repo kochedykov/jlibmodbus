@@ -1,6 +1,5 @@
 package com.intelligt.modbus.jlibmodbus.master;
 
-import com.intelligt.modbus.jlibmodbus.ModbusMaster;
 import com.intelligt.modbus.jlibmodbus.data.CommStatus;
 import com.intelligt.modbus.jlibmodbus.exception.ModbusIOException;
 import com.intelligt.modbus.jlibmodbus.exception.ModbusNumberException;
