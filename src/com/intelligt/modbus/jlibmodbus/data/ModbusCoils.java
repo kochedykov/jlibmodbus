@@ -80,7 +80,7 @@ public class ModbusCoils extends ModbusValues<Boolean> {
             throw new IllegalDataValueException();
         synchronized (this) {
             for (int i = 0; i < range.length; i++) {
-                set(i, range[i]);
+                set(offset + i, range[i]);
             }
         }
     }

@@ -75,7 +75,7 @@ public class ModbusHoldingRegisters extends ModbusValues<Integer> {
             throw new IllegalDataAddressException(offset);
         synchronized (this) {
             for (int i = 0; i < range.length; i++) {
-                set(i, range[i]);
+                set(offset + i, range[i]);
             }
         }
     }
