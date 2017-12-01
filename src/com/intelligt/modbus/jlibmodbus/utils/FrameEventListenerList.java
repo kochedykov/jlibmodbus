@@ -35,4 +35,6 @@ public interface FrameEventListenerList {
     void fireFrameReceivedEvent(FrameEvent event);
 
     void fireFrameSentEvent(FrameEvent event);
+
+    int countListeners();
 }

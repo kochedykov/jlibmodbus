@@ -9,6 +9,7 @@ import com.intelligt.modbus.jlibmodbus.msg.base.ModbusRequest;
 import com.intelligt.modbus.jlibmodbus.net.ModbusConnectionFactory;
 import com.intelligt.modbus.jlibmodbus.net.transport.ModbusTransport;
 
+import java.io.IOException;
 import java.net.Socket;
 
 /*
@@ -34,17 +35,18 @@ import java.net.Socket;
  */
 class RequestHandlerTCP extends RequestHandler {
 
+    final private Socket socket;
+
     RequestHandlerTCP(ModbusSlaveTCP slave, Socket s) throws ModbusIOException {
         super(slave, ModbusConnectionFactory.getTcpSlave(s));
+        socket = s;
     }
 
     @Override
     public void run() {
         setListening(true);
         try {
-
             getSlave().connectionOpened(getConnection());
-
             do {
                 try {
                     DataHolder dataHolder = getSlave().getDataHolder();
@@ -72,11 +74,25 @@ class RequestHandlerTCP extends RequestHandler {
         } finally {
             setListening(false);
             try {
-                getConnection().close();
-                getSlave().connectionClosed(getConnection());
+                if (getConnection().isOpened()) {
+                    getConnection().close();
+                    getSlave().connectionClosed(getConnection());
+                }
             } catch (ModbusIOException ioe) {
                 Modbus.log().warning(ioe.getMessage());
             }
+        }
+    }
+
+    @Override
+    public void closeConnection() {
+        try {
+            if (socket.isConnected() && !isListening()) {
+                socket.close();
+                setListening(false);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }

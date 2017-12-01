@@ -764,4 +764,9 @@ abstract public class ModbusMaster implements FrameEventListenerList {
     public void fireFrameSentEvent(FrameEvent event) {
         getConnection().fireFrameSentEvent(event);
     }
+
+    @Override
+    public int countListeners() {
+        return getConnection().countListeners();
+    }
 }

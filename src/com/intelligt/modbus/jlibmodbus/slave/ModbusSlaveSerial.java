@@ -43,32 +43,21 @@ class ModbusSlaveSerial extends ModbusSlave {
         getConnection().setReadTimeout(Modbus.DEFAULT_READ_TIMEOUT);
     }
 
-    void closeConnection() throws ModbusIOException {
-        getConnection().close();
-        connectionClosed(getConnection());
-        serialPortInfo.setOpened(false);
-    }
-
-    void openConnection() throws ModbusIOException {
-        getConnection().open();
-        connectionOpened(getConnection());
-        serialPortInfo.setOpened(true);
-    }
-
     @Override
     synchronized public void listenImpl() throws ModbusIOException {
-        shutdown();
-        openConnection();
+        if (isListening()) {
+            shutdown();
+        }
         mainThread = new Thread(requestHandler);
         mainThread.start();
     }
 
     @Override
     synchronized public void shutdownImpl() throws ModbusIOException {
-        requestHandler.setListening(false);
+        requestHandler.closeConnection();
         try {
             if (mainThread != null) {
-                mainThread.join(2000);
+                mainThread.join(getReadTimeout() * 10);
                 if (mainThread.isAlive())
                     mainThread.interrupt();
             }
@@ -76,7 +65,6 @@ class ModbusSlaveSerial extends ModbusSlave {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        closeConnection();
     }
 
     protected ModbusConnection getConnection() {
@@ -86,15 +74,18 @@ class ModbusSlaveSerial extends ModbusSlave {
     @Override
     void connectionOpened(ModbusConnection connection) {
         super.connectionOpened(connection);
+        serialPortInfo.setOpened(true);
         notifyObservers(serialPortInfo);
     }
 
     @Override
     void connectionClosed(ModbusConnection connection) {
         super.connectionClosed(connection);
+        serialPortInfo.setOpened(false);
         notifyObservers(serialPortInfo);
     }
 
+    /* facade */
     @Override
     public void addListener(FrameEventListener listener) {
         getConnection().addListener(listener);
@@ -118,5 +109,10 @@ class ModbusSlaveSerial extends ModbusSlave {
     @Override
     public void fireFrameSentEvent(FrameEvent event) {
         fireFrameSentEvent(event);
+    }
+
+    @Override
+    public int countListeners() {
+        return getConnection().countListeners();
     }
 }

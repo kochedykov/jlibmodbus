@@ -63,4 +63,9 @@ public class FrameEventListenerListImpl implements FrameEventListenerList {
             l.frameSentEvent(event);
         }
     }
+
+    @Override
+    public int countListeners() {
+        return eventListenerList.size();
+    }
 }

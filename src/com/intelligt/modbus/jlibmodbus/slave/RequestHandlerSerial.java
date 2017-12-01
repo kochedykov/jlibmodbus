@@ -41,64 +41,76 @@ class RequestHandlerSerial extends RequestHandler {
     }
 
     @Override
-    public void run() {
-        setListening(true);
-        do {
-            DataHolder dataHolder = getSlave().getDataHolder();
-            CommStatus commStatus = dataHolder.getCommStatus();
-            ModbusTransport transport = getConnection().getTransport();
-            try {
-                ModbusRequest request = (ModbusRequest) transport.readRequest();
+    public void closeConnection() {
+        setListening(false);
+    }
 
-                commStatus.incBusMessageCounter();
-                if (!(request instanceof GetCommEventCounterRequest ||
-                        request instanceof GetCommEventLogRequest)) {
-                    commStatus.enter();
-                }
-                if (request.getServerAddress() == getSlave().getServerAddress()) {
-                    try {
-                        ModbusResponse response = request.process(dataHolder);
-                        commStatus.incSlaveMessageCounter();
-                        if (response.isException()) {
-                            commStatus.addEvent(ModbusCommEventSend.createExceptionSentRead());
-                            commStatus.incExErrorCounter();
-                        } else {
-                            if (!(request instanceof GetCommEventCounterRequest ||
-                                    request instanceof GetCommEventLogRequest)) {
-                                commStatus.incEventCounter();
-                            }
-                        }
-                        if (!commStatus.isListenOnlyMode())
-                            transport.send(response);
-                        if (commStatus.isRestartCommunicationsOption()) {
-                            commStatus.restartCommunicationsOption();
-                            getSlave().shutdown();
-                            getSlave().listen();
-                        }
-                    } catch (RuntimeException re) {
-                        throw re;
-                    } catch (Exception e) {
-                        /*
-                         * quantity of messages addressed to the remote device for
-                         * which it has returned no response (neither a normal response nor an exception response)
-                         */
-                        commStatus.incNoResponseCounter();
-                        throw e;
-                    }
-                } else if (/*broadcast*/ request.getServerAddress() == Modbus.BROADCAST_ID && getSlave().isBroadcastEnabled()) {
-                    //we do not answer these requests to avoid collisions on the bus
-                    request.process(dataHolder);
-                }
-            } catch (ModbusChecksumException e) {
-                commStatus.incCommErrorCounter();
-            } catch (Exception e) {
-                Modbus.log().warning(e.getLocalizedMessage());
-            } finally {
-                commStatus.leave();
-            }
-        } while (isListening());
+    @Override
+    public void run() {
         try {
-            ((ModbusSlaveSerial) getSlave()).closeConnection();
+            getConnection().open();
+            getSlave().connectionOpened(getConnection());
+            setListening(true);
+            do {
+                DataHolder dataHolder = getSlave().getDataHolder();
+                CommStatus commStatus = dataHolder.getCommStatus();
+                ModbusTransport transport = getConnection().getTransport();
+                try {
+                    ModbusRequest request = (ModbusRequest) transport.readRequest();
+
+                    commStatus.incBusMessageCounter();
+                    if (!(request instanceof GetCommEventCounterRequest ||
+                            request instanceof GetCommEventLogRequest)) {
+                        commStatus.enter();
+                    }
+                    if (request.getServerAddress() == getSlave().getServerAddress()) {
+                        try {
+                            ModbusResponse response = request.process(dataHolder);
+                            commStatus.incSlaveMessageCounter();
+                            if (response.isException()) {
+                                commStatus.addEvent(ModbusCommEventSend.createExceptionSentRead());
+                                commStatus.incExErrorCounter();
+                            } else {
+                                if (!(request instanceof GetCommEventCounterRequest ||
+                                        request instanceof GetCommEventLogRequest)) {
+                                    commStatus.incEventCounter();
+                                }
+                            }
+                            if (!commStatus.isListenOnlyMode())
+                                transport.send(response);
+                            if (commStatus.isRestartCommunicationsOption()) {
+                                commStatus.restartCommunicationsOption();
+                                getSlave().shutdown();
+                                getSlave().listen();
+                            }
+                        } catch (RuntimeException re) {
+                            throw re;
+                        } catch (Exception e) {
+                            /*
+                             * quantity of messages addressed to the remote device for
+                             * which it has returned no response (neither a normal response nor an exception response)
+                             */
+                            commStatus.incNoResponseCounter();
+                            throw e;
+                        }
+                    } else if (/*broadcast*/ request.getServerAddress() == Modbus.BROADCAST_ID && getSlave().isBroadcastEnabled()) {
+                        //we do not answer these requests to avoid collisions on the bus
+                        request.process(dataHolder);
+                    }
+                } catch (ModbusChecksumException e) {
+                    commStatus.incCommErrorCounter();
+                } catch (Exception e) {
+                    Modbus.log().warning(e.getLocalizedMessage());
+                    //e.printStackTrace();
+                } finally {
+                    commStatus.leave();
+                }
+            } while (isListening());
+
+            if (getConnection().isOpened()) {
+                getConnection().close();
+                getSlave().connectionClosed(getConnection());
+            }
         } catch (ModbusIOException e) {
             Modbus.log().warning(e.getMessage());
         }

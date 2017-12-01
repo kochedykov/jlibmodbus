@@ -38,9 +38,11 @@ abstract public class RequestHandler implements Runnable {
         return listening;
     }
 
-    public void setListening(boolean listening) {
+    protected void setListening(boolean listening) {
         this.listening = listening;
     }
+
+    abstract public void closeConnection();
 
     public ModbusSlave getSlave() {
         return slave;

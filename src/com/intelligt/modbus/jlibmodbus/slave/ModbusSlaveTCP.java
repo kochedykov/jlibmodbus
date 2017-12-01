@@ -134,10 +134,13 @@ public class ModbusSlaveTCP extends ModbusSlave implements Runnable {
             Modbus.log().warning(e.getLocalizedMessage());
             e.printStackTrace();
         } finally {
-            try {
-                shutdown();
-            } catch (ModbusIOException e) {
-                Modbus.log().warning(e.getLocalizedMessage());
+            if (isListening()) {
+                try {
+                    shutdown();
+                } catch (ModbusIOException e) {
+                    Modbus.log().warning(e.getLocalizedMessage());
+                    e.printStackTrace();
+                }
             }
         }
     }

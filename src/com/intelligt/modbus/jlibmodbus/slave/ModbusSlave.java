@@ -174,9 +174,18 @@ abstract public class ModbusSlave implements FrameEventListenerList {
         }
     }
 
+    @Override
+    public int countListeners() {
+        int count = 0;
+        for (ModbusConnection c : getConnectionList()) {
+            count += c.countListeners();
+        }
+        return count;
+    }
+
     /*
-    facade
-     */
+        facade
+         */
     public void addObserver(Observer observer) {
         observable.addObserver(observer);
     }

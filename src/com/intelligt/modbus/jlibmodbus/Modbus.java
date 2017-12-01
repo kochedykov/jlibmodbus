@@ -178,10 +178,10 @@ final public class Modbus {
         */
         switch (serverAddress) {
             case 0x00:
-                Modbus.log().info("Broadcast message");
+                //Modbus.log().info("Broadcast message");
                 return true;
             case 0xFF:
-                Modbus.log().info("0xFF default slave id using ModbusTCP");
+                //Modbus.log().info("Using 0xFF ModbusTCP default slave id");
                 return true;
             default:
                 return !(serverAddress < Modbus.MIN_SERVER_ADDRESS || serverAddress > Modbus.MAX_SERVER_ADDRESS);
