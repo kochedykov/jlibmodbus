@@ -35,11 +35,11 @@ import java.util.List;
  * email: vladislav.kochedykov@gmail.com
  */
 
-public class SerialPortFactoryTcp implements SerialPortAbstractFactory {
+public class SerialPortFactoryTcpClient implements SerialPortAbstractFactory {
 
     private TcpParameters tcpParameters;
 
-    public SerialPortFactoryTcp(TcpParameters tcpParameters) {
+    public SerialPortFactoryTcpClient(TcpParameters tcpParameters) {
         setTcpParameters(tcpParameters);
     }
 
@@ -52,7 +52,7 @@ public class SerialPortFactoryTcp implements SerialPortAbstractFactory {
     }
 
     public SerialPort createSerial(SerialParameters sp) throws SerialPortException {
-        return new SerialPortViaTCP(sp);
+        return new SerialPortTcpClient(sp);
     }
 
     @Override
@@ -65,13 +65,13 @@ public class SerialPortFactoryTcp implements SerialPortAbstractFactory {
         return "information about version is unavailable.";
     }
 
-    private class SerialPortViaTCP extends SerialPort {
+    private class SerialPortTcpClient extends SerialPort {
 
         private Socket socket;
         private InputStreamTCP is;
         private OutputStreamTCP os;
 
-        public SerialPortViaTCP(SerialParameters sp) {
+        SerialPortTcpClient(SerialParameters sp) {
             super(sp);
         }
 
