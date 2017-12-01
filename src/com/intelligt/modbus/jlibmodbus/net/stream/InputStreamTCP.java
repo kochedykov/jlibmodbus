@@ -42,7 +42,7 @@ public class InputStreamTCP extends LoggingInputStream {
             public int read() throws IOException {
                 int c = in.read();
                 if (-1 == c) {
-                    throw new IOException();
+                    throw new IOException("Input stream is closed");
                 }
                 return c;
             }
