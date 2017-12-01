@@ -3,7 +3,6 @@ package com.intelligt.modbus.jlibmodbus.serial;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 /*
  * Copyright (C) 2017 Vladislav Y. Kochedykov
@@ -72,7 +71,7 @@ public class SerialPortJSerialComm extends SerialPort {
         in = port.getInputStream();
         out = port.getOutputStream();
 
-        port.setComPortTimeouts(com.fazecast.jSerialComm.SerialPort.TIMEOUT_NONBLOCKING, getReadTimeout(), getReadTimeout());
+        port.setComPortTimeouts(com.fazecast.jSerialComm.SerialPort.TIMEOUT_READ_BLOCKING, getReadTimeout(), 0);
     }
 
     @Override
