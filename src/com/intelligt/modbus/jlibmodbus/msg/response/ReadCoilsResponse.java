@@ -62,8 +62,7 @@ public class ReadCoilsResponse extends AbstractReadResponse {
     final public boolean[] getCoils() {
         return DataUtils.toBitsArray(buffer, buffer.length * 8);
     }
-
-    @Deprecated
+    
     final public ModbusCoils getModbusCoils() {
         return new ModbusCoils(buffer);
     }
