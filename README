@@ -22,7 +22,7 @@ The latest stable release.
 <dependency>
   <groupId>com.intelligt.modbus</groupId>
   <artifactId>jlibmodbus</artifactId>
-  <version>1.2.9.0</version>
+  <version>1.2.9.1</version>
 </dependency>
 
 The previous stable release.
@@ -47,6 +47,16 @@ https://github.com/scream3r/java-simple-serial-connector
 
 rxtx home page:
 http://users.frii.com/jarvi/rxtx/index.html
+-----------------------------------------------------------------------------------------------------------
+----Release version 1.2.9.1 -------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------
+This release contains important bug fixes. Added the jSerialComm library support.
+	* Experimental! Implemented RTU over TCP. Add a new serial port factories TcpClient and TcpServer. Usage: //server side SerialUtils.setSerialPortFactory(new SerialPortFactoryTcpServer(tcpParameters)); ModbusSlave slave = ModbusSlaveFactory.createModbusSlaveRTU(serialParameters);
+	* Important! Fixed bug in setRange method #15.
+	* Added ModbusSlaveSerialObserver and SerialPortInfo classes to notify if the com port was opened or closed.
+	* Important! Added the jSerialComm library support.
+	* Important! Fixed bug in DataHolder class #14. Description checkPointer call in readCoilRange method needs to be fixed. coils field should be passed as parameter instead of holdingRegisters.
+	* Added API to retrieve information about a TCP client connected to the TCP slave.
 -----------------------------------------------------------------------------------------------------------
 ----Release version 1.2.9.0 -------------------------------------------------------------------------------
 -----------------------------------------------------------------------------------------------------------
