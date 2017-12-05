@@ -1,6 +1,5 @@
 package com.intelligt.modbus.jlibmodbus.slave;
 
-import com.intelligt.modbus.jlibmodbus.Modbus;
 import com.intelligt.modbus.jlibmodbus.exception.ModbusIOException;
 import com.intelligt.modbus.jlibmodbus.net.ModbusConnection;
 import com.intelligt.modbus.jlibmodbus.serial.SerialParameters;
@@ -40,7 +39,6 @@ class ModbusSlaveSerial extends ModbusSlave {
         this.conn = conn;
         this.serialPortInfo = new SerialPortInfo(serialParameters);
         this.requestHandler = new RequestHandlerSerial(this, conn);
-        getConnection().setReadTimeout(Modbus.DEFAULT_READ_TIMEOUT);
     }
 
     @Override
