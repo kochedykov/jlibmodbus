@@ -66,6 +66,9 @@ abstract public class ModbusSlave implements FrameEventListenerList {
 
     public void setReadTimeout(int readTimeout) {
         this.readTimeout = readTimeout;
+        for (ModbusConnection conn : getConnectionList()) {
+            conn.setReadTimeout(readTimeout);
+        }
     }
 
     abstract protected void listenImpl() throws ModbusIOException;
