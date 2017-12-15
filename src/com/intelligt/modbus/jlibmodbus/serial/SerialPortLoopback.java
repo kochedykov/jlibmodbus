@@ -78,7 +78,7 @@ public class SerialPortLoopback extends SerialPort {
 
         try {
 
-            Byte b = myReadFifo.poll((long) getReadTimeout() * 5000, TimeUnit.MILLISECONDS);
+            Byte b = myReadFifo.poll((long) getReadTimeout(), TimeUnit.MILLISECONDS);
             if (b == null)
                 throw new IOException("Timeout");
 
