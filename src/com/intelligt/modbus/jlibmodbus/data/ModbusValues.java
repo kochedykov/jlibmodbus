@@ -36,9 +36,7 @@ abstract public class ModbusValues<T> extends Observable implements Iterable<T> 
 
             @Override
             public boolean hasNext() {
-                if (index >= getQuantity())
-                    throw new ConcurrentModificationException();
-                return (index + 1) < getQuantity();
+                return index < getQuantity();
             }
 
             @Override
