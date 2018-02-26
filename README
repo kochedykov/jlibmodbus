@@ -40,6 +40,7 @@ https://github.com/kochedykov/jlibmodbus
 
 purejavacomm homepage:
 http://www.sparetimelabs.com/purejavacomm/purejavacomm.php
+https://github.com/nyholku/purejavacomm
 
 jssc home page:
 https://code.google.com/p/java-simple-serial-connector
@@ -48,6 +49,14 @@ https://github.com/scream3r/java-simple-serial-connector
 rxtx home page:
 http://users.frii.com/jarvi/rxtx/index.html
 
+jserialcomm homepage:
+https://github.com/Fazecast/jSerialComm
+
+-----------------------------------------------------------------------------------------------------------
+----Release version 1.2.9.3 -------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------
+	* Fixed hasNext() in ModbusValues iterator.
+	* Fixed error in JSerialComm implementation. https://sourceforge.net/p/jlibmodbus/bugs/2/
 -----------------------------------------------------------------------------------------------------------
 ----Release version 1.2.9.2 -------------------------------------------------------------------------------
 -----------------------------------------------------------------------------------------------------------
