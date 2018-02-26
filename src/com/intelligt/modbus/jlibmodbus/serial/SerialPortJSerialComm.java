@@ -32,6 +32,7 @@ public class SerialPortJSerialComm extends SerialPort {
     private com.fazecast.jSerialComm.SerialPort port;
     private InputStream in;
     private OutputStream out;
+    final byte [] b = new byte[1];
 
     public SerialPortJSerialComm(SerialParameters sp) {
         super(sp);
@@ -65,6 +66,8 @@ public class SerialPortJSerialComm extends SerialPort {
     public void open() throws SerialPortException {
         SerialParameters sp = getSerialParameters();
         port = com.fazecast.jSerialComm.SerialPort.getCommPort(sp.getDevice());
+        port.openPort();
+
         port.setComPortParameters(sp.getBaudRate(), sp.getDataBits(), sp.getStopBits(), sp.getParity().getValue());
         port.setFlowControl(com.fazecast.jSerialComm.SerialPort.FLOW_CONTROL_DISABLED);
 
@@ -72,14 +75,16 @@ public class SerialPortJSerialComm extends SerialPort {
         out = port.getOutputStream();
 
         port.setComPortTimeouts(com.fazecast.jSerialComm.SerialPort.TIMEOUT_READ_BLOCKING, getReadTimeout(), 0);
+
     }
 
     @Override
     public void setReadTimeout(int readTimeout) {
         super.setReadTimeout(readTimeout);
 
-        if (isOpened())
+        if (isOpened()) {
             port.setComPortTimeouts(com.fazecast.jSerialComm.SerialPort.TIMEOUT_NONBLOCKING, getReadTimeout(), getReadTimeout());
+        }
     }
 
     @Override
@@ -88,13 +93,14 @@ public class SerialPortJSerialComm extends SerialPort {
             throw new IOException("Port not opened");
         }
         int c;
+
         try {
-            c = in.read();
+            c = in.read(b, 0, b.length);
         } catch (Exception e) {
             throw new IOException(e);
         }
-        if (c > -1)
-            return c;
+        if (c > 0)
+            return b[0];
         else
             throw new IOException("Read timeout");
     }
