@@ -46,13 +46,11 @@ public class InputStreamASCII extends InputStreamSerial {
 
     @Override
     public void frameCheck() throws IOException, ModbusChecksumException {
-        int cr;
-        int lf;
-        int r_lrc;
-        r_lrc = (byte) read();
         int c_lrc = (byte) lrcGet();
-        cr = readRaw();
-        lf = readRaw();
+        int r_lrc = (byte) read();
+
+        int cr = readRaw();
+        int lf = readRaw();
         // following checks delimiter has read (LF character by default)
         if (cr != Modbus.ASCII_CODE_CR || lf != Modbus.getAsciiMsgDelimiter())
             Modbus.log().warning("\\r\\n not received.");

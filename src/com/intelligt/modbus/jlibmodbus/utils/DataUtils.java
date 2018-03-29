@@ -26,7 +26,12 @@ import java.util.Locale;
 public class DataUtils {
 
     static public int fromAscii(char h, char l) {
-        return Integer.parseInt("" + h + l, 16);
+        try {
+            return Integer.parseInt("" + h + l, 16);
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+            return 0;
+        }
     }
 
     static public String toAscii(byte b) {
@@ -34,10 +39,17 @@ public class DataUtils {
     }
 
     static public String toAscii(byte[] bytes) {
+        return toAscii(bytes, 0, bytes.length);
+    }
+
+    static public String toAscii(byte[] bytes, int offset, int length) {
         StringBuilder sb = new StringBuilder();
-        for (byte b : bytes) {
-            sb.append(toHexString(b));
+        int tail = offset + length;
+
+        for (int i = offset; i < tail; i++) {
+            sb.append(toHexString(bytes[i]));
         }
+
         return sb.toString().toUpperCase(Locale.ENGLISH);
     }
 

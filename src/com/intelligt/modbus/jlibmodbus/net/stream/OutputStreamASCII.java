@@ -39,10 +39,16 @@ public class OutputStreamASCII extends OutputStreamSerial {
 
     @Override
     public void write(byte[] bytes) throws IOException {
-        for (byte b : bytes) {
-            lrc += b;
+        write(bytes, 0, bytes.length);
+    }
+
+    @Override
+    public void write(byte[] bytes, int offset, int length) throws IOException {
+        int tail = offset+length;
+        for (int i = offset; i < tail; i++) {
+            lrc += bytes[i];
         }
-        byte[] ascii = DataUtils.toAscii(bytes).getBytes(Charset.forName("ASCII"));
+        byte[] ascii = DataUtils.toAscii(bytes, offset, length).getBytes(Charset.forName("ASCII"));
         super.write(ascii);
     }
 
