@@ -74,7 +74,7 @@ public class LoggingInputStream extends ModbusInputStream {
         if (Modbus.isLoggingEnabled() && fifo.size() > 0) {
             byte[] bytes = fifo.toByteArray();
             Modbus.log().info(LOG_MESSAGE_TITLE + DataUtils.toAscii(bytes));
-            listenerList.fireFrameSentEvent(new FrameEvent(bytes));
+            listenerList.fireFrameReceivedEvent(new FrameEvent(bytes));
             fifo.reset();
         }
     }
