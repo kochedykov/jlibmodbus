@@ -22,14 +22,7 @@ The latest stable release.
 <dependency>
   <groupId>com.intelligt.modbus</groupId>
   <artifactId>jlibmodbus</artifactId>
-  <version>1.2.9.2</version>
-</dependency>
-
-The previous stable release.
-<dependency>
-  <groupId>com.github.kochedykov</groupId>
-  <artifactId>jlibmodbus</artifactId>
-  <version>1.2.8.4</version>
+  <version>1.2.9.4</version>
 </dependency>
 
 WEB SITE
@@ -52,6 +45,12 @@ http://users.frii.com/jarvi/rxtx/index.html
 jserialcomm homepage:
 https://github.com/Fazecast/jSerialComm
 
+-----------------------------------------------------------------------------------------------------------
+----Release version 1.2.9.4 -------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------
+	* Fixed incoming frame logging.
+	* Fixed bug in OutputStreamASCII - add unimplemented method write(byte[], int, int).
+	* Fixed #17: incorrect logic if lrc equals zero. thanks to https://github.com/mlasevich
 -----------------------------------------------------------------------------------------------------------
 ----Release version 1.2.9.3 -------------------------------------------------------------------------------
 -----------------------------------------------------------------------------------------------------------
