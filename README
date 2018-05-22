@@ -22,7 +22,7 @@ The latest stable release.
 <dependency>
   <groupId>com.intelligt.modbus</groupId>
   <artifactId>jlibmodbus</artifactId>
-  <version>1.2.9.4</version>
+  <version>1.2.9.5</version>
 </dependency>
 
 WEB SITE
@@ -44,7 +44,10 @@ http://users.frii.com/jarvi/rxtx/index.html
 
 jserialcomm homepage:
 https://github.com/Fazecast/jSerialComm
-
+-----------------------------------------------------------------------------------------------------------
+----Release version 1.2.9.5 -------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------
+	* Fixed bug with an incorrect conversion from two integers to a long value.
 -----------------------------------------------------------------------------------------------------------
 ----Release version 1.2.9.4 -------------------------------------------------------------------------------
 -----------------------------------------------------------------------------------------------------------
