@@ -91,10 +91,15 @@ public class ExampleRTUOverTCP {
             // at next string we receive ten registers from a slave with id of 1 at offset of 0.
             int[] registerValues = master.readHoldingRegisters(slaveId, offset, quantity);
             // print values
+            int address = offset;
             for (int value : registerValues) {
-                System.out.println("Address: " + offset++ + ", Value: " + value);
+                System.out.println("Address: " + address++ + ", Value: " + value);
             }
+            System.out.println();
+            System.out.println("Read " + quantity + " HoldingRegisters start from " + offset);
 
+            master.disconnect();
+            slave.shutdown();
         } catch (SerialPortException e) {
             e.printStackTrace();
         } catch (UnknownHostException e) {
