@@ -82,7 +82,7 @@ public class ExampleTCP {
 
                 @Override
                 public void clientDisconnected(TcpClientInfo info) {
-                    System.out.println("Client disonnected " + info.getTcpParameters().getHost());
+                    System.out.println("Client disconnected " + info.getTcpParameters().getHost());
                 }
             };
             slave.addObserver(o);
