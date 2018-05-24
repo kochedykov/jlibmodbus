@@ -34,6 +34,8 @@ import com.intelligt.modbus.jlibmodbus.data.ModbusHoldingRegisters;
 import com.intelligt.modbus.jlibmodbus.exception.*;
 import com.intelligt.modbus.jlibmodbus.master.ModbusMaster;
 import com.intelligt.modbus.jlibmodbus.master.ModbusMasterFactory;
+import com.intelligt.modbus.jlibmodbus.msg.request.ReadHoldingRegistersRequest;
+import com.intelligt.modbus.jlibmodbus.msg.response.ReadHoldingRegistersResponse;
 import com.intelligt.modbus.jlibmodbus.serial.*;
 import com.intelligt.modbus.jlibmodbus.slave.ModbusSlave;
 import com.intelligt.modbus.jlibmodbus.slave.ModbusSlaveFactory;
@@ -95,8 +97,27 @@ public class ExampleRTUOverTCP {
             for (int value : registerValues) {
                 System.out.println("Address: " + address++ + ", Value: " + value);
             }
-            System.out.println();
+
             System.out.println("Read " + quantity + " HoldingRegisters start from " + offset);
+            System.out.println();
+
+            /*
+             * The same thing using a request
+             */
+            ReadHoldingRegistersRequest readRequest = new ReadHoldingRegistersRequest();
+            readRequest.setServerAddress(slaveId);
+            readRequest.setStartAddress(offset);
+            readRequest.setQuantity(quantity);
+
+            master.processRequest(readRequest);
+            ReadHoldingRegistersResponse response = (ReadHoldingRegistersResponse)readRequest.getResponse();
+
+            for (int value : response.getHoldingRegisters()) {
+                System.out.println("Address: " + address++ + ", Value: " + value);
+            }
+
+            System.out.println("Read " + quantity + " HoldingRegisters start from " + offset);
+            System.out.println();
 
             master.disconnect();
             slave.shutdown();
