@@ -78,7 +78,11 @@ public class SerialPortAT extends SerialPort {
     public int read() throws IOException {
         try {
             readTime = System.currentTimeMillis();
-            while ((System.currentTimeMillis() - readTime) < getReadTimeout() && port.read(buffer, 1) != 1);
+            while (port.read(buffer, 1) < 1) {
+                if ((System.currentTimeMillis() - readTime) > getReadTimeout()) {
+                    throw new IOException("Read timeout");
+                }
+            }
             return buffer[0];
         } catch (Exception e) {
             throw new IOException(e);
@@ -89,16 +93,25 @@ public class SerialPortAT extends SerialPort {
     public int read(byte[] b, int off, final int len) throws IOException {
         try {
             readTime = System.currentTimeMillis();
-            int count;
+            int read;
+            int count = 0;
 
-            count = port.read(buffer, buffer.length);
-            while ((System.currentTimeMillis() - readTime) < getReadTimeout() && count > 0) {
-                System.arraycopy(buffer, 0, b, off, count);
-                off += count;
-                //byteFifo.write(buffer, 0, count);
-                count = port.read(buffer, buffer.length);
+            while (count < len) {
+                read = port.read(buffer, buffer.length);
+                count += read;
+                if (count > len) {
+                    int diff = count - len;
+                    read -= diff;
+                    count -= diff;
+                }
+                System.arraycopy(buffer, 0, b, off, read);
+                off += read;
+
+                if ((System.currentTimeMillis() - readTime) > getReadTimeout()) {
+                    throw new IOException("Read timeout");
+                }
             }
-            return off;
+            return count;
         } catch (Exception e) {
             throw new IOException(e);
         }
