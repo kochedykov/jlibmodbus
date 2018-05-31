@@ -10,8 +10,8 @@
     <url>https://github.com/kochedykov/jlibmodbus</url>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.source>1.6</maven.compiler.source>
-        <maven.compiler.target>1.6</maven.compiler.target>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
     </properties>
     <dependencies>
         <!-- http://fazecast.github.io/jSerialComm -->
@@ -48,6 +48,12 @@
             <systemPath>${project.basedir}/lib/comm.jar</systemPath>
             <optional>true</optional>
         </dependency>
+		<!-- https://mvnrepository.com/artifact/com.google.android.things/androidthings -->
+		<dependency>
+			<groupId>com.google.android.things</groupId>
+			<artifactId>androidthings</artifactId>
+			<version>1.0</version>
+		</dependency>
     </dependencies>
     <build>
         <sourceDirectory>src</sourceDirectory>
