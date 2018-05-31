@@ -25,23 +25,19 @@ import java.util.List;
  * Authors: Vladislav Y. Kochedykov, software engineer.
  * email: vladislav.kochedykov@gmail.com
  */
-public class SerialPortFactoryJSSC implements SerialPortAbstractFactory {
-    public SerialPort createSerial(SerialParameters sp) throws SerialPortException {
-        try {
-            Class.forName("jssc.SerialPort");
-        } catch (ClassNotFoundException e) {
-            throw new SerialPortException(e);
-        }
+public class SerialPortFactoryJSSC extends SerialPortAbstractFactory {
+
+    public SerialPortFactoryJSSC() {
+        super("jssc.SerialPort", "jssc");
+    }
+
+    @Override
+    public SerialPort createSerialImpl(SerialParameters sp) {
         return new SerialPortJSSC(sp);
     }
 
     @Override
-    public List<String> getPortIdentifiers() {
+    public List<String> getPortIdentifiersImpl() {
         return Arrays.asList(jssc.SerialPortList.getPortNames());
-    }
-
-    @Override
-    public String getVersion() {
-        return "information about version is unavailable.";
     }
 }

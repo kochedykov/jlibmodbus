@@ -35,11 +35,12 @@ import java.util.List;
  * email: vladislav.kochedykov@gmail.com
  */
 
-public class SerialPortFactoryTcpServer implements SerialPortAbstractFactory {
+public class SerialPortFactoryTcpServer extends SerialPortAbstractFactory {
 
     final private TcpParameters tcpParameters;
 
     public SerialPortFactoryTcpServer(TcpParameters tcpParameters) {
+        super(SerialPortFactoryTcpServer.class.getCanonicalName(), "tcp-server");
         this.tcpParameters = tcpParameters;
     }
 
@@ -47,18 +48,14 @@ public class SerialPortFactoryTcpServer implements SerialPortAbstractFactory {
         return tcpParameters;
     }
 
-    public SerialPort createSerial(SerialParameters sp) throws SerialPortException {
+    @Override
+    public SerialPort createSerialImpl(SerialParameters sp) {
         return new SerialPortTcpServer(sp);
     }
 
     @Override
-    public List<String> getPortIdentifiers() {
+    public List<String> getPortIdentifiersImpl() {
         return new LinkedList<String>();
-    }
-
-    @Override
-    public String getVersion() {
-        return "information about version is unavailable.";
     }
 
     class SerialPortTcpServer extends SerialPort implements Runnable {
@@ -93,7 +90,7 @@ public class SerialPortFactoryTcpServer implements SerialPortAbstractFactory {
         @Override
         public void open() throws SerialPortException {
             try {
-                server = new ServerSocket(tcpParameters.getPort());
+                server = new ServerSocket(getTcpParameters().getPort());
                 mainThread = new Thread(this);
                 setListening(true);
                 mainThread.start();

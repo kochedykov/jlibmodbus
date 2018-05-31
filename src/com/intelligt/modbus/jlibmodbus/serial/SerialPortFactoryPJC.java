@@ -29,18 +29,19 @@ import java.util.List;
  * Authors: Vladislav Y. Kochedykov, software engineer.
  * email: vladislav.kochedykov@gmail.com
  */
-public class SerialPortFactoryPJC implements SerialPortAbstractFactory {
-    public SerialPort createSerial(SerialParameters sp) throws SerialPortException {
-        try {
-            Class.forName("purejavacomm.SerialPort");
-        } catch (ClassNotFoundException e) {
-            throw new SerialPortException(e);
-        }
+public class SerialPortFactoryPJC extends SerialPortAbstractFactory {
+
+    public SerialPortFactoryPJC() {
+        super("purejavacomm.PureJavaComm", "purejavacomm");
+    }
+
+    @Override
+    public SerialPort createSerialImpl(SerialParameters sp) {
         return new SerialPortPJC(sp);
     }
 
     @Override
-    public List<String> getPortIdentifiers() {
+    public List<String> getPortIdentifiersImpl() {
         Enumeration ports = CommPortIdentifier.getPortIdentifiers();
         List<String> list = new ArrayList<String>();
         while (ports.hasMoreElements()) {
@@ -54,13 +55,6 @@ public class SerialPortFactoryPJC implements SerialPortAbstractFactory {
 
     @Override
     public String getVersion() {
-        String version = "information about version is unavailable.";
-        try {
-            Class.forName("purejavacomm.PureJavaComm");
-            version = purejavacomm.PureJavaComm.getVersion();
-        } catch (ClassNotFoundException e) {
-            Modbus.log().warning("The PureJavaComm library is not found.");
-        }
-        return version;
+        return available() ? purejavacomm.PureJavaComm.getVersion() : super.getVersion();
     }
 }

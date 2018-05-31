@@ -27,18 +27,19 @@ import java.util.List;
  * Authors: Vladislav Y. Kochedykov, software engineer.
  * email: vladislav.kochedykov@gmail.com
  */
-public class SerialPortFactoryJavaComm implements SerialPortAbstractFactory {
-    public SerialPort createSerial(SerialParameters sp) throws SerialPortException {
-        try {
-            Class.forName("javax.comm.SerialPort");
-        } catch (ClassNotFoundException e) {
-            throw new SerialPortException(e);
-        }
+public class SerialPortFactoryJavaComm extends SerialPortAbstractFactory {
+
+    public SerialPortFactoryJavaComm() {
+        super("javax.comm.SerialPort", "javacomm");
+    }
+
+    @Override
+    public SerialPort createSerialImpl(SerialParameters sp) {
         return new SerialPortJavaComm(sp);
     }
 
     @Override
-    public List<String> getPortIdentifiers() {
+    public List<String> getPortIdentifiersImpl() {
         Enumeration ports = CommPortIdentifier.getPortIdentifiers();
         List<String> list = new ArrayList<String>();
         while (ports.hasMoreElements()) {
@@ -48,10 +49,5 @@ public class SerialPortFactoryJavaComm implements SerialPortAbstractFactory {
             }
         }
         return list;
-    }
-
-    @Override
-    public String getVersion() {
-        return "information about version is unavailable.";
     }
 }

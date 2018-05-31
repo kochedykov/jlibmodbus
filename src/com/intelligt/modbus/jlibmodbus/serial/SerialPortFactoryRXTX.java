@@ -29,18 +29,19 @@ import java.util.List;
  * Authors: Vladislav Y. Kochedykov, software engineer.
  * email: vladislav.kochedykov@gmail.com
  */
-public class SerialPortFactoryRXTX implements SerialPortAbstractFactory {
-    public SerialPort createSerial(SerialParameters sp) throws SerialPortException {
-        try {
-            Class.forName("gnu.io.SerialPort");
-        } catch (ClassNotFoundException e) {
-            throw new SerialPortException(e);
-        }
+public class SerialPortFactoryRXTX extends SerialPortAbstractFactory {
+
+    protected SerialPortFactoryRXTX() {
+        super("gnu.io.RXTXVersion", "rxtx");
+    }
+
+    @Override
+    public SerialPort createSerialImpl(SerialParameters sp) {
         return new SerialPortRXTX(sp);
     }
 
     @Override
-    public List<String> getPortIdentifiers() {
+    public List<String> getPortIdentifiersImpl() {
         Enumeration ports = gnu.io.CommPortIdentifier.getPortIdentifiers();
         List<String> list = new ArrayList<String>();
         while (ports.hasMoreElements()) {
@@ -55,13 +56,6 @@ public class SerialPortFactoryRXTX implements SerialPortAbstractFactory {
 
     @Override
     public String getVersion() {
-        String version = "information about version is unavailable.";
-        try {
-            Class.forName("gnu.io.SerialPort");
-            version = gnu.io.RXTXVersion.getVersion();
-        } catch (ClassNotFoundException e) {
-            Modbus.log().warning("The RXTX library is not found.");
-        }
-        return version;
+        return available() ? gnu.io.RXTXVersion.getVersion() : super.getVersion();
     }
 }

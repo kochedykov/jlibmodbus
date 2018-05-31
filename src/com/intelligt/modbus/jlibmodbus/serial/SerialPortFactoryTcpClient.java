@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.SocketException;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -35,11 +36,12 @@ import java.util.List;
  * email: vladislav.kochedykov@gmail.com
  */
 
-public class SerialPortFactoryTcpClient implements SerialPortAbstractFactory {
+public class SerialPortFactoryTcpClient extends SerialPortAbstractFactory {
 
     private TcpParameters tcpParameters;
 
     public SerialPortFactoryTcpClient(TcpParameters tcpParameters) {
+        super(SerialPortFactoryTcpClient.class.getCanonicalName(), "tcp-client");
         setTcpParameters(tcpParameters);
     }
 
@@ -51,18 +53,14 @@ public class SerialPortFactoryTcpClient implements SerialPortAbstractFactory {
         this.tcpParameters = tcpParameters;
     }
 
-    public SerialPort createSerial(SerialParameters sp) throws SerialPortException {
+    @Override
+    public SerialPort createSerialImpl(SerialParameters sp) {
         return new SerialPortTcpClient(sp);
     }
 
     @Override
-    public List<String> getPortIdentifiers() {
-        return new LinkedList<String>();
-    }
-
-    @Override
-    public String getVersion() {
-        return "information about version is unavailable.";
+    public List<String> getPortIdentifiersImpl() {
+        return Arrays.asList(new String[0]);
     }
 
     private class SerialPortTcpClient extends SerialPort {

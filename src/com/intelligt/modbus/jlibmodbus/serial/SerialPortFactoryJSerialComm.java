@@ -1,7 +1,5 @@
 package com.intelligt.modbus.jlibmodbus.serial;
 
-import com.intelligt.modbus.jlibmodbus.Modbus;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,36 +25,24 @@ import java.util.List;
  * Authors: Vladislav Y. Kochedykov, software engineer.
  * email: vladislav.kochedykov@gmail.com
  */
-public class SerialPortFactoryJSerialComm implements SerialPortAbstractFactory {
-    public SerialPort createSerial(SerialParameters sp) throws SerialPortException {
-        try {
-            Class.forName("com.fazecast.jSerialComm.SerialPort");
-        } catch (ClassNotFoundException e) {
-            throw new SerialPortException(e);
-        }
+public class SerialPortFactoryJSerialComm extends SerialPortAbstractFactory {
+
+    public SerialPortFactoryJSerialComm() {
+        super("com.fazecast.jSerialComm.SerialPort", "jserialcomm");
+    }
+
+    @Override
+    public SerialPort createSerialImpl(SerialParameters sp) {
         return new SerialPortJSerialComm(sp);
     }
 
     @Override
-    public List<String> getPortIdentifiers() {
-
+    public List<String> getPortIdentifiersImpl() {
         com.fazecast.jSerialComm.SerialPort[] ports = com.fazecast.jSerialComm.SerialPort.getCommPorts();
         List<String> portIdentifiers = new ArrayList<String>(ports.length);
         for (int i = 0; i < ports.length; i++) {
             portIdentifiers.add(ports[i].getSystemPortName());
         }
         return portIdentifiers;
-    }
-
-    @Override
-    public String getVersion() {
-        String version = "information about version is unavailable.";
-        try {
-            Class.forName("purejavacomm.PureJavaComm");
-            version = purejavacomm.PureJavaComm.getVersion();
-        } catch (ClassNotFoundException e) {
-            Modbus.log().warning("The PureJavaComm library is not found.");
-        }
-        return version;
     }
 }
