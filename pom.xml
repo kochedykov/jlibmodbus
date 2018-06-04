@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.intelligt.modbus</groupId>
     <artifactId>jlibmodbus</artifactId>
-    <version>1.2.9.5</version>
+    <version>1.2.9.6</version>
     <name>JLibModbus</name>
     <description>Implementation of the Modbus protocol in Java language</description>
     <packaging>jar</packaging>
