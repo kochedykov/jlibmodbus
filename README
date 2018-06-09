@@ -22,7 +22,7 @@ The latest stable release.
 <dependency>
   <groupId>com.intelligt.modbus</groupId>
   <artifactId>jlibmodbus</artifactId>
-  <version>1.2.9.6</version>
+  <version>1.2.9.7</version>
 </dependency>
 
 WEB SITE
@@ -45,6 +45,11 @@ http://users.frii.com/jarvi/rxtx/index.html
 jserialcomm homepage:
 https://github.com/Fazecast/jSerialComm
 
+-----------------------------------------------------------------------------------------------------------
+----Release version 1.2.9.7 -------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------
+	* NEWS
+	* The automatic serial port connector selection is rolled back.
 -----------------------------------------------------------------------------------------------------------
 ----Release version 1.2.9.6 -------------------------------------------------------------------------------
 -----------------------------------------------------------------------------------------------------------
