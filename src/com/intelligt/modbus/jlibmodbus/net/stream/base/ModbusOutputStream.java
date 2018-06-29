@@ -30,7 +30,7 @@ import java.io.OutputStream;
  */
 abstract public class ModbusOutputStream extends OutputStream {
 
-    private final ByteFifo fifo = new ByteFifo(Modbus.MAX_RTU_ADU_LENGTH);
+    private final ByteFifo fifo = new ByteFifo(Modbus.MAX_TCP_ADU_LENGTH);
 
     @Override
     public void write(byte[] b) throws IOException {

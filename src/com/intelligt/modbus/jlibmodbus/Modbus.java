@@ -35,7 +35,7 @@ final public class Modbus {
        Note that actually the modbus pdu doesn't include the "slave id" field.
      */
     final static public int MIN_PDU_LENGTH = 2;
-    //final static public int MAX_TCP_ADU_LENGTH = 260;
+    final static public int MAX_TCP_ADU_LENGTH = 260;
     final static public int MAX_RTU_ADU_LENGTH = 256;
     final static public int MAX_REGISTER_VALUE = 0xFFFF;
     final static public int MIN_START_ADDRESS = 0x0000;
