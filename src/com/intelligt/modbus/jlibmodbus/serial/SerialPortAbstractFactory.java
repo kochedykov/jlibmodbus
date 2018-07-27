@@ -42,8 +42,8 @@ abstract public class SerialPortAbstractFactory {
         return mainClassName;
     }
 
-    abstract SerialPort createSerialImpl(SerialParameters sp) throws SerialPortException;
-    abstract List<String> getPortIdentifiersImpl() throws SerialPortException;
+    abstract public SerialPort createSerialImpl(SerialParameters sp) throws SerialPortException;
+    abstract public List<String> getPortIdentifiersImpl() throws SerialPortException;
 
     final SerialPort createSerial(SerialParameters sp) throws SerialPortException {
         checkLibrary();
