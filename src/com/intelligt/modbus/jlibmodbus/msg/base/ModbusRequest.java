@@ -91,7 +91,7 @@ abstract public class ModbusRequest extends ModbusMessage implements ModbusMessa
 
     public void validateResponse(ModbusResponse msg) throws ModbusNumberException {
         if (getProtocolId() != msg.getProtocolId())
-            throw new ModbusNumberException("Collision: does not matches the transaction id");
+            throw new ModbusNumberException("Collision: does not matches the protocol id");
         if (getTransactionId() != msg.getTransactionId())
             throw new ModbusNumberException("Collision: does not matches the transaction id");
         if (getServerAddress() != msg.getServerAddress())
