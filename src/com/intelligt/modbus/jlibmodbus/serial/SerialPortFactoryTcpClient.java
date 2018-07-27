@@ -10,7 +10,6 @@ import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.SocketException;
 import java.util.Arrays;
-import java.util.LinkedList;
 import java.util.List;
 
 /*
@@ -41,7 +40,6 @@ public class SerialPortFactoryTcpClient extends SerialPortAbstractFactory {
     private TcpParameters tcpParameters;
 
     public SerialPortFactoryTcpClient(TcpParameters tcpParameters) {
-        super(SerialPortFactoryTcpClient.class.getCanonicalName(), "tcp-client");
         setTcpParameters(tcpParameters);
     }
 

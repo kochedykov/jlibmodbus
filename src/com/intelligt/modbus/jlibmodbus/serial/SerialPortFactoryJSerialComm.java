@@ -28,7 +28,6 @@ import java.util.List;
 public class SerialPortFactoryJSerialComm extends SerialPortAbstractFactory {
 
     public SerialPortFactoryJSerialComm() {
-        super("com.fazecast.jSerialComm.SerialPort", "jserialcomm");
     }
 
     @Override

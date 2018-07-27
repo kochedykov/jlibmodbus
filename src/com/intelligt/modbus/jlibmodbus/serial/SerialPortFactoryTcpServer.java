@@ -40,7 +40,6 @@ public class SerialPortFactoryTcpServer extends SerialPortAbstractFactory {
     final private TcpParameters tcpParameters;
 
     public SerialPortFactoryTcpServer(TcpParameters tcpParameters) {
-        super(SerialPortFactoryTcpServer.class.getCanonicalName(), "tcp-server");
         this.tcpParameters = tcpParameters;
     }
 

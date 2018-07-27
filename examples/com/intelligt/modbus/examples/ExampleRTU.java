@@ -9,10 +9,7 @@ import com.intelligt.modbus.jlibmodbus.master.ModbusMaster;
 import com.intelligt.modbus.jlibmodbus.master.ModbusMasterFactory;
 import com.intelligt.modbus.jlibmodbus.msg.request.ReadHoldingRegistersRequest;
 import com.intelligt.modbus.jlibmodbus.msg.response.ReadHoldingRegistersResponse;
-import com.intelligt.modbus.jlibmodbus.serial.SerialParameters;
-import com.intelligt.modbus.jlibmodbus.serial.SerialPortException;
-import com.intelligt.modbus.jlibmodbus.serial.SerialPortFactoryLoopback;
-import com.intelligt.modbus.jlibmodbus.serial.SerialUtils;
+import com.intelligt.modbus.jlibmodbus.serial.*;
 import com.intelligt.modbus.jlibmodbus.slave.ModbusSlave;
 import com.intelligt.modbus.jlibmodbus.slave.ModbusSlaveFactory;
 import com.intelligt.modbus.jlibmodbus.utils.DataUtils;
@@ -56,6 +53,8 @@ public class ExampleRTU {
         try {
             Modbus.setLogLevel(Modbus.LogLevel.LEVEL_DEBUG);
             SerialParameters serialParameters = new SerialParameters();
+
+            SerialUtils.trySelectConnector();
             /*
              Use a virtual serial port SerialPortLoopback
              */

@@ -28,7 +28,6 @@ import java.util.List;
 public class SerialPortFactoryJSSC extends SerialPortAbstractFactory {
 
     public SerialPortFactoryJSSC() {
-        super("jssc.SerialPort", "jssc");
     }
 
     @Override

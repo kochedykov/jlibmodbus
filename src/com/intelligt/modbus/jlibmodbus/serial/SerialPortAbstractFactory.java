@@ -26,50 +26,26 @@ package com.intelligt.modbus.jlibmodbus.serial;
 import java.util.List;
 
 abstract public class SerialPortAbstractFactory {
-    final protected String mainClassName;
-    final protected String connectorName;
 
-    protected SerialPortAbstractFactory(final String mainClassName, final String connectorName) {
-        this.mainClassName = mainClassName;
-        this.connectorName = connectorName;
+    protected SerialPortAbstractFactory() {
     }
 
     final public String getUnavailableString() {
-        return "The " + connectorName + " library is missing";
-    }
-
-    final public String getMainClassName() {
-        return mainClassName;
+        return "Connector is missing";
     }
 
     abstract public SerialPort createSerialImpl(SerialParameters sp) throws SerialPortException;
     abstract public List<String> getPortIdentifiersImpl() throws SerialPortException;
 
     final SerialPort createSerial(SerialParameters sp) throws SerialPortException {
-        checkLibrary();
         return createSerialImpl(sp);
     }
 
     final List<String> getPortIdentifiers() throws SerialPortException {
-        checkLibrary();
         return getPortIdentifiersImpl();
     }
 
     String getVersion() {
         return "The version number is unavailable.";
-    }
-
-    public boolean available() {
-        try {
-            Class.forName(getMainClassName());
-            return true;
-        } catch (ClassNotFoundException e) {
-            return false;
-        }
-    }
-
-    final protected void checkLibrary() throws SerialPortException {
-        if (!available())
-            throw new SerialPortException(getUnavailableString());
     }
 }

@@ -1,6 +1,5 @@
 package com.intelligt.modbus.jlibmodbus.serial;
 
-import com.intelligt.modbus.jlibmodbus.Modbus;
 import purejavacomm.CommPortIdentifier;
 
 import java.util.ArrayList;
@@ -31,8 +30,9 @@ import java.util.List;
  */
 public class SerialPortFactoryPJC extends SerialPortAbstractFactory {
 
+    final private ValidatorSerialPortFactory validator = new ValidatorSerialPortFactory("purejavacomm.PureJavaComm", SerialPortFactoryPJC.class.getCanonicalName());
+
     public SerialPortFactoryPJC() {
-        super("purejavacomm.PureJavaComm", "purejavacomm");
     }
 
     @Override
@@ -55,6 +55,10 @@ public class SerialPortFactoryPJC extends SerialPortAbstractFactory {
 
     @Override
     public String getVersion() {
-        return available() ? purejavacomm.PureJavaComm.getVersion() : super.getVersion();
+        try {
+            return purejavacomm.PureJavaComm.getVersion();
+        } catch (Exception e) {
+            return super.getVersion();
+        }
     }
 }

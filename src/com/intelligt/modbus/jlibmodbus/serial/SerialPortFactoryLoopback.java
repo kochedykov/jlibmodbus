@@ -31,10 +31,9 @@ import java.util.List;
  */
 public class SerialPortFactoryLoopback extends SerialPortAbstractFactory {
 
-    private final boolean isMaster;
+    final private boolean isMaster;
 
     public SerialPortFactoryLoopback(boolean isMaster) {
-        super(SerialPortFactoryLoopback.class.getCanonicalName(), "loopback");
         this.isMaster = isMaster;
     }
 

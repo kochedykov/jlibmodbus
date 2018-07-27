@@ -1,6 +1,8 @@
 package com.intelligt.modbus.jlibmodbus.serial;
 
-import java.util.List;
+import com.intelligt.modbus.jlibmodbus.Modbus;
+
+import java.util.*;
 
 /*
  * Copyright (C) 2016 "Invertor" Factory", JSC
@@ -25,33 +27,39 @@ import java.util.List;
  */
 public class SerialUtils {
 
-    static private SerialPortAbstractFactory factory;
+    static private Set<ValidatorSerialPortFactory> validatorSet = new TreeSet<ValidatorSerialPortFactory>();
 
-    /*
-    static public boolean isThingsDevice(Context context) {
-        final PackageManager pm = context.getPackageManager();
-        return pm.hasSystemFeature(PackageManager.FEATURE_EMBEDDED);
-    }
-    */
-
-    static public void setSerialPortFactoryJSSC() {
-        setSerialPortFactory(new SerialPortFactoryJSSC());
+    static {
+        registerSerialPortFactory("com.google.android.things.AndroidThings", SerialPortFactoryAT.class.getCanonicalName());
+        registerSerialPortFactory("com.fazecast.jSerialComm.SerialPort", SerialPortFactoryJSerialComm.class.getCanonicalName());
+        registerSerialPortFactory("jssc.SerialPort", SerialPortFactoryJSSC.class.getCanonicalName());
+        registerSerialPortFactory("purejavacomm.PureJavaComm", SerialPortFactoryPJC.class.getCanonicalName());
+        registerSerialPortFactory("gnu.io.RXTXVersion", SerialPortFactoryRXTX.class.getCanonicalName());
     }
 
-    static public void setSerialPortFactoryRXTX() {
-        setSerialPortFactory(new SerialPortFactoryRXTX());
+    static private SerialPortAbstractFactory factory = null;
+
+    static public void registerSerialPortFactory(String connectorClassname, String factoryClassname) {
+        if (!validatorSet.add(new ValidatorSerialPortFactory(connectorClassname, factoryClassname))) {
+            Modbus.log().warning("The factory is already registered, skipping: " + factoryClassname);
+        }
     }
 
-    static public void setSerialPortFactoryJSerialComm() {
-        setSerialPortFactory(new SerialPortFactoryJSerialComm());
-    }
-
-    static public void setSerialPortFactoryPureJavaComm() {
-        setSerialPortFactory(new SerialPortFactoryPJC());
-    }
-
-    static public void setSerialPortFactoryAndroidThings() {
-        setSerialPortFactory(new SerialPortFactoryAT());
+    static public void trySelectConnector() throws SerialPortException {
+        Iterator<ValidatorSerialPortFactory> iterator = validatorSet.iterator();
+        while (iterator.hasNext() && getSerialPortFactory() == null) {
+            ValidatorSerialPortFactory validator = iterator.next();
+            if (validator.validate() ) {
+                try {
+                    setSerialPortFactory(validator.getFactory());
+                } catch (ClassNotFoundException e) {
+                    Modbus.log().warning("Cannot set a serial port factory " + validator.getFactoryClassname());
+                }
+            }
+        }
+        if (getSerialPortFactory() == null) {
+            throw new SerialPortException("There are no available connectors");
+        }
     }
 
     static public SerialPort createSerial(SerialParameters sp) throws SerialPortException {

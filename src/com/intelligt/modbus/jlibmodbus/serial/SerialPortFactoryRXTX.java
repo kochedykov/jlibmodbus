@@ -1,6 +1,5 @@
 package com.intelligt.modbus.jlibmodbus.serial;
 
-import com.intelligt.modbus.jlibmodbus.Modbus;
 import gnu.io.CommPortIdentifier;
 
 import java.util.ArrayList;
@@ -32,7 +31,6 @@ import java.util.List;
 public class SerialPortFactoryRXTX extends SerialPortAbstractFactory {
 
     protected SerialPortFactoryRXTX() {
-        super("gnu.io.RXTXVersion", "rxtx");
     }
 
     @Override
@@ -56,6 +54,10 @@ public class SerialPortFactoryRXTX extends SerialPortAbstractFactory {
 
     @Override
     public String getVersion() {
-        return available() ? gnu.io.RXTXVersion.getVersion() : super.getVersion();
+        try {
+            return gnu.io.RXTXVersion.getVersion();
+        } catch (Exception e) {
+            return super.getVersion();
+        }
     }
 }

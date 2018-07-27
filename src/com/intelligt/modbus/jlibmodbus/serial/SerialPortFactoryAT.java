@@ -3,7 +3,6 @@ package com.intelligt.modbus.jlibmodbus.serial;
 import com.google.android.things.AndroidThings;
 import com.google.android.things.pio.PeripheralManager;
 
-import java.util.Arrays;
 import java.util.List;
 
 /*
@@ -31,7 +30,6 @@ import java.util.List;
 public class SerialPortFactoryAT extends SerialPortAbstractFactory {
 
     public SerialPortFactoryAT() {
-        super("com.google.android.things.AndroidThings", "androidthings");
     }
 
     @Override
@@ -47,6 +45,10 @@ public class SerialPortFactoryAT extends SerialPortAbstractFactory {
 
     @Override
     public String getVersion() {
-        return available() ? AndroidThings.RELEASE : super.getVersion();
+        try {
+            return AndroidThings.RELEASE;
+        } catch (Exception e) {
+            return super.getVersion();
+        }
     }
 }
