@@ -54,11 +54,6 @@ public class SerialUtils {
         setSerialPortFactory(new SerialPortFactoryAT());
     }
 
-    @Deprecated
-    static public void setSerialPortFactoryJavaComm() {
-        setSerialPortFactory(new SerialPortFactoryJavaComm());
-    }
-
     static public SerialPort createSerial(SerialParameters sp) throws SerialPortException {
         return getSerialPortFactory().createSerial(sp);
     }
