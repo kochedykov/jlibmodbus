@@ -97,7 +97,7 @@ public class SerialPortAT extends SerialPort {
             int count = 0;
 
             while (count < len) {
-                read = port.read(buffer, buffer.length);
+                read = port.read(buffer, 1);
                 count += read;
                 if (count > len) {
                     int diff = count - len;
