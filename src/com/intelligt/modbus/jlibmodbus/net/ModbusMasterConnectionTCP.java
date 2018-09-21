@@ -61,15 +61,20 @@ class ModbusMasterConnectionTCP extends ModbusConnection {
     protected void openImpl() throws ModbusIOException {
         if (!isOpened()) {
             if (parameters != null) {
-                Socket socket = new Socket();
                 InetSocketAddress isa = new InetSocketAddress(parameters.getHost(), parameters.getPort());
+                Socket socket = new Socket();
                 try {
-                    socket.connect(isa, Modbus.MAX_CONNECTION_TIMEOUT);
+                    socket.connect(isa, parameters.getConnectionTimeout());
                     socket.setKeepAlive(parameters.isKeepAlive());
 
                     transport = ModbusTransportFactory.createTCP(socket);
                     setReadTimeout(getReadTimeout());
                 } catch (Exception e) {
+                    try {
+                        socket.close();
+                    } catch (IOException e1) {
+                        // ignored
+                    }
                     throw new ModbusIOException(e);
                 }
             } else {
