@@ -30,6 +30,7 @@ public class TcpParameters {
     private InetAddress host = null;
     private int port;
     private boolean keepAlive;
+    private int connectionTimeout = Modbus.MAX_CONNECTION_TIMEOUT;
 
     public TcpParameters() {
         try {
@@ -43,6 +44,7 @@ public class TcpParameters {
 
     public TcpParameters(TcpParameters p) {
         this(p.getHost(), p.getPort(), p.isKeepAlive());
+        setConnectionTimeout(p.getConnectionTimeout());
     }
 
     public TcpParameters(InetAddress host, int port, boolean keepAlive) {
@@ -83,5 +85,13 @@ public class TcpParameters {
 
     public void setKeepAlive(boolean keepAlive) {
         this.keepAlive = keepAlive;
+    }
+    
+    public int getConnectionTimeout() {
+        return connectionTimeout;
+    }
+    
+    public void setConnectionTimeout(int connectionTimeout) {
+        this.connectionTimeout = connectionTimeout;
     }
 }
