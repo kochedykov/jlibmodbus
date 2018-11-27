@@ -157,14 +157,14 @@ public class DataUtils {
     }
 
     public static int wordFromBytes(int l, int h) {
-        return (l & 0xff) & ((h & 0xff) << 8);
+        return (l & 0xff) | ((h & 0xff) << 8);
     }
 
     public static int dwordFromWords(int l, int h) {
-        return (l & 0xffff) & ((h & 0xffff) << 16);
+        return (l & 0xffff) | ((h & 0xffff) << 16);
     }
 
     public static long Int64FromDwords(int l, int h) {
-        return ((long) l & 0xffffffff) & (((long) h & 0xffffffff) << 32);
+        return ((long) l & 0xffffffff) | (((long) h & 0xffffffff) << 32);
     }
 }
