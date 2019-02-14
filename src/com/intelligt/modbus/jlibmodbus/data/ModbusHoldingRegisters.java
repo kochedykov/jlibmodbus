@@ -188,7 +188,7 @@ public class ModbusHoldingRegisters extends ModbusValues<Integer> {
     }
 
     private void checkAddress(int offset) throws IllegalDataAddressException {
-        if (offset > (getQuantity() - 1))
+        if (DataUtils.wordLow(offset) > (getQuantity() - 1))
             throw new IllegalDataAddressException(offset);
     }
 
