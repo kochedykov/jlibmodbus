@@ -96,11 +96,16 @@ public class SerialPortAT extends SerialPort {
             int read;
             int count = 0;
 
-            while (count < len) {
-                read = port.read(buffer, buffer.length);
+            int length = len-off;
+
+            if (length < 0 || b.length < off+len)
+                throw new ArrayIndexOutOfBoundsException("len + off is greater than b.length");
+
+            while (count < length) {
+                read = port.read(buffer, length-count);
                 count += read;
-                if (count > len) {
-                    int diff = count - len;
+                if (count > length) {
+                    int diff = count - length;
                     read -= diff;
                     count -= diff;
                 }
