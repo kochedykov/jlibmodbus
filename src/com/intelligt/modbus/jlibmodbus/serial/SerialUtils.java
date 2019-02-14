@@ -30,11 +30,12 @@ public class SerialUtils {
     static private Set<ValidatorSerialPortFactory> validatorSet = new TreeSet<ValidatorSerialPortFactory>();
 
     static {
-        registerSerialPortFactory("com.google.android.things.AndroidThings", SerialPortFactoryAT.class.getCanonicalName());
-        registerSerialPortFactory("com.fazecast.jSerialComm.SerialPort", SerialPortFactoryJSerialComm.class.getCanonicalName());
-        registerSerialPortFactory("jssc.SerialPort", SerialPortFactoryJSSC.class.getCanonicalName());
-        registerSerialPortFactory("purejavacomm.PureJavaComm", SerialPortFactoryPJC.class.getCanonicalName());
-        registerSerialPortFactory("gnu.io.RXTXVersion", SerialPortFactoryRXTX.class.getCanonicalName());
+        registerSerialPortFactory("com.fazecast.jSerialComm.SerialPort", "com.intelligt.modbus.jlibmodbus.serial.SerialPortFactoryJSerialComm");
+        registerSerialPortFactory("jssc.SerialPort", "com.intelligt.modbus.jlibmodbus.serial.SerialPortFactoryJSSC");
+        registerSerialPortFactory("purejavacomm.PureJavaComm", "com.intelligt.modbus.jlibmodbus.serial.SerialPortFactoryPJC");
+        registerSerialPortFactory("gnu.io.RXTXVersion", "com.intelligt.modbus.jlibmodbus.serial.SerialPortFactoryRXTX");
+
+        registerSerialPortFactory("com.google.android.things.AndroidThings", "com.intelligt.modbus.jlibmodbus.serial.SerialPortFactoryAT");
     }
 
     static private SerialPortAbstractFactory factory = null;

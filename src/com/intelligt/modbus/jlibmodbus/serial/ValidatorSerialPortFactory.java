@@ -47,6 +47,6 @@ public class ValidatorSerialPortFactory implements Comparable<ValidatorSerialPor
 
     @Override
     public int compareTo(ValidatorSerialPortFactory o) {
-        return this.getClass() == o.getClass() ? 0 : 1;
+        return this.equals(o) ? 0 : 1;
     }
 }
