@@ -25,6 +25,7 @@ abstract public class ModbusValues<T> extends Observable implements Iterable<T> 
 
     final public void set(int offset, T value) throws IllegalDataAddressException, IllegalDataValueException {
         setImpl(offset, value);
+        setChanged();
         notifyObservers(new int[]{offset, 1});
     }
 
