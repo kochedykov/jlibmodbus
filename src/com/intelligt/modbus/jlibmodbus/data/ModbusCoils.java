@@ -43,7 +43,7 @@ public class ModbusCoils extends ModbusValues<Boolean> {
     }
 
     public ModbusCoils(byte[] bytes) {
-        coils = DataUtils.toBitsArray(bytes, bytes.length);
+        coils = DataUtils.toBitsArray(bytes, bytes.length*8);
     }
 
     @Override
