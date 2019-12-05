@@ -84,6 +84,9 @@ public class SerialUtils {
     }
 
     static public SerialPortAbstractFactory getSerialPortFactory() {
+        if (SerialUtils.factory == null){
+            SerialUtils.factory = new SerialPortFactoryJSSC();
+        }
         return SerialUtils.factory;
     }
 }
