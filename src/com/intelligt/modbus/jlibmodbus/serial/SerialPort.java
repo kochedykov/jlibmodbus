@@ -81,7 +81,7 @@ public abstract class SerialPort {
             public int read(byte[] b, int off, int len) throws IOException {
                 int size = 0;
                 while (size < len) {
-                    size += serial.read(b, size, len - size);
+                    size += serial.read(b, off + size, len - size);
                 }
                 return size;
             }
