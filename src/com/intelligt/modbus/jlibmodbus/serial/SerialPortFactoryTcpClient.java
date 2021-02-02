@@ -82,6 +82,7 @@ public class SerialPortFactoryTcpClient extends SerialPortAbstractFactory {
                     socket.connect(isa, Modbus.MAX_CONNECTION_TIMEOUT);
                     socket.setKeepAlive(parameters.isKeepAlive());
                     socket.setSoTimeout(getReadTimeout());
+                    socket.setTcpNoDelay(true);
 
                     is = new InputStreamTCP(socket);
                     os = new OutputStreamTCP(socket);

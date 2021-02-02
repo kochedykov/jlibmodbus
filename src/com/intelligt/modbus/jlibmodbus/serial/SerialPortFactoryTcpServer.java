@@ -188,6 +188,7 @@ public class SerialPortFactoryTcpServer extends SerialPortAbstractFactory {
             try {
                 while (isListening()) {
                     client = server.accept();
+                    client.setTcpNoDelay(true);
                     is = new InputStreamTCP(client);
                     os = new OutputStreamTCP(client);
                     while (client.isConnected() && isListening()) {

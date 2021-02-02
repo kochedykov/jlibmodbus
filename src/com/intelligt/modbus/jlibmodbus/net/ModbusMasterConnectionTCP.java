@@ -66,6 +66,7 @@ class ModbusMasterConnectionTCP extends ModbusConnection {
                 try {
                     socket.connect(isa, parameters.getConnectionTimeout());
                     socket.setKeepAlive(parameters.isKeepAlive());
+                    socket.setTcpNoDelay(true);
 
                     transport = ModbusTransportFactory.createTCP(socket);
                     setReadTimeout(getReadTimeout());
