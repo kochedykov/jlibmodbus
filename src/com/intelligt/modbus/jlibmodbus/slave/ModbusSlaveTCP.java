@@ -118,6 +118,7 @@ public class ModbusSlaveTCP extends ModbusSlave implements Runnable {
         try {
             while (isListening()) {
                 s = server.accept();
+                s.setTcpNoDelay(true);
                 try {
                     threadPool.execute(new RequestHandlerTCP(this, s));
                 } catch (ModbusIOException ioe) {
