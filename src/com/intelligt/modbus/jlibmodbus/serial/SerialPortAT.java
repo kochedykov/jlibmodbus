@@ -6,6 +6,7 @@ import com.intelligt.modbus.jlibmodbus.Modbus;
 import com.intelligt.modbus.jlibmodbus.utils.ByteFifo;
 
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
 /*
  * Copyright (C) 2017 Vladislav Y. Kochedykov
@@ -34,7 +35,7 @@ public class SerialPortAT extends SerialPort {
 
     private UartDevice port;
     byte[] buffer = new byte[Modbus.MAX_PDU_LENGTH];
-    volatile long readTime = 0;
+    volatile long readTimeNs = 0;
 
     public SerialPortAT(SerialParameters sp) {
         super(sp);
@@ -77,9 +78,9 @@ public class SerialPortAT extends SerialPort {
     @Override
     public int read() throws IOException {
         try {
-            readTime = System.currentTimeMillis();
+            readTimeNs = System.nanoTime();
             while (port.read(buffer, 1) < 1) {
-                if ((System.currentTimeMillis() - readTime) > getReadTimeout()) {
+                if (TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - readTimeNs) > getReadTimeout()) {
                     throw new IOException("Read timeout");
                 }
             }
@@ -92,7 +93,7 @@ public class SerialPortAT extends SerialPort {
     @Override
     public int read(byte[] b, int off, final int len) throws IOException {
         try {
-            readTime = System.currentTimeMillis();
+            readTimeNs = System.nanoTime();
             int read;
             int count = 0;
 
@@ -112,7 +113,7 @@ public class SerialPortAT extends SerialPort {
                 System.arraycopy(buffer, 0, b, off, read);
                 off += read;
 
-                if ((System.currentTimeMillis() - readTime) > getReadTimeout()) {
+                if (TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - readTimeNs) > getReadTimeout()) {
                     throw new IOException("Read timeout");
                 }
             }
