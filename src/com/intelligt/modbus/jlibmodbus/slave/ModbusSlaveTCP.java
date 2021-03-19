@@ -55,7 +55,7 @@ public class ModbusSlaveTCP extends ModbusSlave implements Runnable {
     @Override
     synchronized public void listenImpl() throws ModbusIOException {
         try {
-            server = new ServerSocket(tcp.getPort());
+            server = new ServerSocket(tcp.getPort(), 0, tcp.getHost());
             mainThread = new Thread(this);
             setListening(true);
             mainThread.start();
