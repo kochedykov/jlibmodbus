@@ -1,5 +1,7 @@
 package com.intelligt.modbus.jlibmodbus.master;
 
+import java.util.concurrent.TimeUnit;
+
 import com.intelligt.modbus.jlibmodbus.Modbus;
 import com.intelligt.modbus.jlibmodbus.data.CommStatus;
 import com.intelligt.modbus.jlibmodbus.exception.ModbusIOException;
@@ -47,7 +49,7 @@ abstract public class ModbusMaster implements FrameEventListenerList {
     final private ModbusConnection conn;
     final private BroadcastResponse broadcastResponse = new BroadcastResponse();
     private int transactionId = 0;
-    private long requestTime = 0;
+    private long requestTimeNs = 0;
 
     public ModbusMaster(ModbusConnection conn) {
         this.conn = conn;
@@ -104,7 +106,7 @@ abstract public class ModbusMaster implements FrameEventListenerList {
         if (transport == null)
             throw new ModbusIOException("transport is null");
         transport.send(msg);
-        requestTime = System.currentTimeMillis();
+        requestTimeNs = System.nanoTime();
     }
 
     protected ModbusMessage readResponse(ModbusRequest request) throws ModbusProtocolException, ModbusNumberException, ModbusIOException {
@@ -146,7 +148,7 @@ abstract public class ModbusMaster implements FrameEventListenerList {
                     } catch (ModbusNumberException mne) {
                         Modbus.log().warning(mne.getLocalizedMessage());
                     }
-                } while (System.currentTimeMillis() - requestTime < getConnection().getReadTimeout());
+                } while (TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - requestTimeNs) < getConnection().getReadTimeout());
                 /*
                  * throw an exception if there is a response timeout
                  */
