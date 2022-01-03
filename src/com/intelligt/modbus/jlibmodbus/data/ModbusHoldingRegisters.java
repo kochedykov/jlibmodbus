@@ -118,11 +118,21 @@ public class ModbusHoldingRegisters extends ModbusValues<Integer> {
     }
 
     public int getInt32At(int offset) throws IllegalDataAddressException {
-        return (getInt16At(offset)&0xffff) | ((getInt16At(offset + 1)&0xffff) << 16);
+        return (getInt16At(offset) & 0xffff) | ((getInt16At(offset + 1) & 0xffff) << 16);
     }
 
     public long getInt64At(int offset) throws IllegalDataAddressException {
-        return (getInt32At(offset)&0xffffffffL) | ((getInt32At(offset + 2)&0xffffffffL) << 32);
+        return (getInt32At(offset) & 0xffffffffL) | ((getInt32At(offset + 2) & 0xffffffffL) << 32);
+    }
+
+    public float getFloat48BigEndian() {
+        return (float) ((registers[0] * Math.pow(2, 32)) + (registers[1] * Math.pow(2, 16))
+                + (registers[2] * Math.pow(2, 0)));
+    }
+
+    public float getFloat48LittleEndian() {
+        return (float) ((registers[0] * Math.pow(2, 0)) + (registers[1] * Math.pow(2, 16))
+                + (registers[2] * Math.pow(2, 32)));
     }
 
     public float getFloat32At(int offset) throws IllegalDataAddressException {
