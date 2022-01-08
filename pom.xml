@@ -34,7 +34,6 @@
             <url>https://mvnrepository.com/</url>
         </repository>
     </repositories>
-    <!--init commit-->
     <dependencies>
         <!-- http://fazecast.github.io/jSerialComm -->
         <dependency>
