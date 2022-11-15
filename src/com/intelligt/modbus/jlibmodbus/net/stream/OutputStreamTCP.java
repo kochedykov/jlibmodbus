@@ -3,7 +3,6 @@ package com.intelligt.modbus.jlibmodbus.net.stream;
 import com.intelligt.modbus.jlibmodbus.net.stream.base.LoggingOutputStream;
 import com.intelligt.modbus.jlibmodbus.net.stream.base.ModbusOutputStream;
 
-import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 
@@ -33,14 +32,13 @@ public class OutputStreamTCP extends LoggingOutputStream {
     public OutputStreamTCP(final Socket s) throws IOException {
         super(new ModbusOutputStream() {
             final Socket socket = s;
-            final private BufferedOutputStream os = new BufferedOutputStream(socket.getOutputStream());
 
             @Override
             public void flush() throws IOException {
                 try {
                     byte[] bytes = toByteArray();
-                    os.write(bytes);
-                    os.flush();
+                    socket.getOutputStream().write(bytes);
+                    socket.getOutputStream().flush();
                 } catch (Exception e) {
                     throw new IOException(e);
                 } finally {
@@ -50,7 +48,7 @@ public class OutputStreamTCP extends LoggingOutputStream {
 
             @Override
             public void close() throws IOException {
-                os.close();
+            	socket.getOutputStream().close();
             }
         });
     }
