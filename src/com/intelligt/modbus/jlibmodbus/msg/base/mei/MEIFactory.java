@@ -29,6 +29,7 @@ public class MEIFactory {
             case READ_DEVICE_IDENTIFICATION:
                 return new MEIReadDeviceIdentification();
             case CAN_OPEN_PDU:
+                return new CANopenGeneralReferencePDU();
             case RESERVED:
             default:
                 return null;
