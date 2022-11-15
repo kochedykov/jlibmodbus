@@ -58,6 +58,7 @@ public class SimpleSlaveTCP {
             tcpParameters.setPort(Modbus.TCP_PORT);
 
             slave = ModbusSlaveFactory.createModbusSlaveTCP(tcpParameters);
+            slave.setReadTimeout(0); // if not set default timeout is 1000ms, I think this must be set to 0 (infinitive timeout)
             Modbus.setLogLevel(Modbus.LogLevel.LEVEL_DEBUG);
 
             MyOwnDataHolder dh = new MyOwnDataHolder();
