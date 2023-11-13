@@ -290,7 +290,7 @@ final public class Modbus {
      * @return "true" if register value is correct, else "false".
      */
     static public boolean checkRegisterValue(int value) {
-        return checkRange(value, 0, Modbus.MAX_REGISTER_VALUE);
+        return checkRange((short)value, Short.MIN_VALUE, Short.MAX_VALUE);
     }
 
     /**
