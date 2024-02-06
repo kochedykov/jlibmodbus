@@ -22,7 +22,7 @@ The latest stable release.
 <dependency>
   <groupId>com.intelligt.modbus</groupId>
   <artifactId>jlibmodbus</artifactId>
-  <version>1.2.9.7</version>
+  <version>1.2.9.9</version>
 </dependency>
 
 WEB SITE
@@ -45,6 +45,17 @@ http://users.frii.com/jarvi/rxtx/index.html
 jserialcomm homepage:
 https://github.com/Fazecast/jSerialComm
 
+-----------------------------------------------------------------------------------------------------------
+----Release version 1.2.9.9 -------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------
+	* NEWS
+	* The release contains a bug fix that do rollback changes by commit 010c95917c913c355bd9599cc2458094a311da2b
+-----------------------------------------------------------------------------------------------------------
+----Release version 1.2.9.8 -------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------
+	* NEWS
+	* The release contains several bug fixes and the latest pull requests including some new features 
+	* (see git log on github https://github.com/kochedykov/jlibmodbus).
 -----------------------------------------------------------------------------------------------------------
 ----Release version 1.2.9.7 -------------------------------------------------------------------------------
 -----------------------------------------------------------------------------------------------------------
