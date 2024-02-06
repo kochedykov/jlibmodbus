@@ -76,7 +76,7 @@ public class ReadFifoQueueResponse extends ModbusResponse {
     }
 
     public int[] getFifoValueRegister() {
-        return DataUtils.BeToIntArray(bytes);
+        return DataUtils.BeToRegArray(bytes);
     }
 
     public void setFifoValueRegister(int[] fifoValueRegister) throws ModbusNumberException {

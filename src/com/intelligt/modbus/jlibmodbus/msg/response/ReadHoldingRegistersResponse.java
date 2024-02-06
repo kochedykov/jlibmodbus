@@ -52,7 +52,7 @@ public class ReadHoldingRegistersResponse extends AbstractReadResponse {
 
     @Deprecated
     synchronized final public int[] getRegisters() {
-        return DataUtils.BeToIntArray(buffer);
+        return DataUtils.BeToRegArray(buffer);
     }
 
     synchronized final public ModbusHoldingRegisters getHoldingRegisters() {

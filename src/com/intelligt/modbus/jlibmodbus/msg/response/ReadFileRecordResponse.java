@@ -61,7 +61,7 @@ final public class ReadFileRecordResponse extends AbstractReadResponse {
             if (fifo.read(buffer) != record_byte_count)
                 throw new ModbusNumberException(record_byte_count + " bytes expected, but not received.");
             read += record_byte_count;
-            ModbusFileRecord mfr = new ModbusFileRecord(0, i++, DataUtils.BeToIntArray(buffer));
+            ModbusFileRecord mfr = new ModbusFileRecord(0, i++, DataUtils.BeToRegArray(buffer));
             records.add(mfr);
         }
         setFileRecords(records.toArray(new ModbusFileRecord[records.size()]));

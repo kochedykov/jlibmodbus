@@ -97,7 +97,7 @@ final public class WriteMultipleRegistersRequest extends AbstractWriteMultipleRe
     }
 
     public int[] getRegisters() {
-        return DataUtils.BeToIntArray(getBytes());
+        return DataUtils.BeToRegArray(getBytes());
     }
 
     public void setRegisters(int[] registers) throws ModbusNumberException {

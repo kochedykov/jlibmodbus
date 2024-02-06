@@ -1,5 +1,10 @@
 package com.intelligt.modbus.jlibmodbus.utils;
 
+import com.intelligt.modbus.jlibmodbus.exception.IllegalDataAddressException;
+import com.intelligt.modbus.jlibmodbus.exception.IllegalDataValueException;
+import com.intelligt.modbus.jlibmodbus.exception.IllegalRangeException;
+
+import java.util.IllegalFormatWidthException;
 import java.util.Locale;
 
 /*
@@ -73,10 +78,24 @@ public class DataUtils {
         return dst;
     }
 
-   static public int[] BeToIntArray(byte[] bytes) {
+   static public int[] BeToRegArray(byte[] bytes) {
         int[] dst = new int[bytes.length / 2];
         for (int i = 0, j = 0; i < dst.length; i++, j += 2)
             dst[i] = ((bytes[j] & 0xff) << 8) | (bytes[j + 1] & 0xff);
+        return dst;
+    }
+
+    static public int[] BeToIntArray(byte[] bytes) throws IllegalRangeException {
+        if (bytes.length % 4 != 0) {
+            throw new IllegalRangeException();
+        }
+        int[] dst = new int[bytes.length / 4];
+        for (int i = 0, j = 0; i < dst.length; i++, j += 4)
+            dst[i] = ((bytes[j] )<< 24)             |
+                     ((bytes[j + 1] & 0xFF) << 16)  |
+                     ((bytes[j + 2] & 0xFF) << 8)   |
+                     ((bytes[j + 3]) & 0xFF);
+
         return dst;
     }
 

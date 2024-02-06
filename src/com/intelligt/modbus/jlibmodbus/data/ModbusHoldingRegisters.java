@@ -163,7 +163,7 @@ public class ModbusHoldingRegisters extends ModbusValues<Integer> {
 
     @Override
     public void setBytesBe(byte[] bytes) {
-        registers = DataUtils.BeToIntArray(bytes);
+        registers = DataUtils.BeToRegArray(bytes);
     }
 
     public void setBytesLe(byte[] bytes) {
