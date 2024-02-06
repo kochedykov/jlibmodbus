@@ -139,28 +139,23 @@ public abstract class SerialPort {
         }
     }
 
-    public enum BaudRate {
-        BAUD_RATE_4800(4800),
-        BAUD_RATE_9600(9600),
-        BAUD_RATE_14400(14400),
-        BAUD_RATE_19200(19200),
-        BAUD_RATE_38400(38400),
-        BAUD_RATE_57600(57600),
-        BAUD_RATE_115200(115200);
+    static public class BaudRate {
+        final static public BaudRate BAUD_RATE_4800 = new BaudRate(4800);
+        final static public BaudRate BAUD_RATE_9600 = new BaudRate(9600);
+        final static public BaudRate BAUD_RATE_14400 = new BaudRate(14000);
+        final static public BaudRate BAUD_RATE_19200 = new BaudRate(19200);
+        final static public BaudRate BAUD_RATE_38400 = new BaudRate(38400);
+        final static public BaudRate BAUD_RATE_57600 = new BaudRate(57600);
+        final static public BaudRate BAUD_RATE_115200 = new BaudRate(115200);
 
         private final int value;
 
-        BaudRate(int value) {
+        public BaudRate(int value) {
             this.value = value;
         }
 
         static public BaudRate getBaudRate(int value) {
-            for (BaudRate br : BaudRate.values()) {
-                if (br.value == value) {
-                    return br;
-                }
-            }
-            throw new IllegalArgumentException("Illegal baud rate value:" + value);
+            return new BaudRate(value);
         }
 
         public int getValue() {

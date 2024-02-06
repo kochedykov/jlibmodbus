@@ -201,7 +201,7 @@ public class ModbusTest implements Runnable {
                         baud_rate = initParameter("baud_rate", baud_rate, argv[3], new ParameterInitializer<SerialPort.BaudRate>() {
                             @Override
                             public SerialPort.BaudRate init(String arg) throws Exception {
-                                return SerialPort.BaudRate.getBaudRate(Integer.decode(arg));
+                                return new SerialPort.BaudRate(921600);//SerialPort.BaudRate.getBaudRate(Integer.decode(arg));
                             }
                         });
                         parity = initParameter("parity", parity, argv[4], new ParameterInitializer<SerialPort.Parity>() {
