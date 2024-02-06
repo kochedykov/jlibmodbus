@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.intelligt.modbus</groupId>
     <artifactId>jlibmodbus</artifactId>
-    <version>1.2.9.8</version>
+    <version>1.2.9.9</version>
     <name>JLibModbus</name>
     <description>Implementation of the Modbus protocol in Java language</description>
     <packaging>jar</packaging>
@@ -127,20 +127,6 @@
                     </execution>
                 </executions>
             </plugin>
-            <!--<plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-gpg-plugin</artifactId>
-                <version>1.5</version>
-                <executions>
-                    <execution>
-                        <id>sign-artifacts</id>
-                        <phase>verify</phase>
-                        <goals>
-                            <goal>sign</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>-->
         </plugins>
     </build>
     <licenses>
