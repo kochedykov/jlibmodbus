@@ -11,6 +11,8 @@ import com.intelligt.modbus.jlibmodbus.msg.response.ReadHoldingRegistersResponse
 import com.intelligt.modbus.jlibmodbus.tcp.TcpParameters;
 
 import java.net.InetAddress;
+import java.util.logging.Handler;
+import java.util.logging.LogRecord;
 
 /*
  * Copyright (C) 2016 "Invertor" Factory", JSC
@@ -45,9 +47,27 @@ import java.net.InetAddress;
 public class SimpleMasterTCP {
 
     static public void main(String[] args) {
+
+        Modbus.log().addHandler(new Handler() {
+            @Override
+            public void publish(LogRecord record) {
+                System.out.println(record.getLevel().getName() + ": " + record.getMessage());
+            }
+
+            @Override
+            public void flush() {
+                //do nothing
+            }
+
+            @Override
+            public void close() throws SecurityException {
+                //do nothing
+            }
+        });
+        Modbus.setLogLevel(Modbus.LogLevel.LEVEL_DEBUG);
+
         try {
             TcpParameters tcpParameters = new TcpParameters();
-
             //tcp parameters have already set by default as in example
             tcpParameters.setHost(InetAddress.getLocalHost());
             tcpParameters.setKeepAlive(true);

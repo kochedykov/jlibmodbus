@@ -15,6 +15,10 @@ import com.intelligt.modbus.jlibmodbus.slave.ModbusSlaveFactory;
 import com.intelligt.modbus.jlibmodbus.utils.DataUtils;
 import com.intelligt.modbus.jlibmodbus.utils.FrameEvent;
 import com.intelligt.modbus.jlibmodbus.utils.FrameEventListener;
+
+import java.util.logging.Handler;
+import java.util.logging.LogRecord;
+
 /*
  * Copyright (C) 2018 "Invertor" Factory", JSC
  * All rights reserved
@@ -51,23 +55,59 @@ public class ExampleRTU {
 
     public static void main(String[] argv) {
         try {
+            Modbus.log().addHandler(new Handler() {
+                @Override
+                public void publish(LogRecord record) {
+                    System.out.println(record.getLevel().getName() + ": " + record.getMessage());
+                }
+
+                @Override
+                public void flush() {
+                    //do nothing
+                }
+
+                @Override
+                public void close() throws SecurityException {
+                    //do nothing
+                }
+            });
             Modbus.setLogLevel(Modbus.LogLevel.LEVEL_DEBUG);
-            SerialParameters serialParameters = new SerialParameters();
+            SerialParameters slaveSerialParameters = new SerialParameters();
+            SerialParameters masterSerialParameters = new SerialParameters();
 
             SerialUtils.trySelectConnector();
             /*
              Use a virtual serial port SerialPortLoopback
              */
-            SerialUtils.setSerialPortFactory(new SerialPortFactoryLoopback(false));
-            ModbusSlave slave = ModbusSlaveFactory.createModbusSlaveRTU(serialParameters);
+            //SerialUtils.setSerialPortFactory(new SerialPortFactoryLoopback(false));
+            SerialUtils.setSerialPortFactory(new SerialPortFactoryJSerialComm());
 
-            SerialUtils.setSerialPortFactory(new SerialPortFactoryLoopback(true));
-            ModbusMaster master = ModbusMasterFactory.createModbusMasterRTU(serialParameters);
+            slaveSerialParameters.setDevice("COM2");
+            slaveSerialParameters.setParity(SerialPort.Parity.NONE);
+            SerialPort.BaudRate baudrate = new SerialPort.BaudRate(921600);
+            slaveSerialParameters.setBaudRate(baudrate);
+            slaveSerialParameters.setDataBits(8);
+            slaveSerialParameters.setStopBits(1);
+
+            ModbusSlave slave = ModbusSlaveFactory.createModbusSlaveRTU(slaveSerialParameters);
+
+
+            //SerialUtils.setSerialPortFactory(new SerialPortFactoryLoopback(true));
+            masterSerialParameters.setDevice("COM3");
+            masterSerialParameters.setParity(SerialPort.Parity.NONE);
+            masterSerialParameters.setBaudRate(baudrate);
+            masterSerialParameters.setDataBits(8);
+            masterSerialParameters.setStopBits(1);
+            ModbusMaster master = ModbusMasterFactory.createModbusMasterRTU(masterSerialParameters);
 
             master.setResponseTimeout(1000);
+            master.connect();
             slave.setServerAddress(slaveId);
             slave.setBroadcastEnabled(true);
             slave.setReadTimeout(10000);
+
+        /*    CompletableFuture<ReadHoldingRegistersResponse> future =
+                    master.sendRequest(new ReadHoldingRegistersRequest(0, 10), 0);*/
 
             FrameEventListener listener = new FrameEventListener() {
                 @Override
@@ -107,6 +147,8 @@ public class ExampleRTU {
             request.setQuantity(10);
             ReadHoldingRegistersResponse response = (ReadHoldingRegistersResponse) request.getResponse();
 
+            //TODO: ReadHoldingRegistersResponse response = master.processRequestAsync(request);
+            //CompletableFuture<ReadHoldingRegistersResponse> future
             master.processRequest(request);
             ModbusHoldingRegisters registers = response.getHoldingRegisters();
             for (int r : registers) {

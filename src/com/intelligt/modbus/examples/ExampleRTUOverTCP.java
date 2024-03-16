@@ -30,6 +30,7 @@
  */
 package com.intelligt.modbus.examples;
 
+import com.intelligt.modbus.jlibmodbus.Modbus;
 import com.intelligt.modbus.jlibmodbus.data.ModbusHoldingRegisters;
 import com.intelligt.modbus.jlibmodbus.exception.*;
 import com.intelligt.modbus.jlibmodbus.master.ModbusMaster;
@@ -46,10 +47,29 @@ import com.intelligt.modbus.jlibmodbus.utils.FrameEventListener;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.logging.Handler;
+import java.util.logging.LogRecord;
 
 public class ExampleRTUOverTCP {
     static public void main(String[] argv) {
         try {
+            Modbus.log().addHandler(new Handler() {
+                @Override
+                public void publish(LogRecord record) {
+                    System.out.println(record.getLevel().getName() + ": " + record.getMessage());
+                }
+
+                @Override
+                public void flush() {
+                    //do nothing
+                }
+
+                @Override
+                public void close() throws SecurityException {
+                    //do nothing
+                }
+            });
+            Modbus.setLogLevel(Modbus.LogLevel.LEVEL_DEBUG);
             TcpParameters tcpParameter = new TcpParameters();
             InetAddress host = InetAddress.getLocalHost();
             tcpParameter.setHost(host);

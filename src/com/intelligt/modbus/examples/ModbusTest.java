@@ -23,6 +23,8 @@ import jssc.SerialPortList;
 
 import java.net.InetAddress;
 import java.nio.charset.Charset;
+import java.util.logging.Handler;
+import java.util.logging.LogRecord;
 
 /*
  * Copyright (C) 2016 "Invertor" Factory", JSC
@@ -77,6 +79,24 @@ public class ModbusTest implements Runnable {
             printUsage();
             return;
         }
+
+        Modbus.log().addHandler(new Handler() {
+            @Override
+            public void publish(LogRecord record) {
+                System.out.println(record.getLevel().getName() + ": " + record.getMessage());
+            }
+
+            @Override
+            public void flush() {
+                //do nothing
+            }
+
+            @Override
+            public void close() throws SecurityException {
+                //do nothing
+            }
+        });
+        Modbus.setLogLevel(Modbus.LogLevel.LEVEL_DEBUG);
 
         SerialParameters sp;
         TcpParameters tp;

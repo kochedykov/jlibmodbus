@@ -17,6 +17,8 @@ import com.intelligt.modbus.jlibmodbus.utils.*;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Observer;
+import java.util.logging.Handler;
+import java.util.logging.LogRecord;
 
 /*
  * Copyright (C) 2017 Vladislav Y. Kochedykov
@@ -44,6 +46,22 @@ public class ExampleTCP {
 
         //
         try {
+            Modbus.log().addHandler(new Handler() {
+                @Override
+                public void publish(LogRecord record) {
+                    System.out.println(record.getLevel().getName() + ": " + record.getMessage());
+                }
+
+                @Override
+                public void flush() {
+                    //do nothing
+                }
+
+                @Override
+                public void close() throws SecurityException {
+                    //do nothing
+                }
+            });
             Modbus.setLogLevel(Modbus.LogLevel.LEVEL_DEBUG);
             TcpParameters tcpParameters = new TcpParameters();
             //listening on localhost

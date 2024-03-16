@@ -8,6 +8,9 @@ import com.intelligt.modbus.jlibmodbus.serial.SerialParameters;
 import com.intelligt.modbus.jlibmodbus.serial.SerialPort;
 import jssc.SerialPortList;
 
+import java.util.logging.Handler;
+import java.util.logging.LogRecord;
+
 /*
  * Copyright (C) 2016 "Invertor" Factory", JSC
  * All rights reserved
@@ -41,8 +44,26 @@ import jssc.SerialPortList;
 public class SimpleMasterRTU {
 
     static public void main(String[] arg) {
-        SerialParameters sp = new SerialParameters();
+        Modbus.log().addHandler(new Handler() {
+            @Override
+            public void publish(LogRecord record) {
+                System.out.println(record.getLevel().getName() + ": " + record.getMessage());
+            }
+
+            @Override
+            public void flush() {
+                //do nothing
+            }
+
+            @Override
+            public void close() throws SecurityException {
+                //do nothing
+            }
+        });
         Modbus.setLogLevel(Modbus.LogLevel.LEVEL_DEBUG);
+
+        SerialParameters sp = new SerialParameters();
+
         try {
             // you can use just string to get connection with remote slave,
             // but you can also get a list of all serial ports available at your system.

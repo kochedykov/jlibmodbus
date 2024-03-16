@@ -12,6 +12,8 @@ import com.intelligt.modbus.jlibmodbus.tcp.TcpParameters;
 import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Handler;
+import java.util.logging.LogRecord;
 
 /*
  * Copyright (c) 2017 Vladislav Kochedykov
@@ -46,6 +48,24 @@ import java.util.List;
 public class SimpleSlaveTCP {
 
     static public void main(String[] argv) {
+
+        Modbus.log().addHandler(new Handler() {
+            @Override
+            public void publish(LogRecord record) {
+                System.out.println(record.getLevel().getName() + ": " + record.getMessage());
+            }
+
+            @Override
+            public void flush() {
+                //do nothing
+            }
+
+            @Override
+            public void close() throws SecurityException {
+                //do nothing
+            }
+        });
+        Modbus.setLogLevel(Modbus.LogLevel.LEVEL_DEBUG);
 
         try {
 
