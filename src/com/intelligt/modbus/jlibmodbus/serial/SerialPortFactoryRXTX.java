@@ -30,7 +30,7 @@ import java.util.List;
  */
 public class SerialPortFactoryRXTX extends SerialPortAbstractFactory {
 
-    protected SerialPortFactoryRXTX() {
+    public SerialPortFactoryRXTX() {
     }
 
     @Override
