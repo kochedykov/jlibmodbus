@@ -29,7 +29,7 @@ package com.intelligt.modbus.jlibmodbus;
  */
 class Version {
 	
-	private static final String version = "1.2.9.10";
+	private static final String version = "1.2.9.11";
 	/**
 	 * returns the current version of the JLibModbus library
 	 *

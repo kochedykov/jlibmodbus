@@ -1,13 +1,16 @@
 package com.intelligt.modbus.examples;
 
 import com.intelligt.modbus.jlibmodbus.Modbus;
+import com.intelligt.modbus.jlibmodbus.data.ModbusCoils;
 import com.intelligt.modbus.jlibmodbus.data.ModbusHoldingRegisters;
 import com.intelligt.modbus.jlibmodbus.exception.ModbusIOException;
 import com.intelligt.modbus.jlibmodbus.exception.ModbusNumberException;
 import com.intelligt.modbus.jlibmodbus.exception.ModbusProtocolException;
 import com.intelligt.modbus.jlibmodbus.master.ModbusMaster;
 import com.intelligt.modbus.jlibmodbus.master.ModbusMasterFactory;
+import com.intelligt.modbus.jlibmodbus.msg.request.ReadCoilsRequest;
 import com.intelligt.modbus.jlibmodbus.msg.request.ReadHoldingRegistersRequest;
+import com.intelligt.modbus.jlibmodbus.msg.response.ReadCoilsResponse;
 import com.intelligt.modbus.jlibmodbus.msg.response.ReadHoldingRegistersResponse;
 import com.intelligt.modbus.jlibmodbus.slave.ModbusSlaveFactory;
 import com.intelligt.modbus.jlibmodbus.slave.ModbusSlaveTCP;
@@ -106,6 +109,7 @@ public class ExampleTCP {
             slave.addObserver(o);
 
             ModbusHoldingRegisters holdingRegisters = new ModbusHoldingRegisters(1000);
+            ModbusCoils coils = new ModbusCoils(1000);
 
             for (int i = 0; i < holdingRegisters.getQuantity(); i++) {
                 //fill
@@ -116,6 +120,7 @@ public class ExampleTCP {
             holdingRegisters.setFloat64At(0, Math.PI);
 
             slave.getDataHolder().setHoldingRegisters(holdingRegisters);
+            slave.getDataHolder().setCoils(coils);
 
             Modbus.setAutoIncrementTransactionId(true);
 
@@ -124,20 +129,22 @@ public class ExampleTCP {
             master.connect();
 
             //prepare request
-            ReadHoldingRegistersRequest request = new ReadHoldingRegistersRequest();
+            ReadCoilsRequest request = new ReadCoilsRequest();
             request.setServerAddress(Modbus.TCP_DEFAULT_ID);
             request.setStartAddress(0);
-            request.setQuantity(10);
-            ReadHoldingRegistersResponse response = (ReadHoldingRegistersResponse) request.getResponse();
+            request.setQuantity(123);
+            ReadCoilsResponse response = (ReadCoilsResponse) request.getResponse();
 
             master.processRequest(request);
-            ModbusHoldingRegisters registers = response.getHoldingRegisters();
-            for (int r : registers) {
+            ModbusCoils registers = response.getModbusCoils();
+            for (boolean r : registers) {
                 System.out.println(r);
             }
+
+            registers.get(120);
             //get float
-            System.out.println("PI is approximately equal to " + registers.getFloat64At(0));
-            System.out.println();
+            //System.out.println("PI is approximately equal to " + registers.getFloat64At(0));
+            System.out.println(registers.get(120));
 
             master.disconnect();
             slave.shutdown();

@@ -71,7 +71,7 @@ public class ExampleRTU {
                     //do nothing
                 }
             });
-            Modbus.setLogLevel(Modbus.LogLevel.LEVEL_DEBUG);
+            Modbus.setLogLevel(Modbus.LogLevel.LEVEL_RELEASE);
             SerialParameters slaveSerialParameters = new SerialParameters();
             SerialParameters masterSerialParameters = new SerialParameters();
 
@@ -101,10 +101,10 @@ public class ExampleRTU {
             ModbusMaster master = ModbusMasterFactory.createModbusMasterRTU(masterSerialParameters);
 
             master.setResponseTimeout(1000);
-            master.connect();
+
             slave.setServerAddress(slaveId);
             slave.setBroadcastEnabled(true);
-            slave.setReadTimeout(10000);
+            slave.setReadTimeout(1000);
 
         /*    CompletableFuture<ReadHoldingRegistersResponse> future =
                     master.sendRequest(new ReadHoldingRegistersRequest(0, 10), 0);*/
@@ -138,6 +138,8 @@ public class ExampleRTU {
 
             slave.listen();
 
+            Thread.sleep(1000);
+
             master.connect();
 
             //prepare request
@@ -168,6 +170,8 @@ public class ExampleRTU {
             e.printStackTrace();
         } catch (SerialPortException e) {
             e.printStackTrace();
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
         }
     }
 }
